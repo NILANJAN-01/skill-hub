@@ -1,0 +1,743 @@
+[
+  {
+    "name": "git-installing-git",
+    "title": "Installing Git",
+    "description": "Installing Git playbook extracted from \"Pro Git\". You can either install it as a package or via another installer, or download the source code and compile it yourself. Use when the user asks about installing git, install git, git chocolatey package, git website, debian-based distribution, fedora, download; or mentions dnf install, apt-get install, apt install, make install, git --version, ln -s.",
+    "pages": "24-27",
+    "sections": [
+      "Installing Git",
+      "Installing Git > Installing on Linux",
+      "Installing Git > Installing on macOS",
+      "Installing Git > Installing on Windows",
+      "Installing Git > Installing from Source"
+    ]
+  },
+  {
+    "name": "git-first-time-git-setup",
+    "title": "First-Time Git Setup",
+    "description": "First-Time Git Setup playbook extracted from \"Pro Git\". The first thing you should do when you install Git is to set your user name and email address. Use when the user asks about first-time git setup, git config, windows system, git environment, editor, user, option; or mentions git config --global, git config --list --show-origin, git config --list, git config, git config --show-origin.",
+    "pages": "27-30",
+    "sections": [
+      "First-Time Git Setup",
+      "First-Time Git Setup > Your Identity",
+      "First-Time Git Setup > Your Editor",
+      "First-Time Git Setup > Your default branch name",
+      "First-Time Git Setup > Checking Your Settings"
+    ]
+  },
+  {
+    "name": "git-getting-help",
+    "title": "Getting Help",
+    "description": "Getting Help playbook extracted from \"Pro Git\". These channels are regularly filled with hundreds of people who are all very knowledgeable about Git and are often willing to help. Use when the user asks about getting help, comprehensive manual page, git config, git commands, manpage, offline, equivalent; or mentions git help, git --help, man, git add -h; or hits errors like \"errors\".",
+    "pages": "30-31",
+    "sections": [
+      "Getting Help"
+    ]
+  },
+  {
+    "name": "git-getting-a-git-repository",
+    "title": "Getting a Git Repository",
+    "description": "Getting a Git Repository playbook extracted from \"Pro Git\". This is an important distinction — instead of getting just a working copy, Git receives a full copy of nearly all data that the server has. Use when the user asks about getting a git repository, git repository, git clone, existing git, files, project, typically obtain; or mentions cd, git add, git clone, git init, git commit -m.",
+    "pages": "32-34",
+    "sections": [
+      "Getting a Git Repository",
+      "Getting a Git Repository > Initializing a Repository in an Existing Directory",
+      "Getting a Git Repository > Cloning an Existing Repository"
+    ]
+  },
+  {
+    "name": "git-recording-changes-to-the-repository",
+    "title": "Recording Changes to the Repository",
+    "description": "Recording Changes to the Repository playbook extracted from \"Pro Git\". The CONTRIBUTING.md file appears under a section named “Changes not staged for commit” — which means that a file that is tracked has been modified in the working directory but not yet staged. Use when the user asks about recording changes to the repository, git add, git status, git diff, command, staged, git commit; or mentions git status, git add, git rm, echo, git diff, git mv.",
+    "pages": "34-46",
+    "sections": [
+      "Recording Changes to the Repository",
+      "Recording Changes to the Repository > Checking the Status of Your Files",
+      "Recording Changes to the Repository > Tracking New Files",
+      "Recording Changes to the Repository > Staging Modified Files",
+      "Recording Changes to the Repository > Short Status",
+      "Recording Changes to the Repository > Ignoring Files",
+      "Recording Changes to the Repository > Viewing Your Staged and Unstaged Changes",
+      "Recording Changes to the Repository > Committing Your Changes",
+      "Recording Changes to the Repository > Skipping the Staging Area",
+      "Recording Changes to the Repository > Removing Files",
+      "Recording Changes to the Repository > Moving Files"
+    ]
+  },
+  {
+    "name": "git-viewing-the-commit-history",
+    "title": "Viewing the Commit History",
+    "description": "Viewing the Commit History playbook extracted from \"Pro Git\". Another really helpful filter is the -S option (colloquially referred to as Git’s “pickaxe” option), which takes a string and shows only those commits that changed the number of occurrences of that string. Use when the user asks about viewing the commit history, git log, show commits, log output, format, command, files; or mentions git log, git log --pretty, git clone, git log -p, git log --stat, git log --pretty --graph.",
+    "pages": "46-52",
+    "sections": [
+      "Viewing the Commit History",
+      "Viewing the Commit History > Limiting Log Output"
+    ]
+  },
+  {
+    "name": "git-undoing-things",
+    "title": "Undoing Things",
+    "description": "Undoing Things playbook extracted from \"Pro Git\". One of the common undos takes place when you commit too early and possibly forget to add some files, or you mess up your commit message. Use when the user asks about undoing things, git restore, git reset, previous commit, undo, commit message, committed; or mentions git status, git add, git commit --amend, git commit -m, git reset, git checkout.",
+    "pages": "52-56",
+    "sections": [
+      "Undoing Things",
+      "Undoing Things > Unstaging a Staged File",
+      "Undoing Things > Unmodifying a Modified File",
+      "Undoing Things > Undoing things with git restore"
+    ]
+  },
+  {
+    "name": "git-working-with-remotes",
+    "title": "Working with Remotes",
+    "description": "Working with Remotes playbook extracted from \"Pro Git\". To see which remote servers you have configured, you can run the git remote command. Use when the user asks about working with remotes, git remote, remote repositories, remote repository, remote git repository, merge, remote branches; or mentions git remote, git remote -v, git fetch, git clone, cd ticgit, cd grit.",
+    "pages": "56-61",
+    "sections": [
+      "Working with Remotes",
+      "Working with Remotes > Showing Your Remotes",
+      "Working with Remotes > Adding Remote Repositories",
+      "Working with Remotes > Fetching and Pulling from Your Remotes",
+      "Working with Remotes > Pushing to Your Remotes",
+      "Working with Remotes > Inspecting a Remote",
+      "Working with Remotes > Renaming and Removing Remotes"
+    ]
+  },
+  {
+    "name": "git-tagging",
+    "title": "Tagging",
+    "description": "Tagging playbook extracted from \"Pro Git\". The -m specifies a tagging message, which is stored with the tag. Use when the user asks about tagging, git push, git tag, lightweight tag, remote, tag commits, command; or mentions git tag, git show, git push, git checkout, git tag -l, git tag -a -m; or hits errors like \"You are in 'detached HEAD' state. You can look around, make experimental\".",
+    "pages": "61-66",
+    "sections": [
+      "Tagging",
+      "Tagging > Listing Your Tags",
+      "Tagging > Creating Tags",
+      "Tagging > Annotated Tags",
+      "Tagging > Lightweight Tags",
+      "Tagging > Tagging Later",
+      "Tagging > Sharing Tags",
+      "Tagging > Deleting Tags",
+      "Tagging > Checking out Tags"
+    ]
+  },
+  {
+    "name": "git-aliases",
+    "title": "Git Aliases",
+    "description": "Git Aliases playbook extracted from \"Pro Git\". As you go on using Git, you’ll probably use other commands frequently as well; don’t hesitate to create new aliases. Use when the user asks about git aliases, n’t automatically infer, git commands, git config, alias, git commit, partially; or mentions git config --global, git unstage, git reset, git last.",
+    "pages": "66-68",
+    "sections": [
+      "Git Aliases"
+    ]
+  },
+  {
+    "name": "git-branches-in-a-nutshell",
+    "title": "Branches in a Nutshell",
+    "description": "Branches in a Nutshell playbook extracted from \"Pro Git\". In Git, this is a pointer to the local branch you’re currently on. Use when the user asks about branches in a nutshell, git log, git stores, git repository, master, git checkout, git switch; or mentions git branch, git log --oneline --decorate, git checkout, vim, git commit -a -m, git add.",
+    "pages": "69-76",
+    "sections": [
+      "Branches in a Nutshell",
+      "Branches in a Nutshell > Creating a New Branch",
+      "Branches in a Nutshell > Switching Branches"
+    ]
+  },
+  {
+    "name": "git-basic-branching-and-merging",
+    "title": "Basic Branching and Merging",
+    "description": "Basic Branching and Merging playbook extracted from \"Pro Git\". However, before you do that, note that if your working directory or staging area has uncommitted changes that conflict with the branch you’re checking out, Git won’t let you switch branches. Use when the user asks about basic branching and merging, git merge, merge commit, switch back, branch back, conflict, resolved; or mentions git merge, git branch -d, git branch, git checkout, vim, git commit -a -m; or hits errors like \"CONFLICT (content): Merge conflict in index.html\".",
+    "pages": "76-85",
+    "sections": [
+      "Basic Branching and Merging",
+      "Basic Branching and Merging > Basic Branching",
+      "Basic Branching and Merging > Basic Merging",
+      "Basic Branching and Merging > Basic Merge Conflicts"
+    ]
+  },
+  {
+    "name": "git-branch-management",
+    "title": "Branch Management",
+    "description": "Branch Management playbook extracted from \"Pro Git\". This means that if you commit at this point, the master branch will be moved forward with your new work. Use when the user asks about branch management, git branch, branch-management tools, corrected branch, notice, no-merged, commit; or mentions git branch --no-merged, git branch --move, git branch --all, git branch, git branch -v, git branch --merged; or hits errors like \"error: The branch 'testing' is not fully merged.\".",
+    "pages": "85-88",
+    "sections": [
+      "Branch Management",
+      "Branch Management > Changing a branch name"
+    ]
+  },
+  {
+    "name": "git-remote-branches",
+    "title": "Remote Branches",
+    "description": "Remote Branches playbook extracted from \"Pro Git\". Checking out a local branch from a remote-tracking branch automatically creates what is called a “tracking branch” (and the branch it tracks is called an “upstream branch”). Use when the user asks about remote branches, remote branch, local branch, git fetch, remote-tracking branch, git server, git branch; or mentions git branch -u, git branch -vv, git checkout -b, git push, git fetch, git checkout --track.",
+    "pages": "91-101",
+    "sections": [
+      "Remote Branches",
+      "Remote Branches > Pushing",
+      "Remote Branches > Tracking Branches",
+      "Remote Branches > Pulling",
+      "Remote Branches > Deleting Remote Branches"
+    ]
+  },
+  {
+    "name": "git-rebasing",
+    "title": "Rebasing",
+    "description": "Rebasing playbook extracted from \"Pro Git\". In Git, there are two main ways to integrate changes from one branch into another: the merge and the rebase. Use when the user asks about rebasing, commit history, rebase commits, git rebase, git pull, merge commit, topic branch; or mentions git rebase, git rebase --onto, git checkout, git merge, git branch -d.",
+    "pages": "101-110",
+    "sections": [
+      "Rebasing",
+      "Rebasing > The Basic Rebase",
+      "Rebasing > More Interesting Rebases",
+      "Rebasing > The Perils of Rebasing",
+      "Rebasing > Rebase When You Rebase",
+      "Rebasing > Rebase vs. Merge"
+    ]
+  },
+  {
+    "name": "git-the-protocols",
+    "title": "The Protocols",
+    "description": "The Protocols playbook extracted from \"Pro Git\". The most basic is the Local protocol, in which the remote repository is in another directory on the same host. Use when the user asks about the protocols, git repository, git http smart, ssh protocol, access, http protocol, smart http; or mentions git clone, cd, git remote, git clone --bare, mv, chmod.",
+    "pages": "111-116",
+    "sections": [
+      "The Protocols",
+      "The Protocols > Local Protocol",
+      "The Protocols > The HTTP Protocols",
+      "The Protocols > The SSH Protocol",
+      "The Protocols > The Git Protocol"
+    ]
+  },
+  {
+    "name": "git-getting-git-on-a-server",
+    "title": "Getting Git on a Server",
+    "description": "Getting Git on a Server playbook extracted from \"Pro Git\". However, keep in mind that to collaborate with a couple of people on a private project, all you need is an SSH server and a bare repository. Use when the user asks about getting git on a server, bare repository, git server, ssh server, ssh access, directory, git repository; or mentions git clone --bare, cp -Rf, scp -r, git clone, ssh, cd.",
+    "pages": "116-118",
+    "sections": [
+      "Getting Git on a Server",
+      "Getting Git on a Server > Putting the Bare Repository on a Server",
+      "Getting Git on a Server > Small Setups"
+    ]
+  },
+  {
+    "name": "git-generating-your-ssh-public-key",
+    "title": "Generating Your SSH Public Key",
+    "description": "Generating Your SSH Public Key playbook extracted from \"Pro Git\". The .pub file is your public key, and the other file is the corresponding private key. Use when the user asks about generating your ssh public key, git servers authenticate, ssh keys, public keys, user, file, password; or mentions ssh-keygen -o, cd, ls, cat.",
+    "pages": "118-119",
+    "sections": [
+      "Generating Your SSH Public Key"
+    ]
+  },
+  {
+    "name": "git-setting-up-the-server",
+    "title": "Setting Up the Server",
+    "description": "Setting Up the Server playbook extracted from \"Pro Git\". With this method, you can quickly get a read/write Git server up and running for a handful of developers. Use when the user asks about setting up the server, ssh public keys, git server, user account, walk through setting, authorized, directory; or mentions cat, cd, mkdir, git push, adduser git, su git; or hits errors like \"fatal: Interactive git shell is not enabled.\".",
+    "pages": "119-122",
+    "sections": [
+      "Setting Up the Server"
+    ]
+  },
+  {
+    "name": "git-daemon",
+    "title": "Git Daemon",
+    "description": "Git Daemon playbook extracted from \"Pro Git\". The --reuseaddr option allows the server to restart without waiting for old connections to time out, while the --base-path option allows people to clone projects without specifying the entire path, and the path at the end tells the Git daemon where to... Use when the user asks about git daemon, ’re running, git daemon, daemon serving repositories, git protocol, system, git data; or mentions git daemon --reuseaddr --base-path, touch git-daemon-export-ok, cd.",
+    "pages": "122-123",
+    "sections": [
+      "Git Daemon"
+    ]
+  },
+  {
+    "name": "git-smart-http",
+    "title": "Smart HTTP",
+    "description": "Smart HTTP playbook extracted from \"Pro Git\". Setting up Smart HTTP is basically just enabling a CGI script that is provided with Git called git-http-backend on the server. Use when the user asks about smart http, access through ssh, cgi script, web server, http url, smart http, ssh and unauthenticated; or mentions apt-get install, a2enmod cgi, chgrp -R, htpasswd -c.",
+    "pages": "123-125",
+    "sections": [
+      "Smart HTTP"
+    ]
+  },
+  {
+    "name": "git-gitweb",
+    "title": "GitWeb",
+    "description": "GitWeb playbook extracted from \"Pro Git\". Git comes with a CGI script called GitWeb that is sometimes used for this. Use when the user asks about gitweb, simple web-based visualizer, basic read, write and read-only, read-only access, cgi script, gitweb; or mentions git instaweb --httpd, git instaweb --httpd --stop, git clone, cd, make, cp -Rf.",
+    "pages": "125-127",
+    "sections": [
+      "GitWeb"
+    ]
+  },
+  {
+    "name": "git-distributed-git-contributing-to-a-project",
+    "title": "Contributing to a Project",
+    "description": "Contributing to a Project playbook extracted from \"Pro Git\". Because Git is very flexible, people can and do work together in many ways, and it’s problematic to describe how you should contribute — every project is a bit different. Use when the user asks about contributing to a project, jessica emails john, git project, topic branch, push, server, john fetches jessica; or mentions cd project, git push, git commit -am, git fetch, git checkout -b, git commit; or hits errors like \"! [rejected] master -> master (non-fast forward)\".",
+    "pages": "135-156",
+    "sections": [
+      "Contributing to a Project",
+      "Contributing to a Project > Commit Guidelines",
+      "Contributing to a Project > Private Small Team",
+      "Contributing to a Project > Private Managed Team",
+      "Contributing to a Project > Forked Public Project",
+      "Contributing to a Project > Public Project over Email",
+      "Contributing to a Project > Summary"
+    ]
+  },
+  {
+    "name": "git-distributed-git-maintaining-a-project",
+    "title": "Maintaining a Project",
+    "description": "Maintaining a Project playbook extracted from \"Pro Git\". This can consist of accepting and applying patches generated via format-patch and emailed to you, or integrating changes in remote branches for repositories you’ve added as remotes to your project. Use when the user asks about maintaining a project, topic branch, git apply, git project, master, work, command; or mentions git diff, git am, git checkout -b, git branch, git apply, git apply --check; or hits errors like \"error: patch failed: ticgit.gemspec:1\".",
+    "pages": "156-171",
+    "sections": [
+      "Maintaining a Project",
+      "Maintaining a Project > Working in Topic Branches",
+      "Maintaining a Project > Applying Patches from Email",
+      "Maintaining a Project > Checking Out Remote Branches",
+      "Maintaining a Project > Determining What Is Introduced",
+      "Maintaining a Project > Integrating Contributed Work",
+      "Maintaining a Project > Tagging Your Releases",
+      "Maintaining a Project > Generating a Build Number",
+      "Maintaining a Project > Preparing a Release",
+      "Maintaining a Project > The Shortlog"
+    ]
+  },
+  {
+    "name": "git-github-contributing-to-a-project",
+    "title": "Contributing to a Project",
+    "description": "Contributing to a Project playbook extracted from \"Pro Git\". This is the basic workflow that most GitHub projects use. Use when the user asks about contributing to a project, pull request; or mentions git push, git remote, git fetch, git checkout, git pull, git clone; or hits errors like \"CONFLICT (content): Merge conflict in blink.ino\".",
+    "pages": "177-197",
+    "sections": [
+      "Contributing to a Project",
+      "Contributing to a Project > Forking Projects",
+      "Contributing to a Project > The GitHub Flow",
+      "Contributing to a Project > Advanced Pull Requests",
+      "Contributing to a Project > GitHub Flavored Markdown",
+      "Contributing to a Project > Keep your GitHub public repository up-to-date"
+    ]
+  },
+  {
+    "name": "git-github-maintaining-a-project",
+    "title": "Maintaining a Project",
+    "description": "Maintaining a Project playbook extracted from \"Pro Git\". Doing so will give them “push” access, which means they have both read and write access to the project and Git repository. Use when the user asks about maintaining a project, pull request, git pull; or mentions git fetch, curl, git ls-remote, git checkout.",
+    "pages": "197-211",
+    "sections": [
+      "Maintaining a Project",
+      "Maintaining a Project > Creating a New Repository",
+      "Maintaining a Project > Adding Collaborators",
+      "Maintaining a Project > Managing Pull Requests",
+      "Maintaining a Project > Mentions and Notifications",
+      "Maintaining a Project > Special Files",
+      "Maintaining a Project > README",
+      "Maintaining a Project > CONTRIBUTING",
+      "Maintaining a Project > Project Administration"
+    ]
+  },
+  {
+    "name": "git-scripting-github",
+    "title": "Scripting GitHub",
+    "description": "Scripting GitHub playbook extracted from \"Pro Git\". The Hooks and Services section of GitHub repository administration is the easiest way to have Use when the user asks about scripting github, web hook, web service, add service, service integration, continuous integration services, email; or mentions curl, curl -H.",
+    "pages": "214-223",
+    "sections": [
+      "Scripting GitHub",
+      "Scripting GitHub > Services and Hooks",
+      "Scripting GitHub > The GitHub API",
+      "Scripting GitHub > Basic Usage",
+      "Scripting GitHub > Commenting on an Issue",
+      "Scripting GitHub > Changing the Status of a Pull Request",
+      "Scripting GitHub > Octokit"
+    ]
+  },
+  {
+    "name": "git-revision-selection",
+    "title": "Revision Selection",
+    "description": "Revision Selection playbook extracted from \"Pro Git\". The last major range-selection syntax is the triple-dot syntax, which specifies all the commits that are reachable by either of two references but not by both of them. Use when the user asks about revision selection, git log, git show head, single commit, objects, repository; or mentions git show, git log, git log --not, git log --abbrev-commit --pretty, git rev-parse, git reflog.",
+    "pages": "224-232",
+    "sections": [
+      "Revision Selection",
+      "Revision Selection > Single Revisions",
+      "Revision Selection > Short SHA-1",
+      "Revision Selection > Branch References",
+      "Revision Selection > RefLog Shortnames",
+      "Revision Selection > Ancestry References",
+      "Revision Selection > Commit Ranges"
+    ]
+  },
+  {
+    "name": "git-interactive-staging",
+    "title": "Interactive Staging",
+    "description": "Interactive Staging playbook extracted from \"Pro Git\". You can see that this command shows you a much different view of your staging area than you’re probably used to — basically, the same information you get with git status but a bit more succinct and informative. Use when the user asks about interactive staging, big messy commit, git add, staged files, staging, diff, unstaged; or mentions git add -i.",
+    "pages": "232-236",
+    "sections": [
+      "Interactive Staging",
+      "Interactive Staging > Staging and Unstaging Files",
+      "Interactive Staging > Staging Patches"
+    ]
+  },
+  {
+    "name": "git-stashing-and-cleaning",
+    "title": "Stashing and Cleaning",
+    "description": "Stashing and Cleaning playbook extracted from \"Pro Git\". The answer to this issue is the git stash command. Use when the user asks about stashing and cleaning, git stash, working directory, git clean, remove, branch, stash apply; or mentions git stash, git clean -n -d, git stash --index, git stash --keep-index, git stash -u, git stash --patch.",
+    "pages": "236-242",
+    "sections": [
+      "Stashing and Cleaning",
+      "Stashing and Cleaning > Stashing Your Work",
+      "Stashing and Cleaning > Creative Stashing",
+      "Stashing and Cleaning > Creating a Branch from a Stash",
+      "Stashing and Cleaning > Cleaning your Working Directory"
+    ]
+  },
+  {
+    "name": "git-signing-your-work",
+    "title": "Signing Your Work",
+    "description": "Signing Your Work playbook extracted from \"Pro Git\". If you’re taking work from others on the internet and want to verify that commits are actually from a trusted source, Git has a few ways to sign and verify work using GPG. Use when the user asks about signing your work, gpg signature, cryptographically secure, git merge, gpg private key, tags, command; or mentions git merge --verify-signatures, gpg --list-keys, gpg --gen-key, git config --global, git tag -s -m, git show; or hits errors like \"error: could not verify the tag 'v1.4.2.1'\".",
+    "pages": "242-245",
+    "sections": [
+      "Signing Your Work",
+      "Signing Your Work > GPG Introduction",
+      "Signing Your Work > Signing Tags",
+      "Signing Your Work > Verifying Tags",
+      "Signing Your Work > Signing Commits",
+      "Signing Your Work > Everyone Must Sign"
+    ]
+  },
+  {
+    "name": "git-searching",
+    "title": "Searching",
+    "description": "Searching playbook extracted from \"Pro Git\". Another fairly advanced log search that is insanely useful is the line history search. Use when the user asks about searching, git grep, search string, git log, option, line, working directory; or mentions git grep -n, git grep --count, git grep -p, git grep --break --heading, git log -S --oneline, git log -L.",
+    "pages": "245-249",
+    "sections": [
+      "Searching",
+      "Searching > Git Grep",
+      "Searching > Git Log Searching"
+    ]
+  },
+  {
+    "name": "git-rewriting-history",
+    "title": "Rewriting History",
+    "description": "Rewriting History playbook extracted from \"Pro Git\". filter-branch is the tool you probably want to use to scrub your entire history. Use when the user asks about rewriting history, commit message, git rebase, git commit, git applies, history, single commit; or mentions git commit --amend, git rebase -i, git log --pretty, git rebase --continue, git add, git commit -m.",
+    "pages": "249-257",
+    "sections": [
+      "Rewriting History",
+      "Rewriting History > Changing the Last Commit",
+      "Rewriting History > Changing Multiple Commit Messages",
+      "Rewriting History > Reordering Commits",
+      "Rewriting History > Squashing Commits",
+      "Rewriting History > Splitting a Commit",
+      "Rewriting History > Deleting a commit",
+      "Rewriting History > The Nuclear Option: filter-branch"
+    ]
+  },
+  {
+    "name": "git-reset-demystified",
+    "title": "Reset Demystified",
+    "description": "Reset Demystified playbook extracted from \"Pro Git\". Like reset, checkout manipulates the three trees, and it is a bit different depending on whether you give the command a file path or not. Use when the user asks about reset demystified, head points, git commit, git reset, file, working directory, branch; or mentions git cat-file -p, git ls-tree -r, git ls-files -s, tree.",
+    "pages": "257-277",
+    "sections": [
+      "Reset Demystified",
+      "Reset Demystified > The Three Trees",
+      "Reset Demystified > The Workflow",
+      "Reset Demystified > The Role of Reset",
+      "Reset Demystified > Reset With a Path",
+      "Reset Demystified > Squashing",
+      "Reset Demystified > Check It Out",
+      "Reset Demystified > Summary"
+    ]
+  },
+  {
+    "name": "git-advanced-merging",
+    "title": "Advanced Merging",
+    "description": "Advanced Merging playbook extracted from \"Pro Git\". When you invoke a merge into HEAD (git merge topic), the new commit has two parents: the first one is HEAD (C6), and the second is the tip of the branch being merged in (C4). Use when the user asks about advanced merging, git merge, merge conflict, merge commit, git diff, rack, side; or mentions git merge, git merge --abort, git merge -Xignore-space-change, git merge-file -p, git merge -Xours, git merge -s; or hits errors like \"CONFLICT (content): Merge conflict in hello.rb\".",
+    "pages": "277-294",
+    "sections": [
+      "Advanced Merging",
+      "Advanced Merging > Merge Conflicts",
+      "Advanced Merging > Undoing Merges",
+      "Advanced Merging > Other Types of Merges"
+    ]
+  },
+  {
+    "name": "git-rerere",
+    "title": "Rerere",
+    "description": "Rerere playbook extracted from \"Pro Git\". The git rerere functionality is a bit of a hidden feature. Use when the user asks about rerere, git rerere, merge conflict, topic branch, resolve, recorded, resolution; or mentions git rerere, git add, cat, git config --global, git merge, git status; or hits errors like \"CONFLICT (content): Merge conflict in hello.rb\".",
+    "pages": "294-301",
+    "sections": [
+      "Rerere"
+    ]
+  },
+  {
+    "name": "git-debugging-with-git",
+    "title": "Debugging with Git",
+    "description": "Debugging with Git playbook extracted from \"Pro Git\". If you track down a bug in your code and want to know when it was introduced and why, file annotation is often your best tool. Use when the user asks about debugging with git, git bisect, git blame, bad commit, line, good, commits; or mentions git bisect, git blame -L, git blame -C -L.",
+    "pages": "301-304",
+    "sections": [
+      "Debugging with Git",
+      "Debugging with Git > File Annotation",
+      "Debugging with Git > Binary Search"
+    ]
+  },
+  {
+    "name": "git-submodules",
+    "title": "Submodules",
+    "description": "Submodules playbook extracted from \"Pro Git\". Although DbConnector is a subdirectory in your working directory, Git sees it as a submodule and doesn’t track its contents when you’re not in that directory. Use when the user asks about submodules, git submodule update, submodule directory, git diff, main project, commits, submodule project; or mentions git submodule, git submodule --remote, git submodule --init --recursive, git submodule --remote --merge, git push --recurse-submodules, git diff --cached --submodule; or hits errors like \"error: Your local changes to the following files would be overwritten by checkou\".",
+    "pages": "304-324",
+    "sections": [
+      "Submodules",
+      "Submodules > Starting with Submodules",
+      "Submodules > Cloning a Project with Submodules",
+      "Submodules > Working on a Project with Submodules",
+      "Submodules > Submodule Tips",
+      "Submodules > Issues with Submodules"
+    ]
+  },
+  {
+    "name": "git-bundling",
+    "title": "Bundling",
+    "description": "Bundling playbook extracted from \"Pro Git\". The first command is the bundle verify command that will make sure the file is actually a valid Git bundle and that you have all the necessary ancestors to reconstitute it properly. Use when the user asks about bundling, git bundle, covered the common, range of commits, data, send, access; or mentions git bundle, git log --oneline, git log, git clone, cd repo, git fetch; or hits errors like \"error: Repository lacks these prerequisite commits:\".",
+    "pages": "324-328",
+    "sections": [
+      "Bundling"
+    ]
+  },
+  {
+    "name": "git-replace",
+    "title": "Replace",
+    "description": "Replace playbook extracted from \"Pro Git\". The replace command lets you specify an object in Git and say \"every time you refer to this object, pretend it’s a different object\". Use when the user asks about replace, base commit, recent history, commit object, entire history, object database, git replace; or mentions git replace, git log --oneline, git log --oneline --decorate, git remote, git branch, git push.",
+    "pages": "328-336",
+    "sections": [
+      "Replace"
+    ]
+  },
+  {
+    "name": "git-credential-storage",
+    "title": "Credential Storage",
+    "description": "Credential Storage playbook extracted from \"Pro Git\". This means that until you change your password for the Git host, you won’t ever have to type in your credentials again. Use when the user asks about credential storage, git credential, ssh transport, credential helper, file, securely transfer data, windows credential store; or mentions git credential, git credential-store --file, git credential-read-only --file, git config --global --file, git config --global.",
+    "pages": "336-341",
+    "sections": [
+      "Credential Storage",
+      "Credential Storage > Under the Hood",
+      "Credential Storage > A Custom Credential Cache"
+    ]
+  },
+  {
+    "name": "git-configuration",
+    "title": "Git Configuration",
+    "description": "Git Configuration playbook extracted from \"Pro Git\". As you read briefly in Getting Started, you can specify Git configuration settings with the git config command. Use when the user asks about git configuration, git config, git diff, place git, git automatically, configuration, git rebase; or mentions git config --global, cat, git config --system, git chekcout, chmod, git apply --whitespace; or hits errors like \"WARNING: You called a Git command named 'chekcout', which does not exist.\".",
+    "pages": "342-352",
+    "sections": [
+      "Git Configuration",
+      "Git Configuration > Basic Client Configuration",
+      "Git Configuration > Colors in Git",
+      "Git Configuration > External Merge and Diff Tools",
+      "Git Configuration > Formatting and Whitespace",
+      "Git Configuration > Server Configuration"
+    ]
+  },
+  {
+    "name": "git-attributes",
+    "title": "Git Attributes",
+    "description": "Git Attributes playbook extracted from \"Pro Git\". These path-specific settings are called Git attributes and are set either in a .gitattributes file in one of your directories (normally the root of your project) or in the .git/info/attributes file if you don’t want the attributes file committed with... Use when the user asks about git attributes, git attributes, git diff, git archive, date, git log, merge; or mentions echo, git config, cat, git config --global, git diff, rm.",
+    "pages": "352-360",
+    "sections": [
+      "Git Attributes",
+      "Git Attributes > Binary Files",
+      "Git Attributes > Keyword Expansion",
+      "Git Attributes > Exporting Your Repository",
+      "Git Attributes > Merge Strategies"
+    ]
+  },
+  {
+    "name": "git-hooks",
+    "title": "Git Hooks",
+    "description": "Git Hooks playbook extracted from \"Pro Git\". This hook takes a few parameters: the path to the file that holds the commit message so far, the type of commit, and the commit SHA-1 if this is an amended commit. Use when the user asks about git hooks, hook runs, commit message, git commit, client-side hooks, push, version control systems.",
+    "pages": "360-363",
+    "sections": [
+      "Git Hooks",
+      "Git Hooks > Installing a Hook",
+      "Git Hooks > Client-Side Hooks",
+      "Git Hooks > Server-Side Hooks"
+    ]
+  },
+  {
+    "name": "git-an-example-git-enforced-policy",
+    "title": "An Example Git-Enforced Policy",
+    "description": "An Example Git-Enforced Policy playbook extracted from \"Pro Git\". You’ll build client scripts that help the developer know if their push will be rejected and server scripts that actually enforce the policies. Use when the user asks about an example git-enforced policy, commit message, acl file, update script, list, scripts, server; or mentions git cat-file, git commit -am, git rev-list, git log --name-only --pretty, git push -f; or hits errors like \"error: hooks/update exited with error code 1\".",
+    "pages": "363-372",
+    "sections": [
+      "An Example Git-Enforced Policy",
+      "An Example Git-Enforced Policy > Server-Side Hook",
+      "An Example Git-Enforced Policy > Client-Side Hooks"
+    ]
+  },
+  {
+    "name": "git-as-a-client",
+    "title": "Git as a Client",
+    "description": "Git as a Client playbook extracted from \"Pro Git\". This tool allows you to use Git as a valid client to a Subversion server, so you can use all the local features of Git and then push to a Subversion server as if you were using Subversion locally. Use when the user asks about git as a client, git svn, perforce git fusion, subversion server, git commit, perforce server, git repository; or mentions git svn, git log --oneline --all, git p4, git log --oneline --graph, git push, git clone; or hits errors like \"ERROR from SVN:\".",
+    "pages": "373-405",
+    "sections": [
+      "Git as a Client",
+      "Git as a Client > Git and Subversion",
+      "Git as a Client > Git and Mercurial",
+      "Git as a Client > Git and Perforce"
+    ]
+  },
+  {
+    "name": "git-migrating-to-git",
+    "title": "Migrating to Git",
+    "description": "Migrating to Git playbook extracted from \"Pro Git\". If you want to map this to better Git author data, you need a mapping from the Subversion users to the Git authors. Use when the user asks about migrating to git, git svn, git tags, git fast-import, git server, data, directory; or mentions cd, git log, ls, for --format, git remote, git push --all.",
+    "pages": "405-419",
+    "sections": [
+      "Migrating to Git",
+      "Migrating to Git > Subversion",
+      "Migrating to Git > Mercurial",
+      "Migrating to Git > Perforce",
+      "Migrating to Git > A Custom Importer"
+    ]
+  },
+  {
+    "name": "git-plumbing-and-porcelain",
+    "title": "Plumbing and Porcelain",
+    "description": "Plumbing and Porcelain playbook extracted from \"Pro Git\". These commands are generally referred to as Git’s “plumbing” commands, while the more user-friendly commands are called “porcelain” Use when the user asks about plumbing and porcelain, full user-friendly vcs, version control system, initially a toolkit, number of subcommands, low-level work, chained together unix-style; or mentions ls -F1.",
+    "pages": "420-421",
+    "sections": [
+      "Plumbing and Porcelain"
+    ]
+  },
+  {
+    "name": "git-objects",
+    "title": "Git Objects",
+    "description": "Git Objects playbook extracted from \"Pro Git\". The next type of Git object we’ll examine is the tree, which solves the problem of storing the filename and also allows you to store a group of files together. Use when the user asks about git objects, git objects, tree object, git cat-file, git hash-object, git object database, git stores; or mentions git hash-object -w, git cat-file -p, find -type, echo, git write-tree, cat.",
+    "pages": "421-431",
+    "sections": [
+      "Git Objects",
+      "Git Objects > Tree Objects",
+      "Git Objects > Commit Objects",
+      "Git Objects > Object Storage"
+    ]
+  },
+  {
+    "name": "git-references",
+    "title": "Git References",
+    "description": "Git References playbook extracted from \"Pro Git\". That’s basically what a branch in Git is: a simple pointer or reference to the head of a line of work. Use when the user asks about git references, git branch, git object, tag object, head file, history, simple; or mentions cat, git update-ref, git symbolic-ref, git log --pretty, find, find -type; or hits errors like \"fatal: Refusing to point HEAD outside of refs/\".",
+    "pages": "431-435",
+    "sections": [
+      "Git References",
+      "Git References > The HEAD",
+      "Git References > Tags",
+      "Git References > Remotes"
+    ]
+  },
+  {
+    "name": "git-packfiles",
+    "title": "Packfiles",
+    "description": "Packfiles playbook extracted from \"Pro Git\". The packfile is a single file containing the contents of all the objects that were removed from your filesystem. Use when the user asks about packfiles, git saves objects, git packs objects, test git repository, git compresses, packfile, files; or mentions find -type, git cat-file -p, git cat-file -s, curl, git checkout, git add.",
+    "pages": "435-438",
+    "sections": [
+      "Packfiles"
+    ]
+  },
+  {
+    "name": "git-the-refspec",
+    "title": "The Refspec",
+    "description": "The Refspec playbook extracted from \"Pro Git\". Because the refspec is <src>:<dst>, by leaving off the <src> part, this basically says to make the topic branch on the remote nothing, which deletes it. Use when the user asks about the refspec, git push origin, local git repository, git remote add, small local git, remote server, refspec; or mentions git log, git fetch, git push, git remote, git push --delete; or hits errors like \"! [rejected] master -> origin/mymaster (non fast forward)\".",
+    "pages": "438-441",
+    "sections": [
+      "The Refspec",
+      "The Refspec > Pushing Refspecs",
+      "The Refspec > Deleting References"
+    ]
+  },
+  {
+    "name": "git-transfer-protocols",
+    "title": "Transfer Protocols",
+    "description": "Transfer Protocols playbook extracted from \"Pro Git\". If you’re setting up a repository to be served read-only over HTTP, the dumb protocol is likely what will be used. Use when the user asks about transfer protocols, git checks, dumb protocol, commit object, head, remote, master; or mentions ssh -x, git clone, git cat-file -p.",
+    "pages": "441-446",
+    "sections": [
+      "Transfer Protocols",
+      "Transfer Protocols > The Dumb Protocol",
+      "Transfer Protocols > The Smart Protocol",
+      "Transfer Protocols > Protocols Summary"
+    ]
+  },
+  {
+    "name": "git-maintenance-and-data-recovery",
+    "title": "Maintenance and Data Recovery",
+    "description": "Maintenance and Data Recovery playbook extracted from \"Pro Git\". Because the reflog data is kept in the .git/logs/ directory, you effectively have no reflog. Use when the user asks about maintenance and data recovery, git reflog, loose objects, git history; or mentions git log --pretty, rm -Rf, git count-objects -v, git commit -m, git gc, git gc --auto.",
+    "pages": "446-453",
+    "sections": [
+      "Maintenance and Data Recovery",
+      "Maintenance and Data Recovery > Maintenance",
+      "Maintenance and Data Recovery > Data Recovery",
+      "Maintenance and Data Recovery > Removing Objects"
+    ]
+  },
+  {
+    "name": "git-environment-variables",
+    "title": "Environment Variables",
+    "description": "Environment Variables playbook extracted from \"Pro Git\". Some of Git’s general behavior as a computer program depends on environment variables. Use when the user asks about environment variables, git diff, portable git, git behave, field, object, editor git; or mentions GIT_TRACE=true git, GIT_TRACE_PACK_ACCESS=true git, GIT_TRACE_PACKET=true git, GIT_TRACE_PERFORMANCE=true git, GIT_TRACE_SETUP=true git, GIT_REFLOG_ACTION=\"my --allow-empty -m.",
+    "pages": "453-458",
+    "sections": [
+      "Environment Variables",
+      "Environment Variables > Global Behavior",
+      "Environment Variables > Repository Locations",
+      "Environment Variables > Pathspecs",
+      "Environment Variables > Committing",
+      "Environment Variables > Networking",
+      "Environment Variables > Diffing and Merging",
+      "Environment Variables > Debugging",
+      "Environment Variables > Miscellaneous"
+    ]
+  },
+  {
+    "name": "git-in-powershell",
+    "title": "Git in PowerShell",
+    "description": "Git in PowerShell playbook extracted from \"Pro Git\". Before you’re able to run PowerShell scripts on your machine, you need to set your local ExecutionPolicy to RemoteSigned (basically, anything except Undefined and Restricted). Use when the user asks about git in powershell, legacy command-line terminal, customized git experience, n’t really capable, posh-git, remotesigned, scope.",
+    "pages": "469-471",
+    "sections": [
+      "Git in PowerShell",
+      "Git in PowerShell > Installation"
+    ]
+  },
+  {
+    "name": "git-libgit2",
+    "title": "Libgit2",
+    "description": "Libgit2 playbook extracted from \"Pro Git\". Objective-Git (https://github.com/libgit2/objective-git) is the name of the Use when the user asks about libgit2, object database, git repository, git object, structure, type, ruby; or hits errors like \"error = git_revparse_single(&head_commit, repo, \"HEAD^{commit}\");\".",
+    "pages": "472-477",
+    "sections": [
+      "Libgit2",
+      "Libgit2 > Advanced Functionality",
+      "Libgit2 > Other Bindings",
+      "Libgit2 > Further Reading"
+    ]
+  },
+  {
+    "name": "git-jgit",
+    "title": "JGit",
+    "description": "JGit playbook extracted from \"Pro Git\". JGit is a relatively full-featured implementation of Git written natively in Java, and is widely used in the Java community. Use when the user asks about jgit, fully featured git, featured git library, git library called, library called jgit, object, java.",
+    "pages": "477-480",
+    "sections": [
+      "JGit",
+      "JGit > Getting Set Up",
+      "JGit > Plumbing",
+      "JGit > Porcelain",
+      "JGit > Further Reading"
+    ]
+  },
+  {
+    "name": "git-setup-and-config",
+    "title": "Setup and Config",
+    "description": "Setup and Config playbook extracted from \"Pro Git\". There are two commands that are used quite a lot, from the first invocations of Git to common every day tweaking and referencing, the config and help commands. Use when the user asks about setup and config, tweaking and referencing, common every day, day tweaking, command, git setup, default.",
+    "pages": "484-486",
+    "sections": [
+      "Setup and Config",
+      "Setup and Config > git config",
+      "Setup and Config > git config core.editor commands",
+      "Setup and Config > git help"
+    ]
+  },
+  {
+    "name": "git-basic-snapshotting",
+    "title": "Basic Snapshotting",
+    "description": "Basic Snapshotting playbook extracted from \"Pro Git\". For the basic workflow of staging content and committing it to your history, there are only a few basic commands. Use when the user asks about basic snapshotting, staging area, git add, git diff, git commit, staged, git reset.",
+    "pages": "487-489",
+    "sections": [
+      "Basic Snapshotting",
+      "Basic Snapshotting > git add",
+      "Basic Snapshotting > git status",
+      "Basic Snapshotting > git diff",
+      "Basic Snapshotting > git difftool",
+      "Basic Snapshotting > git commit",
+      "Basic Snapshotting > git reset",
+      "Basic Snapshotting > git rm",
+      "Basic Snapshotting > git mv",
+      "Basic Snapshotting > git clean"
+    ]
+  }
+]
