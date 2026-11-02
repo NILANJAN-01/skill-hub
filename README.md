@@ -2,6 +2,8 @@
 
 A collection of AI Agent Skills (`SKILL.md` playbooks) that AI coding agents such as Claude Code can load and act on, plus the tool that generates them from technical PDFs.
 
+**Browse the skills online: https://nilanjan-01.github.io/skill-hub/**
+
 ## What's inside
 
 | Path | What it is |

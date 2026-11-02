@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>skill-hub · AI Agent Skills</title>
+<meta name="description" content="Browse AI Agent Skills (SKILL.md playbooks) for Git, generated offline from the Pro Git book.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23f05133'/><path d='M10 9v14M10 16h7a5 5 0 0 0 5-5V9' stroke='white' stroke-width='3' fill='none' stroke-linecap='round'/><circle cx='22' cy='23' r='3' fill='white'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" media="(prefers-color-scheme: light)">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" media="(prefers-color-scheme: dark)">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<style>
+:root {
+  --bg: #fbfaf8; --surface: #ffffff; --surface-2: #f3f1ed; --border: #e4e0d8;
+  --text: #1d1b18; --muted: #6b665d; --accent: #e8492b; --accent-soft: #fdebe6;
+  --code-bg: #f6f4f0; --shadow: 0 1px 2px rgba(30,25,15,.05), 0 4px 16px rgba(30,25,15,.05);
+  --radius: 12px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121110; --surface: #1b1a18; --surface-2: #24221f; --border: #33302b;
+    --text: #ece9e3; --muted: #a29c91; --accent: #ff6a4d; --accent-soft: #3a2019;
+    --code-bg: #201e1b; --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.25);
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.6 Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+code, pre, kbd { font-family: "JetBrains Mono", ui-monospace, Consolas, monospace; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+
+/* header */
+header.top { border-bottom: 1px solid var(--border); background: var(--surface); position: sticky; top: 0; z-index: 10; }
+header.top .wrap { display: flex; align-items: center; gap: 12px; height: 58px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; color: var(--text); }
+.brand:hover { text-decoration: none; }
+.logo { width: 28px; height: 28px; border-radius: 7px; background: var(--accent); display: grid; place-items: center; }
+.logo svg { width: 18px; height: 18px; }
+header.top nav { margin-left: auto; display: flex; gap: 18px; font-size: 14px; }
+header.top nav a { color: var(--muted); }
+header.top nav a:hover { color: var(--text); text-decoration: none; }
+
+/* hero */
+.hero { padding: 48px 0 28px; }
+.hero h1 { font-size: clamp(28px, 5vw, 42px); line-height: 1.15; margin: 0 0 12px; letter-spacing: -.02em; }
+.hero h1 span { color: var(--accent); }
+.hero p { color: var(--muted); max-width: 680px; margin: 0 0 24px; font-size: 16px; }
+.stats { display: flex; flex-wrap: wrap; gap: 10px; }
+.stat { background: var(--surface); border: 1px solid var(--border); border-radius: 999px; padding: 6px 14px; font-size: 13px; color: var(--muted); }
+.stat b { color: var(--text); }
+
+/* toolbar */
+.toolbar { display: flex; gap: 10px; align-items: center; margin: 8px 0 18px; flex-wrap: wrap; }
+.search { flex: 1 1 320px; position: relative; }
+.search input {
+  width: 100%; padding: 12px 14px 12px 40px; font: inherit; color: var(--text);
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px; outline: none;
+}
+.search input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.search svg { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: var(--muted); }
+.count { color: var(--muted); font-size: 13px; white-space: nowrap; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+.chip {
+  border: 1px solid var(--border); background: var(--surface); color: var(--muted); border-radius: 999px;
+  padding: 5px 12px; font: 500 13px Inter, sans-serif; cursor: pointer;
+}
+.chip:hover { color: var(--text); }
+.chip.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* grid */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; padding-bottom: 48px; }
+.card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px;
+  display: flex; flex-direction: column; gap: 10px; box-shadow: var(--shadow); color: var(--text);
+  transition: transform .12s ease, border-color .12s ease;
+}
+.card:hover { transform: translateY(-2px); border-color: var(--accent); text-decoration: none; }
+.card h3 { margin: 0; font-size: 16px; }
+.card .name { font: 12px "JetBrains Mono", monospace; color: var(--muted); }
+.card p { margin: 0; color: var(--muted); font-size: 13.5px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.cmds { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; }
+.cmd { font: 11.5px "JetBrains Mono", monospace; background: var(--surface-2); border-radius: 6px; padding: 2px 7px; color: var(--text); }
+.pages { font-size: 12px; color: var(--muted); }
+.empty { text-align: center; color: var(--muted); padding: 48px 0; grid-column: 1 / -1; }
+
+/* detail */
+.detail { padding: 24px 0 64px; }
+.back { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; margin-bottom: 18px; }
+.detail-head { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; justify-content: space-between; margin-bottom: 18px; }
+.detail-head h1 { margin: 0 0 4px; font-size: clamp(24px, 4vw, 32px); letter-spacing: -.01em; }
+.detail-head .name { font: 13px "JetBrains Mono", monospace; color: var(--muted); }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--border); background: var(--surface);
+  color: var(--text); border-radius: 8px; padding: 8px 12px; font: 500 13px Inter, sans-serif; cursor: pointer;
+}
+.btn:hover { border-color: var(--accent); text-decoration: none; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.install { background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-bottom: 18px; font-size: 13px; overflow-x: auto; }
+.install code { white-space: pre; }
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 6px; overflow-x: auto; }
+.tab { border: 0; background: none; color: var(--muted); font: 500 14px Inter, sans-serif; padding: 10px 14px; cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; }
+.tab.on { color: var(--text); border-bottom-color: var(--accent); }
+
+/* rendered markdown */
+.md { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: clamp(16px, 4vw, 36px); box-shadow: var(--shadow); overflow-wrap: anywhere; }
+.md h1 { font-size: 26px; margin-top: 0; }
+.md h2 { font-size: 20px; margin-top: 34px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+.md h3 { font-size: 16.5px; margin-top: 26px; }
+.md p, .md li { font-size: 15px; }
+.md li { margin: 4px 0; }
+.md code { background: var(--code-bg); padding: 1px 5px; border-radius: 5px; font-size: 13px; }
+.md pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; overflow-x: auto; }
+.md pre code { background: none; padding: 0; font-size: 13px; }
+.md pre code.hljs { background: none; padding: 0; }
+.md table { border-collapse: collapse; width: 100%; display: block; overflow-x: auto; font-size: 13.5px; margin: 12px 0; }
+.md th, .md td { border: 1px solid var(--border); padding: 7px 10px; text-align: left; vertical-align: top; }
+.md th { background: var(--surface-2); }
+.md blockquote { margin: 12px 0; padding: 8px 14px; border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 8px 8px 0; }
+.md em { color: var(--muted); }
+
+/* about */
+.about { padding: 8px 0 56px; }
+.about h2 { font-size: 22px; margin: 0 0 6px; }
+.about > p { color: var(--muted); margin: 0 0 20px; }
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
+.step { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; }
+.step b { display: block; margin-bottom: 4px; }
+.step span { color: var(--muted); font-size: 14px; }
+.codebox { margin-top: 18px; background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; overflow-x: auto; font-size: 13px; }
+footer { border-top: 1px solid var(--border); color: var(--muted); font-size: 13px; padding: 22px 0; }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 18px; justify-content: space-between; }
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--text); color: var(--bg); padding: 9px 16px; border-radius: 8px; font-size: 13px; opacity: 0; transition: .2s; pointer-events: none; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.loading { color: var(--muted); padding: 40px 0; text-align: center; }
+[hidden] { display: none !important; }
+@media (max-width: 560px) {
+  header.top nav a.hide-sm { display: none; }
+  .hero { padding-top: 32px; }
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#/">
+      <span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.6" stroke-linecap="round"><path d="M6 4v16M6 12h6a5 5 0 0 0 5-5V4"/><circle cx="17" cy="18" r="2.2" fill="white" stroke="none"/></svg></span>
+      skill-hub
+    </a>
+    <nav>
+      <a href="#/">Skills</a>
+      <a href="#/about" class="hide-sm">How it works</a>
+      <a id="gh-link" href="#" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- catalog view -->
+  <section id="view-list">
+    <div class="wrap hero">
+      <h1>AI Agent Skills for <span>Git</span></h1>
+      <p>Ready-to-use <code>SKILL.md</code> playbooks that AI coding agents load on demand: when to act, safety rules,
+        step-by-step procedures with exact commands, troubleshooting and more. Extracted from the <em>Pro Git</em> book.</p>
+      <div class="stats" id="stats"></div>
+    </div>
+    <div class="wrap">
+      <div class="toolbar">
+        <label class="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input id="q" type="search" placeholder="Search skills, commands, errors… e.g. rebase, stash, CONFLICT" autocomplete="off">
+        </label>
+        <span class="count" id="count"></span>
+      </div>
+      <div class="chips" id="chips"></div>
+      <div class="grid" id="grid"><div class="loading">Loading skills…</div></div>
+    </div>
+  </section>
+
+  <!-- skill view -->
+  <section id="view-skill" hidden>
+    <div class="wrap detail">
+      <a class="back" href="#/">← All skills</a>
+      <div class="detail-head">
+        <div>
+          <h1 id="s-title"></h1>
+          <div class="name" id="s-name"></div>
+        </div>
+        <div class="actions">
+          <button class="btn primary" id="copy-install">Copy install command</button>
+          <a class="btn" id="raw-link" target="_blank" rel="noopener">Raw SKILL.md</a>
+          <a class="btn" id="gh-folder" target="_blank" rel="noopener">View on GitHub</a>
+        </div>
+      </div>
+      <div class="install"><code id="install-cmd"></code></div>
+      <div class="tabs" id="tabs"></div>
+      <article class="md" id="md"></article>
+    </div>
+  </section>
+
+  <!-- about view -->
+  <section id="view-about" hidden>
+    <div class="wrap hero">
+      <h1>How it <span>works</span></h1>
+      <p>Every skill here was generated by <code>skillforge.py</code>, a single Python script that turns a technical PDF
+        into focused skills using open-source NLP only. It uses no API keys and no LLM.</p>
+    </div>
+    <div class="wrap about">
+      <div class="steps">
+        <div class="step"><b>1 · Parse</b><span>PyMuPDF reads fonts and layout to separate headings, prose, code blocks, inline code, captions and note/warning callouts.</span></div>
+        <div class="step"><b>2 · Index</b><span>Each subsection is indexed with scikit-learn TF-IDF and light stemming, so "rebase", "rebasing" and "rebased" match.</span></div>
+        <div class="step"><b>3 · Plan</b><span>Topics are matched to the best sections across the whole book; the plan is editable JSON.</span></div>
+        <div class="step"><b>4 · Author</b><span>Procedures come from instruction → command → output sequences; concepts from TextRank, keyphrases from YAKE, safety rules from callouts.</span></div>
+      </div>
+      <pre class="codebox"><code>cd git-skills
+pip install -r requirements.txt
+python skillforge.py your-book.pdf                                   # one skill per actionable section
+python skillforge.py your-book.pdf --topics "rebase, hooks, merge conflicts"</code></pre>
+      <p style="color:var(--muted);margin-top:18px">Every statement in a skill is quoted from the source, so skills stay faithful to the book, though some extracted bullets can be noisy. Review a skill before you rely on it.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Git skills derived from <a href="https://git-scm.com/book" target="_blank" rel="noopener">Pro Git</a> by Scott Chacon &amp; Ben Straub (CC BY-NC-SA 3.0).</span>
+    <span>Generated with <code>skillforge.py</code></span>
+  </div>
+</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  // ------------------------------------------------------------------ config
+  const SKILLS_DIR = "git-skills/skills";
+  const REPO = guessRepo();                      // {owner, name} from the github.io URL, with a fallback
+  const GH = `https://github.com/${REPO.owner}/${REPO.name}`;
+  const RAW = `https://raw.githubusercontent.com/${REPO.owner}/${REPO.name}/main`;
+  document.getElementById("gh-link").href = GH;
+
+  function guessRepo() {
+    const fallback = { owner: "NILANJAN-01", name: "skill-hub" };
+    const m = location.hostname.match(/^([^.]+)\.github\.io$/i);
+    if (!m) return fallback;
+    const seg = location.pathname.split("/").filter(Boolean)[0];
+    return { owner: m[1], name: seg || `${m[1]}.github.io` };
+  }
+
+  // Topic chips: label -> keywords searched in name/title/description
+  const CHIPS = [
+    ["All", []],
+    ["Branching & merging", ["branch", "merg", "rebas", "rerere"]],
+    ["History & undo", ["undo", "reset", "rewrit", "history", "stash", "revision", "reflog", "recovery"]],
+    ["Remotes & collaboration", ["remote", "contribut", "maintain", "github", "protocol", "server", "refspec"]],
+    ["Config & automation", ["config", "attribut", "hook", "polic", "alias", "credential", "signing"]],
+    ["Internals", ["object", "reference", "packfile", "plumbing", "transfer", "maintenance", "replace", "bundl"]],
+    ["Other systems", ["migrat", "as-a-client", "svn", "mercurial", "perforce"]],
+  ];
+
+  let catalog = [], activeChip = 0, current = null;
+  const $ = (id) => document.getElementById(id);
+
+  // ------------------------------------------------------------------ helpers
+  function parseDesc(d) {
+    const body = d.replace(/^.*? playbook extracted from "[^"]*"\.\s*/, "");
+    const [overview, use = ""] = body.split(/\s*Use when /);
+    const mentions = (use.match(/mentions ([^;]+?)(?:;|\.$|$)/) || [])[1] || "";
+    const cmds = mentions.split(/,\s*/).map(s => s.trim()).filter(Boolean).slice(0, 4);
+    return { overview: overview.trim(), cmds };
+  }
+  function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+  function toast(msg) { const t = $("toast"); t.textContent = msg; t.classList.add("show"); setTimeout(() => t.classList.remove("show"), 1600); }
+  async function copy(text) {
+    try { await navigator.clipboard.writeText(text); toast("Copied to clipboard"); }
+    catch (e) { toast("Copy failed: select the text manually"); }
+  }
+  function matches(s, words) {
+    const hay = `${s.name} ${s.title} ${s.description} ${(s.sections || []).join(" ")}`.toLowerCase();
+    return words.every(w => hay.includes(w));
+  }
+
+  // ------------------------------------------------------------------ list view
+  function renderChips() {
+    $("chips").innerHTML = CHIPS.map(([label], i) =>
+      `<button class="chip${i === activeChip ? " on" : ""}" data-i="${i}">${esc(label)}</button>`).join("");
+    $("chips").querySelectorAll(".chip").forEach(b => b.onclick = () => { activeChip = +b.dataset.i; renderChips(); renderGrid(); });
+  }
+
+  function renderGrid() {
+    const q = $("q").value.trim().toLowerCase();
+    const words = q.split(/\s+/).filter(Boolean);
+    const keys = CHIPS[activeChip][1];
+    const list = catalog.filter(s => matches(s, words) &&
+      (!keys.length || keys.some(k => `${s.name} ${s.title} ${s.description}`.toLowerCase().includes(k))));
+    $("count").textContent = `${list.length} of ${catalog.length} skills`;
+    if (!list.length) { $("grid").innerHTML = `<div class="empty">No skills match “${esc(q)}”.</div>`; return; }
+    $("grid").innerHTML = list.map(s => {
+      const { overview, cmds } = parseDesc(s.description);
+      return `<a class="card" href="#/skill/${encodeURIComponent(s.name)}">
+        <div><h3>${esc(s.title)}</h3><div class="name">${esc(s.name)}</div></div>
+        <p>${esc(overview)}</p>
+        <div class="cmds">${cmds.map(c => `<span class="cmd">${esc(c)}</span>`).join("")}</div>
+        <div class="pages">Pro Git · pages ${esc(s.pages)}</div>
+      </a>`;
+    }).join("");
+  }
+
+  // ------------------------------------------------------------------ skill view
+  const TAB_FILES = [["SKILL.md", "SKILL.md"], ["More procedures", "references/procedures.md"], ["Source text", "references/source-text.md"]];
+  const cache = new Map();
+
+  async function fetchText(path) {
+    if (cache.has(path)) return cache.get(path);
+    const res = await fetch(path, { cache: "no-cache" });
+    const val = res.ok ? await res.text() : null;
+    cache.set(path, val);
+    return val;
+  }
+
+  async function showSkill(name, file = "SKILL.md") {
+    const s = catalog.find(x => x.name === name);
+    if (!s) { location.hash = "#/"; return; }
+    current = s;
+    document.title = `${s.title} · skill-hub`;
+    $("s-title").textContent = s.title;
+    $("s-name").textContent = s.name;
+    const folder = `${SKILLS_DIR}/${s.name}`;
+    $("raw-link").href = `${RAW}/${folder}/SKILL.md`;
+    $("gh-folder").href = `${GH}/tree/main/${folder}`;
+    const cmd = `git clone --depth 1 ${GH}.git\ncp -r ${REPO.name}/${folder} ~/.claude/skills/`;
+    $("install-cmd").textContent = cmd;
+    $("copy-install").onclick = () => copy(cmd);
+
+    // tabs: only show files that exist
+    const avail = [];
+    for (const [label, f] of TAB_FILES) if (f === "SKILL.md" || (await fetchText(`${folder}/${f}`)) !== null) avail.push([label, f]);
+    $("tabs").innerHTML = avail.map(([label, f]) =>
+      `<button class="tab${f === file ? " on" : ""}" data-f="${f}">${esc(label)}</button>`).join("");
+    $("tabs").querySelectorAll(".tab").forEach(b => b.onclick = () => { location.hash = `#/skill/${encodeURIComponent(name)}/${b.dataset.f}`; });
+
+    $("md").innerHTML = `<div class="loading">Loading…</div>`;
+    const text = await fetchText(`${folder}/${file}`);
+    if (text === null) { $("md").innerHTML = `<p>Could not load <code>${esc(file)}</code>.</p>`; return; }
+    const body = text.replace(/^---\n[\s\S]*?\n---\n/, "");      // drop YAML frontmatter
+    $("md").innerHTML = DOMPurify.sanitize(marked.parse(body, { gfm: true }));
+    // in-page links to references/*.md switch tabs instead of leaving the site
+    $("md").querySelectorAll("a[href]").forEach(a => {
+      const href = a.getAttribute("href");
+      if (/^references\/[\w.-]+\.md$/.test(href)) a.href = `#/skill/${encodeURIComponent(name)}/${href}`;
+      else if (/^https?:/.test(href)) { a.target = "_blank"; a.rel = "noopener"; }
+    });
+    $("md").querySelectorAll("pre code").forEach(el => { try { hljs.highlightElement(el); } catch (e) {} });
+  }
+
+  // ------------------------------------------------------------------ router
+  function route() {
+    const h = decodeURIComponent(location.hash.replace(/^#\/?/, ""));
+    const [view, name, ...rest] = h.split("/");
+    $("view-list").hidden = view !== "" ;
+    $("view-skill").hidden = view !== "skill";
+    $("view-about").hidden = view !== "about";
+    if (view === "skill" && name) showSkill(name, rest.join("/") || "SKILL.md");
+    else { document.title = "skill-hub · AI Agent Skills"; }
+    if (!["", "skill", "about"].includes(view)) location.hash = "#/";
+    window.scrollTo(0, 0);
+  }
+
+  // ------------------------------------------------------------------ boot
+  async function boot() {
+    try {
+      const res = await fetch(`${SKILLS_DIR}/catalog.json`, { cache: "no-cache" });
+      catalog = await res.json();
+    } catch (e) {
+      $("grid").innerHTML = `<div class="empty">Could not load the skill catalog. If you opened this file directly from disk, serve it instead: <code>python -m http.server</code></div>`;
+      return;
+    }
+    catalog.sort((a, b) => a.title.localeCompare(b.title));
+    const cmdCount = new Set(catalog.flatMap(s => parseDesc(s.description).cmds)).size;
+    $("stats").innerHTML = [
+      `<b>${catalog.length}</b> skills`, `<b>${cmdCount}+</b> commands covered`,
+      `Source: <b>Pro Git</b>`, `Generated <b>offline</b>, no LLM`,
+    ].map(x => `<span class="stat">${x}</span>`).join("");
+    renderChips();
+    renderGrid();
+    $("q").addEventListener("input", renderGrid);
+    window.addEventListener("hashchange", route);
+    route();
+  }
+  boot();
+})();
+</script>
+</body>
+</html>
