@@ -20,7 +20,7 @@ from hublib import (CATALOG, PROMPTS_HTML, PROMPTS_TEMPLATE, ROOT, SKILLS_README
 from install import AGENTS
 
 README = ROOT / "README.md"
-AGENTS_START, AGENTS_END = "<!-- agents:start -->", "<!-- agents:end -->"
+GUIDE = ROOT / "GUIDE.md"
 
 
 def agents_table() -> str:
@@ -33,12 +33,28 @@ def agents_table() -> str:
     return "\n".join(rows)
 
 
-def readme_with_agents(text: str) -> str:
-    pat = re.compile(re.escape(AGENTS_START) + r".*?" + re.escape(AGENTS_END), re.S)
+def agents_table_simple() -> str:
+    """Short 'where to copy' table for GUIDE.md (agents with their own entry; no 'universal')."""
+    rows = ["| Agent | This project | Just me |", "|---|---|---|"]
+    for k, a in AGENTS.items():
+        if k == "universal":
+            continue
+        user = f"`{a['global']}/`" if a["global"] else "-"
+        rows.append(f"| {a['name']} | `{a['project']}/` | {user} |")
+    return "\n".join(rows)
+
+
+def fill_block(text: str, name: str, table: str, where: str) -> str:
+    start, end = f"<!-- {name}:start -->", f"<!-- {name}:end -->"
+    pat = re.compile(re.escape(start) + r".*?" + re.escape(end), re.S)
     if not pat.search(text):
-        sys.exit(f"README.md is missing the {AGENTS_START} ... {AGENTS_END} markers")
-    block = f"{AGENTS_START}\n<!-- Generated from tools/install.py AGENTS by tools/build_catalog.py -->\n{agents_table()}\n{AGENTS_END}"
+        sys.exit(f"{where} is missing the {start} ... {end} markers")
+    block = f"{start}\n<!-- Generated from tools/install.py AGENTS by tools/build_catalog.py -->\n{table}\n{end}"
     return pat.sub(lambda _: block, text)
+
+
+def readme_with_agents(text: str) -> str:
+    return fill_block(text, "agents", agents_table(), "README.md")
 
 REPOSITORY = "https://github.com/NILANJAN-01/skill-hub"
 
@@ -153,7 +169,8 @@ def main() -> None:
     args = ap.parse_args()
     catalog_text, readme_text, prompts_html = build()
     targets = [(CATALOG, catalog_text), (SKILLS_README, readme_text), (PROMPTS_HTML, prompts_html),
-               (README, readme_with_agents(README.read_text(encoding="utf-8")))]
+               (README, readme_with_agents(README.read_text(encoding="utf-8"))),
+               (GUIDE, fill_block(GUIDE.read_text(encoding="utf-8"), "agents-simple", agents_table_simple(), "GUIDE.md"))]
     if args.check:
         stale = [p for p, t in targets if not p.exists() or p.read_text(encoding="utf-8") != t]
         for p in stale:

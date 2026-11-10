@@ -4,6 +4,8 @@
 
 **A centralized hub of Agent Skills that work in every major AI coding agent:** Claude Code, Google Antigravity, Devin, GitHub Copilot, Cursor, Windsurf, OpenAI Codex and Gemini CLI.
 
+**New here? Follow the [step-by-step guide](GUIDE.md)**: install a skill into your agent in about 5 minutes.
+
 Browse the skills at **https://nilanjan-01.github.io/skill-hub/**. The **[example prompts](https://nilanjan-01.github.io/skill-hub/prompts.html)** page shows what to say to your agent for each skill.
 
 A skill is a folder with a `SKILL.md` file in the open [Agent Skills](https://agentskills.io/specification) format. The YAML frontmatter (`name`, `description`) tells the agent *when* to use the skill. The Markdown body tells it *how*. Agents read only the descriptions up front and load the full skill when a task matches. Because the format is shared, each skill here is written **once** and installed into whichever agent you use.
@@ -29,11 +31,15 @@ See the full list in [`skills/README.md`](skills/README.md). The machine-readabl
 
 ### Option 1: the hub installer (any agent, Python only)
 
-`tools/install.py` knows where each agent looks for skills. It needs only Python 3.8+, with no clone and no Node.
+`tools/install.py` knows where each agent looks for skills. It needs only Python 3.8+, with no clone and no Node. The [guide](GUIDE.md) walks through it step by step.
 
 ```bash
 # from anywhere: downloads the hub and installs into the current project
 curl -fsSL https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py | python3 - --agent cursor --plugin git-branching
+
+# Windows PowerShell: download first, then run
+irm https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py -OutFile install.py
+python install.py --agent cursor --plugin git-branching
 
 # from a clone
 python tools/install.py --list                                          # agents, plugins, skills
@@ -99,6 +105,7 @@ spec/agent-skills-spec.md         Agent Skills spec summary + hub conventions
 tools/install.py                  multi-agent installer (source of truth for agent folders)
 tools/build_catalog.py            regenerates catalog.json, skills/README.md, prompts.html, the agent table above
 tools/validate_skills.py          spec + hub + portability checks (CI)
+GUIDE.md                          step-by-step guide for people using the skills
 AGENTS.md                         instructions for AI agents working on this repo
 ```
 
