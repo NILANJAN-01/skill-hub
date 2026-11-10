@@ -46,10 +46,24 @@ jobs:
           set -e
           proj="$RUNNER_TEMP/proj"
           python tools/install.py --list > /dev/null
+          python tools/install.py --detect
           python tools/install.py --agent claude-code,antigravity,devin,copilot,cursor,windsurf,codex,gemini-cli,universal \
-            --plugin hub-tools --skill git-rebasing --project "$proj" --each
+            --plugin hub-tools --skill git-rebasing --project "$proj" --each --yes
           for d in .claude .agents .github .cursor .devin .gemini; do
             test -f "$proj/$d/skills/git-rebasing/SKILL.md" || { echo "missing $d"; exit 1; }
           done
           python tools/install.py --zip "$RUNNER_TEMP/zips" --plugin hub-tools
           test -f "$RUNNER_TEMP/zips/find-skills.zip"
+      - name: Guided mode with a sandboxed home
+        shell: bash
+        run: |
+          set -e
+          home="$RUNNER_TEMP/home"; mkdir -p "$home/.codex" && touch "$home/.codex/auth.json"
+          export HOME="$home" USERPROFILE="$home"
+          # answers: codex only (by key), everything, for me, go ahead
+          printf 'codex\na\n1\ny\n' | python tools/install.py
+          test -f "$home/.agents/skills/git-rebasing/SKILL.md"
+          # second run must find nothing to do and change nothing
+          printf 'codex\na\n1\n' | python tools/install.py | grep -q "Nothing to do"
+          # declining writes nothing
+          printf 'n\n' | python tools/install.py | grep -q "Nothing was changed"

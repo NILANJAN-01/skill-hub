@@ -27,7 +27,7 @@ If you use an AI agent to contribute, it follows [AGENTS.md](AGENTS.md).
 
 ## Supporting a new agent
 
-Add an entry to the `AGENTS` dict in `tools/install.py`, using only the vendor's official documentation (link it in `docs`). Then run `python tools/build_catalog.py`, which updates the agent tables in `README.md` and `GUIDE.md` and `catalog.json`.
+Add an entry to the `AGENTS` dict in `tools/install.py`, using only the vendor's official documentation (link it in `docs`). Fill in its skill folders and its `detect` hints (commands on PATH, app install folders, config folders) so the guided installer can find it. Then run `python tools/build_catalog.py`, which updates the agent tables in `README.md` and `GUIDE.md` and `catalog.json`.
 
 ## Adding a new category
 

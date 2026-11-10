@@ -29,27 +29,40 @@ See the full list in [`skills/README.md`](skills/README.md). The machine-readabl
 
 ## Install
 
-### Option 1: the hub installer (any agent, Python only)
+### Option 1: the hub installer (detects your agents, asks first)
 
-`tools/install.py` knows where each agent looks for skills. It needs only Python 3.8+, with no clone and no Node. The [guide](GUIDE.md) walks through it step by step.
+`tools/install.py` needs only Python 3.8+, with no clone and no Node. Run it with **no options**. It detects which AI agents and IDEs are installed, asks which of them to use (`a` for all, numbers for some, `n` for none), asks which skills and where, shows the exact plan, and installs only after you say yes. The [guide](GUIDE.md) walks through it step by step.
 
 ```bash
-# from anywhere: downloads the hub and installs into the current project
-curl -fsSL https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py | python3 - --agent cursor --plugin git-branching
+# macOS / Linux
+curl -fsSL https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py | python3 -
 
-# Windows PowerShell: download first, then run
+# Windows PowerShell
 irm https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py -OutFile install.py
-python install.py --agent cursor --plugin git-branching
+python install.py
 
 # from a clone
-python tools/install.py --list                                          # agents, plugins, skills
-python tools/install.py --agent antigravity --skill git-rebasing        # one skill, this project
-python tools/install.py --agent copilot,devin,claude-code --plugin hub-tools
-python tools/install.py --agent codex --plugin git-skills --global      # for your user, all projects
-python tools/install.py --zip dist --plugin git-branching               # one .zip per skill, for upload UIs
+python tools/install.py
 ```
 
-When you name several agents, the installer writes to the **fewest shared folders** that all of them read. For example, `.agents/skills` serves Antigravity, Devin, Codex and Copilot at once, so skills aren't duplicated. Pass `--each` to copy into every agent's own folder instead. Existing skill folders are kept unless you pass `--force`.
+The installer:
+- **Reads the machine fresh on every run.** It looks for installed apps, commands on your PATH and the agents' config folders.
+- **Writes to the fewest folders** that cover every agent you pick. For example, Copilot also reads Claude Code's and Codex's folders, so nothing gets installed twice.
+- **Skips skills an agent can already see.** It asks before replacing a skill that differs from the hub, and offers to remove redundant identical copies. A repeat run reports *"Nothing to do"*.
+
+To skip the questions (scripts, CI, dotfiles), pass options instead:
+
+```bash
+python install.py --detect                                        # which agents are installed
+python install.py --list                                          # agents, plugins, skills
+python install.py --agent detected --all --global --yes           # everything, every detected agent
+python install.py --agent cursor --skill git-rebasing             # one skill, this project
+python install.py --agent copilot,claude-code --plugin hub-tools --global
+python install.py --agent codex --plugin git-skills --global --dry-run
+python install.py --zip dist --plugin git-branching               # one .zip per skill, for upload UIs
+```
+
+`--force` replaces installed skills that differ from the hub, `--tidy` removes redundant copies, and `--each` copies into every agent's own folder instead of shared ones.
 
 ### Option 2: the `skills` CLI (Node)
 

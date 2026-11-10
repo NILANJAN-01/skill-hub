@@ -23,6 +23,7 @@ A hub of **agent-neutral** Agent Skills (`skills/<name>/SKILL.md`, open format f
    python tools/build_catalog.py --check
    ```
 5. **Tooling is Python standard library only** (3.8+ for `install.py`). Don't add dependencies to `tools/`.
+   `install.py` must never write without the user's confirmation (or `--yes`). Test it with a sandboxed home: set `HOME`/`USERPROFILE` to a temp folder.
 6. **One skill per pull request.** Title it `Add <name> skill` or `Update <name> skill: <what changed>`. Tooling changes go in their own PR.
 7. Don't commit source documents (PDFs, books) or secrets. Respect licenses: derived content needs a `license` field and an entry in `THIRD_PARTY_NOTICES.md`.
 
@@ -32,7 +33,7 @@ A hub of **agent-neutral** Agent Skills (`skills/<name>/SKILL.md`, open format f
 |---|---|
 | Add a skill | `cp -r template skills/<name>` → write `SKILL.md` → add to a plugin in `marketplace.json` → add prompts → rebuild + validate |
 | Add a category | New plugin entry in `marketplace.json` + title in `CATEGORY_TITLES` |
-| Support a new agent | Add an entry to `AGENTS` in `tools/install.py` from official docs → rebuild (updates the README and GUIDE tables and the catalog) |
+| Support a new agent | Add an entry to `AGENTS` in `tools/install.py` from official docs: folders (`project`, `global`, `also_reads`, `global_also_reads`) and `detect` (commands + install/config paths, per OS) → rebuild (updates the README and GUIDE tables and the catalog) → check with `python tools/install.py --detect` |
 | Generate skills from a PDF | Follow `skills/skillforge/SKILL.md` |
 | Change user-facing install steps | Edit `GUIDE.md` (and the README Install section) |
 | Browse the catalog locally (optional) | `python -m http.server`, then open http://localhost:8000. The hub is not published to GitHub Pages |

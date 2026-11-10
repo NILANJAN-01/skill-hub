@@ -1,6 +1,6 @@
 # Using skill-hub: step-by-step guide
 
-This guide takes you from nothing to a working skill in your AI coding agent in about 5 minutes. It works for **Claude Code, Google Antigravity, Devin, GitHub Copilot (VS Code), Cursor, Windsurf, OpenAI Codex and Gemini CLI**.
+This guide takes you from nothing to working skills in your AI coding agents in about 5 minutes. The installer detects which agents you have and asks before changing anything. It works for **Claude Code, Google Antigravity, Devin, GitHub Copilot (VS Code), Cursor, Windsurf, OpenAI Codex and Gemini CLI**.
 
 > **What's a skill?** A skill is a folder with a `SKILL.md` playbook. Once it's installed, your agent reads the skill's short description. When your request matches it, the agent loads the full playbook and follows it. You don't call skills by name; you just ask for what you want.
 
@@ -19,16 +19,156 @@ No Python? Install it from https://www.python.org/downloads/. On Windows, tick *
 
 *(Prefer Node? You can use `npx skills` instead. See [Other ways to install](#other-ways-to-install).)*
 
-## Step 2: Find the skill you want
+## Step 2: Run the installer. It finds your agents and asks you
 
-Pick whichever is easiest:
+Run the installer with **no options**. It works out which AI agents and IDEs are on your computer and asks what you want. **Nothing is written until you say yes.**
 
-- **Skill list:** [`skills/README.md`](skills/README.md) has every skill, grouped by category, with a short description.
-- **Example prompts:** [`examples/PROMPTS.md`](examples/PROMPTS.md) shows what you'd say for each skill. It's often the quickest way to spot the one you need.
-- **From the terminal:** run the installer with `--list` (see Step 5).
-- **Search a clone (optional):** run `python -m http.server` in the repo and open http://localhost:8000 for a searchable view.
+**macOS / Linux**
 
-Note the skill's **name**, such as `git-rebasing`, or the **category** (plugin) it's in, such as `git-branching`. You can install one skill or a whole category.
+```bash
+curl -fsSL https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py | python3 -
+```
+
+**Windows (PowerShell)**
+
+```powershell
+irm https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py -OutFile install.py
+python install.py
+```
+
+(If you have a clone of this repo, `python tools/install.py` does the same.)
+
+It asks four questions:
+
+```
+Agents found on this machine:
+  [x] Claude Code                  (command `claude`; ~/.claude)
+  [x] GitHub Copilot (VS Code)     (~/.vscode; ...\Programs\Microsoft VS Code)
+  [x] OpenAI Codex                 (~/.codex)
+  Not found: Google Antigravity, Devin, Cursor, Windsurf (Devin Local), Gemini CLI
+
+Which agents should get the skills?
+   1) Claude Code
+   2) GitHub Copilot (VS Code)
+   3) OpenAI Codex
+   4) Google Antigravity   (not detected)
+   ...
+Your choice (a = all 3 detected, numbers like 1,3 or 2-4, n = none): a
+
+Which skills? (64 available)
+   1) Everything (64 skills)
+   2) git-skills              61 skills  All 61 Git skills ...
+   4) git-branching            7 skills  Git branching & merging ...
+   ...
+Your choice (a = everything, numbers like 1,3 or 2-4, n = none): 4
+
+Where?
+   1) For me, in every project (user-level folders)  [default]
+   2) Only this project: /home/you/my-project
+Your choice [1/2]: 1
+
+Plan:
+  + install   7 skill(s) into ~/.claude/skills   (read by Claude Code, GitHub Copilot (VS Code))
+  + install   7 skill(s) into ~/.agents/skills   (read by GitHub Copilot (VS Code), OpenAI Codex)
+
+Go ahead? [Y/n] y
+```
+
+How to answer:
+
+| Question | Answers |
+|---|---|
+| Agents | `a` = every **detected** agent · numbers such as `1,3` or `2-4` (you can also pick ones marked *not detected*) · `n` = stop |
+| Skills | `a` = everything · numbers to pick categories, e.g. `4` or `3,4,11` · `n` = stop |
+| Where | `1` = for you, in every project (default) · `2` = only the current project folder, which you can share through git |
+| Go ahead? | `y` to install, `n` to cancel with nothing changed |
+
+What the installer does for you:
+
+- **Detects agents fresh on every run**, from installed apps, commands on your PATH and the agents' own config folders.
+- **Avoids duplicates.** Some agents read several folders. Copilot, for example, also reads Claude Code's and Codex's folders. The installer writes to the fewest folders that cover everyone you picked, and skips skills an agent can already see.
+- **Never overwrites without asking.** If an installed skill differs from the hub version (an update, or your own edits), it asks first. The default is **no**.
+- **Offers to tidy up.** If an identical copy becomes redundant because another folder now covers it, it offers to remove it.
+- **Is safe to run again.** A repeat run reports *"Nothing to do"*.
+
+> **Tip:** Install only what you need. Every installed skill adds its description to your agent's context. To browse first, see [`skills/README.md`](skills/README.md) or [`examples/PROMPTS.md`](examples/PROMPTS.md).
+
+## Step 3: Restart or reload your agents
+
+Most agents scan for skills when a session starts:
+
+- **IDEs** (Antigravity, Cursor, Windsurf, VS Code with Copilot): reload the window or open a new chat.
+- **CLIs** (Claude Code, Codex, Gemini CLI, Devin CLI): start a new session.
+- **Cloud Devin:** install into the project (answer `2` to *Where?*), then commit and push the `.agents/skills/` folder. Devin reads skills from the repo.
+
+## Step 4: Use them by just asking
+
+Describe your task normally. For example, after installing `git-rebasing`:
+
+> *"My feature branch is behind main. Put my commits on top of the latest main without a merge commit."*
+
+The agent matches your request to the skill and follows its steps. [`examples/PROMPTS.md`](examples/PROMPTS.md) has 3 ready-made prompts for every skill.
+
+**Want to force a specific skill?** Name it:
+
+> *"Use the git-hooks skill: block commits whose message doesn't start with a ticket ID."*
+
+## Step 5: Check that it worked
+
+- **Ask your agent:** *"Which skills do you have available?"* The installed skill names should appear.
+- **Check the folders** listed in the plan from Step 2. Each should contain `<skill-name>/SKILL.md`.
+- **If the agent answered without using the skill:** that can happen for simple questions the agent already knows well. Name the skill explicitly (Step 4) when you want its exact procedure.
+
+## Step 6: Share it with your team (optional)
+
+If you answered `2` (only this project), the skills are in folders inside your repo, such as `.agents/skills/` or `.claude/skills/`. Commit them:
+
+```bash
+git add .agents/skills .claude/skills     # whichever folders the plan listed
+git commit -m "Add skill-hub skills"
+git push
+```
+
+Everyone who clones the repo now gets the skills in their agent automatically.
+
+## Step 7: Update or remove skills
+
+- **Update:** run the installer again. It lists skills that differ from the hub and asks before replacing them.
+- **Remove a skill:** delete its folder, for example `~/.claude/skills/git-rebasing/`.
+
+---
+
+## Do it in one command (no questions)
+
+Use options when you already know what you want, or for scripts, dotfiles and CI. Replace `...` with `curl -fsSL <installer-url> | python3 -` (macOS/Linux) or `python install.py` (Windows / a clone).
+
+```bash
+... --detect                                         # just show which agents are installed
+... --list                                           # agents, categories and every skill
+... --agent detected --all --global                  # every skill, every detected agent, for you
+... --agent cursor --skill git-rebasing              # one skill, one agent, this project
+... --agent copilot,claude-code --plugin git-branching --global
+... --agent codex --plugin git-skills --global --dry-run     # preview only
+... --agent detected --all --global --yes            # no confirmation prompt (scripts)
+... --agent detected --all --global --force --tidy   # also update changed skills and remove redundant copies
+```
+
+Agent IDs for `--agent`:
+
+| You use… | Agent ID |
+|---|---|
+| Claude Code | `claude-code` |
+| Google Antigravity | `antigravity` |
+| Devin | `devin` |
+| GitHub Copilot in VS Code | `copilot` |
+| Cursor | `cursor` |
+| Windsurf | `windsurf` |
+| OpenAI Codex | `codex` |
+| Gemini CLI | `gemini-cli` |
+| Every agent found on this computer | `detected` |
+| Something else that supports Agent Skills | `universal` |
+
+Categories for `--plugin`:
 
 | Category | What's in it |
 |---|---|
@@ -43,123 +183,7 @@ Note the skill's **name**, such as `git-rebasing`, or the **category** (plugin) 
 | `git-reference` | The whole *Pro Git* book as one reference skill |
 | `git-skills` | All 61 Git skills |
 
-> **Tip:** Install only what you need. Every installed skill adds its description to your agent's context.
-
-## Step 3: Pick your agent ID
-
-| You use… | Agent ID |
-|---|---|
-| Claude Code | `claude-code` |
-| Google Antigravity | `antigravity` |
-| Devin | `devin` |
-| GitHub Copilot in VS Code | `copilot` |
-| Cursor | `cursor` |
-| Windsurf | `windsurf` |
-| OpenAI Codex | `codex` |
-| Gemini CLI | `gemini-cli` |
-| Something else that supports Agent Skills | `universal` |
-
-Using more than one? List them all with commas, for example `cursor,copilot`. The installer picks the fewest folders that cover them all, so no agent sees the same skill twice.
-
-## Step 4: Decide where to install
-
-| Choice | When to use it | How |
-|---|---|---|
-| **This project** (default) | The skill is for one codebase, and you want to share it with your team through git | Run the command from inside your project folder |
-| **Just me, everywhere** | You want the skill in all your projects | Add `--global` |
-
-## Step 5: Run the installer
-
-Go to your project folder first (`cd path/to/your-project`), then run the command for your system. Replace `<agent>` and pick `--skill` or `--plugin`.
-
-**macOS / Linux**
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py | python3 - --agent <agent> --skill git-rebasing
-```
-
-**Windows (PowerShell)**
-
-```powershell
-irm https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py -OutFile install.py
-python install.py --agent <agent> --skill git-rebasing
-```
-
-**Examples**
-
-```bash
-# Cursor, one skill, this project
-... --agent cursor --skill git-rebasing
-
-# Antigravity, a whole category, this project
-... --agent antigravity --plugin git-branching
-
-# Copilot + Claude Code together, several skills
-... --agent copilot,claude-code --skill git-rebasing,git-hooks
-
-# Codex, all Git skills, for your user (every project)
-... --agent codex --plugin git-skills --global
-
-# See every agent, category and skill without installing anything
-... --list
-
-# Preview what would be written without writing it
-... --agent cursor --plugin git-branching --dry-run
-```
-
-(`...` stands for the `curl … | python3 -` or `python install.py` part above.)
-
-You'll see output like this:
-
-```
-Cursor: /home/you/my-project/.cursor/skills
-  install  git-rebasing  ->  /home/you/my-project/.cursor/skills/git-rebasing
-
-Installed 1 skill folder(s). Restart or reload the agent, ...
-```
-
-## Step 6: Restart or reload your agent
-
-Most agents scan for skills when a session starts:
-
-- **IDEs** (Antigravity, Cursor, Windsurf, VS Code with Copilot): reload the window or open a new chat.
-- **CLIs** (Claude Code, Codex, Gemini CLI, Devin CLI): start a new session.
-- **Cloud Devin:** commit and push the `.agents/skills/` folder to your repository. Devin reads skills from the repo.
-
-## Step 7: Use it by just asking
-
-Describe your task normally. For example, after installing `git-rebasing`:
-
-> *"My feature branch is behind main. Put my commits on top of the latest main without a merge commit."*
-
-The agent matches your request to the skill and follows its steps. [`examples/PROMPTS.md`](examples/PROMPTS.md) has 3 ready-made prompts for every skill.
-
-**Want to force a specific skill?** Name it:
-
-> *"Use the git-hooks skill: block commits whose message doesn't start with a ticket ID."*
-
-## Step 8: Check that it worked
-
-- **Ask your agent:** *"Which skills do you have available?"* The installed skill's name should appear.
-- **Check the folder:** open the folder shown in Step 5's output. There should be `<skill-name>/SKILL.md` inside.
-- **If the agent answered without using the skill:** that can happen for simple questions the agent already knows well. Name the skill explicitly (Step 7) when you want its exact procedure.
-
-## Step 9: Share it with your team (optional)
-
-Project installs live in a folder inside your repo, such as `.agents/skills/` or `.cursor/skills/`. Commit it:
-
-```bash
-git add .agents/skills .cursor/skills     # whichever folders were created
-git commit -m "Add skill-hub skills"
-git push
-```
-
-Everyone who clones the repo now gets the skills in their agent automatically.
-
-## Step 10: Update or remove skills
-
-- **Update to the latest version:** run the same install command again with `--force`. Without `--force`, existing skills are left untouched.
-- **Remove a skill:** delete its folder, for example `.cursor/skills/git-rebasing/`, or the same name in your global folder.
+`--all` installs every skill. `--skill a,b` installs specific skills by name.
 
 ---
 
@@ -185,7 +209,9 @@ The full flow for one common setup: every hub skill, available in every folder y
 4. **Use them** in Copilot Chat (`Ctrl+Alt+I`), in chat or agent mode:
    - Just ask: *"My feature branch is behind main. Put my commits on top of main without a merge commit."*
    - Or pick a skill as a slash command: *"`/git-hooks` block commits whose message doesn't start with a ticket ID"*
-5. **Update later** by running the same command with `--force`. Remove a skill by deleting its folder.
+5. **Update later** by running the installer again (it asks before replacing anything), or add `--force` to the command. Remove a skill by deleting its folder.
+
+   Prefer to be asked? Run `python install.py` with no options, pick **GitHub Copilot (VS Code)** and **Everything**, then answer `1` to *Where?*.
 
 > Copilot also reads `.agents/skills` and `.claude/skills` (and `~/.agents/skills`, `~/.claude/skills`). Don't install the same skill in more than one of them, or it shows up twice. If you also use Claude Code, Codex or another agent, name them all in one command (e.g. `--agent copilot,claude-code`) and the installer avoids duplicates.
 
@@ -245,13 +271,16 @@ Download or clone the repo and copy `skills/<name>/` into your agent's folder:
 |---|---|
 | `python3: command not found` (macOS/Linux) | Install Python 3, or try `python` instead of `python3` |
 | `python` opens the Microsoft Store (Windows) | Install Python from python.org with "Add to PATH" ticked, or use `py install.py ...` |
-| On Windows, `curl ... \| python3 -` fails | Use the PowerShell commands from Step 5 (`irm ... -OutFile install.py`, then `python install.py ...`) |
-| `skip ... (exists; use --force to replace)` | The skill is already installed. Add `--force` to update it |
+| On Windows, `curl ... \| python3 -` fails | Use the PowerShell commands from Step 2 (`irm ... -OutFile install.py`, then `python install.py`) |
+| `differ from the hub` in the plan | The installed copy is older or was edited locally. Answer `y` to replace it, or add `--force` |
+| `No terminal available for questions` | You ran it somewhere it can't ask questions (CI, scripts). Use options instead, e.g. `--agent detected --all --global --yes` |
+| My agent isn't detected | Pick it by number anyway (it's listed as *not detected*), or pass `--agent <id>`. Detection looks for the app, its command, or its config folder |
+| `will find N skill(s) in more than one folder` | Some agents read each other's folders (e.g. Copilot reads Claude Code's and Codex's). With that mix of agents a second copy can't be avoided. It's harmless, but the skill may be listed twice |
 | `Unknown skill` / `Unknown plugin` | Check the spelling with `--list` |
-| `unknown agent` | Use one of the IDs from Step 3 |
+| `unknown agent` | Use one of the IDs from [the table above](#do-it-in-one-command-no-questions) |
 | Download fails or times out | Check your internet or proxy, or clone the repo and run `python tools/install.py ...` from it |
-| Agent doesn't see the skill | Restart or reload it (Step 6), check that you ran the command from the project root, and that the folder matches the agent (Step 8) |
-| The same skill appears twice | It's in two folders your agent reads. Delete one copy. The installer avoids this when you list all your agents in one `--agent` |
+| Agent doesn't see the skill | Restart or reload it (Step 3). For project installs, check that you ran the installer from the project root |
+| The same skill appears twice | It's in two folders your agent reads. Run the installer again and accept *Remove the redundant identical copies?*, or delete one copy |
 | Skill loads but the advice doesn't fit | Skills can be imperfect. [Open an issue](https://github.com/NILANJAN-01/skill-hub/issues) with the prompt you used |
 
 ## Licenses

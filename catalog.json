@@ -253,8 +253,17 @@
       "project": ".claude/skills",
       "global": "~/.claude/skills",
       "also_reads": [],
+      "global_also_reads": [],
       "native": "/plugin marketplace add NILANJAN-01/skill-hub",
-      "docs": "https://code.claude.com/docs/en/skills"
+      "docs": "https://code.claude.com/docs/en/skills",
+      "detect": {
+        "commands": [
+          "claude"
+        ],
+        "paths": [
+          "~/.claude"
+        ]
+      }
     },
     {
       "id": "antigravity",
@@ -264,7 +273,20 @@
       "also_reads": [
         ".agent/skills"
       ],
-      "docs": "https://antigravity.google/docs/skills"
+      "global_also_reads": [],
+      "docs": "https://antigravity.google/docs/skills",
+      "detect": {
+        "commands": [
+          "antigravity",
+          "agy"
+        ],
+        "paths": [
+          "~/.gemini/antigravity",
+          "~/.gemini/antigravity-cli",
+          "%LOCALAPPDATA%/Programs/Antigravity",
+          "/Applications/Antigravity.app"
+        ]
+      }
     },
     {
       "id": "devin",
@@ -279,8 +301,20 @@
         ".windsurf/skills",
         ".codex/skills"
       ],
+      "global_also_reads": [
+        "~/.agents/skills"
+      ],
       "note": "Cloud Devin reads skills committed to the repo; the global folder is for Devin Local / CLI.",
-      "docs": "https://docs.devin.ai/product-guides/skills"
+      "docs": "https://docs.devin.ai/product-guides/skills",
+      "detect": {
+        "commands": [
+          "devin"
+        ],
+        "paths": [
+          "~/.config/devin",
+          "/Applications/Devin.app"
+        ]
+      }
     },
     {
       "id": "copilot",
@@ -291,7 +325,28 @@
         ".agents/skills",
         ".claude/skills"
       ],
-      "docs": "https://code.visualstudio.com/docs/agent-customization/agent-skills"
+      "global_also_reads": [
+        "~/.agents/skills",
+        "~/.claude/skills"
+      ],
+      "docs": "https://code.visualstudio.com/docs/agent-customization/agent-skills",
+      "detect": {
+        "commands": [
+          "code",
+          "code-insiders",
+          "copilot"
+        ],
+        "paths": [
+          "~/.copilot",
+          "~/.vscode",
+          "~/.vscode-insiders",
+          "%LOCALAPPDATA%/Programs/Microsoft VS Code",
+          "%ProgramFiles%/Microsoft VS Code",
+          "/Applications/Visual Studio Code.app",
+          "/usr/share/code",
+          "/snap/bin/code"
+        ]
+      }
     },
     {
       "id": "cursor",
@@ -302,7 +357,22 @@
         ".claude/skills",
         ".codex/skills"
       ],
-      "docs": "https://cursor.com/docs/skills"
+      "global_also_reads": [
+        "~/.claude/skills",
+        "~/.codex/skills"
+      ],
+      "docs": "https://cursor.com/docs/skills",
+      "detect": {
+        "commands": [
+          "cursor",
+          "cursor-agent"
+        ],
+        "paths": [
+          "~/.cursor",
+          "%LOCALAPPDATA%/Programs/cursor",
+          "/Applications/Cursor.app"
+        ]
+      }
     },
     {
       "id": "windsurf",
@@ -312,8 +382,22 @@
       "also_reads": [
         ".windsurf/skills"
       ],
+      "global_also_reads": [
+        "~/.agents/skills"
+      ],
       "note": "Windsurf Cascade is now Devin Local; .windsurf/skills is still read as a legacy path.",
-      "docs": "https://docs.devin.ai/desktop/cascade/skills"
+      "docs": "https://docs.devin.ai/desktop/cascade/skills",
+      "detect": {
+        "commands": [
+          "windsurf"
+        ],
+        "paths": [
+          "~/.codeium/windsurf",
+          "~/.windsurf",
+          "%LOCALAPPDATA%/Programs/Windsurf",
+          "/Applications/Windsurf.app"
+        ]
+      }
     },
     {
       "id": "codex",
@@ -321,7 +405,16 @@
       "project": ".agents/skills",
       "global": "~/.agents/skills",
       "also_reads": [],
-      "docs": "https://learn.chatgpt.com/docs/build-skills"
+      "global_also_reads": [],
+      "docs": "https://learn.chatgpt.com/docs/build-skills",
+      "detect": {
+        "commands": [
+          "codex"
+        ],
+        "paths": [
+          "~/.codex"
+        ]
+      }
     },
     {
       "id": "gemini-cli",
@@ -331,7 +424,16 @@
       "also_reads": [
         ".agents/skills"
       ],
-      "docs": "https://geminicli.com/docs/cli/skills/"
+      "global_also_reads": [
+        "~/.agents/skills"
+      ],
+      "docs": "https://geminicli.com/docs/cli/skills/",
+      "detect": {
+        "commands": [
+          "gemini"
+        ],
+        "paths": []
+      }
     },
     {
       "id": "universal",
@@ -339,8 +441,13 @@
       "project": ".agents/skills",
       "global": "~/.agents/skills",
       "also_reads": [],
+      "global_also_reads": [],
       "note": "The emerging shared location; read by Antigravity, Devin, Copilot, Codex and others.",
-      "docs": "https://agentskills.io"
+      "docs": "https://agentskills.io",
+      "detect": {
+        "commands": [],
+        "paths": []
+      }
     }
   ],
   "skills": [
