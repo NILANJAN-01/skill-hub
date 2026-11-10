@@ -1,0 +1,322 @@
+{
+  "find-skills": [
+    "Is there a skill in skill-hub for git submodules? Which plugin has it?",
+    "What skills does skill-hub offer for working with Git remotes?",
+    "Find me a skill that helps with resolving merge conflicts and install it for this project."
+  ],
+  "contribute-skill": [
+    "Add a new skill called docker-compose-basics to skill-hub.",
+    "validate_skills.py says my skill is 'not listed in any plugin'. How do I fix it?",
+    "Create a new plugin category in skill-hub for Kubernetes skills."
+  ],
+  "skillforge": [
+    "Turn this Kubernetes handbook PDF into Agent Skills.",
+    "Generate skills only for 'backup, restore, replication' from postgres-manual.pdf.",
+    "Show me the plan of skills skillforge would create from book.pdf before writing anything."
+  ],
+  "git-installing-git": [
+    "How do I install Git on Ubuntu?",
+    "Install the latest Git on my Mac.",
+    "I want to build Git from source. What do I need?"
+  ],
+  "git-first-time-git-setup": [
+    "I just installed Git. What should I configure first?",
+    "Set my Git name and email globally.",
+    "Make VS Code my default Git editor and set the default branch name to main."
+  ],
+  "git-getting-help": [
+    "How do I see the manual page for git commit?",
+    "Show me a quick summary of the options for git add.",
+    "Where can I get help with Git commands offline?"
+  ],
+  "git-setup-and-config": [
+    "Show me all my Git config settings and where each one comes from.",
+    "What's the difference between --system, --global and --local config in Git?",
+    "How do I change the editor Git opens for commit messages?"
+  ],
+  "git-getting-a-git-repository": [
+    "Turn this existing folder into a Git repository.",
+    "Clone https://github.com/libgit2/libgit2 into a folder named mylibgit.",
+    "What's the difference between git init and git clone?"
+  ],
+  "git-recording-changes-to-the-repository": [
+    "How do I stage only some files and commit them?",
+    "Make Git ignore all .log files and the build/ folder.",
+    "Show me what I've staged versus what I've changed but not staged."
+  ],
+  "git-basic-snapshotting": [
+    "Explain the basic add, status, diff and commit workflow in Git.",
+    "How do I remove a file from Git but keep it on disk?",
+    "Rename a file so Git tracks the move."
+  ],
+  "git-viewing-the-commit-history": [
+    "Show the last 5 commits with the diffs.",
+    "Find the commits that added or removed the string 'getUserToken'.",
+    "Show a one-line graph of the history of all branches."
+  ],
+  "git-undoing-things": [
+    "I forgot to add a file to my last commit. How do I fix it?",
+    "Unstage a file I accidentally added.",
+    "Throw away my local changes to config.yml."
+  ],
+  "git-working-with-remotes": [
+    "List the remotes of this repository with their URLs.",
+    "Add a second remote called upstream and fetch from it.",
+    "Rename the remote 'origin' to 'github'."
+  ],
+  "git-tagging": [
+    "Create an annotated tag v1.2.0 with a message and push it.",
+    "List all tags that start with v2.",
+    "Delete a tag both locally and on the remote."
+  ],
+  "git-aliases": [
+    "Create a git alias so 'git st' runs git status.",
+    "Make a 'git last' command that shows the last commit.",
+    "How do I create a git alias that runs an external shell command?"
+  ],
+  "git-branches-in-a-nutshell": [
+    "Explain how Git branches and HEAD actually work.",
+    "Create a branch called testing and switch to it.",
+    "Show which commit each branch points to."
+  ],
+  "git-basic-branching-and-merging": [
+    "Create a hotfix branch, fix the bug, and merge it back into main.",
+    "I got 'CONFLICT (content): Merge conflict in index.html'. What do I do?",
+    "What's the difference between a fast-forward merge and a merge commit?"
+  ],
+  "git-branch-management": [
+    "List the branches already merged into main so I can delete them.",
+    "Rename my local branch from 'feat' to 'feature/login'.",
+    "Show each branch with its last commit."
+  ],
+  "git-remote-branches": [
+    "Make my local branch track origin/develop.",
+    "Delete the branch 'old-feature' on the remote.",
+    "Show how far ahead of or behind its upstream each of my branches is."
+  ],
+  "git-rebasing": [
+    "Rebase my feature branch onto the latest main without a merge commit.",
+    "Move a branch that was based on 'server' so it sits directly on main using --onto.",
+    "When should I avoid rebasing? I already pushed my branch."
+  ],
+  "git-advanced-merging": [
+    "Abort this merge, it went wrong.",
+    "During a merge conflict, take their version of every conflicting file.",
+    "Undo a merge commit that was already pushed."
+  ],
+  "git-rerere": [
+    "Make Git remember how I resolved conflicts so it reapplies the fix next time.",
+    "Turn on rerere and show me what it has recorded.",
+    "I keep resolving the same conflict on every rebase. How can Git automate that?"
+  ],
+  "git-the-protocols": [
+    "Should I use SSH or HTTPS to host my Git repository?",
+    "Explain the local, HTTP, SSH and git:// protocols and their pros and cons.",
+    "Clone a repository from a shared network folder."
+  ],
+  "git-getting-git-on-a-server": [
+    "Create a bare repository to put on my server.",
+    "Set up a shared Git repo on a Linux server that my team can push to.",
+    "Make a server repository group-writable for all developers."
+  ],
+  "git-generating-your-ssh-public-key": [
+    "Generate an SSH key to use with Git.",
+    "Do I already have an SSH key? Where is it stored?",
+    "How do I give my SSH public key to the Git server admin?"
+  ],
+  "git-setting-up-the-server": [
+    "Set up a git user on my server that accepts SSH keys from my team.",
+    "Restrict the git user so it can only run Git commands (git-shell).",
+    "Add a new developer's public key to my Git server."
+  ],
+  "git-daemon": [
+    "Serve my repositories read-only with git daemon.",
+    "Run git daemon as a systemd service.",
+    "Allow anonymous cloning of a repository over git://."
+  ],
+  "git-smart-http": [
+    "Set up Smart HTTP for Git with Apache.",
+    "Configure git-http-backend so pushes over HTTP require a password.",
+    "Host Git over HTTPS on my own server."
+  ],
+  "git-gitweb": [
+    "Set up GitWeb to browse my repositories in a web browser.",
+    "Run a quick GitWeb instance with git instaweb.",
+    "Install GitWeb on Apache for all repos in /srv/git."
+  ],
+  "git-distributed-git-contributing-to-a-project": [
+    "What makes a good commit message?",
+    "How do I contribute to a project by sending patches by email?",
+    "Squash my topic branch into one commit before sending it upstream."
+  ],
+  "git-distributed-git-maintaining-a-project": [
+    "Apply a patch someone emailed me with git am.",
+    "Review the changes a contributor's branch introduces before I merge it.",
+    "Create a release tarball and a shortlog for my project's release notes."
+  ],
+  "git-github-contributing-to-a-project": [
+    "Fork a GitHub project, make a change, and open a pull request.",
+    "Update my pull request after the maintainer asked for changes.",
+    "Sync my fork with the upstream repository."
+  ],
+  "git-github-maintaining-a-project": [
+    "Check out a GitHub pull request locally to test it.",
+    "Add collaborators to my GitHub repository.",
+    "How do I use pull request refs to fetch all open PRs?"
+  ],
+  "git-scripting-github": [
+    "Use the GitHub API to comment on an issue.",
+    "Set the commit status on GitHub from a script.",
+    "Get notified with a webhook when someone pushes to my repo."
+  ],
+  "git-credential-storage": [
+    "Stop Git asking for my password on every push.",
+    "Cache my Git credentials for 1 hour.",
+    "Which credential helper should I use on Windows or macOS?"
+  ],
+  "git-revision-selection": [
+    "What does HEAD~3 versus HEAD^2 mean?",
+    "Show the commits on my branch that are not on main.",
+    "Use the reflog to find where my branch pointed yesterday."
+  ],
+  "git-interactive-staging": [
+    "Stage only some of the changes in a file.",
+    "Use git add -p to split my changes into two commits.",
+    "Walk me through git add -i."
+  ],
+  "git-stashing-and-cleaning": [
+    "I have half-done changes and need to switch branches urgently.",
+    "Stash my changes including untracked files, then restore them later.",
+    "Remove all untracked files and folders, but show me what will be deleted first."
+  ],
+  "git-signing-your-work": [
+    "Sign my commits with GPG.",
+    "Create a signed tag and verify it.",
+    "Make Git sign every commit automatically."
+  ],
+  "git-searching": [
+    "Search the whole repository for 'TODO' with line numbers.",
+    "Find when the function parseConfig was introduced.",
+    "Show the history of a single function in a file."
+  ],
+  "git-rewriting-history": [
+    "Change the message of a commit three commits back.",
+    "Squash my last 4 commits into one.",
+    "Remove a file with a leaked password from the entire Git history."
+  ],
+  "git-reset-demystified": [
+    "Explain the difference between git reset --soft, --mixed and --hard.",
+    "Undo my last commit but keep the changes staged.",
+    "What's the difference between git reset and git checkout on a file?"
+  ],
+  "git-debugging-with-git": [
+    "Use git bisect to find which commit introduced a bug.",
+    "Who last changed lines 10 to 20 of app.py?",
+    "Automate git bisect with a test script."
+  ],
+  "git-submodules": [
+    "Add a library as a git submodule.",
+    "Clone a repository together with all its submodules.",
+    "Update all submodules to their latest upstream commits."
+  ],
+  "git-bundling": [
+    "Send my repository to someone without network access.",
+    "Create a git bundle with only the last 10 commits.",
+    "Clone from a .bundle file."
+  ],
+  "git-replace": [
+    "Make Git treat one commit as if it were another with git replace.",
+    "Graft old project history onto a shortened repository.",
+    "How do I list and delete git replace refs?"
+  ],
+  "git-configuration": [
+    "Make Git colorize output and use a custom pager.",
+    "Configure core.autocrlf correctly for a team on Windows and Linux.",
+    "Set up a global .gitignore and a commit message template."
+  ],
+  "git-attributes": [
+    "Tell Git to treat *.pdf files as binary.",
+    "Diff Word documents in Git in a readable way.",
+    "Keep a config file's local version during merges with a merge strategy attribute."
+  ],
+  "git-hooks": [
+    "Block commits whose message doesn't start with a ticket ID like ABC-123.",
+    "Run my test suite before every commit with a pre-commit hook.",
+    "Which server-side hooks can reject a push?"
+  ],
+  "git-an-example-git-enforced-policy": [
+    "Enforce a commit message format on the server with an update hook.",
+    "Restrict which users can push to which directories.",
+    "Prevent non-fast-forward pushes on the server."
+  ],
+  "git-environment-variables": [
+    "Which environment variable sets the committer date in Git?",
+    "Debug a slow git fetch with GIT_TRACE.",
+    "Use a different SSH command for one Git operation."
+  ],
+  "git-plumbing-and-porcelain": [
+    "What's the difference between plumbing and porcelain commands in Git?",
+    "What's inside the .git directory?",
+    "Which Git commands are safe to use in scripts?"
+  ],
+  "git-objects": [
+    "Explain blobs, trees and commits in Git internals.",
+    "Create a Git object by hand with hash-object and read it back with cat-file.",
+    "Show the tree object of the latest commit."
+  ],
+  "git-references": [
+    "How are branches stored inside .git?",
+    "Update a branch ref directly with git update-ref.",
+    "What is HEAD internally, and what's a symbolic ref?"
+  ],
+  "git-packfiles": [
+    "Why is my .git folder so big? Explain packfiles.",
+    "Inspect the contents of a packfile with git verify-pack.",
+    "Run git gc and explain what it does."
+  ],
+  "git-the-refspec": [
+    "Explain the refspec +refs/heads/*:refs/remotes/origin/*.",
+    "Fetch only the main branch from a remote by default.",
+    "Push my local branch to a differently named remote branch."
+  ],
+  "git-transfer-protocols": [
+    "How does git fetch talk to the server over HTTP?",
+    "Explain the dumb versus smart Git transfer protocols.",
+    "What happens during git push over SSH (send-pack and receive-pack)?"
+  ],
+  "git-maintenance-and-data-recovery": [
+    "I deleted a branch by accident. How do I get it back?",
+    "Find and remove a huge file that is bloating my repository.",
+    "Recover lost commits with git fsck and the reflog."
+  ],
+  "git-as-a-client": [
+    "Use Git with a Subversion repository via git svn.",
+    "Push my Git commits back to SVN with git svn dcommit.",
+    "Work with a Mercurial or Perforce server from Git."
+  ],
+  "git-migrating-to-git": [
+    "Migrate our SVN repository to Git, keeping history and authors.",
+    "Convert a Mercurial repo to Git.",
+    "Write a custom importer with git fast-import."
+  ],
+  "git-in-powershell": [
+    "Set up posh-git so PowerShell shows Git status in my prompt.",
+    "Install posh-git on Windows.",
+    "Get Git tab completion in PowerShell."
+  ],
+  "git-jgit": [
+    "Use JGit to open a repository and read the latest commit in Java.",
+    "Clone a repository from Java code.",
+    "How do I add JGit to my Maven project?"
+  ],
+  "git-libgit2": [
+    "Use libgit2 to read a commit in C.",
+    "What language bindings exist for libgit2?",
+    "Create a commit programmatically with libgit2."
+  ],
+  "git-pro": [
+    "Explain how Git stores data compared to other version control systems.",
+    "Give me an overview of Git's distributed workflows.",
+    "What does the Pro Git book say about customizing Git?"
+  ]
+}

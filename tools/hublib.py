@@ -11,6 +11,17 @@ SKILLS_DIR = ROOT / "skills"
 MARKETPLACE = ROOT / ".claude-plugin" / "marketplace.json"
 CATALOG = ROOT / "catalog.json"
 SKILLS_README = SKILLS_DIR / "README.md"
+EXAMPLES = ROOT / "examples" / "prompts.json"
+PROMPTS_TEMPLATE = ROOT / "tools" / "prompts_template.html"
+PROMPTS_HTML = ROOT / "prompts.html"
+MIN_EXAMPLES = 2
+
+
+def load_examples() -> dict[str, list[str]]:
+    """Example prompts per skill name, from examples/prompts.json ({} if the file is missing)."""
+    if not EXAMPLES.exists():
+        return {}
+    return json.loads(EXAMPLES.read_text(encoding="utf-8"))
 
 _FM = re.compile(r"\A---\r?\n(.*?)\r?\n---\r?\n", re.DOTALL)
 

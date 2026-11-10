@@ -14,8 +14,8 @@ import re
 import sys
 from pathlib import Path
 
-from hublib import (MARKETPLACE, ROOT, FrontmatterError, load_marketplace, parse_frontmatter,
-                    plugin_skill_names, skill_dirs)
+from hublib import (EXAMPLES, MARKETPLACE, MIN_EXAMPLES, ROOT, FrontmatterError, load_examples,
+                    load_marketplace, parse_frontmatter, plugin_skill_names, skill_dirs)
 
 NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 KNOWN_FIELDS = {"name", "description", "license", "compatibility", "metadata", "allowed-tools"}
@@ -132,6 +132,20 @@ def main() -> None:
         listed.update(plugin_skill_names(p))
 
     dirs = skill_dirs()
+    ex_where = EXAMPLES.relative_to(ROOT).as_posix()
+    try:
+        examples = load_examples()
+    except ValueError as e:
+        report("ERROR", ex_where, f"invalid JSON: {e}")
+        examples = {}
+    for k in sorted(set(examples) - {d.name for d in dirs}):
+        report("ERROR", ex_where, f"prompts for unknown skill {k!r}")
+    for d in dirs:
+        prompts = examples.get(d.name, [])
+        if not isinstance(prompts, list) or not all(isinstance(p, str) and p.strip() for p in prompts):
+            report("ERROR", ex_where, f"{d.name}: prompts must be a list of non-empty strings")
+        elif len(prompts) < MIN_EXAMPLES:
+            report("ERROR", ex_where, f"{d.name}: needs at least {MIN_EXAMPLES} example prompts (has {len(prompts)})")
     for d in dirs:
         errors, warns = check_skill(d, plugin_names, listed)
         where = d.relative_to(ROOT).as_posix()

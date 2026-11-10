@@ -257,6 +257,11 @@
       ],
       "path": "skills/contribute-skill",
       "license": "Complete terms in the repository README",
+      "examples": [
+        "Add a new skill called docker-compose-basics to skill-hub.",
+        "validate_skills.py says my skill is 'not listed in any plugin'. How do I fix it?",
+        "Create a new plugin category in skill-hub for Kubernetes skills."
+      ],
       "files": []
     },
     {
@@ -269,6 +274,11 @@
       ],
       "path": "skills/find-skills",
       "license": "Complete terms in the repository README",
+      "examples": [
+        "Is there a skill in skill-hub for git submodules? Which plugin has it?",
+        "What skills does skill-hub offer for working with Git remotes?",
+        "Find me a skill that helps with resolving merge conflicts and install it for this project."
+      ],
       "files": []
     },
     {
@@ -284,6 +294,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "277-294",
+      "examples": [
+        "Abort this merge, it went wrong.",
+        "During a merge conflict, take their version of every conflicting file.",
+        "Undo a merge commit that was already pushed."
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -302,6 +317,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "66-68",
+      "examples": [
+        "Create a git alias so 'git st' runs git status.",
+        "Make a 'git last' command that shows the last commit.",
+        "How do I create a git alias that runs an external shell command?"
+      ],
       "files": [
         "references/source-text.md"
       ]
@@ -319,6 +339,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "363-372",
+      "examples": [
+        "Enforce a commit message format on the server with an update hook.",
+        "Restrict which users can push to which directories.",
+        "Prevent non-fast-forward pushes on the server."
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -337,6 +362,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "373-405",
+      "examples": [
+        "Use Git with a Subversion repository via git svn.",
+        "Push my Git commits back to SVN with git svn dcommit.",
+        "Work with a Mercurial or Perforce server from Git."
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -355,6 +385,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "352-360",
+      "examples": [
+        "Tell Git to treat *.pdf files as binary.",
+        "Diff Word documents in Git in a readable way.",
+        "Keep a config file's local version during merges with a merge strategy attribute."
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -373,6 +408,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "76-85",
+      "examples": [
+        "Create a hotfix branch, fix the bug, and merge it back into main.",
+        "I got 'CONFLICT (content): Merge conflict in index.html'. What do I do?",
+        "What's the difference between a fast-forward merge and a merge commit?"
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -391,6 +431,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "487-489",
+      "examples": [
+        "Explain the basic add, status, diff and commit workflow in Git.",
+        "How do I remove a file from Git but keep it on disk?",
+        "Rename a file so Git tracks the move."
+      ],
       "files": [
         "references/source-text.md"
       ]
@@ -408,6 +453,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "85-88",
+      "examples": [
+        "List the branches already merged into main so I can delete them.",
+        "Rename my local branch from 'feat' to 'feature/login'.",
+        "Show each branch with its last commit."
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -426,6 +476,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "69-76",
+      "examples": [
+        "Explain how Git branches and HEAD actually work.",
+        "Create a branch called testing and switch to it.",
+        "Show which commit each branch points to."
+      ],
       "files": [
         "references/source-text.md"
       ]
@@ -443,6 +498,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "324-328",
+      "examples": [
+        "Send my repository to someone without network access.",
+        "Create a git bundle with only the last 10 commits.",
+        "Clone from a .bundle file."
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -461,6 +521,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "342-352",
+      "examples": [
+        "Make Git colorize output and use a custom pager.",
+        "Configure core.autocrlf correctly for a team on Windows and Linux.",
+        "Set up a global .gitignore and a commit message template."
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -479,6 +544,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "336-341",
+      "examples": [
+        "Stop Git asking for my password on every push.",
+        "Cache my Git credentials for 1 hour.",
+        "Which credential helper should I use on Windows or macOS?"
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -497,6 +567,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "122-123",
+      "examples": [
+        "Serve my repositories read-only with git daemon.",
+        "Run git daemon as a systemd service.",
+        "Allow anonymous cloning of a repository over git://."
+      ],
       "files": [
         "references/source-text.md"
       ]
@@ -514,6 +589,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "301-304",
+      "examples": [
+        "Use git bisect to find which commit introduced a bug.",
+        "Who last changed lines 10 to 20 of app.py?",
+        "Automate git bisect with a test script."
+      ],
       "files": [
         "references/source-text.md"
       ]
@@ -531,6 +611,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "135-156",
+      "examples": [
+        "What makes a good commit message?",
+        "How do I contribute to a project by sending patches by email?",
+        "Squash my topic branch into one commit before sending it upstream."
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -549,6 +634,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "156-171",
+      "examples": [
+        "Apply a patch someone emailed me with git am.",
+        "Review the changes a contributor's branch introduces before I merge it.",
+        "Create a release tarball and a shortlog for my project's release notes."
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -567,6 +657,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "453-458",
+      "examples": [
+        "Which environment variable sets the committer date in Git?",
+        "Debug a slow git fetch with GIT_TRACE.",
+        "Use a different SSH command for one Git operation."
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -585,6 +680,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "27-30",
+      "examples": [
+        "I just installed Git. What should I configure first?",
+        "Set my Git name and email globally.",
+        "Make VS Code my default Git editor and set the default branch name to main."
+      ],
       "files": [
         "references/source-text.md"
       ]
@@ -602,6 +702,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "118-119",
+      "examples": [
+        "Generate an SSH key to use with Git.",
+        "Do I already have an SSH key? Where is it stored?",
+        "How do I give my SSH public key to the Git server admin?"
+      ],
       "files": [
         "references/source-text.md"
       ]
@@ -619,6 +724,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "32-34",
+      "examples": [
+        "Turn this existing folder into a Git repository.",
+        "Clone https://github.com/libgit2/libgit2 into a folder named mylibgit.",
+        "What's the difference between git init and git clone?"
+      ],
       "files": [
         "references/source-text.md"
       ]
@@ -636,6 +746,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "116-118",
+      "examples": [
+        "Create a bare repository to put on my server.",
+        "Set up a shared Git repo on a Linux server that my team can push to.",
+        "Make a server repository group-writable for all developers."
+      ],
       "files": [
         "references/source-text.md"
       ]
@@ -653,6 +768,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "30-31",
+      "examples": [
+        "How do I see the manual page for git commit?",
+        "Show me a quick summary of the options for git add.",
+        "Where can I get help with Git commands offline?"
+      ],
       "files": [
         "references/source-text.md"
       ]
@@ -670,6 +790,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "177-197",
+      "examples": [
+        "Fork a GitHub project, make a change, and open a pull request.",
+        "Update my pull request after the maintainer asked for changes.",
+        "Sync my fork with the upstream repository."
+      ],
       "files": [
         "references/source-text.md"
       ]
@@ -687,6 +812,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "197-211",
+      "examples": [
+        "Check out a GitHub pull request locally to test it.",
+        "Add collaborators to my GitHub repository.",
+        "How do I use pull request refs to fetch all open PRs?"
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -705,6 +835,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "125-127",
+      "examples": [
+        "Set up GitWeb to browse my repositories in a web browser.",
+        "Run a quick GitWeb instance with git instaweb.",
+        "Install GitWeb on Apache for all repos in /srv/git."
+      ],
       "files": [
         "references/source-text.md"
       ]
@@ -722,6 +857,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "360-363",
+      "examples": [
+        "Block commits whose message doesn't start with a ticket ID like ABC-123.",
+        "Run my test suite before every commit with a pre-commit hook.",
+        "Which server-side hooks can reject a push?"
+      ],
       "files": [
         "references/source-text.md"
       ]
@@ -739,6 +879,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "469-471",
+      "examples": [
+        "Set up posh-git so PowerShell shows Git status in my prompt.",
+        "Install posh-git on Windows.",
+        "Get Git tab completion in PowerShell."
+      ],
       "files": [
         "references/source-text.md"
       ]
@@ -756,6 +901,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "24-27",
+      "examples": [
+        "How do I install Git on Ubuntu?",
+        "Install the latest Git on my Mac.",
+        "I want to build Git from source. What do I need?"
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -774,6 +924,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "232-236",
+      "examples": [
+        "Stage only some of the changes in a file.",
+        "Use git add -p to split my changes into two commits.",
+        "Walk me through git add -i."
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -792,6 +947,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "477-480",
+      "examples": [
+        "Use JGit to open a repository and read the latest commit in Java.",
+        "Clone a repository from Java code.",
+        "How do I add JGit to my Maven project?"
+      ],
       "files": [
         "references/source-text.md"
       ]
@@ -809,6 +969,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "472-477",
+      "examples": [
+        "Use libgit2 to read a commit in C.",
+        "What language bindings exist for libgit2?",
+        "Create a commit programmatically with libgit2."
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -827,6 +992,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "446-453",
+      "examples": [
+        "I deleted a branch by accident. How do I get it back?",
+        "Find and remove a huge file that is bloating my repository.",
+        "Recover lost commits with git fsck and the reflog."
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -845,6 +1015,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "405-419",
+      "examples": [
+        "Migrate our SVN repository to Git, keeping history and authors.",
+        "Convert a Mercurial repo to Git.",
+        "Write a custom importer with git fast-import."
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -863,6 +1038,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "421-431",
+      "examples": [
+        "Explain blobs, trees and commits in Git internals.",
+        "Create a Git object by hand with hash-object and read it back with cat-file.",
+        "Show the tree object of the latest commit."
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -881,6 +1061,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "435-438",
+      "examples": [
+        "Why is my .git folder so big? Explain packfiles.",
+        "Inspect the contents of a packfile with git verify-pack.",
+        "Run git gc and explain what it does."
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -899,6 +1084,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "420-421",
+      "examples": [
+        "What's the difference between plumbing and porcelain commands in Git?",
+        "What's inside the .git directory?",
+        "Which Git commands are safe to use in scripts?"
+      ],
       "files": [
         "references/source-text.md"
       ]
@@ -916,6 +1106,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "1-501",
+      "examples": [
+        "Explain how Git stores data compared to other version control systems.",
+        "Give me an overview of Git's distributed workflows.",
+        "What does the Pro Git book say about customizing Git?"
+      ],
       "files": [
         "references/appendix-a-git-in-other-environments.md",
         "references/appendix-b-embedding-git-in-your-applications.md",
@@ -946,6 +1141,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "101-110",
+      "examples": [
+        "Rebase my feature branch onto the latest main without a merge commit.",
+        "Move a branch that was based on 'server' so it sits directly on main using --onto.",
+        "When should I avoid rebasing? I already pushed my branch."
+      ],
       "files": [
         "references/source-text.md"
       ]
@@ -963,6 +1163,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "34-46",
+      "examples": [
+        "How do I stage only some files and commit them?",
+        "Make Git ignore all .log files and the build/ folder.",
+        "Show me what I've staged versus what I've changed but not staged."
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -981,6 +1186,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "431-435",
+      "examples": [
+        "How are branches stored inside .git?",
+        "Update a branch ref directly with git update-ref.",
+        "What is HEAD internally, and what's a symbolic ref?"
+      ],
       "files": [
         "references/source-text.md"
       ]
@@ -998,6 +1208,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "91-101",
+      "examples": [
+        "Make my local branch track origin/develop.",
+        "Delete the branch 'old-feature' on the remote.",
+        "Show how far ahead of or behind its upstream each of my branches is."
+      ],
       "files": [
         "references/source-text.md"
       ]
@@ -1015,6 +1230,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "328-336",
+      "examples": [
+        "Make Git treat one commit as if it were another with git replace.",
+        "Graft old project history onto a shortened repository.",
+        "How do I list and delete git replace refs?"
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -1033,6 +1253,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "294-301",
+      "examples": [
+        "Make Git remember how I resolved conflicts so it reapplies the fix next time.",
+        "Turn on rerere and show me what it has recorded.",
+        "I keep resolving the same conflict on every rebase. How can Git automate that?"
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -1051,6 +1276,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "257-277",
+      "examples": [
+        "Explain the difference between git reset --soft, --mixed and --hard.",
+        "Undo my last commit but keep the changes staged.",
+        "What's the difference between git reset and git checkout on a file?"
+      ],
       "files": [
         "references/source-text.md"
       ]
@@ -1068,6 +1298,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "224-232",
+      "examples": [
+        "What does HEAD~3 versus HEAD^2 mean?",
+        "Show the commits on my branch that are not on main.",
+        "Use the reflog to find where my branch pointed yesterday."
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -1086,6 +1321,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "249-257",
+      "examples": [
+        "Change the message of a commit three commits back.",
+        "Squash my last 4 commits into one.",
+        "Remove a file with a leaked password from the entire Git history."
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -1104,6 +1344,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "214-223",
+      "examples": [
+        "Use the GitHub API to comment on an issue.",
+        "Set the commit status on GitHub from a script.",
+        "Get notified with a webhook when someone pushes to my repo."
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -1122,6 +1367,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "245-249",
+      "examples": [
+        "Search the whole repository for 'TODO' with line numbers.",
+        "Find when the function parseConfig was introduced.",
+        "Show the history of a single function in a file."
+      ],
       "files": [
         "references/source-text.md"
       ]
@@ -1139,6 +1389,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "119-122",
+      "examples": [
+        "Set up a git user on my server that accepts SSH keys from my team.",
+        "Restrict the git user so it can only run Git commands (git-shell).",
+        "Add a new developer's public key to my Git server."
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -1157,6 +1412,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "484-486",
+      "examples": [
+        "Show me all my Git config settings and where each one comes from.",
+        "What's the difference between --system, --global and --local config in Git?",
+        "How do I change the editor Git opens for commit messages?"
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -1175,6 +1435,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "242-245",
+      "examples": [
+        "Sign my commits with GPG.",
+        "Create a signed tag and verify it.",
+        "Make Git sign every commit automatically."
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -1193,6 +1458,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "123-125",
+      "examples": [
+        "Set up Smart HTTP for Git with Apache.",
+        "Configure git-http-backend so pushes over HTTP require a password.",
+        "Host Git over HTTPS on my own server."
+      ],
       "files": [
         "references/source-text.md"
       ]
@@ -1210,6 +1480,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "236-242",
+      "examples": [
+        "I have half-done changes and need to switch branches urgently.",
+        "Stash my changes including untracked files, then restore them later.",
+        "Remove all untracked files and folders, but show me what will be deleted first."
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -1228,6 +1503,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "304-324",
+      "examples": [
+        "Add a library as a git submodule.",
+        "Clone a repository together with all its submodules.",
+        "Update all submodules to their latest upstream commits."
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -1246,6 +1526,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "61-66",
+      "examples": [
+        "Create an annotated tag v1.2.0 with a message and push it.",
+        "List all tags that start with v2.",
+        "Delete a tag both locally and on the remote."
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -1264,6 +1549,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "111-116",
+      "examples": [
+        "Should I use SSH or HTTPS to host my Git repository?",
+        "Explain the local, HTTP, SSH and git:// protocols and their pros and cons.",
+        "Clone a repository from a shared network folder."
+      ],
       "files": [
         "references/source-text.md"
       ]
@@ -1281,6 +1571,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "438-441",
+      "examples": [
+        "Explain the refspec +refs/heads/*:refs/remotes/origin/*.",
+        "Fetch only the main branch from a remote by default.",
+        "Push my local branch to a differently named remote branch."
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -1299,6 +1594,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "441-446",
+      "examples": [
+        "How does git fetch talk to the server over HTTP?",
+        "Explain the dumb versus smart Git transfer protocols.",
+        "What happens during git push over SSH (send-pack and receive-pack)?"
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -1317,6 +1617,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "52-56",
+      "examples": [
+        "I forgot to add a file to my last commit. How do I fix it?",
+        "Unstage a file I accidentally added.",
+        "Throw away my local changes to config.yml."
+      ],
       "files": [
         "references/source-text.md"
       ]
@@ -1334,6 +1639,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "46-52",
+      "examples": [
+        "Show the last 5 commits with the diffs.",
+        "Find the commits that added or removed the string 'getUserToken'.",
+        "Show a one-line graph of the history of all branches."
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -1352,6 +1662,11 @@
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "source": "Pro Git, 2nd edition",
       "pages": "56-61",
+      "examples": [
+        "List the remotes of this repository with their URLs.",
+        "Add a second remote called upstream and fetch from it.",
+        "Rename the remote 'origin' to 'github'."
+      ],
       "files": [
         "references/procedures.md",
         "references/source-text.md"
@@ -1367,6 +1682,11 @@
       ],
       "path": "skills/skillforge",
       "license": "Complete terms in the repository README",
+      "examples": [
+        "Turn this Kubernetes handbook PDF into Agent Skills.",
+        "Generate skills only for 'backup, restore, replication' from postgres-manual.pdf.",
+        "Show me the plan of skills skillforge would create from book.pdf before writing anything."
+      ],
       "files": []
     }
   ]

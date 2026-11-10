@@ -133,6 +133,13 @@ header.top nav a:hover { color: var(--text); text-decoration: none; }
 .about { padding: 8px 0 56px; }
 .about h2 { font-size: 22px; margin: 0 0 6px; }
 .about h2:not(:first-child) { margin-top: 30px; }
+.examples { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-bottom: 18px; }
+.examples h4 { margin: 0 0 8px; font-size: 13px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+.examples ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.examples li { display: flex; gap: 8px; align-items: flex-start; font-size: 14px; }
+.examples q { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.examples button { flex: none; border: 1px solid var(--border); background: var(--surface-2); color: var(--muted); border-radius: 6px; font: 12px Inter, system-ui, sans-serif; padding: 2px 8px; cursor: pointer; }
+.examples button:hover { color: var(--text); border-color: var(--accent); }
 .hero .codebox { display: inline-block; margin-top: 16px; }
 .about > p { color: var(--muted); margin: 0 0 20px; }
 .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
@@ -161,6 +168,7 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 18px; justify-content: s
     </a>
     <nav>
       <a href="#/">Skills</a>
+      <a href="prompts.html">Prompts</a>
       <a href="#/about" class="hide-sm">How it works</a>
       <a id="gh-link" href="#" target="_blank" rel="noopener">GitHub</a>
     </nav>
@@ -207,6 +215,7 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 18px; justify-content: s
         </div>
       </div>
       <div class="install"><code id="install-cmd"></code></div>
+      <div class="examples" id="examples"></div>
       <div class="tabs" id="tabs"></div>
       <article class="md" id="md"></article>
     </div>
@@ -360,6 +369,13 @@ python skills/skillforge/scripts/skillforge.py your-book.pdf --topics "rebase, h
       `# or copy just this skill\ngit clone --depth 1 ${GH}.git\ncp -r ${REPO.name}/${folder} ~/.claude/skills/`;
     $("install-cmd").textContent = cmd;
     $("copy-install").onclick = () => copy(cmd);
+
+    // example prompts that should trigger this skill
+    const ex = s.examples || [];
+    $("examples").hidden = !ex.length;
+    $("examples").innerHTML = `<h4>Try saying</h4><ul>${ex.map((p, i) =>
+      `<li><q>${esc(p)}</q><button data-i="${i}">Copy</button></li>`).join("")}</ul>`;
+    $("examples").querySelectorAll("button").forEach(b => b.onclick = () => copy(ex[+b.dataset.i]));
 
     // tabs: SKILL.md plus every bundled Markdown file listed in the catalog
     const avail = ["SKILL.md", ...(s.files || [])].map(f => [tabLabel(f), f]);

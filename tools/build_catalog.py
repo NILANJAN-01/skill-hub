@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Build catalog.json and skills/README.md from every skills/*/SKILL.md and the plugin marketplace.
 
+Also builds prompts.html (example prompts per skill) from examples/prompts.json.
+
     python tools/build_catalog.py           # (re)write the files
     python tools/build_catalog.py --check   # exit 1 if they are out of date (used by CI)
 """
@@ -11,8 +13,8 @@ import argparse
 import json
 import sys
 
-from hublib import (CATALOG, ROOT, SKILLS_README, FrontmatterError, load_marketplace,
-                    parse_frontmatter, plugin_skill_names, skill_dirs)
+from hublib import (CATALOG, PROMPTS_HTML, PROMPTS_TEMPLATE, ROOT, SKILLS_README, FrontmatterError,
+                    load_examples, load_marketplace, parse_frontmatter, plugin_skill_names, skill_dirs)
 
 REPOSITORY = "https://github.com/NILANJAN-01/skill-hub"
 
@@ -34,8 +36,9 @@ def titleize(name: str) -> str:
     return name.replace("-", " ").capitalize()
 
 
-def build() -> tuple[str, str]:
+def build() -> tuple[str, str, str]:
     market = load_marketplace()
+    examples = load_examples()
     plugins = market.get("plugins", [])
     membership: dict[str, list[str]] = {}
     for p in plugins:
@@ -67,6 +70,7 @@ def build() -> tuple[str, str]:
         for k in ("source", "pages"):
             if meta.get(k):
                 entry[k] = meta[k]
+        entry["examples"] = examples.get(d.name, [])
         entry["files"] = sorted(p.relative_to(d).as_posix() for p in d.rglob("*.md") if p.name != "SKILL.md")
         skills.append(entry)
 
@@ -102,15 +106,26 @@ def build() -> tuple[str, str]:
         for s in sorted((s for s in skills if s["category"] == c["name"]), key=lambda s: s["title"].lower()):
             lines.append(f"| [`{s['name']}`]({s['name']}/SKILL.md) | {cell(s['description'])} |")
         lines.append("")
-    return catalog_text, "\n".join(lines)
+    page_data = {
+        "categories": categories,
+        "skills": [{"name": s["name"], "title": s["title"], "category": s["category"],
+                    "plugin": s["plugins"][0] if s["plugins"] else "", "examples": s["examples"]}
+                   for s in sorted(skills, key=lambda s: s["title"].lower()) if s["examples"]],
+    }
+    data_js = json.dumps(page_data, ensure_ascii=False).replace("</", "<\\/")
+    template = PROMPTS_TEMPLATE.read_text(encoding="utf-8")
+    if "/*__DATA__*/null" not in template:
+        sys.exit("tools/prompts_template.html lost its /*__DATA__*/null placeholder")
+    prompts_html = template.replace("/*__DATA__*/null", data_js)
+    return catalog_text, "\n".join(lines), prompts_html
 
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--check", action="store_true", help="fail if generated files are stale")
     args = ap.parse_args()
-    catalog_text, readme_text = build()
-    targets = [(CATALOG, catalog_text), (SKILLS_README, readme_text)]
+    catalog_text, readme_text, prompts_html = build()
+    targets = [(CATALOG, catalog_text), (SKILLS_README, readme_text), (PROMPTS_HTML, prompts_html)]
     if args.check:
         stale = [p for p, t in targets if not p.exists() or p.read_text(encoding="utf-8") != t]
         for p in stale:

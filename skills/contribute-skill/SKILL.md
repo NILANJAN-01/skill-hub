@@ -12,7 +12,7 @@ metadata:
 Every skill in the hub lives in `skills/<name>/` and is registered in `.claude-plugin/marketplace.json`. Two scripts keep the hub consistent:
 
 - `tools/validate_skills.py` checks every skill against the Agent Skills spec and the hub rules.
-- `tools/build_catalog.py` regenerates `catalog.json` and `skills/README.md`. The website and the `find-skills` skill read these.
+- `tools/build_catalog.py` regenerates `catalog.json`, `skills/README.md` and `prompts.html`. The website and the `find-skills` skill read these.
 
 ## Procedure
 
@@ -48,14 +48,15 @@ Every skill in the hub lives in `skills/<name>/` and is registered in `.claude-p
    }
    ```
    Add the plugin's display title to `CATEGORY_TITLES` in `tools/build_catalog.py`.
-6. **Rebuild and validate**:
+6. **Add example prompts** to `examples/prompts.json` (at least 2, ideally 3): `"<name>": ["realistic user request 1", "..."]`. Write them the way users actually ask. They appear on the website and on `prompts.html`.
+7. **Rebuild and validate**:
    ```bash
    python tools/build_catalog.py
    python tools/validate_skills.py
    ```
    Fix every `ERROR`. Read each `WARN` and fix it where reasonable. CI runs both scripts with `--check` and fails if `catalog.json` is stale.
-7. **Preview** the website locally with `python -m http.server`, then open `http://localhost:8000/#/skill/<name>`.
-8. **Commit** the skill folder, `marketplace.json`, `catalog.json` and `skills/README.md` together.
+8. **Preview** the website locally with `python -m http.server`, then open `http://localhost:8000/#/skill/<name>`.
+9. **Commit** the skill folder, `marketplace.json`, `examples/prompts.json`, `catalog.json`, `skills/README.md` and `prompts.html` together.
 
 ## Common validation errors
 
@@ -67,4 +68,5 @@ Every skill in the hub lives in `skills/<name>/` and is registered in `.claude-p
 | `not listed in any plugin` | Add it to a plugin in `marketplace.json` (step 5) |
 | `marketplace lists missing skill` | Fix the path or remove the entry |
 | `broken relative link` | Create the referenced file or fix the link path |
+| `needs at least 2 example prompts` | Add prompts for the skill to `examples/prompts.json` |
 | `catalog.json is out of date` | Run `python tools/build_catalog.py` and commit the result |

@@ -11,7 +11,8 @@ Thanks for adding to the hub! Every skill must pass `tools/validate_skills.py` a
 - [ ] The body is actionable: when to use, when not to use, numbered steps with exact commands, safety rules for destructive actions, and troubleshooting.
 - [ ] `SKILL.md` is under about 500 lines. Long material goes in `references/`, code in `scripts/`, and templates or data in `assets/`. All links are relative.
 - [ ] The skill is listed in at least one plugin in `.claude-plugin/marketplace.json`.
-- [ ] You ran `python tools/build_catalog.py` and committed `catalog.json` and `skills/README.md`.
+- [ ] `examples/prompts.json` has at least 2 realistic prompts for the skill, written the way a user would ask. Each one should make Claude load the skill.
+- [ ] You ran `python tools/build_catalog.py` and committed `catalog.json`, `skills/README.md` and `prompts.html`.
 - [ ] `python tools/validate_skills.py` reports 0 errors.
 - [ ] You tested it: install the skill locally (`cp -r skills/<name> ~/.claude/skills/`) and check that Claude picks it up for a matching request and does **not** pick it up for an unrelated one.
 

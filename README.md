@@ -2,7 +2,7 @@
 
 [![Validate skills](https://github.com/NILANJAN-01/skill-hub/actions/workflows/validate.yml/badge.svg)](https://github.com/NILANJAN-01/skill-hub/actions/workflows/validate.yml)
 
-**A centralized hub of Agent Skills for Claude.** Browse them at **https://nilanjan-01.github.io/skill-hub/**.
+**A centralized hub of Agent Skills for Claude.** Browse them at **https://nilanjan-01.github.io/skill-hub/**. To see what to say to Claude for each skill, open the **[example prompts](https://nilanjan-01.github.io/skill-hub/prompts.html)** page.
 
 Skills are folders of instructions, scripts and resources that Claude loads on demand to do specialized tasks in a repeatable way. Each skill is a folder with a `SKILL.md` file. The YAML frontmatter (`name`, `description`) tells the agent *when* to use the skill. The Markdown body tells it *how*. Claude reads only the descriptions up front and loads the full skill when a task matches.
 
@@ -35,7 +35,9 @@ See the full list in [`skills/README.md`](skills/README.md). The machine-readabl
 ```
 .claude-plugin/marketplace.json   Claude Code plugin marketplace: groups skills into installable plugins
 skills/<name>/SKILL.md            one folder per skill (+ optional references/, scripts/, assets/)
+examples/prompts.json             example prompts for every skill (feeds prompts.html)
 catalog.json, skills/README.md    generated index of every skill (tools/build_catalog.py)
+prompts.html                      generated example-prompts page
 template/SKILL.md                 starting point for a new skill
 spec/agent-skills-spec.md         the Agent Skills spec summary + hub conventions
 tools/                            build_catalog.py, validate_skills.py (stdlib-only Python)
@@ -90,10 +92,10 @@ Upload a skill folder as a custom skill. See the [Skills API guide](https://docs
 ## Add a skill to the hub
 
 1. `cp -r template skills/<your-skill>` and fill in `SKILL.md`. Give it a specific `description` that says what the skill does and when to use it.
-2. Add `"./skills/<your-skill>"` to a plugin in `.claude-plugin/marketplace.json`.
+2. Add `"./skills/<your-skill>"` to a plugin in `.claude-plugin/marketplace.json`, and add at least 2 example prompts for it to `examples/prompts.json`.
 3. Run the tools:
    ```bash
-   python tools/build_catalog.py      # regenerate catalog.json + skills/README.md
+   python tools/build_catalog.py      # regenerate catalog.json, skills/README.md, prompts.html
    python tools/validate_skills.py    # spec + hub checks
    ```
 4. Open a pull request. CI runs the same checks.
