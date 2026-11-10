@@ -212,6 +212,16 @@
       ]
     },
     {
+      "name": "android-automation",
+      "description": "Android UI test automation: turn UIAutomator dumps (XML, .uix, Appium source or HTML) into keyword/resource-id locator JSON for any Android UI, including automotive OEM head units",
+      "source": "./",
+      "strict": false,
+      "category": "android",
+      "skills": [
+        "./skills/android-uiautomator-locators"
+      ]
+    },
+    {
       "name": "hub-tools",
       "description": "Skills for working with the hub itself: find and install skills, contribute new skills, and generate skills from technical PDFs (skillforge)",
       "source": "./",

@@ -21,7 +21,9 @@ jobs:
       - name: Check generated files are up to date
         run: python tools/build_catalog.py --check
       - name: Byte-compile tools and skill scripts
-        run: python -m py_compile tools/*.py skills/skillforge/scripts/skillforge.py
+        run: python -m py_compile tools/*.py skills/skillforge/scripts/skillforge.py skills/android-uiautomator-locators/scripts/*.py
+      - name: Skill tests (android-uiautomator-locators)
+        run: python skills/android-uiautomator-locators/scripts/test_dump_to_locators.py
 
   install:
     # The installer promises Python 3.8+ and every OS; check that it holds.

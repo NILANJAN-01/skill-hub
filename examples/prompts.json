@@ -318,5 +318,10 @@
     "Explain how Git stores data compared to other version control systems.",
     "Give me an overview of Git's distributed workflows.",
     "What does the Pro Git book say about customizing Git?"
+  ],
+  "android-uiautomator-locators": [
+    "Here's the HTML of a uiautomator dump from our head unit. Generate a JSON with keyword names and resource ids for our tests.",
+    "Convert all the window_dump.xml files in dumps/ into locator JSON files in tests/locators.",
+    "This Compose screen has no resource-ids. Give me the best locators you can from this uiautomator dump."
   ]
 }
