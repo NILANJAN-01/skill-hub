@@ -27,6 +27,10 @@ This page summarizes the parts that `tools/validate_skills.py` enforces, plus th
 
 ## Hub conventions (on top of the spec)
 
+- **Agent-neutral bodies.** Skills are installed into Claude Code, Antigravity, Devin, Copilot, Cursor, Windsurf, Codex and Gemini CLI. Don't rely on one agent's tool names, slash commands or config files. Put real requirements in `compatibility`. The validator warns on agent-specific wording.
+- **Portable frontmatter only.** Use the spec fields above. Some agents support extra fields (e.g. `argument-hint`, `disable-model-invocation`), but others ignore or reject them, so put hub data under `metadata:`.
+- **Scripts** are cross-platform (Python standard library preferred) and documented in the body.
+
 - `metadata.title`: human-readable title shown on the website.
 - `metadata.category`: the focused plugin the skill belongs to (e.g. `git-branching`).
 - `metadata.source` / `metadata.pages`: provenance for skills derived from a document.

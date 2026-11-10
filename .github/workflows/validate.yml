@@ -18,7 +18,38 @@ jobs:
           python-version: "3.12"
       - name: Validate skills and marketplace
         run: python tools/validate_skills.py
-      - name: Check catalog.json and skills/README.md are up to date
+      - name: Check generated files are up to date
         run: python tools/build_catalog.py --check
       - name: Byte-compile tools and skill scripts
         run: python -m py_compile tools/*.py skills/skillforge/scripts/skillforge.py
+
+  install:
+    # The installer promises Python 3.8+ and every OS; check that it holds.
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Installer stays compatible with Python 3.8
+        shell: bash
+        run: |
+          python -m pip install --quiet vermin
+          vermin --no-tips --violations -t=3.8- tools/install.py
+      - name: Install into every agent's folder
+        shell: bash
+        run: |
+          set -e
+          proj="$RUNNER_TEMP/proj"
+          python tools/install.py --list > /dev/null
+          python tools/install.py --agent claude-code,antigravity,devin,copilot,cursor,windsurf,codex,gemini-cli,universal \
+            --plugin hub-tools --skill git-rebasing --project "$proj" --each
+          for d in .claude .agents .github .cursor .devin .gemini; do
+            test -f "$proj/$d/skills/git-rebasing/SKILL.md" || { echo "missing $d"; exit 1; }
+          done
+          python tools/install.py --zip "$RUNNER_TEMP/zips" --plugin hub-tools
+          test -f "$RUNNER_TEMP/zips/find-skills.zip"

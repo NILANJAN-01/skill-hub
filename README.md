@@ -2,16 +2,11 @@
 
 [![Validate skills](https://github.com/NILANJAN-01/skill-hub/actions/workflows/validate.yml/badge.svg)](https://github.com/NILANJAN-01/skill-hub/actions/workflows/validate.yml)
 
-**A centralized hub of Agent Skills for Claude.** Browse them at **https://nilanjan-01.github.io/skill-hub/**. To see what to say to Claude for each skill, open the **[example prompts](https://nilanjan-01.github.io/skill-hub/prompts.html)** page.
+**A centralized hub of Agent Skills that work in every major AI coding agent:** Claude Code, Google Antigravity, Devin, GitHub Copilot, Cursor, Windsurf, OpenAI Codex and Gemini CLI.
 
-Skills are folders of instructions, scripts and resources that Claude loads on demand to do specialized tasks in a repeatable way. Each skill is a folder with a `SKILL.md` file. The YAML frontmatter (`name`, `description`) tells the agent *when* to use the skill. The Markdown body tells it *how*. Claude reads only the descriptions up front and loads the full skill when a task matches.
+Browse the skills at **https://nilanjan-01.github.io/skill-hub/**. The **[example prompts](https://nilanjan-01.github.io/skill-hub/prompts.html)** page shows what to say to your agent for each skill.
 
-For background on skills, see:
-
-- [What are skills?](https://support.claude.com/en/articles/12512176-what-are-skills)
-- [Using skills in Claude](https://support.claude.com/en/articles/12512180-using-skills-in-claude)
-- [How to create custom skills](https://support.claude.com/en/articles/12512198-creating-custom-skills)
-- [Agent Skills specification](https://agentskills.io/specification)
+A skill is a folder with a `SKILL.md` file in the open [Agent Skills](https://agentskills.io/specification) format. The YAML frontmatter (`name`, `description`) tells the agent *when* to use the skill. The Markdown body tells it *how*. Agents read only the descriptions up front and load the full skill when a task matches. Because the format is shared, each skill here is written **once** and installed into whichever agent you use.
 
 ## What's in the hub
 
@@ -30,77 +25,95 @@ For background on skills, see:
 
 See the full list in [`skills/README.md`](skills/README.md). The machine-readable index is [`catalog.json`](catalog.json).
 
-## Repository layout
+## Install
 
+### Option 1: the hub installer (any agent, Python only)
+
+`tools/install.py` knows where each agent looks for skills. It needs only Python 3.8+, with no clone and no Node.
+
+```bash
+# from anywhere: downloads the hub and installs into the current project
+curl -fsSL https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py | python3 - --agent cursor --plugin git-branching
+
+# from a clone
+python tools/install.py --list                                          # agents, plugins, skills
+python tools/install.py --agent antigravity --skill git-rebasing        # one skill, this project
+python tools/install.py --agent copilot,devin,claude-code --plugin hub-tools
+python tools/install.py --agent codex --plugin git-skills --global      # for your user, all projects
+python tools/install.py --zip dist --plugin git-branching               # one .zip per skill, for upload UIs
 ```
-.claude-plugin/marketplace.json   Claude Code plugin marketplace: groups skills into installable plugins
-skills/<name>/SKILL.md            one folder per skill (+ optional references/, scripts/, assets/)
-examples/prompts.json             example prompts for every skill (feeds prompts.html)
-catalog.json, skills/README.md    generated index of every skill (tools/build_catalog.py)
-prompts.html                      generated example-prompts page
-template/SKILL.md                 starting point for a new skill
-spec/agent-skills-spec.md         the Agent Skills spec summary + hub conventions
-tools/                            build_catalog.py, validate_skills.py (stdlib-only Python)
-index.html                        the GitHub Pages site (reads catalog.json)
+
+When you name several agents, the installer writes to the **fewest shared folders** that all of them read. For example, `.agents/skills` serves Antigravity, Devin, Codex and Copilot at once, so skills aren't duplicated. Pass `--each` to copy into every agent's own folder instead. Existing skill folders are kept unless you pass `--force`.
+
+### Option 2: the `skills` CLI (Node)
+
+The community [`skills`](https://skills.sh) CLI also installs from this repo into 40+ agents:
+
+```bash
+npx skills add NILANJAN-01/skill-hub --skill git-rebasing      # detects your agents
+npx skills add NILANJAN-01/skill-hub --list
 ```
 
-## Use the skills
-
-### Claude Code
-
-Register this repository as a plugin marketplace:
+### Option 3: Claude Code plugin marketplace
 
 ```
 /plugin marketplace add NILANJAN-01/skill-hub
-```
-
-Then select **Browse and install plugins** → **skill-hub** → a plugin → **Install now**. You can also install plugins directly:
-
-```
-/plugin install hub-tools --marketplace NILANJAN-01/skill-hub
-/plugin install git-getting-started --marketplace NILANJAN-01/skill-hub
 /plugin install git-branching --marketplace NILANJAN-01/skill-hub
-/plugin install git-collaboration --marketplace NILANJAN-01/skill-hub
-/plugin install git-power-tools --marketplace NILANJAN-01/skill-hub
-/plugin install git-customization --marketplace NILANJAN-01/skill-hub
-/plugin install git-internals --marketplace NILANJAN-01/skill-hub
-/plugin install git-integrations --marketplace NILANJAN-01/skill-hub
-/plugin install git-reference --marketplace NILANJAN-01/skill-hub
-/plugin install git-skills --marketplace NILANJAN-01/skill-hub
 ```
 
-On older Claude Code versions, add the marketplace first, then use `/plugin install <plugin>@skill-hub`.
+Plugins: `hub-tools`, `git-getting-started`, `git-branching`, `git-collaboration`, `git-power-tools`, `git-customization`, `git-internals`, `git-integrations`, `git-reference`, `git-skills` (all Git). On older Claude Code versions, add the marketplace first, then use `/plugin install <plugin>@skill-hub`.
 
-Install only the categories you need, because every installed skill adds its description to Claude's context. After installing, just describe the task, e.g. *"rebase my feature branch onto main"* loads `git-rebasing`.
+### Option 4: copy a folder or upload a zip
 
-To install **a single skill** without the plugin system, copy its folder:
+Copy `skills/<name>/` into a folder from the table below. For web apps with an upload UI, such as Claude.ai (**Settings → Capabilities → Skills**) or the Devin web app, upload the zip that `install.py --zip` produces.
 
-```bash
-git clone --depth 1 https://github.com/NILANJAN-01/skill-hub.git
-cp -r skill-hub/skills/git-rebasing ~/.claude/skills/            # all projects
-cp -r skill-hub/skills/git-rebasing <project>/.claude/skills/    # one project
+### Where each agent reads skills
+
+<!-- agents:start -->
+<!-- Generated from tools/install.py AGENTS by tools/build_catalog.py -->
+| Agent | `--agent` | Project folder | User folder | Also reads |
+|---|---|---|---|---|
+| [Claude Code](https://code.claude.com/docs/en/skills) | `claude-code` | `.claude/skills` | `~/.claude/skills` | - |
+| [Google Antigravity](https://antigravity.google/docs/skills) | `antigravity` | `.agents/skills` | `~/.gemini/config/skills` | `.agent/skills` |
+| [Devin](https://docs.devin.ai/product-guides/skills) | `devin` | `.agents/skills` | `~/.config/devin/skills` | `.devin/skills`, `.github/skills`, `.claude/skills`, `.cursor/skills`, `.windsurf/skills`, `.codex/skills` |
+| [GitHub Copilot (VS Code)](https://code.visualstudio.com/docs/agent-customization/agent-skills) | `copilot` | `.github/skills` | `~/.copilot/skills` | `.agents/skills`, `.claude/skills` |
+| [Cursor](https://cursor.com/docs/skills) | `cursor` | `.cursor/skills` | `~/.cursor/skills` | `.claude/skills`, `.codex/skills` |
+| [Windsurf (Devin Local)](https://docs.devin.ai/desktop/cascade/skills) | `windsurf` | `.devin/skills` | `~/.config/devin/skills` | `.windsurf/skills` |
+| [OpenAI Codex](https://learn.chatgpt.com/docs/build-skills) | `codex` | `.agents/skills` | `~/.agents/skills` | - |
+| [Gemini CLI](https://geminicli.com/docs/cli/skills/) | `gemini-cli` | `.gemini/skills` | `~/.gemini/skills` | `.agents/skills` |
+| [Any Agent Skills tool (.agents)](https://agentskills.io) | `universal` | `.agents/skills` | `~/.agents/skills` | - |
+<!-- agents:end -->
+
+Commit project folders to share skills with your team. Install only the categories you need, because every installed skill adds its description to the agent's context. After installing, just describe the task. For example, *"rebase my feature branch onto main"* loads `git-rebasing`.
+
+## Repository layout
+
 ```
-
-### Claude.ai
-
-Zip a skill folder and upload it under **Settings → Capabilities → Skills**. See [Using skills in Claude](https://support.claude.com/en/articles/12512180-using-skills-in-claude#h_a4222fa77b).
-
-### Claude API
-
-Upload a skill folder as a custom skill. See the [Skills API guide](https://docs.claude.com/en/api/skills-guide#creating-a-skill).
+skills/<name>/SKILL.md            one folder per skill, agent-neutral (+ optional references/, scripts/, assets/)
+.claude-plugin/marketplace.json   groups skills into plugins/categories (used by Claude Code and install.py)
+examples/prompts.json             example prompts for every skill (feeds prompts.html)
+catalog.json, skills/README.md    generated index of every skill, plugins and agents
+prompts.html, index.html          the GitHub Pages site
+template/SKILL.md                 starting point for a new skill
+spec/agent-skills-spec.md         Agent Skills spec summary + hub conventions
+tools/install.py                  multi-agent installer (source of truth for agent folders)
+tools/build_catalog.py            regenerates catalog.json, skills/README.md, prompts.html, the agent table above
+tools/validate_skills.py          spec + hub + portability checks (CI)
+AGENTS.md                         instructions for AI agents working on this repo
+```
 
 ## Add a skill to the hub
 
-1. `cp -r template skills/<your-skill>` and fill in `SKILL.md`. Give it a specific `description` that says what the skill does and when to use it.
+1. `cp -r template skills/<your-skill>` and fill in `SKILL.md`. Give it a specific `description` that says what the skill does and when to use it. Keep the body **agent-neutral**: no instructions that only one IDE understands.
 2. Add `"./skills/<your-skill>"` to a plugin in `.claude-plugin/marketplace.json`, and add at least 2 example prompts for it to `examples/prompts.json`.
 3. Run the tools:
    ```bash
-   python tools/build_catalog.py      # regenerate catalog.json, skills/README.md, prompts.html
-   python tools/validate_skills.py    # spec + hub checks
+   python tools/build_catalog.py      # regenerate generated files
+   python tools/validate_skills.py    # spec + hub + portability checks
    ```
-4. Open a pull request. CI runs the same checks.
+4. Open one pull request per skill, titled `Add <skill> skill` or `Update <skill> skill: <what changed>`. CI runs the same checks.
 
-[CONTRIBUTING.md](CONTRIBUTING.md) has the full rules. The [`contribute-skill`](skills/contribute-skill/SKILL.md) skill teaches Claude to do all of this for you.
+[CONTRIBUTING.md](CONTRIBUTING.md) has the full rules. Any agent working in this repo follows [AGENTS.md](AGENTS.md), and the [`contribute-skill`](skills/contribute-skill/SKILL.md) skill walks an agent through the whole process.
 
 ### Generate skills from a PDF
 
@@ -120,10 +133,10 @@ python -m http.server     # then open http://localhost:8000
 
 ## Disclaimer
 
-Skills are provided as-is, for productivity and education. Generated skills are extracted from their sources and can contain noisy bullets. Review a skill and test it in your own environment before relying on it for critical work.
+Skills are provided as-is, for productivity and education. Generated skills are extracted from their sources and can contain noisy bullets. Review a skill and test it in your own environment before relying on it for critical work. Skills can include scripts, so read a skill before installing it from any source.
 
 ## Credits & licenses
 
 - The `git-*` skills are derived from [*Pro Git*](https://git-scm.com/book) by Scott Chacon and Ben Straub, licensed under [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/). See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 - Each skill declares its license in the `license` field of its frontmatter.
-- The hub layout follows [anthropics/skills](https://github.com/anthropics/skills), which is also worth browsing for more skills.
+- The hub layout follows [anthropics/skills](https://github.com/anthropics/skills). Skill paths come from each vendor's documentation, linked in the table above.

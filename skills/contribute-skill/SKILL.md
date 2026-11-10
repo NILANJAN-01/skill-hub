@@ -1,7 +1,8 @@
 ---
 name: contribute-skill
-description: Add a new skill (or update an existing one) in the skill-hub repository so that it validates, appears in catalog.json and the website, and is installable through the Claude Code plugin marketplace. Use when the user wants to write, add, publish, register, contribute or rename a skill in skill-hub, create a new plugin bundle, or fix validation/catalog errors from tools/validate_skills.py or tools/build_catalog.py.
+description: Add a new skill (or update an existing one) in the skill-hub repository so that it validates, appears in catalog.json and the website, and installs into every supported AI coding agent (Claude Code, Antigravity, Devin, Copilot, Cursor, Windsurf, Codex, Gemini CLI). Use when the user wants to write, add, publish, register, contribute or rename a skill in skill-hub, create a new plugin bundle, or fix validation/catalog errors from tools/validate_skills.py or tools/build_catalog.py.
 license: Complete terms in the repository README
+compatibility: Works in any agent. Edits a skill-hub checkout, so it needs file-system and shell access with Python 3.8+. Mentions agent names only to explain where skills are installed.
 metadata:
   title: "Contribute a skill to the hub"
   category: hub-tools
@@ -9,7 +10,7 @@ metadata:
 
 # Contribute a skill to skill-hub
 
-Every skill in the hub lives in `skills/<name>/` and is registered in `.claude-plugin/marketplace.json`. Two scripts keep the hub consistent:
+Every skill in the hub lives in `skills/<name>/` and is registered in a plugin (category) in `.claude-plugin/marketplace.json`. Claude Code reads that file natively, and `tools/install.py` uses it to install categories into other agents. Two scripts keep the hub consistent:
 
 - `tools/validate_skills.py` checks every skill against the Agent Skills spec and the hub rules.
 - `tools/build_catalog.py` regenerates `catalog.json`, `skills/README.md` and `prompts.html`. The website and the `find-skills` skill read these.
@@ -36,6 +37,7 @@ Every skill in the hub lives in `skills/<name>/` and is registered in `.claude-p
    ```
    The `description` is the only thing an agent sees before it loads the skill. Make it specific (what plus when), at most 1024 characters, written in the third person, and include the words users actually type.
 4. **Write the body.** Keep it actionable: when to use, when not to use, numbered procedures with exact commands, safety rules for destructive steps, and troubleshooting. Keep `SKILL.md` under about 500 lines. Move long material into `references/*.md`, and put helper code in `scripts/`. Link both with relative paths so that the agent loads them only when needed.
+   **Keep it agent-neutral.** The same folder is installed into many different agents. Describe *what* to do ("run", "read", "ask the user") and don't name one agent's tools, slash commands or config files. Scripts must be cross-platform (Python standard library preferred). If a skill really needs a specific agent or environment, say so in the `compatibility` frontmatter field. Otherwise the validator warns about agent-specific wording.
 5. **Register it** in `.claude-plugin/marketplace.json`. Add `"./skills/<name>"` to the `skills` array of the matching focused plugin, and to a bundle plugin (e.g. `git-skills`) if one exists for its family. To add a new plugin:
    ```json
    {
@@ -56,7 +58,7 @@ Every skill in the hub lives in `skills/<name>/` and is registered in `.claude-p
    ```
    Fix every `ERROR`. Read each `WARN` and fix it where reasonable. CI runs both scripts with `--check` and fails if `catalog.json` is stale.
 8. **Preview** the website locally with `python -m http.server`, then open `http://localhost:8000/#/skill/<name>`.
-9. **Commit** the skill folder, `marketplace.json`, `examples/prompts.json`, `catalog.json`, `skills/README.md` and `prompts.html` together.
+9. **Open one pull request per skill**, titled `Add <name> skill` or `Update <name> skill: <what changed>`. Commit the skill folder, `marketplace.json`, `examples/prompts.json`, `catalog.json`, `skills/README.md` and `prompts.html` together.
 
 ## Common validation errors
 
@@ -67,6 +69,7 @@ Every skill in the hub lives in `skills/<name>/` and is registered in `.claude-p
 | `description is longer than 1024 characters` | Shorten it. Move detail into the body |
 | `not listed in any plugin` | Add it to a plugin in `marketplace.json` (step 5) |
 | `marketplace lists missing skill` | Fix the path or remove the entry |
+| `agent-specific wording (...)` | Rewrite those lines neutrally, or add a `compatibility:` field explaining the requirement |
 | `broken relative link` | Create the referenced file or fix the link path |
 | `needs at least 2 example prompts` | Add prompts for the skill to `examples/prompts.json` |
 | `catalog.json is out of date` | Run `python tools/build_catalog.py` and commit the result |

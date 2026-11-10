@@ -246,12 +246,109 @@
       "count": 1
     }
   ],
+  "agents": [
+    {
+      "id": "claude-code",
+      "name": "Claude Code",
+      "project": ".claude/skills",
+      "global": "~/.claude/skills",
+      "also_reads": [],
+      "native": "/plugin marketplace add NILANJAN-01/skill-hub",
+      "docs": "https://code.claude.com/docs/en/skills"
+    },
+    {
+      "id": "antigravity",
+      "name": "Google Antigravity",
+      "project": ".agents/skills",
+      "global": "~/.gemini/config/skills",
+      "also_reads": [
+        ".agent/skills"
+      ],
+      "docs": "https://antigravity.google/docs/skills"
+    },
+    {
+      "id": "devin",
+      "name": "Devin",
+      "project": ".agents/skills",
+      "global": "~/.config/devin/skills",
+      "also_reads": [
+        ".devin/skills",
+        ".github/skills",
+        ".claude/skills",
+        ".cursor/skills",
+        ".windsurf/skills",
+        ".codex/skills"
+      ],
+      "note": "Cloud Devin reads skills committed to the repo; the global folder is for Devin Local / CLI.",
+      "docs": "https://docs.devin.ai/product-guides/skills"
+    },
+    {
+      "id": "copilot",
+      "name": "GitHub Copilot (VS Code)",
+      "project": ".github/skills",
+      "global": "~/.copilot/skills",
+      "also_reads": [
+        ".agents/skills",
+        ".claude/skills"
+      ],
+      "docs": "https://code.visualstudio.com/docs/agent-customization/agent-skills"
+    },
+    {
+      "id": "cursor",
+      "name": "Cursor",
+      "project": ".cursor/skills",
+      "global": "~/.cursor/skills",
+      "also_reads": [
+        ".claude/skills",
+        ".codex/skills"
+      ],
+      "docs": "https://cursor.com/docs/skills"
+    },
+    {
+      "id": "windsurf",
+      "name": "Windsurf (Devin Local)",
+      "project": ".devin/skills",
+      "global": "~/.config/devin/skills",
+      "also_reads": [
+        ".windsurf/skills"
+      ],
+      "note": "Windsurf Cascade is now Devin Local; .windsurf/skills is still read as a legacy path.",
+      "docs": "https://docs.devin.ai/desktop/cascade/skills"
+    },
+    {
+      "id": "codex",
+      "name": "OpenAI Codex",
+      "project": ".agents/skills",
+      "global": "~/.agents/skills",
+      "also_reads": [],
+      "docs": "https://learn.chatgpt.com/docs/build-skills"
+    },
+    {
+      "id": "gemini-cli",
+      "name": "Gemini CLI",
+      "project": ".gemini/skills",
+      "global": "~/.gemini/skills",
+      "also_reads": [
+        ".agents/skills"
+      ],
+      "docs": "https://geminicli.com/docs/cli/skills/"
+    },
+    {
+      "id": "universal",
+      "name": "Any Agent Skills tool (.agents)",
+      "project": ".agents/skills",
+      "global": "~/.agents/skills",
+      "also_reads": [],
+      "note": "The emerging shared location; read by Antigravity, Devin, Copilot, Codex and others.",
+      "docs": "https://agentskills.io"
+    }
+  ],
   "skills": [
     {
       "name": "contribute-skill",
       "title": "Contribute a skill to the hub",
       "category": "hub-tools",
-      "description": "Add a new skill (or update an existing one) in the skill-hub repository so that it validates, appears in catalog.json and the website, and is installable through the Claude Code plugin marketplace. Use when the user wants to write, add, publish, register, contribute or rename a skill in skill-hub, create a new plugin bundle, or fix validation/catalog errors from tools/validate_skills.py or tools/build_catalog.py.",
+      "description": "Add a new skill (or update an existing one) in the skill-hub repository so that it validates, appears in catalog.json and the website, and installs into every supported AI coding agent (Claude Code, Antigravity, Devin, Copilot, Cursor, Windsurf, Codex, Gemini CLI). Use when the user wants to write, add, publish, register, contribute or rename a skill in skill-hub, create a new plugin bundle, or fix validation/catalog errors from tools/validate_skills.py or tools/build_catalog.py.",
       "plugins": [
         "hub-tools"
       ],
@@ -268,7 +365,7 @@
       "name": "find-skills",
       "title": "Find & install hub skills",
       "category": "hub-tools",
-      "description": "Search the skill-hub catalog for an Agent Skill that fits the current task and install it into Claude Code (as a plugin or by copying the folder). Use when the user asks \"is there a skill for X\", wants to find, browse, list, recommend or install skills, asks what skills or plugins skill-hub offers, or when a task would clearly benefit from a specialized playbook (e.g. a tricky git rebase, writing a git hook, generating skills from a PDF).",
+      "description": "Search the skill-hub catalog for an Agent Skill that fits the current task and install it into the AI coding agent in use (any agent that reads SKILL.md skills). Use when the user asks \"is there a skill for X\", wants to find, browse, list, recommend or install skills, asks what skills or plugins skill-hub offers, or when a task would clearly benefit from a specialized playbook (e.g. a tricky git rebase, writing a git hook, generating skills from a PDF).",
       "plugins": [
         "hub-tools"
       ],

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>skill-hub · AI Agent Skills</title>
-<meta name="description" content="skill-hub: a centralized hub of Agent Skills (SKILL.md playbooks) for Claude. Browse, search and install skills as Claude Code plugins.">
+<meta name="description" content="skill-hub: a centralized hub of Agent Skills (SKILL.md playbooks) for Claude Code, Antigravity, Devin, Copilot, Cursor, Windsurf, Codex and Gemini CLI.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23f05133'/><path d='M10 9v14M10 16h7a5 5 0 0 0 5-5V9' stroke='white' stroke-width='3' fill='none' stroke-linecap='round'/><circle cx='22' cy='23' r='3' fill='white'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -140,12 +140,22 @@ header.top nav a:hover { color: var(--text); text-decoration: none; }
 .examples q { flex: 1; min-width: 0; overflow-wrap: anywhere; }
 .examples button { flex: none; border: 1px solid var(--border); background: var(--surface-2); color: var(--muted); border-radius: 6px; font: 12px Inter, system-ui, sans-serif; padding: 2px 8px; cursor: pointer; }
 .examples button:hover { color: var(--text); border-color: var(--accent); }
-.hero .codebox { display: inline-block; margin-top: 16px; }
+.hero .codebox { display: block; margin: 14px 0 22px; max-width: 100%; }
+.agents { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.agents span.lbl { color: var(--muted); font-size: 13px; margin-right: 2px; }
+.agents a { font-size: 13px; border: 1px solid var(--border); background: var(--surface); color: var(--text); border-radius: 999px; padding: 4px 11px; }
+.agents a:hover { border-color: var(--accent); text-decoration: none; }
+.agent-pick { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; font-size: 14px; color: var(--muted); }
+.agent-pick select { font: 14px Inter, system-ui, sans-serif; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; max-width: 100%; }
 .about > p { color: var(--muted); margin: 0 0 20px; }
 .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
 .step { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; }
 .step b { display: block; margin-bottom: 4px; }
 .step span { color: var(--muted); font-size: 14px; }
+.tablewrap { overflow-x: auto; margin-top: 10px; }
+.agent-table { border-collapse: collapse; font-size: 13.5px; min-width: 560px; }
+.agent-table th, .agent-table td { text-align: left; border-bottom: 1px solid var(--border); padding: 7px 12px 7px 0; vertical-align: top; }
+.agent-table th { color: var(--muted); font-weight: 600; }
 .codebox { margin-top: 18px; background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; overflow-x: auto; font-size: 13px; }
 footer { border-top: 1px solid var(--border); color: var(--muted); font-size: 13px; padding: 22px 0; }
 footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 18px; justify-content: space-between; }
@@ -179,11 +189,12 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 18px; justify-content: s
   <!-- catalog view -->
   <section id="view-list">
     <div class="wrap hero">
-      <h1>The <span>skill hub</span> for Claude</h1>
-      <p>A centralized, curated collection of <code>SKILL.md</code> playbooks that Claude loads on demand: when to act,
-        safety rules, step-by-step procedures with exact commands, troubleshooting and more. Install a whole category as a
-        Claude Code plugin, or copy a single skill.</p>
-      <pre class="codebox"><code>/plugin marketplace add NILANJAN-01/skill-hub</code></pre>
+      <h1>One <span>skill hub</span> for every AI coding agent</h1>
+      <p>A curated collection of <code>SKILL.md</code> playbooks in the open Agent Skills format. Your agent loads them on
+        demand: when to act, safety rules, step-by-step procedures with exact commands, troubleshooting and more.
+        Each skill is written once and works everywhere.</p>
+      <div class="agents" id="agents"></div>
+      <pre class="codebox"><code>curl -fsSL https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py | python3 - --agent &lt;agent&gt; --plugin git-branching</code></pre>
       <div class="stats" id="stats"></div>
     </div>
     <div class="wrap">
@@ -214,6 +225,7 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 18px; justify-content: s
           <a class="btn" id="gh-folder" target="_blank" rel="noopener">View on GitHub</a>
         </div>
       </div>
+      <label class="agent-pick">Install for <select id="agent-select"></select></label>
       <div class="install"><code id="install-cmd"></code></div>
       <div class="examples" id="examples"></div>
       <div class="tabs" id="tabs"></div>
@@ -226,19 +238,25 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 18px; justify-content: s
     <div class="wrap hero">
       <h1>How the hub <span>works</span></h1>
       <p>Every skill is a folder in <code>skills/</code> with a <code>SKILL.md</code>. Skills are grouped into plugins in
-        <code>.claude-plugin/marketplace.json</code>, so Claude Code can install a whole category at once.
+        <code>.claude-plugin/marketplace.json</code>, so the hub installer and Claude Code can install a whole category at once.
         <code>tools/build_catalog.py</code> generates <code>catalog.json</code>, which powers this site and the
         <code>find-skills</code> skill. <code>tools/validate_skills.py</code> checks every skill against the Agent Skills spec in CI.</p>
     </div>
     <div class="wrap about">
-      <h2>Install</h2>
-      <pre class="codebox"><code>/plugin marketplace add NILANJAN-01/skill-hub
-/plugin install git-branching --marketplace NILANJAN-01/skill-hub   # one category
-/plugin install git-skills --marketplace NILANJAN-01/skill-hub      # every Git skill
+      <h2>Install (any agent)</h2>
+      <pre class="codebox"><code># hub installer: Python only, knows every agent's skills folder
+curl -fsSL https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py | python3 - --agent cursor --plugin git-branching
+python tools/install.py --agent copilot,devin --skill git-rebasing   # several agents, fewest shared folders
+python tools/install.py --agent codex --plugin git-skills --global   # for your user, all projects
 
-# or copy one skill
-git clone --depth 1 https://github.com/NILANJAN-01/skill-hub.git
-cp -r skill-hub/skills/git-rebasing ~/.claude/skills/</code></pre>
+# skills CLI (Node)
+npx skills add NILANJAN-01/skill-hub --skill git-rebasing
+
+# Claude Code plugin marketplace
+/plugin marketplace add NILANJAN-01/skill-hub
+/plugin install git-branching --marketplace NILANJAN-01/skill-hub</code></pre>
+      <h2>Where each agent reads skills</h2>
+      <div class="tablewrap"><table class="agent-table" id="agent-table"></table></div>
       <h2>Contribute</h2>
       <pre class="codebox"><code>cp -r template skills/my-skill          # write SKILL.md
 # add "./skills/my-skill" to a plugin in .claude-plugin/marketplace.json
@@ -287,7 +305,7 @@ python skills/skillforge/scripts/skillforge.py your-book.pdf --topics "rebase, h
 
   // Category chips come from catalog.categories ("All" first)
   let CHIPS = [["All", null]];
-  let categories = [], plugins = [];
+  let categories = [], plugins = [], agents = [];
 
   let catalog = [], activeChip = 0, current = null;
   const $ = (id) => document.getElementById(id);
@@ -337,6 +355,23 @@ python skills/skillforge/scripts/skillforge.py your-book.pdf --topics "rebase, h
   }
 
   // ------------------------------------------------------------------ skill view
+  function preferredAgent() {
+    let v = null;
+    try { v = localStorage.getItem("skillhub.agent"); } catch (e) {}
+    return agents.some(a => a.id === v) ? v : "claude-code";
+  }
+  function installCommand(s, a) {
+    const installer = `https://raw.githubusercontent.com/${REPO.owner}/${REPO.name}/main/tools/install.py`;
+    const lines = [`# ${a.name}: this skill into the current project (${a.project}/)`,
+      `curl -fsSL ${installer} | python3 - --agent ${a.id} --skill ${s.name}`];
+    if (a.global) lines.push("", `# for your user, all projects (${a.global}/)`,
+      `curl -fsSL ${installer} | python3 - --agent ${a.id} --skill ${s.name} --global`);
+    if (a.id === "claude-code" && s.plugins[0]) lines.push("", `# or the Claude Code plugin (whole "${s.plugins[0]}" category)`,
+      `/plugin marketplace add ${REPO.owner}/${REPO.name}`, `/plugin install ${s.plugins[0]} --marketplace ${REPO.owner}/${REPO.name}`);
+    lines.push("", "# or with the skills CLI (Node)", `npx skills add ${REPO.owner}/${REPO.name} --skill ${s.name}`);
+    if (a.note) lines.push("", `# note: ${a.note}`);
+    return lines.join("\n");
+  }
   function catTitle(name) { return (categories.find(c => c.name === name) || {}).title || name; }
   function tabLabel(f) {
     if (f === "SKILL.md") return "SKILL.md";
@@ -364,11 +399,16 @@ python skills/skillforge/scripts/skillforge.py your-book.pdf --topics "rebase, h
     const folder = s.path;
     $("raw-link").href = `${RAW}/${folder}/SKILL.md`;
     $("gh-folder").href = `${GH}/tree/main/${folder}`;
-    const plugin = s.plugins[0];
-    const cmd = (plugin ? `# Claude Code plugin (installs the "${plugin}" category)\n/plugin marketplace add ${REPO.owner}/${REPO.name}\n/plugin install ${plugin} --marketplace ${REPO.owner}/${REPO.name}\n\n` : "") +
-      `# or copy just this skill\ngit clone --depth 1 ${GH}.git\ncp -r ${REPO.name}/${folder} ~/.claude/skills/`;
-    $("install-cmd").textContent = cmd;
-    $("copy-install").onclick = () => copy(cmd);
+    const sel = $("agent-select");
+    sel.innerHTML = agents.map(a => `<option value="${esc(a.id)}">${esc(a.name)}</option>`).join("");
+    sel.value = preferredAgent();
+    const renderCmd = () => {
+      const cmd = installCommand(s, agents.find(a => a.id === sel.value) || agents[0]);
+      $("install-cmd").textContent = cmd;
+      $("copy-install").onclick = () => copy(cmd);
+    };
+    sel.onchange = () => { try { localStorage.setItem("skillhub.agent", sel.value); } catch (e) {} renderCmd(); };
+    renderCmd();
 
     // example prompts that should trigger this skill
     const ex = s.examples || [];
@@ -415,7 +455,7 @@ python skills/skillforge/scripts/skillforge.py your-book.pdf --topics "rebase, h
     try {
       const res = await fetch(CATALOG_URL, { cache: "no-cache" });
       const data = await res.json();
-      catalog = data.skills; categories = data.categories; plugins = data.plugins;
+      catalog = data.skills; categories = data.categories; plugins = data.plugins; agents = data.agents || [];
       CHIPS = [["All", null], ...categories.map(c => [`${c.title} (${c.count})`, c.name])];
     } catch (e) {
       $("grid").innerHTML = `<div class="empty">Could not load the skill catalog. If you opened this file directly from disk, serve it instead: <code>python -m http.server</code></div>`;
@@ -426,8 +466,14 @@ python skills/skillforge/scripts/skillforge.py your-book.pdf --topics "rebase, h
     catalog.sort((a, b) => rank(a) - rank(b) || a.title.localeCompare(b.title));
     $("stats").innerHTML = [
       `<b>${catalog.length}</b> skills`, `<b>${categories.length}</b> categories`,
-      `<b>${plugins.length}</b> installable plugins`, `Validated against the <b>Agent Skills</b> spec`,
+      `<b>${plugins.length}</b> installable plugins`, `<b>${agents.length - 1}</b> supported agents`,
     ].map(x => `<span class="stat">${x}</span>`).join("");
+    $("agents").innerHTML = `<span class="lbl">Works with</span>` + agents.filter(a => a.id !== "universal")
+      .map(a => `<a href="${esc(a.docs)}" target="_blank" rel="noopener">${esc(a.name)}</a>`).join("") +
+      `<a href="#/about">+ any Agent Skills tool</a>`;
+    $("agent-table").innerHTML = `<tr><th>Agent</th><th><code>--agent</code></th><th>Project folder</th><th>User folder</th></tr>` +
+      agents.map(a => `<tr><td><a href="${esc(a.docs)}" target="_blank" rel="noopener">${esc(a.name)}</a></td><td><code>${esc(a.id)}</code></td>` +
+        `<td><code>${esc(a.project)}</code></td><td>${a.global ? `<code>${esc(a.global)}</code>` : "-"}</td></tr>`).join("");
     renderChips();
     renderGrid();
     $("q").addEventListener("input", renderGrid);

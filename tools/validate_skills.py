@@ -21,6 +21,11 @@ NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 KNOWN_FIELDS = {"name", "description", "license", "compatibility", "metadata", "allowed-tools"}
 LINK_RE = re.compile(r"\[[^\]]*\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
 MAX_LINES = 500
+# Skills must work in every agent. Agent-specific wording needs a `compatibility` note.
+AGENT_SPECIFIC = re.compile(
+    r"\bClaude Code\b|\bClaude\.ai\b|~/\.claude\b|\.claude/skills|/plugin install|\bCLAUDE\.md\b|"
+    r"\bAntigravity\b|\bGitHub Copilot\b|\bCursor IDE\b|\bWindsurf\b|\bDevin\b|\bCodex CLI\b|\bGemini CLI\b|"
+    r"\bSkill tool\b|\bTodoWrite\b|\bAskUserQuestion\b")
 
 
 def check_skill(d: Path, plugin_names: set[str], listed: set[str]) -> tuple[list[str], list[str]]:
@@ -71,6 +76,12 @@ def check_skill(d: Path, plugin_names: set[str], listed: set[str]) -> tuple[list
         errors.append("skills derived from a source document must declare a license")
     if d.name not in listed:
         errors.append("not listed in any plugin in .claude-plugin/marketplace.json")
+
+    if not fm.get("compatibility"):
+        hits = sorted(set(AGENT_SPECIFIC.findall(body)))
+        if hits:
+            warns.append(f"agent-specific wording ({', '.join(hits)}); make the body agent-neutral or "
+                         "declare it in a 'compatibility' field")
 
     n_lines = text.count("\n") + 1
     if n_lines > MAX_LINES:
