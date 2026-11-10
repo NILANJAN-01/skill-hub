@@ -163,6 +163,34 @@ Everyone who clones the repo now gets the skills in their agent automatically.
 
 ---
 
+## Example: all skills in VS Code (GitHub Copilot)
+
+The full flow for one common setup: every hub skill, available in every folder you open in VS Code.
+
+1. **Install all 64 skills** (the `git-skills` and `hub-tools` categories) into Copilot's personal folder:
+
+   ```powershell
+   # Windows PowerShell
+   irm https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py -OutFile install.py
+   python install.py --agent copilot --plugin git-skills,hub-tools --global
+   ```
+   ```bash
+   # macOS / Linux
+   curl -fsSL https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py | python3 - --agent copilot --plugin git-skills,hub-tools --global
+   ```
+   This writes to `~/.copilot/skills/` (on Windows, `C:\Users\<you>\.copilot\skills\`). For one repo only, drop `--global` and run it from the repo root. The skills then go to `.github/skills/`, which you can commit for your team.
+
+2. **Reload VS Code:** `Ctrl+Shift+P` → **Developer: Reload Window** (or just open a new chat). No setting needs to be turned on.
+3. **Check they loaded:** `Ctrl+Shift+P` → **Chat: Open Customizations** → **Skills**. You can also type `/` (or `/skills`) in the Copilot Chat box.
+4. **Use them** in Copilot Chat (`Ctrl+Alt+I`), in chat or agent mode:
+   - Just ask: *"My feature branch is behind main. Put my commits on top of main without a merge commit."*
+   - Or pick a skill as a slash command: *"`/git-hooks` block commits whose message doesn't start with a ticket ID"*
+5. **Update later** by running the same command with `--force`. Remove a skill by deleting its folder.
+
+> Copilot also reads `.agents/skills` and `.claude/skills` (and `~/.agents/skills`, `~/.claude/skills`). Don't install the same skill in more than one of them, or it shows up twice. If you also use Claude Code, Codex or another agent, name them all in one command (e.g. `--agent copilot,claude-code`) and the installer avoids duplicates.
+
+---
+
 ## Other ways to install
 
 ### `skills` CLI (needs Node.js)
