@@ -324,5 +324,13 @@
     "Convert all the window_dump.xml files in dumps/ into locator JSON files in tests/locators.",
     "Dump the current screen from the connected device and generate the locator JSON.",
     "This Compose screen has no resource-ids. Give me the best locators you can from this uiautomator dump."
+  ],
+  "image-inspector": [
+    "Describe this screenshot.png for me: size, main colours and what's on it.",
+    "What is the exact hex colour of the pixel at 120,48 in banner.jpg?",
+    "Give me the dominant colour palette of logo.png and tell me if it has a transparent background.",
+    "Export every pixel of icon.png to a CSV and read the text in scan.jpg.",
+    "Where is play_icon.png on this screenshot? Give me the tap coordinates.",
+    "Compare after.png with before.png and show me what changed, ignoring the clock."
   ]
 }

@@ -174,6 +174,7 @@ Categories for `--plugin`:
 |---|---|
 | `hub-tools` | Find and install skills, contribute skills, turn PDFs into skills |
 | `android-automation` | Capture the screen over adb (or read UIAutomator XML dumps) and generate keyword / resource-id locator JSON for Android UI tests |
+| `image-tools` | Read any image and report its pixels (exact colours, palette, pixel map, CSV) and a plain-text description; find icons in and compare screenshots (OpenCV) |
 | `git-getting-started` | Install and configure Git, first repo, commits, history, undo, tags |
 | `git-branching` | Branches, merging, rebasing, merge conflicts |
 | `git-collaboration` | Remotes, Git servers, GitHub, pull requests, credentials |

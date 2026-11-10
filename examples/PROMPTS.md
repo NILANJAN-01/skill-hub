@@ -2,9 +2,9 @@
 
 <!-- Generated from examples/prompts.json by tools/build_catalog.py - do not edit by hand. -->
 
-196 things you can say to your AI coding agent, for all 65 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
+202 things you can say to your AI coding agent, for all 66 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
 
-**Categories:** [Hub tools](#hub-tools) · [Android: UI test automation](#android-ui-test-automation) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
+**Categories:** [Hub tools](#hub-tools) · [Android: UI test automation](#android-ui-test-automation) · [Images: pixels & description](#images-pixels--description) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
 
 ## Hub tools
 
@@ -46,6 +46,21 @@ Install the whole category: `--plugin android-automation`
 - “Convert all the window_dump.xml files in dumps/ into locator JSON files in tests/locators.”
 - “Dump the current screen from the connected device and generate the locator JSON.”
 - “This Compose screen has no resource-ids. Give me the best locators you can from this uiautomator dump.”
+
+## Images: pixels & description
+
+Install the whole category: `--plugin image-tools`
+
+### Image inspector: pixels and description
+
+[`image-inspector`](../skills/image-inspector/SKILL.md) · install: `--skill image-inspector`
+
+- “Describe this screenshot.png for me: size, main colours and what's on it.”
+- “What is the exact hex colour of the pixel at 120,48 in banner.jpg?”
+- “Give me the dominant colour palette of logo.png and tell me if it has a transparent background.”
+- “Export every pixel of icon.png to a CSV and read the text in scan.jpg.”
+- “Where is play_icon.png on this screenshot? Give me the tap coordinates.”
+- “Compare after.png with before.png and show me what changed, ignoring the clock.”
 
 ## Git: getting started
 

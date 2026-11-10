@@ -85,6 +85,7 @@ REPOSITORY = "https://github.com/NILANJAN-01/skill-hub"
 CATEGORY_TITLES = {
     "hub-tools": "Hub tools",
     "android-automation": "Android: UI test automation",
+    "image-tools": "Images: pixels & description",
     "git-getting-started": "Git: getting started",
     "git-branching": "Git: branching & merging",
     "git-collaboration": "Git: remotes & collaboration",

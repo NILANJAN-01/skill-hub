@@ -222,6 +222,16 @@
       ]
     },
     {
+      "name": "image-tools",
+      "description": "Images: read any PNG/JPG/WebP/GIF/BMP with a Python script and report pixels (exact colours, regions, palette, pixel map, CSV) plus a plain-text description, EXIF and optional OCR; with OpenCV, find icons in screenshots and compare screenshots",
+      "source": "./",
+      "strict": false,
+      "category": "image",
+      "skills": [
+        "./skills/image-inspector"
+      ]
+    },
+    {
       "name": "hub-tools",
       "description": "Skills for working with the hub itself: find and install skills, contribute new skills, and generate skills from technical PDFs (skillforge)",
       "source": "./",
