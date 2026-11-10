@@ -23,9 +23,10 @@ No Python? Install it from https://www.python.org/downloads/. On Windows, tick *
 
 Pick whichever is easiest:
 
-- **Website:** https://nilanjan-01.github.io/skill-hub/. Search or filter by category, then open a skill.
-- **Example prompts:** https://nilanjan-01.github.io/skill-hub/prompts.html. This shows what you'd say for each skill.
-- **List in the repo:** [`skills/README.md`](skills/README.md).
+- **Skill list:** [`skills/README.md`](skills/README.md) has every skill, grouped by category, with a short description.
+- **Example prompts:** [`examples/PROMPTS.md`](examples/PROMPTS.md) shows what you'd say for each skill. It's often the quickest way to spot the one you need.
+- **From the terminal:** run the installer with `--list` (see Step 5).
+- **Search a clone (optional):** run `python -m http.server` in the repo and open http://localhost:8000 for a searchable view.
 
 Note the skill's **name**, such as `git-rebasing`, or the **category** (plugin) it's in, such as `git-branching`. You can install one skill or a whole category.
 
@@ -131,7 +132,7 @@ Describe your task normally. For example, after installing `git-rebasing`:
 
 > *"My feature branch is behind main. Put my commits on top of the latest main without a merge commit."*
 
-The agent matches your request to the skill and follows its steps. The [example prompts page](https://nilanjan-01.github.io/skill-hub/prompts.html) has 3 ready-made prompts for every skill.
+The agent matches your request to the skill and follows its steps. [`examples/PROMPTS.md`](examples/PROMPTS.md) has 3 ready-made prompts for every skill.
 
 **Want to force a specific skill?** Name it:
 

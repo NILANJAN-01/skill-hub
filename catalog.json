@@ -348,7 +348,7 @@
       "name": "contribute-skill",
       "title": "Contribute a skill to the hub",
       "category": "hub-tools",
-      "description": "Add a new skill (or update an existing one) in the skill-hub repository so that it validates, appears in catalog.json and the website, and installs into every supported AI coding agent (Claude Code, Antigravity, Devin, Copilot, Cursor, Windsurf, Codex, Gemini CLI). Use when the user wants to write, add, publish, register, contribute or rename a skill in skill-hub, create a new plugin bundle, or fix validation/catalog errors from tools/validate_skills.py or tools/build_catalog.py.",
+      "description": "Add a new skill (or update an existing one) in the skill-hub repository so that it validates, appears in catalog.json and the generated skill lists, and installs into every supported AI coding agent (Claude Code, Antigravity, Devin, Copilot, Cursor, Windsurf, Codex, Gemini CLI). Use when the user wants to write, add, publish, register, contribute or rename a skill in skill-hub, create a new plugin bundle, or fix validation/catalog errors from tools/validate_skills.py or tools/build_catalog.py.",
       "plugins": [
         "hub-tools"
       ],

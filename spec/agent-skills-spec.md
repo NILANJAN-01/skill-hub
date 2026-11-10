@@ -31,7 +31,7 @@ This page summarizes the parts that `tools/validate_skills.py` enforces, plus th
 - **Portable frontmatter only.** Use the spec fields above. Some agents support extra fields (e.g. `argument-hint`, `disable-model-invocation`), but others ignore or reject them, so put hub data under `metadata:`.
 - **Scripts** are cross-platform (Python standard library preferred) and documented in the body.
 
-- `metadata.title`: human-readable title shown on the website.
+- `metadata.title`: human-readable title shown in the skill lists.
 - `metadata.category`: the focused plugin the skill belongs to (e.g. `git-branching`).
 - `metadata.source` / `metadata.pages`: provenance for skills derived from a document.
 - `license` is required when the content is derived from third-party material.

@@ -8,7 +8,7 @@
 
 | Skill | Description |
 |---|---|
-| [`contribute-skill`](contribute-skill/SKILL.md) | Add a new skill (or update an existing one) in the skill-hub repository so that it validates, appears in catalog.json and the website, and installs into... |
+| [`contribute-skill`](contribute-skill/SKILL.md) | Add a new skill (or update an existing one) in the skill-hub repository so that it validates, appears in catalog.json and the generated skill lists, and... |
 | [`find-skills`](find-skills/SKILL.md) | Search the skill-hub catalog for an Agent Skill that fits the current task and install it into the AI coding agent in use (any agent that reads SKILL.md... |
 | [`skillforge`](skillforge/SKILL.md) | Turn a technical PDF (book, manual, handbook, spec) into a library of focused Agent Skills using the bundled offline generator (open-source NLP, no LLM or... |
 

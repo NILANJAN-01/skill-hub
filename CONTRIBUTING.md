@@ -15,7 +15,7 @@ If you use an AI agent to contribute, it follows [AGENTS.md](AGENTS.md).
 - [ ] `SKILL.md` is under about 500 lines. Long material goes in `references/`, code in `scripts/`, and templates or data in `assets/`. All links are relative.
 - [ ] The skill is listed in at least one plugin in `.claude-plugin/marketplace.json`.
 - [ ] `examples/prompts.json` has at least 2 realistic prompts for the skill, written the way a user would ask. Each one should make Claude load the skill.
-- [ ] You ran `python tools/build_catalog.py` and committed `catalog.json`, `skills/README.md` and `prompts.html`.
+- [ ] You ran `python tools/build_catalog.py` and committed all the generated files it changed.
 - [ ] `python tools/validate_skills.py` reports 0 errors.
 - [ ] You tested it in at least one agent: install it with `python tools/install.py --agent <agent> --skill <name>`, then check that the agent picks it up for a matching request and does **not** pick it up for an unrelated one.
 
@@ -27,7 +27,7 @@ If you use an AI agent to contribute, it follows [AGENTS.md](AGENTS.md).
 
 ## Supporting a new agent
 
-Add an entry to the `AGENTS` dict in `tools/install.py`, using only the vendor's official documentation (link it in `docs`). Then run `python tools/build_catalog.py`, which updates the README matrix, `catalog.json` and the website.
+Add an entry to the `AGENTS` dict in `tools/install.py`, using only the vendor's official documentation (link it in `docs`). Then run `python tools/build_catalog.py`, which updates the agent tables in `README.md` and `GUIDE.md` and `catalog.json`.
 
 ## Adding a new category
 

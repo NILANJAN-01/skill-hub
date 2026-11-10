@@ -6,7 +6,7 @@
 
 **New here? Follow the [step-by-step guide](GUIDE.md)**: install a skill into your agent in about 5 minutes.
 
-Browse the skills at **https://nilanjan-01.github.io/skill-hub/**. The **[example prompts](https://nilanjan-01.github.io/skill-hub/prompts.html)** page shows what to say to your agent for each skill.
+Browse every skill in **[skills/README.md](skills/README.md)**. **[examples/PROMPTS.md](examples/PROMPTS.md)** shows what to say to your agent for each one.
 
 A skill is a folder with a `SKILL.md` file in the open [Agent Skills](https://agentskills.io/specification) format. The YAML frontmatter (`name`, `description`) tells the agent *when* to use the skill. The Markdown body tells it *how*. Agents read only the descriptions up front and load the full skill when a task matches. Because the format is shared, each skill here is written **once** and installed into whichever agent you use.
 
@@ -97,13 +97,14 @@ Commit project folders to share skills with your team. Install only the categori
 ```
 skills/<name>/SKILL.md            one folder per skill, agent-neutral (+ optional references/, scripts/, assets/)
 .claude-plugin/marketplace.json   groups skills into plugins/categories (used by Claude Code and install.py)
-examples/prompts.json             example prompts for every skill (feeds prompts.html)
+examples/prompts.json             example prompts for every skill (source)
+examples/PROMPTS.md               generated, readable list of every example prompt
 catalog.json, skills/README.md    generated index of every skill, plugins and agents
-prompts.html, index.html          the GitHub Pages site
+index.html, prompts.html          optional local browser for the catalog (python -m http.server)
 template/SKILL.md                 starting point for a new skill
 spec/agent-skills-spec.md         Agent Skills spec summary + hub conventions
 tools/install.py                  multi-agent installer (source of truth for agent folders)
-tools/build_catalog.py            regenerates catalog.json, skills/README.md, prompts.html, the agent table above
+tools/build_catalog.py            regenerates catalog.json, skills/README.md, examples/PROMPTS.md, prompts.html, agent tables
 tools/validate_skills.py          spec + hub + portability checks (CI)
 GUIDE.md                          step-by-step guide for people using the skills
 AGENTS.md                         instructions for AI agents working on this repo
@@ -132,7 +133,7 @@ python skills/skillforge/scripts/skillforge.py book.pdf --plan-only     # review
 python skills/skillforge/scripts/skillforge.py book.pdf --topics "rebase, hooks, bisect"
 ```
 
-## Preview the website locally
+## Browse the catalog locally (optional)
 
 ```bash
 python -m http.server     # then open http://localhost:8000

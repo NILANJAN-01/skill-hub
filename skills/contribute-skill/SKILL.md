@@ -1,6 +1,6 @@
 ---
 name: contribute-skill
-description: Add a new skill (or update an existing one) in the skill-hub repository so that it validates, appears in catalog.json and the website, and installs into every supported AI coding agent (Claude Code, Antigravity, Devin, Copilot, Cursor, Windsurf, Codex, Gemini CLI). Use when the user wants to write, add, publish, register, contribute or rename a skill in skill-hub, create a new plugin bundle, or fix validation/catalog errors from tools/validate_skills.py or tools/build_catalog.py.
+description: Add a new skill (or update an existing one) in the skill-hub repository so that it validates, appears in catalog.json and the generated skill lists, and installs into every supported AI coding agent (Claude Code, Antigravity, Devin, Copilot, Cursor, Windsurf, Codex, Gemini CLI). Use when the user wants to write, add, publish, register, contribute or rename a skill in skill-hub, create a new plugin bundle, or fix validation/catalog errors from tools/validate_skills.py or tools/build_catalog.py.
 license: Complete terms in the repository README
 compatibility: Works in any agent. Edits a skill-hub checkout, so it needs file-system and shell access with Python 3.8+. Mentions agent names only to explain where skills are installed.
 metadata:
@@ -13,7 +13,7 @@ metadata:
 Every skill in the hub lives in `skills/<name>/` and is registered in a plugin (category) in `.claude-plugin/marketplace.json`. Claude Code reads that file natively, and `tools/install.py` uses it to install categories into other agents. Two scripts keep the hub consistent:
 
 - `tools/validate_skills.py` checks every skill against the Agent Skills spec and the hub rules.
-- `tools/build_catalog.py` regenerates `catalog.json`, `skills/README.md` and `prompts.html`. The website and the `find-skills` skill read these.
+- `tools/build_catalog.py` regenerates `catalog.json`, `skills/README.md`, `examples/PROMPTS.md`, `prompts.html`, and the agent tables in `README.md` and `GUIDE.md`. The `find-skills` skill and the installer read these.
 
 ## Procedure
 
@@ -50,15 +50,15 @@ Every skill in the hub lives in `skills/<name>/` and is registered in a plugin (
    }
    ```
    Add the plugin's display title to `CATEGORY_TITLES` in `tools/build_catalog.py`.
-6. **Add example prompts** to `examples/prompts.json` (at least 2, ideally 3): `"<name>": ["realistic user request 1", "..."]`. Write them the way users actually ask. They appear on the website and on `prompts.html`.
+6. **Add example prompts** to `examples/prompts.json` (at least 2, ideally 3): `"<name>": ["realistic user request 1", "..."]`. Write them the way users actually ask. They appear in `examples/PROMPTS.md` and the local catalog browser.
 7. **Rebuild and validate**:
    ```bash
    python tools/build_catalog.py
    python tools/validate_skills.py
    ```
    Fix every `ERROR`. Read each `WARN` and fix it where reasonable. CI runs both scripts with `--check` and fails if `catalog.json` is stale.
-8. **Preview** the website locally with `python -m http.server`, then open `http://localhost:8000/#/skill/<name>`.
-9. **Open one pull request per skill**, titled `Add <name> skill` or `Update <name> skill: <what changed>`. Commit the skill folder, `marketplace.json`, `examples/prompts.json`, `catalog.json`, `skills/README.md` and `prompts.html` together.
+8. **Check the result.** The skill should appear in `skills/README.md` and `examples/PROMPTS.md`. For an optional visual check, run `python -m http.server` and open `http://localhost:8000/#/skill/<name>`.
+9. **Open one pull request per skill**, titled `Add <name> skill` or `Update <name> skill: <what changed>`. Commit the skill folder, `marketplace.json`, `examples/prompts.json`, and all the generated files (`catalog.json`, `skills/README.md`, `examples/PROMPTS.md`, `prompts.html`, `README.md`, `GUIDE.md`) together.
 
 ## Common validation errors
 

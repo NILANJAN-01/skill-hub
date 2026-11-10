@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Build catalog.json and skills/README.md from every skills/*/SKILL.md and the plugin marketplace.
 
-Also builds prompts.html (example prompts per skill) from examples/prompts.json.
+Also builds prompts.html and examples/PROMPTS.md (example prompts per skill) from examples/prompts.json,
+and the agent tables in README.md and GUIDE.md from tools/install.py.
 
     python tools/build_catalog.py           # (re)write the files
     python tools/build_catalog.py --check   # exit 1 if they are out of date (used by CI)
@@ -21,6 +22,28 @@ from install import AGENTS
 
 README = ROOT / "README.md"
 GUIDE = ROOT / "GUIDE.md"
+PROMPTS_MD = ROOT / "examples" / "PROMPTS.md"
+
+
+def prompts_markdown(skills: list, categories: list) -> str:
+    """examples/PROMPTS.md: every skill's example prompts, readable on GitHub."""
+    total = sum(len(s["examples"]) for s in skills)
+    out = ["# Example prompts", "",
+           "<!-- Generated from examples/prompts.json by tools/build_catalog.py - do not edit by hand. -->", "",
+           f"{total} things you can say to your AI coding agent, for all {len(skills)} skills. Install a skill "
+           "([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its "
+           "description. To force a skill, start with *\"Use the &lt;skill-name&gt; skill: …\"*.", "",
+           "**Categories:** " + " · ".join(
+               f"[{c['title']}](#{re.sub(r'[^a-z0-9 -]', '', c['title'].lower()).replace(' ', '-')})"
+               for c in categories), ""]
+    for c in categories:
+        out += [f"## {c['title']}", "",
+                f"Install the whole category: `--plugin {c['name']}`", ""]
+        for s in sorted((s for s in skills if s["category"] == c["name"]), key=lambda s: s["title"].lower()):
+            out += [f"### {s['title']}", "",
+                    f"[`{s['name']}`](../skills/{s['name']}/SKILL.md) · install: `--skill {s['name']}`", ""]
+            out += [f"- “{p}”" for p in s["examples"]] + [""]
+    return "\n".join(out)
 
 
 def agents_table() -> str:
@@ -76,7 +99,7 @@ def titleize(name: str) -> str:
     return name.replace("-", " ").capitalize()
 
 
-def build() -> tuple[str, str, str]:
+def build() -> tuple[str, str, str, str]:
     market = load_marketplace()
     examples = load_examples()
     plugins = market.get("plugins", [])
@@ -160,15 +183,16 @@ def build() -> tuple[str, str, str]:
     if "/*__DATA__*/null" not in template:
         sys.exit("tools/prompts_template.html lost its /*__DATA__*/null placeholder")
     prompts_html = template.replace("/*__DATA__*/null", data_js)
-    return catalog_text, "\n".join(lines), prompts_html
+    return catalog_text, "\n".join(lines), prompts_html, prompts_markdown(skills, categories)
 
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--check", action="store_true", help="fail if generated files are stale")
     args = ap.parse_args()
-    catalog_text, readme_text, prompts_html = build()
+    catalog_text, readme_text, prompts_html, prompts_md = build()
     targets = [(CATALOG, catalog_text), (SKILLS_README, readme_text), (PROMPTS_HTML, prompts_html),
+               (PROMPTS_MD, prompts_md),
                (README, readme_with_agents(README.read_text(encoding="utf-8"))),
                (GUIDE, fill_block(GUIDE.read_text(encoding="utf-8"), "agents-simple", agents_table_simple(), "GUIDE.md"))]
     if args.check:

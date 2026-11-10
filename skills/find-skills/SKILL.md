@@ -16,7 +16,7 @@ The machine-readable index is `catalog.json` at the repository root:
 
 - Local clone: `<repo>/catalog.json`
 - Online: `https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/catalog.json`
-- Website: `https://nilanjan-01.github.io/skill-hub/`
+- Human-readable list: `https://github.com/NILANJAN-01/skill-hub/blob/main/skills/README.md` (example prompts: `examples/PROMPTS.md`)
 
 ## Catalog format
 
@@ -36,7 +36,7 @@ The machine-readable index is `catalog.json` at the repository root:
 
 ## Procedure
 
-1. **Load the catalog.** Read the local `catalog.json` if you are inside a skill-hub clone. Otherwise fetch the online URL. If you cannot read files or the web, send the user to the website instead.
+1. **Load the catalog.** Read the local `catalog.json` if you are inside a skill-hub clone. Otherwise fetch the online URL. If you cannot read files or the web, send the user to the human-readable list instead.
 2. **Match the task.** Compare the user's words, commands and error messages with each skill's `name`, `title`, `description` and `examples`. Prefer the most specific skill. For example, use `git-rebasing` rather than the broad `git-pro` reference.
 3. **Present 1–5 candidates** with name, title, a one-line purpose, and the smallest plugin that contains each one (the first entry in `skills[].plugins`). If nothing fits, say so. Do not force a match.
 4. **Work out the target agent.** Use the agent you are running in. If you are unsure, or the user works with several agents, ask. Look up its `id` and folders in `catalog.agents`.
