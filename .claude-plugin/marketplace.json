@@ -1,0 +1,227 @@
+{
+  "name": "skill-hub",
+  "owner": {
+    "name": "NILANJAN-01"
+  },
+  "metadata": {
+    "description": "skill-hub: a centralized, curated collection of Agent Skills for Claude Code, Claude.ai and the Claude API",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "git-skills",
+      "description": "All 61 Git skills extracted from the Pro Git book (bundle of every git-* plugin)",
+      "source": "./",
+      "strict": false,
+      "category": "git",
+      "skills": [
+        "./skills/git-advanced-merging",
+        "./skills/git-aliases",
+        "./skills/git-an-example-git-enforced-policy",
+        "./skills/git-as-a-client",
+        "./skills/git-attributes",
+        "./skills/git-basic-branching-and-merging",
+        "./skills/git-basic-snapshotting",
+        "./skills/git-branch-management",
+        "./skills/git-branches-in-a-nutshell",
+        "./skills/git-bundling",
+        "./skills/git-configuration",
+        "./skills/git-credential-storage",
+        "./skills/git-daemon",
+        "./skills/git-debugging-with-git",
+        "./skills/git-distributed-git-contributing-to-a-project",
+        "./skills/git-distributed-git-maintaining-a-project",
+        "./skills/git-environment-variables",
+        "./skills/git-first-time-git-setup",
+        "./skills/git-generating-your-ssh-public-key",
+        "./skills/git-getting-a-git-repository",
+        "./skills/git-getting-git-on-a-server",
+        "./skills/git-getting-help",
+        "./skills/git-github-contributing-to-a-project",
+        "./skills/git-github-maintaining-a-project",
+        "./skills/git-gitweb",
+        "./skills/git-hooks",
+        "./skills/git-in-powershell",
+        "./skills/git-installing-git",
+        "./skills/git-interactive-staging",
+        "./skills/git-jgit",
+        "./skills/git-libgit2",
+        "./skills/git-maintenance-and-data-recovery",
+        "./skills/git-migrating-to-git",
+        "./skills/git-objects",
+        "./skills/git-packfiles",
+        "./skills/git-plumbing-and-porcelain",
+        "./skills/git-pro",
+        "./skills/git-rebasing",
+        "./skills/git-recording-changes-to-the-repository",
+        "./skills/git-references",
+        "./skills/git-remote-branches",
+        "./skills/git-replace",
+        "./skills/git-rerere",
+        "./skills/git-reset-demystified",
+        "./skills/git-revision-selection",
+        "./skills/git-rewriting-history",
+        "./skills/git-scripting-github",
+        "./skills/git-searching",
+        "./skills/git-setting-up-the-server",
+        "./skills/git-setup-and-config",
+        "./skills/git-signing-your-work",
+        "./skills/git-smart-http",
+        "./skills/git-stashing-and-cleaning",
+        "./skills/git-submodules",
+        "./skills/git-tagging",
+        "./skills/git-the-protocols",
+        "./skills/git-the-refspec",
+        "./skills/git-transfer-protocols",
+        "./skills/git-undoing-things",
+        "./skills/git-viewing-the-commit-history",
+        "./skills/git-working-with-remotes"
+      ]
+    },
+    {
+      "name": "git-getting-started",
+      "description": "Git fundamentals: install and configure Git, create repositories, record changes, view history, undo mistakes, tags and aliases",
+      "source": "./",
+      "strict": false,
+      "category": "git",
+      "skills": [
+        "./skills/git-installing-git",
+        "./skills/git-first-time-git-setup",
+        "./skills/git-getting-help",
+        "./skills/git-setup-and-config",
+        "./skills/git-getting-a-git-repository",
+        "./skills/git-recording-changes-to-the-repository",
+        "./skills/git-viewing-the-commit-history",
+        "./skills/git-undoing-things",
+        "./skills/git-tagging",
+        "./skills/git-aliases",
+        "./skills/git-basic-snapshotting"
+      ]
+    },
+    {
+      "name": "git-branching",
+      "description": "Git branching & merging: branches, merging, remote-tracking branches, rebasing, advanced merge conflicts and rerere",
+      "source": "./",
+      "strict": false,
+      "category": "git",
+      "skills": [
+        "./skills/git-branches-in-a-nutshell",
+        "./skills/git-basic-branching-and-merging",
+        "./skills/git-branch-management",
+        "./skills/git-remote-branches",
+        "./skills/git-rebasing",
+        "./skills/git-advanced-merging",
+        "./skills/git-rerere"
+      ]
+    },
+    {
+      "name": "git-collaboration",
+      "description": "Collaborating with Git: remotes, protocols, hosting a Git server (SSH, daemon, Smart HTTP, GitWeb), distributed workflows, GitHub and credentials",
+      "source": "./",
+      "strict": false,
+      "category": "git",
+      "skills": [
+        "./skills/git-working-with-remotes",
+        "./skills/git-the-protocols",
+        "./skills/git-getting-git-on-a-server",
+        "./skills/git-generating-your-ssh-public-key",
+        "./skills/git-setting-up-the-server",
+        "./skills/git-daemon",
+        "./skills/git-smart-http",
+        "./skills/git-gitweb",
+        "./skills/git-distributed-git-contributing-to-a-project",
+        "./skills/git-distributed-git-maintaining-a-project",
+        "./skills/git-github-contributing-to-a-project",
+        "./skills/git-github-maintaining-a-project",
+        "./skills/git-scripting-github",
+        "./skills/git-credential-storage"
+      ]
+    },
+    {
+      "name": "git-power-tools",
+      "description": "Git power tools: revision selection, interactive staging, stash, signing, searching, rewriting history, reset, bisect/blame, submodules, bundles and replace",
+      "source": "./",
+      "strict": false,
+      "category": "git",
+      "skills": [
+        "./skills/git-revision-selection",
+        "./skills/git-interactive-staging",
+        "./skills/git-stashing-and-cleaning",
+        "./skills/git-signing-your-work",
+        "./skills/git-searching",
+        "./skills/git-rewriting-history",
+        "./skills/git-reset-demystified",
+        "./skills/git-debugging-with-git",
+        "./skills/git-submodules",
+        "./skills/git-bundling",
+        "./skills/git-replace"
+      ]
+    },
+    {
+      "name": "git-customization",
+      "description": "Customizing Git: configuration, attributes, client/server hooks, enforced policies and environment variables",
+      "source": "./",
+      "strict": false,
+      "category": "git",
+      "skills": [
+        "./skills/git-configuration",
+        "./skills/git-attributes",
+        "./skills/git-hooks",
+        "./skills/git-an-example-git-enforced-policy",
+        "./skills/git-environment-variables"
+      ]
+    },
+    {
+      "name": "git-internals",
+      "description": "Git internals: plumbing commands, objects, references, packfiles, refspecs, transfer protocols, maintenance and data recovery",
+      "source": "./",
+      "strict": false,
+      "category": "git",
+      "skills": [
+        "./skills/git-plumbing-and-porcelain",
+        "./skills/git-objects",
+        "./skills/git-references",
+        "./skills/git-packfiles",
+        "./skills/git-the-refspec",
+        "./skills/git-transfer-protocols",
+        "./skills/git-maintenance-and-data-recovery"
+      ]
+    },
+    {
+      "name": "git-integrations",
+      "description": "Git with other systems and tools: Git as an SVN/Mercurial/Perforce client, migrating to Git, PowerShell, JGit and libgit2",
+      "source": "./",
+      "strict": false,
+      "category": "git",
+      "skills": [
+        "./skills/git-as-a-client",
+        "./skills/git-migrating-to-git",
+        "./skills/git-in-powershell",
+        "./skills/git-jgit",
+        "./skills/git-libgit2"
+      ]
+    },
+    {
+      "name": "git-reference",
+      "description": "Full Pro Git reference skill: chapter-by-chapter source knowledge for Git questions no focused skill covers",
+      "source": "./",
+      "strict": false,
+      "category": "git",
+      "skills": [
+        "./skills/git-pro"
+      ]
+    },
+    {
+      "name": "hub-tools",
+      "description": "Skills for working with the hub itself: find and install skills, contribute new skills, and generate skills from technical PDFs (skillforge)",
+      "source": "./",
+      "strict": false,
+      "category": "hub-tools",
+      "skills": [
+        "./skills/find-skills",
+        "./skills/contribute-skill",
+        "./skills/skillforge"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+.DS_Store
+__pycache__/
+*.pyc
+.idea/
+.vscode/
+
+# skillforge output and caches (review, then copy skills into skills/)
+generated-skills/
+**/.work/
+*.pdf
