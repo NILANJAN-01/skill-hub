@@ -27,6 +27,7 @@ The full field reference is in [references/output-format.md](references/output-f
 
 ## When to use
 
+- A device or emulator is connected and the user wants locators for the screen that is open on it: capture and convert in one command.
 - The user has a `uiautomator dump` XML (`window_dump.xml`) and wants keyword names, resource ids or locators. The same XML hierarchy saved by uiautomatorviewer (`.uix`) or as Appium page source also works.
 - The user is building an object repository, page objects, or a keyword library for UIAutomator, uiautomator2, Appium, or keyword-driven tests (such as Robot Framework) on Android.
 - The screen is from any device: phone, tablet, TV, or an Android Automotive / OEM infotainment system.
@@ -38,7 +39,7 @@ The full field reference is in [references/output-format.md](references/output-f
 
 ## Procedure
 
-Script paths are relative to this skill's folder. Run them from the user's test project, so `dumps/` and `locators/` are created there.
+`scripts/…` below means the `scripts` folder inside this skill's folder. Run the commands with the working directory set to the user's test project, using the full path to the script, so that `dumps/` and `locators/` are created in the project. Or pass `--dumps <folder>` / `--out <folder>`.
 
 1. **Choose the route.**
    - **A device or emulator is connected** (or the user wants "the current screen"): go to step 2.
@@ -53,10 +54,10 @@ Script paths are relative to this skill's folder. Run them from the user's test 
    It works as follows:
    - **Device:** picks the only connected device, or uses `--serial` / `$ANDROID_SERIAL`.
    - **Screen name:** taken from the app and activity in front unless you pass `--name`.
-   - **Retries:** if the UI is not idle (animations), it tries again up to 3 times (`--retries`).
+   - **Retries:** if the UI is not idle (animations), it makes up to 3 attempts in total (`--retries`, `--retry-delay` seconds apart).
    - **Files:** pulls the XML into `dumps/` and deletes the temporary copy on the device. An existing dump is never overwritten unless you pass `--overwrite`; a timestamped name is used instead.
    - **adb:** found on PATH, through `$ADB`, or in the Android SDK. Otherwise pass `--adb <path>`.
-   - **Options:** it accepts all of the converter options below, plus `--dumps <folder>`, `--out <folder>` and `--dump-arg` (an extra argument for `uiautomator dump`, e.g. `--dump-arg=--compressed`).
+   - **Options:** it accepts the converter options below (except `--stdout`, because it always writes files), plus `--dumps <folder>`, `--out <folder>`, `--overwrite`, `--timestamp` and `--dump-arg` (an extra argument for `uiautomator dump`, e.g. `--dump-arg=--compressed`).
 
    If it fails, its error says what to do: no device, an unauthorized device (accept the USB debugging prompt), several devices (pass `--serial`), or adb not found. Pass that on to the user. Then go to step 4.
 3. **Convert existing dumps.**
@@ -66,16 +67,17 @@ Script paths are relative to this skill's folder. Run them from the user's test 
    ```
    To capture by hand instead: `adb shell uiautomator dump /sdcard/window_dump.xml`, then `adb pull /sdcard/window_dump.xml` (more in [references/capturing-dumps.md](references/capturing-dumps.md)).
 
-   Converter options (both scripts accept them):
+   Converter options (both scripts accept these):
    - `--format keywords`: write only the `{keyword: resource-id}` map.
    - `--case upper|camel`: `BTN_PLAY` or `btnPlay` style keywords (default `snake`).
    - `--package com.oem.media`: keep only one app's elements. `--exclude-package com.android.systemui` drops the system bar. Repeat either option as needed.
    - `--include-layout`: also emit elements with no id, text or description. These locators are fragile and marked so.
-   - `--stdout`: print the JSON instead of writing files.
+
+   Only `dump_to_locators.py`: `--stdout` prints the JSON instead of writing files.
 4. **Read the console summary and the warnings, and pass them on to the user.** In particular:
    - *No resource-ids*: typical for Jetpack Compose and some OEM UIs. Locators fall back to content-desc, then text. Recommend that developers expose test tags as resource-ids.
    - *Text-based locators*: these break when the UI language changes. This matters on OEM head units that switch language by market or user.
-   - *N elements share this id*: list rows. Use the per-item keywords (`title_bluetooth`) or the `instance`.
+   - *N elements share this id*: list rows. Use the per-item keywords (`title_network_internet`) or the `instance`.
 5. **Check the result.** Open the JSON and confirm that the keywords for the elements the user cares about exist. If a needed element is missing, it has no id, text or description: rerun with `--include-layout`, or recommend adding an id.
 6. **Hand over.** Show the user the `keywords` map (or the relevant part of it) and the output path. If they want code, generate it from `elements[].locators` for their framework (see below). Don't retype selectors by hand.
 
@@ -84,7 +86,7 @@ Script paths are relative to this skill's folder. Run them from the user's test 
 | Element | Strategy | Keyword | Locator |
 |---|---|---|---|
 | Unique resource-id `com.app:id/btn_play` | `resource_id` | `btn_play` | `resourceId` |
-| Id shared by list rows (`android:id/title` ×4) | `resource_id` (group, `occurrences: 4`) + `resource_id+text` per row | `title`, `title_bluetooth` | `resourceId` + `text` |
+| Id shared by list rows (`android:id/title` ×4) | `resource_id` (group, `occurrences: 4`) + `resource_id+text` per row | `title`, `title_network_internet` | `resourceId` + `text` |
 | Shared id with a content-desc (`hvac_temperature`, "Driver temperature") | `resource_id+content_desc`; the desc is preferred because text often holds live values (21.5°) | `hvac_temperature_driver_temperature` | `resourceId` + `description` |
 | Same id in two apps (`…media:id/back`, `…systemui:id/back`) | `resource_id` | `back`, `systemui_back` | `resourceId` |
 | Compose test tag without `:id/` (`media_play_pause`) | `resource_id` | `media_play_pause` | `resourceId` |
