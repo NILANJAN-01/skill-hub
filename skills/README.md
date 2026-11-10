@@ -16,7 +16,7 @@
 
 | Skill | Description |
 |---|---|
-| [`android-uiautomator-locators`](android-uiautomator-locators/SKILL.md) | Convert an Android UIAutomator dump (window_dump.xml, .uix, Appium page source, or an HTML page that contains a dump) into a JSON locator file of keyword... |
+| [`android-uiautomator-locators`](android-uiautomator-locators/SKILL.md) | Capture the current screen of a connected Android device over adb (uiautomator dump + pull), or read an existing UIAutomator XML dump (window_dump.xml), and... |
 
 ## Git: getting started (`git-getting-started`)
 

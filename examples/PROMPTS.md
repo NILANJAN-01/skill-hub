@@ -2,7 +2,7 @@
 
 <!-- Generated from examples/prompts.json by tools/build_catalog.py - do not edit by hand. -->
 
-195 things you can say to your AI coding agent, for all 65 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
+196 things you can say to your AI coding agent, for all 65 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
 
 **Categories:** [Hub tools](#hub-tools) · [Android: UI test automation](#android-ui-test-automation) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
 
@@ -42,8 +42,9 @@ Install the whole category: `--plugin android-automation`
 
 [`android-uiautomator-locators`](../skills/android-uiautomator-locators/SKILL.md) · install: `--skill android-uiautomator-locators`
 
-- “Here's the HTML of a uiautomator dump from our head unit. Generate a JSON with keyword names and resource ids for our tests.”
+- “Here's window_dump.xml from our head unit. Generate a JSON with keyword names and resource ids for our tests.”
 - “Convert all the window_dump.xml files in dumps/ into locator JSON files in tests/locators.”
+- “Dump the current screen from the connected device and generate the locator JSON.”
 - “This Compose screen has no resource-ids. Give me the best locators you can from this uiautomator dump.”
 
 ## Git: getting started

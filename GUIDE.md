@@ -173,7 +173,7 @@ Categories for `--plugin`:
 | Category | What's in it |
 |---|---|
 | `hub-tools` | Find and install skills, contribute skills, turn PDFs into skills |
-| `android-automation` | Turn UIAutomator dumps into keyword / resource-id locator JSON for Android UI tests |
+| `android-automation` | Capture the screen over adb (or read UIAutomator XML dumps) and generate keyword / resource-id locator JSON for Android UI tests |
 | `git-getting-started` | Install and configure Git, first repo, commits, history, undo, tags |
 | `git-branching` | Branches, merging, rebasing, merge conflicts |
 | `git-collaboration` | Remotes, Git servers, GitHub, pull requests, credentials |

@@ -14,7 +14,7 @@ A skill is a folder with a `SKILL.md` file in the open [Agent Skills](https://ag
 
 | Category (plugin) | Skills | What it covers |
 |---|---:|---|
-| [`android-automation`](skills/README.md#android-ui-test-automation-android-automation) | 1 | Turn UIAutomator dumps (XML, .uix, Appium source, HTML) into keyword → resource-id locator JSON for any Android UI, incl. automotive OEM head units |
+| [`android-automation`](skills/README.md#android-ui-test-automation-android-automation) | 1 | Capture the screen over adb (or read UIAutomator XML dumps) and generate keyword → resource-id locator JSON for any Android UI, incl. automotive OEM head units |
 | [`hub-tools`](skills/README.md#hub-tools-hub-tools) | 3 | Find and install skills, contribute new ones, and generate skills from PDFs (`skillforge`) |
 | [`git-getting-started`](skills/README.md#git-getting-started-git-getting-started) | 11 | Install and configure Git, create repos, record changes, history, undo, tags, aliases |
 | [`git-branching`](skills/README.md#git-branching--merging-git-branching) | 7 | Branches, merging, remote branches, rebasing, advanced merge conflicts, rerere |

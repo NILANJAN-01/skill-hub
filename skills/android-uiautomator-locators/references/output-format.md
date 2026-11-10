@@ -4,14 +4,14 @@ One file per input dump: `<output folder>/<dump name>.locators.json`.
 
 ```json
 {
-  "generator": "android-uiautomator-locators 1.0",
-  "source": "media.html",
+  "generator": "android-uiautomator-locators 1.1",
+  "source": "media.xml",
   "summary": {
     "nodes": 13,                 // UI nodes found in the dump
     "nodes_kept": 13,            // after --package / --exclude-package
     "elements": 13,              // entries in "elements"
     "with_resource_id": 9,
-    "windows": 2,                // <hierarchy> blocks (multi-window / multi-display dumps)
+    "windows": 2,                // top-level windows (e.g. app + system bar on Android Automotive)
     "packages": {"com.example.oem.media": 9, "com.android.systemui": 4}
   },
   "warnings": ["..."],
@@ -21,8 +21,8 @@ One file per input dump: `<output folder>/<dump name>.locators.json`.
   },
   "elements": [
     {
-      "keyword": "hvac_temperature_21_5",
-      "strategy": "resource_id+text",
+      "keyword": "hvac_temperature_driver_temperature",
+      "strategy": "resource_id+content_desc",       // stable label preferred over the live text "21.5°"
       "resource_id": "com.android.systemui:id/hvac_temperature",
       "text": "21.5°",
       "content_desc": "Driver temperature",
@@ -34,10 +34,10 @@ One file per input dump: `<output folder>/<dump name>.locators.json`.
       "bounds": [200, 730, 320, 790],      // left, top, right, bottom (px)
       "center": [260, 760],                // tap point if nothing else works
       "locators": {
-        "uiselector": "new UiSelector().resourceId(\"com.android.systemui:id/hvac_temperature\").text(\"21.5°\")",
-        "uiautomator2": {"resourceId": "com.android.systemui:id/hvac_temperature", "text": "21.5°"},
-        "by": "By.res(\"com.android.systemui:id/hvac_temperature\").text(\"21.5°\")",
-        "xpath": "//*[@resource-id='com.android.systemui:id/hvac_temperature' and @text='21.5°']",
+        "uiselector": "new UiSelector().resourceId(\"com.android.systemui:id/hvac_temperature\").description(\"Driver temperature\")",
+        "uiautomator2": {"resourceId": "com.android.systemui:id/hvac_temperature", "description": "Driver temperature"},
+        "by": "By.res(\"com.android.systemui:id/hvac_temperature\").desc(\"Driver temperature\")",
+        "xpath": "//*[@resource-id='com.android.systemui:id/hvac_temperature' and @content-desc='Driver temperature']",
         "appium": {"strategy": "xpath", "value": "//*[...]"}
       }
     }

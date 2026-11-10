@@ -1,41 +1,38 @@
 #!/usr/bin/env python3
-"""Turn Android UIAutomator dumps into a JSON locator map (keyword names -> resource ids + selectors).
+"""Turn Android UIAutomator XML dumps into a JSON locator map (keyword names -> resource ids + selectors).
 
-Accepts, for any Android UI (phone, tablet, Android Automotive / OEM head units, TV):
-  * raw `uiautomator dump` XML (window_dump.xml) and uiautomatorviewer .uix files
-  * Appium page source (class names used as tag names)
-  * HTML pages containing a dump: escaped inside <pre> (with or without syntax-highlight
-    <span>s), or a browser-saved page where the nodes are real elements
-  * files with several <hierarchy> blocks (multi-window / multi-display dumps)
+Input: the XML written by `uiautomator dump` (window_dump.xml), for any Android UI: phone, tablet,
+TV, Android Automotive / OEM head units. Also reads the same hierarchy saved as .uix
+(uiautomatorviewer) or Appium page-source XML.
 
 Usage:
-    python dump_to_locators.py window_dump.html                 # -> locators/window_dump.locators.json
-    python dump_to_locators.py dumps/ --out test/locators       # every dump in a folder
+    python dump_to_locators.py window_dump.xml                  # -> locators/window_dump.locators.json
+    python dump_to_locators.py dumps/ --out test/locators       # every .xml/.uix dump in a folder
     python dump_to_locators.py screen.xml --stdout              # print instead of writing
     python dump_to_locators.py screen.xml --format keywords     # only {"keyword": "resource-id"}
     python dump_to_locators.py screen.xml --case upper          # BTN_PLAY style keywords
     python dump_to_locators.py screen.xml --package com.example.media --exclude-package com.android.systemui
 
-Standard library only (Python 3.8+). Exit code 0 = all files converted, 2 = some file had no UI nodes.
+Standard library only (Python 3.8+). Exit code 0 = all files converted, 2 = a file could not be read.
 """
 
 from __future__ import annotations
 
 import argparse
-import html
 import json
 import re
 import sys
 import unicodedata
-from html.parser import HTMLParser
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
-VERSION = "1.0"
-INPUT_SUFFIXES = {".xml", ".uix", ".html", ".htm", ".xhtml", ".txt"}
+VERSION = "1.1"
+INPUT_SUFFIXES = {".xml", ".uix"}
 BOUNDS_RE = re.compile(r"\[\s*(-?\d+)\s*,\s*(-?\d+)\s*\]\s*\[\s*(-?\d+)\s*,\s*(-?\d+)\s*\]")
-ESCAPED_NODE_RE = re.compile(r"&lt;\s*(?:node|hierarchy)\b", re.I)
-RAW_NODE_RE = re.compile(r"<\s*(?:node|hierarchy)\b", re.I)
-TAG_RE = re.compile(r"<[^>]*>")
+XML_DECL_RE = re.compile(r"<\?xml[^>]*\?>")
+# Characters XML 1.0 forbids; some apps leak them into text and the dump then fails to parse.
+BAD_XML_CHARS_RE = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f]")
+BAD_CHAR_REF_RE = re.compile(r"&#(?:[xX]0*(?:[0-8bBcCeEfF]|1[0-9a-fA-F])|0*(?:[0-8]|1[124-9]|2[0-9]|3[01]));")
 BOOL_ATTRS = ("checkable", "checked", "clickable", "enabled", "focusable", "focused", "scrollable",
               "long-clickable", "password", "selected", "displayed")
 # Short role names used to make readable keywords; first match wins (order matters).
@@ -49,6 +46,10 @@ ROLES = [("EditText", "input"), ("AutoCompleteTextView", "input"), ("SearchView"
          ("TabWidget", "tabs"), ("WebView", "webview"), ("Toolbar", "toolbar")]
 
 
+class DumpError(ValueError):
+    """The file is not a readable UIAutomator XML dump."""
+
+
 # ================================================================================ reading
 def read_text(path: Path) -> str:
     raw = path.read_bytes()
@@ -60,47 +61,50 @@ def read_text(path: Path) -> str:
         return raw.decode("latin-1")
 
 
-def normalise_markup(text: str) -> str:
-    """If the dump is HTML-escaped (e.g. shown inside <pre> on a web page), turn it back into markup."""
-    if len(ESCAPED_NODE_RE.findall(text)) > len(RAW_NODE_RE.findall(text)):
-        text = TAG_RE.sub("", text)          # drop the page's own tags (<pre>, highlight <span>s, ...)
-        text = html.unescape(text)           # &lt;node ...&gt; -> <node ...>
-    return text
+def _xml_root(text: str) -> ET.Element:
+    """Parse the dump. Tolerates what real dumps contain: the XML declaration, the status line that
+    `adb exec-out uiautomator dump /dev/tty` appends, several <hierarchy> blocks in one file, and
+    control characters some apps leak into text."""
+    if not re.search(r"<\s*(?:hierarchy|node)\b", text):
+        raise DumpError("not a UIAutomator XML dump: no <hierarchy> or <node> elements found")
+    if re.search(r"<!DOCTYPE|<html\b", text, re.I):
+        raise DumpError("this looks like an HTML page or a document with a DOCTYPE; give the XML written by "
+                        "`uiautomator dump` (window_dump.xml)")
+    body = XML_DECL_RE.sub("", text)
+    body = body[body.find("<"):body.rfind(">") + 1]          # drop text before/after the markup
+    doc = "<dumps>" + body + "</dumps>"
+    try:
+        return ET.fromstring(doc)
+    except ET.ParseError:
+        pass
+    try:
+        return ET.fromstring(BAD_CHAR_REF_RE.sub("", BAD_XML_CHARS_RE.sub("", doc)))
+    except ET.ParseError as e:
+        line, col = e.position
+        raise DumpError(f"invalid XML near line {line}, column {col}: {e}. The dump may be cut off; "
+                        "capture it again") from None
 
 
-class DumpParser(HTMLParser):
-    """Lenient parser: works on XML, XHTML and messy HTML. Collects UIAutomator nodes in document order."""
-
-    def __init__(self) -> None:
-        super().__init__(convert_charrefs=True)
-        self.nodes: list = []
-        self.windows: list = []
-        self._stack: list = []            # [(tag, node_index_or_None)]
-
-    def handle_starttag(self, tag, attrs):
-        self._start(tag, attrs, closed=False)
-
-    def handle_startendtag(self, tag, attrs):
-        self._start(tag, attrs, closed=True)
-
-    def handle_endtag(self, tag):
-        for i in range(len(self._stack) - 1, -1, -1):
-            if self._stack[i][0] == tag:
-                del self._stack[i:]
-                return
-
-    def _start(self, tag, attrs, closed):
-        a = {k.lower(): (v if v is not None else "") for k, v in attrs}
-        idx = None
-        if tag == "hierarchy":
-            self.windows.append({"rotation": a.get("rotation", ""), "width": a.get("width", ""),
-                                 "height": a.get("height", "")})
-        elif tag == "node" or ("bounds" in a and ("class" in a or "resource-id" in a)):
-            parent = next((n for _, n in reversed(self._stack) if n is not None), None)
-            idx = len(self.nodes)
-            self.nodes.append(make_node(a, tag, idx, parent, max(len(self.windows), 1)))
-        if not closed:
-            self._stack.append((tag, idx))
+def parse_dump(text: str):
+    """Return (nodes in document order, number of windows). A window is a top-level node of the
+    hierarchy: on Android Automotive the app, the system bars and overlays are separate windows."""
+    root = _xml_root(text)
+    nodes: list = []
+    windows = 0
+    stack = [(child, None, 0) for child in reversed(list(root))]
+    while stack:
+        el, parent, window = stack.pop()
+        a = {k.lower(): v for k, v in el.attrib.items()}
+        if el.tag == "node" or ("bounds" in a and ("class" in a or "resource-id" in a)):
+            if parent is None:
+                windows += 1
+                window = windows
+            idx = len(nodes)
+            nodes.append(make_node(a, el.tag, idx, parent, window))
+            parent = idx
+        for child in reversed(list(el)):
+            stack.append((child, parent, window))
+    return nodes, windows
 
 
 def make_node(a: dict, tag: str, order: int, parent, window: int) -> dict:
@@ -111,7 +115,7 @@ def make_node(a: dict, tag: str, order: int, parent, window: int) -> dict:
         "order": order, "parent": parent, "window": window,
         "resource_id": a.get("resource-id", "").strip(),
         "text": a.get("text", ""),
-        "content_desc": a.get("content-desc", "") or a.get("content_desc", ""),
+        "content_desc": a.get("content-desc", ""),
         "hint": a.get("hint", ""),
         "class": cls, "package": a.get("package", ""), "index": a.get("index", ""),
         "bounds": bounds,
@@ -120,13 +124,6 @@ def make_node(a: dict, tag: str, order: int, parent, window: int) -> dict:
         if b in a:
             node[b.replace("-", "_")] = a[b].strip().lower() == "true"
     return node
-
-
-def parse_dump(text: str):
-    p = DumpParser()
-    p.feed(normalise_markup(text))
-    p.close()
-    return p.nodes, p.windows
 
 
 # ================================================================================ keywords
@@ -349,7 +346,7 @@ def convert(nodes: list, windows: list, source: str, opts) -> dict:
         "generator": f"android-uiautomator-locators {VERSION}",
         "source": source,
         "summary": {"nodes": len(nodes), "nodes_kept": len(keep), "elements": len(elements),
-                    "with_resource_id": with_id, "windows": max(len(windows), 1 if nodes else 0),
+                    "with_resource_id": with_id, "windows": windows,
                     "packages": packages},
         "warnings": warnings,
         "keywords": keywords,
@@ -367,9 +364,9 @@ def iter_inputs(paths: list):
 
 
 def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(description="Convert UIAutomator dumps (XML / .uix / HTML / Appium source) "
-                                             "into a JSON map of keyword names, resource ids and selectors.")
-    ap.add_argument("inputs", nargs="+", type=Path, help="dump files or folders")
+    ap = argparse.ArgumentParser(description="Convert UIAutomator XML dumps into a JSON map of keyword names, "
+                                             "resource ids and ready-made selectors.")
+    ap.add_argument("inputs", nargs="+", type=Path, help="XML dump files, or folders of them (.xml / .uix)")
     ap.add_argument("--out", type=Path, default=Path("locators"), help="output folder (default: ./locators)")
     ap.add_argument("--stdout", action="store_true", help="print JSON instead of writing files")
     ap.add_argument("--format", choices=["full", "keywords"], default="full",
@@ -391,10 +388,12 @@ def main(argv=None) -> int:
             print(f"ERROR {f}: not found", file=sys.stderr)
             status = 2
             continue
-        nodes, windows = parse_dump(read_text(f))
-        if not nodes:
-            print(f"ERROR {f}: no UIAutomator nodes found. Expected a `uiautomator dump` XML/.uix, Appium page "
-                  "source, or an HTML page containing one.", file=sys.stderr)
+        try:
+            nodes, windows = parse_dump(read_text(f))
+            if not nodes:
+                raise DumpError("the XML has a <hierarchy> but no <node> elements (was the screen blank or locked?)")
+        except DumpError as e:
+            print(f"ERROR {f}: {e}", file=sys.stderr)
             status = 2
             continue
         result = convert(nodes, windows, f.name, opts)

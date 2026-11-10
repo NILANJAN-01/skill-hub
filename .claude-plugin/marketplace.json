@@ -213,7 +213,7 @@
     },
     {
       "name": "android-automation",
-      "description": "Android UI test automation: turn UIAutomator dumps (XML, .uix, Appium source or HTML) into keyword/resource-id locator JSON for any Android UI, including automotive OEM head units",
+      "description": "Android UI test automation: capture the screen over adb (or read UIAutomator XML dumps) and generate keyword/resource-id locator JSON for any Android UI, including automotive OEM head units",
       "source": "./",
       "strict": false,
       "category": "android",

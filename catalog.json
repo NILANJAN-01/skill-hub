@@ -190,7 +190,7 @@
     },
     {
       "name": "android-automation",
-      "description": "Android UI test automation: turn UIAutomator dumps (XML, .uix, Appium source or HTML) into keyword/resource-id locator JSON for any Android UI, including automotive OEM head units",
+      "description": "Android UI test automation: capture the screen over adb (or read UIAutomator XML dumps) and generate keyword/resource-id locator JSON for any Android UI, including automotive OEM head units",
       "category": "android",
       "skills": [
         "android-uiautomator-locators"
@@ -468,15 +468,16 @@
       "name": "android-uiautomator-locators",
       "title": "Android UIAutomator dump to locators",
       "category": "android-automation",
-      "description": "Convert an Android UIAutomator dump (window_dump.xml, .uix, Appium page source, or an HTML page that contains a dump) into a JSON locator file of keyword names mapped to resource-ids, with ready-made UiSelector, By, uiautomator2, Appium and XPath locators for UIAutomator-based tests. Works for any Android UI, including Android Automotive / OEM head units (multi-window dumps, Compose screens without ids, non-English text). Use when the user shares a uiautomator dump or HTML of one and wants keywords, resource ids, element locators, an object repository or page objects for Android UI tests, or mentions uiautomator dump, window_dump.xml, resource-id, UiSelector, uiautomator2, Appium locators.",
+      "description": "Capture the current screen of a connected Android device over adb (uiautomator dump + pull), or read an existing UIAutomator XML dump (window_dump.xml), and generate a JSON locator file of keyword names mapped to resource-ids, with ready-made UiSelector, By, uiautomator2, Appium and XPath locators for UIAutomator-based tests. Works for any Android UI, including Android Automotive / OEM head units (multi-window dumps, Compose screens without ids, non-English text). Use when the user wants to dump the screen of a connected device or emulator, shares a uiautomator dump XML, or wants keywords, resource ids, element locators, an object repository or page objects for Android UI tests, or mentions uiautomator dump, window_dump.xml, resource-id, UiSelector, uiautomator2, Appium locators.",
       "plugins": [
         "android-automation"
       ],
       "path": "skills/android-uiautomator-locators",
       "license": "Complete terms in the repository README",
       "examples": [
-        "Here's the HTML of a uiautomator dump from our head unit. Generate a JSON with keyword names and resource ids for our tests.",
+        "Here's window_dump.xml from our head unit. Generate a JSON with keyword names and resource ids for our tests.",
         "Convert all the window_dump.xml files in dumps/ into locator JSON files in tests/locators.",
+        "Dump the current screen from the connected device and generate the locator JSON.",
         "This Compose screen has no resource-ids. Give me the best locators you can from this uiautomator dump."
       ],
       "files": [

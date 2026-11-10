@@ -1,8 +1,8 @@
 ---
 name: android-uiautomator-locators
-description: Convert an Android UIAutomator dump (window_dump.xml, .uix, Appium page source, or an HTML page that contains a dump) into a JSON locator file of keyword names mapped to resource-ids, with ready-made UiSelector, By, uiautomator2, Appium and XPath locators for UIAutomator-based tests. Works for any Android UI, including Android Automotive / OEM head units (multi-window dumps, Compose screens without ids, non-English text). Use when the user shares a uiautomator dump or HTML of one and wants keywords, resource ids, element locators, an object repository or page objects for Android UI tests, or mentions uiautomator dump, window_dump.xml, resource-id, UiSelector, uiautomator2, Appium locators.
+description: Capture the current screen of a connected Android device over adb (uiautomator dump + pull), or read an existing UIAutomator XML dump (window_dump.xml), and generate a JSON locator file of keyword names mapped to resource-ids, with ready-made UiSelector, By, uiautomator2, Appium and XPath locators for UIAutomator-based tests. Works for any Android UI, including Android Automotive / OEM head units (multi-window dumps, Compose screens without ids, non-English text). Use when the user wants to dump the screen of a connected device or emulator, shares a uiautomator dump XML, or wants keywords, resource ids, element locators, an object repository or page objects for Android UI tests, or mentions uiautomator dump, window_dump.xml, resource-id, UiSelector, uiautomator2, Appium locators.
 license: Complete terms in the repository README
-compatibility: Needs Python 3.8+ (standard library only). Capturing a fresh dump needs adb and a connected device or emulator.
+compatibility: Needs Python 3.8+ (standard library only). Capturing from a device needs adb (Android platform-tools) and a device or emulator with USB debugging enabled.
 metadata:
   title: "Android UIAutomator dump to locators"
   category: android-automation
@@ -10,7 +10,14 @@ metadata:
 
 # Android UIAutomator dump → locator JSON
 
-`scripts/dump_to_locators.py` reads a UIAutomator dump and writes one JSON file per screen into a **separate output folder** (default `locators/`). Each file contains:
+Two scripts in `scripts/`. Both use only the Python standard library:
+
+| Script | What it does |
+|---|---|
+| `capture_and_convert.py` | **One command from the device:** runs `uiautomator dump` on the connected device over adb, pulls the XML into `dumps/`, and generates the JSON into `locators/` |
+| `dump_to_locators.py` | Converts XML dumps you already have (files or a folder) into JSON |
+
+Each screen gets one JSON file in a **separate output folder** (default `locators/`). Each file contains:
 
 - `keywords`: `{"keyword_name": "package:id/resource_id"}`, the simple map most test suites need.
 - `elements`: every usable element with its keyword, the strategy used, text, content-desc, class, package, bounds, center point, and ready-made locators (`uiselector`, `by`, `uiautomator2`, `appium`, `xpath`).
@@ -20,39 +27,57 @@ The full field reference is in [references/output-format.md](references/output-f
 
 ## When to use
 
-- The user has a `uiautomator dump` XML, a uiautomatorviewer `.uix`, an Appium page source, or an **HTML page** showing a dump, and wants keyword names, resource ids or locators.
+- The user has a `uiautomator dump` XML (`window_dump.xml`) and wants keyword names, resource ids or locators. The same XML hierarchy saved by uiautomatorviewer (`.uix`) or as Appium page source also works.
 - The user is building an object repository, page objects, or a keyword library for UIAutomator, uiautomator2, Appium, or keyword-driven tests (such as Robot Framework) on Android.
 - The screen is from any device: phone, tablet, TV, or an Android Automotive / OEM infotainment system.
 
 ## When NOT to use
 
 - iOS, web (Selenium DOM) or desktop UIs. This skill only reads Android accessibility dumps.
-- Screenshots only, with no dump. Capture a dump first (see below).
+- Screenshots only, or HTML pages and reports, with no XML dump. Capture the XML dump first (see below).
 
 ## Procedure
 
-1. **Get the dump.** If the user already has the file, use it. Otherwise capture one with a device connected (more options in [references/capturing-dumps.md](references/capturing-dumps.md)):
+Script paths are relative to this skill's folder. Run them from the user's test project, so `dumps/` and `locators/` are created there.
+
+1. **Choose the route.**
+   - **A device or emulator is connected** (or the user wants "the current screen"): go to step 2.
+   - **The user already has XML dump files**: go to step 3.
+2. **Capture from the device and convert, in one command.** First ask the user to open the screen they want on the device.
    ```bash
-   adb shell uiautomator dump /sdcard/window_dump.xml
-   adb pull /sdcard/window_dump.xml
+   python scripts/capture_and_convert.py                          # -> dumps/<app_activity>.xml + locators/<app_activity>.locators.json
+   python scripts/capture_and_convert.py --name media_home        # choose the screen name
+   python scripts/capture_and_convert.py --serial emulator-5554   # when several devices are connected
+   python scripts/capture_and_convert.py --interactive            # several screens: navigate, press Enter, repeat; q to quit
    ```
-2. **Convert it.** The script's path is relative to this skill's folder:
+   It works as follows:
+   - **Device:** picks the only connected device, or uses `--serial` / `$ANDROID_SERIAL`.
+   - **Screen name:** taken from the app and activity in front unless you pass `--name`.
+   - **Retries:** if the UI is not idle (animations), it tries again up to 3 times (`--retries`).
+   - **Files:** pulls the XML into `dumps/` and deletes the temporary copy on the device. An existing dump is never overwritten unless you pass `--overwrite`; a timestamped name is used instead.
+   - **adb:** found on PATH, through `$ADB`, or in the Android SDK. Otherwise pass `--adb <path>`.
+   - **Options:** it accepts all of the converter options below, plus `--dumps <folder>`, `--out <folder>` and `--dump-arg` (an extra argument for `uiautomator dump`, e.g. `--dump-arg=--compressed`).
+
+   If it fails, its error says what to do: no device, an unauthorized device (accept the USB debugging prompt), several devices (pass `--serial`), or adb not found. Pass that on to the user. Then go to step 4.
+3. **Convert existing dumps.**
    ```bash
    python scripts/dump_to_locators.py window_dump.xml              # -> locators/window_dump.locators.json
-   python scripts/dump_to_locators.py dumps/ --out tests/locators  # every dump in a folder, one JSON each
+   python scripts/dump_to_locators.py dumps/ --out tests/locators  # every .xml dump in a folder, one JSON each
    ```
-   Useful options:
+   To capture by hand instead: `adb shell uiautomator dump /sdcard/window_dump.xml`, then `adb pull /sdcard/window_dump.xml` (more in [references/capturing-dumps.md](references/capturing-dumps.md)).
+
+   Converter options (both scripts accept them):
    - `--format keywords`: write only the `{keyword: resource-id}` map.
    - `--case upper|camel`: `BTN_PLAY` or `btnPlay` style keywords (default `snake`).
    - `--package com.oem.media`: keep only one app's elements. `--exclude-package com.android.systemui` drops the system bar. Repeat either option as needed.
    - `--include-layout`: also emit elements with no id, text or description. These locators are fragile and marked so.
    - `--stdout`: print the JSON instead of writing files.
-3. **Read the console summary and the warnings, and pass them on to the user.** In particular:
+4. **Read the console summary and the warnings, and pass them on to the user.** In particular:
    - *No resource-ids*: typical for Jetpack Compose and some OEM UIs. Locators fall back to content-desc, then text. Recommend that developers expose test tags as resource-ids.
    - *Text-based locators*: these break when the UI language changes. This matters on OEM head units that switch language by market or user.
    - *N elements share this id*: list rows. Use the per-item keywords (`title_bluetooth`) or the `instance`.
-4. **Check the result.** Open the JSON and confirm that the keywords for the elements the user cares about exist. If a needed element is missing, it has no id, text or description: rerun with `--include-layout`, or recommend adding an id.
-5. **Hand over.** Show the user the `keywords` map (or the relevant part of it) and the output path. If they want code, generate it from `elements[].locators` for their framework (see below). Don't retype selectors by hand.
+5. **Check the result.** Open the JSON and confirm that the keywords for the elements the user cares about exist. If a needed element is missing, it has no id, text or description: rerun with `--include-layout`, or recommend adding an id.
+6. **Hand over.** Show the user the `keywords` map (or the relevant part of it) and the output path. If they want code, generate it from `elements[].locators` for their framework (see below). Don't retype selectors by hand.
 
 ## How keywords are named
 
@@ -94,7 +119,7 @@ driver.find_element(el["strategy"], el["value"]).click()
 
 ## Safety and quality rules
 
-- The script only reads dumps and writes JSON into the output folder. It never touches the device.
+- `dump_to_locators.py` only reads files. `capture_and_convert.py` only runs read-only commands on the device (`uiautomator dump`, `dumpsys window`, `pull`) and deletes its own temporary file there. Neither script taps, types or changes device settings.
 - Never invent resource-ids. Every id in the output comes from the dump.
 - Generated keywords are a starting point. Review the names of important elements with the user before building a large suite on them.
 - Dumps can contain personal data, such as contact names and destinations. Don't publish dumps or locator files from real vehicles without the user's agreement.
@@ -103,7 +128,12 @@ driver.find_element(el["strategy"], el["value"]).click()
 
 | Problem | Fix |
 |---|---|
-| `no UIAutomator nodes found` | The file holds no dump. For an HTML page, check that it contains the dump text or `<node …>` elements, not only a screenshot |
+| `not a UIAutomator XML dump` / `looks like an HTML page` | Give the XML file written by `uiautomator dump`, not a screenshot, HTML page or report |
+| `invalid XML near line …` | The dump was cut off (copy or pull interrupted). Capture it again |
+| `no <node> elements` | The screen was blank, locked or still loading when dumped. Capture it again |
+| `adb not found` | Install Android platform-tools, or pass `--adb C:\path\to\adb.exe` (or set `ADB`) |
+| `No device ready … unauthorized` | Unlock the device and accept the *Allow USB debugging* prompt, then run again |
+| `Several devices are connected` | Pass `--serial <serial>` (see `adb devices`) |
 | `ERROR: could not get idle state` while dumping | The screen is animating (media players, maps). Pause the animation or retry. Some apps never become idle; use Appium's page source instead |
 | Dump shows only the system bar or the wrong screen | Dump again with the app in front. On multi-display units, see [references/capturing-dumps.md](references/capturing-dumps.md) |
 | Keywords like `text_7` | The label has no Latin characters. Rename the keyword in your suite, or ask for a resource-id |
@@ -112,7 +142,7 @@ driver.find_element(el["strategy"], el["value"]).click()
 ## Run the tests
 
 ```bash
-python scripts/test_dump_to_locators.py
+python -m unittest discover -s scripts -p "test_*.py"
 ```
 
-The fixtures in `scripts/fixtures/` cover a standard dump, an HTML page with an escaped multi-window automotive dump, Appium page source, and a browser-saved Compose screen with no ids.
+The fixtures in `scripts/fixtures/` cover a phone settings dump, an automotive media screen (app and system bar as two windows), Appium page-source XML, and a Compose screen with no ids. `test_capture_and_convert.py` drives the capture script with a fake adb (`scripts/testing/fake_adb.py`), so no device is needed. The converter tests also cover the `adb exec-out` status line, several hierarchies in one file, control characters, truncated dumps and UTF-16 files.
