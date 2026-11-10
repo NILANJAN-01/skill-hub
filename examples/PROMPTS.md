@@ -2,9 +2,9 @@
 
 <!-- Generated from examples/prompts.json by tools/build_catalog.py - do not edit by hand. -->
 
-202 things you can say to your AI coding agent, for all 66 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
+207 things you can say to your AI coding agent, for all 67 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
 
-**Categories:** [Hub tools](#hub-tools) · [Android: UI test automation](#android-ui-test-automation) · [Images: pixels & description](#images-pixels--description) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
+**Categories:** [Hub tools](#hub-tools) · [Android: UI test automation](#android-ui-test-automation) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
 
 ## Hub tools
 
@@ -61,6 +61,20 @@ Install the whole category: `--plugin image-tools`
 - “Export every pixel of icon.png to a CSV and read the text in scan.jpg.”
 - “Where is play_icon.png on this screenshot? Give me the tap coordinates.”
 - “Compare after.png with before.png and show me what changed, ignoring the clock.”
+
+## Video: frames, pixels & description
+
+Install the whole category: `--plugin video-tools`
+
+### Video inspector: frames, pixels and description
+
+[`video-inspector`](../skills/video-inspector/SKILL.md) · install: `--skill video-inspector`
+
+- “Analyse recording.mp4 and describe what happens in it, with a timeline.”
+- “Split demo.mp4 into frames, one every 2 seconds, and save them as PNG.”
+- “Did the screen go black or freeze anywhere in headunit_test.mp4?”
+- “Track the colour of the LED at pixel 50,900 in boot.mp4 over time.”
+- “Extract the frame at 0:12.5 from clip.mp4 and give me its pixels as CSV.”
 
 ## Git: getting started
 

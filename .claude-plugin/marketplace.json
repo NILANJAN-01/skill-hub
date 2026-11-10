@@ -232,6 +232,16 @@
       ]
     },
     {
+      "name": "video-tools",
+      "description": "Video: analyse MP4/MOV/MKV/WebM with a Python script - metadata, frames extracted as images, per-frame colours, brightness and motion, scenes, black and frozen sections, pixel colour over time, pixel CSV, and a text description and timeline",
+      "source": "./",
+      "strict": false,
+      "category": "video",
+      "skills": [
+        "./skills/video-inspector"
+      ]
+    },
+    {
       "name": "hub-tools",
       "description": "Skills for working with the hub itself: find and install skills, contribute new skills, and generate skills from technical PDFs (skillforge)",
       "source": "./",

@@ -332,5 +332,12 @@
     "Export every pixel of icon.png to a CSV and read the text in scan.jpg.",
     "Where is play_icon.png on this screenshot? Give me the tap coordinates.",
     "Compare after.png with before.png and show me what changed, ignoring the clock."
+  ],
+  "video-inspector": [
+    "Analyse recording.mp4 and describe what happens in it, with a timeline.",
+    "Split demo.mp4 into frames, one every 2 seconds, and save them as PNG.",
+    "Did the screen go black or freeze anywhere in headunit_test.mp4?",
+    "Track the colour of the LED at pixel 50,900 in boot.mp4 over time.",
+    "Extract the frame at 0:12.5 from clip.mp4 and give me its pixels as CSV."
   ]
 }

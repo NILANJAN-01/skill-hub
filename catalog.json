@@ -205,6 +205,14 @@
       ]
     },
     {
+      "name": "video-tools",
+      "description": "Video: analyse MP4/MOV/MKV/WebM with a Python script - metadata, frames extracted as images, per-frame colours, brightness and motion, scenes, black and frozen sections, pixel colour over time, pixel CSV, and a text description and timeline",
+      "category": "video",
+      "skills": [
+        "video-inspector"
+      ]
+    },
+    {
       "name": "hub-tools",
       "description": "Skills for working with the hub itself: find and install skills, contribute new skills, and generate skills from technical PDFs (skillforge)",
       "category": "hub-tools",
@@ -229,6 +237,11 @@
     {
       "name": "image-tools",
       "title": "Images: pixels & description",
+      "count": 1
+    },
+    {
+      "name": "video-tools",
+      "title": "Video: frames, pixels & description",
       "count": 1
     },
     {
@@ -1961,6 +1974,27 @@
         "Show me the plan of skills skillforge would create from book.pdf before writing anything."
       ],
       "files": []
+    },
+    {
+      "name": "video-inspector",
+      "title": "Video inspector: frames, pixels and description",
+      "category": "video-tools",
+      "description": "Analyse a video file (MP4, MOV, MKV, WebM, AVI) with a ready-made Python script, covering metadata (duration, fps, frame count, codec, resolution, rotation, audio, GPS), extracting frames as PNG/JPG images, per-frame colours, brightness, sharpness and motion, scene changes, black and frozen/static sections, the colour of a pixel or area over time, a per-frame pixel map or full pixel CSV, and a plain-text description and timeline (TXT, JSON, CSV). Use this skill whenever the user wants to analyse, describe or summarise a video or screen recording, split a video into frames or extract a frame at a time, check a recording for black screens, freezes or flicker, track an LED, icon or indicator colour over time, or get pixel data from video frames. Prefer it over writing one-off video code.",
+      "plugins": [
+        "video-tools"
+      ],
+      "path": "skills/video-inspector",
+      "license": "Complete terms in the repository README",
+      "examples": [
+        "Analyse recording.mp4 and describe what happens in it, with a timeline.",
+        "Split demo.mp4 into frames, one every 2 seconds, and save them as PNG.",
+        "Did the screen go black or freeze anywhere in headunit_test.mp4?",
+        "Track the colour of the LED at pixel 50,900 in boot.mp4 over time.",
+        "Extract the frame at 0:12.5 from clip.mp4 and give me its pixels as CSV."
+      ],
+      "files": [
+        "references/output-format.md"
+      ]
     }
   ]
 }
