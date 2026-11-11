@@ -31,7 +31,8 @@ def box(kind, payload=b""):
     return struct.pack(">I", 8 + len(payload)) + kind + payload
 
 
-def fake_mp4(rotation=0, with_audio=True, gps=b"+52.5200+013.4050/", moov_last=True, fps=25, seconds=4):
+def fake_mp4(rotation=0, with_audio=True, gps=b"+52.5200+013.4050/", moov_last=True, fps=25, seconds=4,
+             with_video=True, movie_seconds=None):
     ts = 1000
     frames = fps * seconds
     mat = {0: (1, 0), 90: (0, 1), 180: (-1, 0), 270: (0, -1)}[rotation]
@@ -50,13 +51,13 @@ def fake_mp4(rotation=0, with_audio=True, gps=b"+52.5200+013.4050/", moov_last=T
                  + box(b"stsz", b"\0" * 4 + struct.pack(">II", 5000, frames)))
     video = box(b"trak", box(b"tkhd", tkhd) + box(b"mdia", mdhd(ts, seconds * ts) + hdlr(b"vide")
                                                   + box(b"minf", v_stbl)))
-    traks = video
+    traks = video if with_video else b""
     if with_audio:
         entry = b"\0" * 6 + struct.pack(">H", 1) + b"\0" * 8 + struct.pack(">HHHHI", 2, 16, 0, 0, 48000 << 16)
         a_stbl = box(b"stbl", box(b"stsd", b"\0" * 4 + struct.pack(">I", 1) + box(b"mp4a", entry))
                      + box(b"stts", b"\0" * 4 + struct.pack(">III", 1, 100, 1024)))
         traks += box(b"trak", box(b"mdia", mdhd(48000, seconds * 48000) + hdlr(b"soun") + box(b"minf", a_stbl)))
-    mvhd = box(b"mvhd", b"\0" * 4 + struct.pack(">IIII", 3_800_000_000, 0, ts, seconds * ts) + b"\0" * 80)
+    mvhd = box(b"mvhd", b"\0" * 4 + struct.pack(">IIII", 3_800_000_000, 0, ts, int((movie_seconds or seconds) * ts)) + b"\0" * 80)
     udta = box(b"udta", box(b"\xa9xyz", struct.pack(">HH", len(gps), 0x15c7) + gps)) if gps else b""
     moov = box(b"moov", mvhd + traks + udta)
     parts = [box(b"ftyp", b"isom\0\0\x02\0isomiso2"), box(b"mdat", b"\0" * 4000)]
@@ -167,6 +168,22 @@ class NoOpenCvTests(TempDir):
         self.assertEqual(p.returncode, 2)
         self.assertIn("pip install opencv-python-headless", p.stderr)
         self.assertIn("--info", p.stderr)
+
+    def test_audio_only_and_edit_list(self):
+        (self.dir / "song.mp4").write_bytes(fake_mp4(with_video=False, gps=None))
+        p = self.cli("song.mp4", "--info", "--stdout", no_cv=True)
+        self.assertEqual(p.returncode, 0, p.stderr)
+        rep = json.loads(p.stdout)
+        self.assertEqual(rep["description"], "song.mp4 has no video track (audio only), 4.0 s.")
+        self.assertTrue(any("no video track" in w for w in rep["warnings"]))
+        if HAVE_CV:                                     # used to hang; must now stop at once with a clear error
+            p = self.cli("song.mp4")
+            self.assertEqual(p.returncode, 2)
+            self.assertIn("no video track", p.stderr)
+        (self.dir / "cut.mp4").write_bytes(fake_mp4(gps=None, movie_seconds=2.5))
+        rep = json.loads(self.cli("cut.mp4", "--info", "--stdout", no_cv=True).stdout)
+        self.assertEqual((rep["video"]["duration_s"], rep["video"]["frames"]), (2.5, 62))
+        self.assertTrue(any("edit list" in w for w in rep["warnings"]))
 
     def test_bad_inputs(self):
         (self.dir / "page.mp4").write_text("<!DOCTYPE html><html></html>")

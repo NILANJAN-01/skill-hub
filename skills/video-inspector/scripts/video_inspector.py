@@ -238,10 +238,17 @@ def parse_box(spec: str, what: str, n: int):
     return tuple(vals)
 
 
+NO_VIDEO = "this file has no video track (audio only), so there are no frames to analyse. --info shows its metadata"
+
+
 def open_capture(path: Path):
     cv2, np = cv()
     cap = cv2.VideoCapture(str(path))
     if not cap.isOpened():
+        if path.suffix.lower() in MP4_EXTS:
+            info = mp4info.read(path, False)           # raises Mp4Error with the precise reason (e.g. no moov box)
+            if not any(t.get("type") == "video" for t in info["tracks"]):
+                raise VideoError(NO_VIDEO)
         raise VideoError("OpenCV cannot open this video (unsupported codec or damaged file). "
                          "Try converting it: ffmpeg -i in.ext -c:v libx264 out.mp4")
     return cap
@@ -290,23 +297,31 @@ def choose_targets(opts, fps: float, nframes: int, duration: float, warnings):
     return targets
 
 
-def read_frames(cap, targets, warnings):
+def read_frames(cap, targets, warnings, nframes=0):
     """Yield (index, frame) for the target indices, seeking for big gaps and grabbing for small ones."""
     cv2, np = cv()
     pos = 0
+
+    def ended(at):
+        if nframes and at >= nframes - max(5, nframes // 50):          # a few frames short: header estimate
+            warnings.append(f"The video has {at} frames, slightly fewer than the {nframes} its header gives; "
+                            "samples after the last frame were skipped.")
+        else:
+            warnings.append(f"The video stops at frame {at} of {nframes or '?'} (damaged or truncated file); "
+                            "later samples were skipped.")
+
     for t in targets:
         if t < pos or t - pos > 90:
             cap.set(cv2.CAP_PROP_POS_FRAMES, t)
             pos = t
         while pos < t:
             if not cap.grab():
-                warnings.append(f"The video ended at frame {pos}, before frame {t}; the frame count in the header is "
-                                "larger than the real number of frames.")
+                ended(pos)
                 return
             pos += 1
         ok, frame = cap.read()
         if not ok or frame is None:
-            warnings.append(f"Frame {t} could not be decoded; stopping there (damaged or truncated video).")
+            ended(t)
             return
         pos += 1
         yield t, frame
@@ -359,6 +374,11 @@ def describe(name, meta, frames, scenes, blacks, freezes, tracks, sampling) -> s
     w, h = meta.get("width"), meta.get("height")
     v = []
     head = f"{name} is a"
+    if meta.get("has_video") is False:
+        head = f"{name} has no video track (audio only)"
+        if meta.get("duration_s"):
+            head += f", {meta['duration_s']:.1f} s"
+        return head + "."
     if w and h:
         head += f" {w}x{h} ({'landscape' if w > h else 'portrait' if h > w else 'square'})"
     head += f" {meta.get('codec_name') or ''} video".replace("  ", " ")
@@ -409,12 +429,20 @@ def metadata(path: Path, cap, include_gps: bool, warnings):
         try:
             info = mp4info.read(path, include_gps)
             meta["container"] = info
+            meta["has_video"] = any(t.get("type") == "video" for t in info["tracks"])
             vt = next((t for t in info["tracks"] if t.get("type") == "video"), {})
             at = next((t for t in info["tracks"] if t.get("type") == "audio"), {})
             meta.update({k: vt[k] for k in ("width", "height", "fps", "frames", "codec", "codec_name", "rotation",
                                               "variable_frame_rate") if k in vt})
-            meta["duration_s"] = info.get("duration_s")
+            meta["duration_s"] = info.get("duration_s") or None      # 0 in fragmented files: unknown
             meta["has_audio"] = info["has_audio"]
+            mdur, tdur, tfps = meta["duration_s"], vt.get("duration_s"), vt.get("fps")
+            if mdur and tdur and tfps and meta.get("frames") and mdur < tdur - 1.5 / tfps:
+                meta["frames"] = min(meta["frames"], int(round(mdur * tfps)))
+                warnings.append(f"An edit list shortens the video track from {tdur:g} s to {mdur:g} s; "
+                                "only the part that plays is analysed.")
+            if not meta["duration_s"] and not vt.get("frames"):
+                warnings.append("Fragmented MP4 (no index in the header): the frame count and duration are estimates.")
             if at:
                 meta["audio"] = {k: at[k] for k in ("codec_name", "channels", "sample_rate", "language") if k in at}
             if info.get("has_gps_location") and not include_gps:
@@ -429,9 +457,11 @@ def metadata(path: Path, cap, include_gps: bool, warnings):
     if cap is not None:
         cv2, np = cv()
         fps = cap.get(cv2.CAP_PROP_FPS) or 0
-        n = int(cap.get(cv2.CAP_PROP_FRAME_COUNT) or 0)
-        w, h = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        meta.setdefault("fps", round(fps, 3) if fps else None)
+        n = max(0, int(cap.get(cv2.CAP_PROP_FRAME_COUNT) or 0))   # -1 when unknown
+        w, h = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH) or 0), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT) or 0)
+        if not (w and h):
+            meta.setdefault("has_video", False)                   # OpenCV found no picture stream
+        meta.setdefault("fps", round(fps, 3) if fps and w and h else None)
         meta.setdefault("frames", n or None)
         if not meta.get("duration_s") and fps and n:
             meta["duration_s"] = round(n / fps, 3)
@@ -465,6 +495,11 @@ def analyse_video(path: Path, opts, dest: Path):
     try:
         meta = metadata(path, cap, opts.include_gps, warnings)
         report["video"] = meta
+        if meta.get("has_video") is False:
+            if opts.info:
+                warnings.append("This file has no video track (audio only); there are no frames to analyse.")
+            else:
+                raise VideoError(NO_VIDEO)
         if opts.info:
             report["description"] = describe(path.name, meta, [], [], [], [], [], "")
             report["warnings"] = warnings
@@ -482,7 +517,7 @@ def analyse_video(path: Path, opts, dest: Path):
         frames_dir = dest / "frames"
         saved = 0
         csv_written = []
-        for idx, img in read_frames(cap, targets, warnings):
+        for idx, img in read_frames(cap, targets, warnings, nframes):
             t = idx / fps
             fr = {"frame": idx, "t": round(t, 3), "time": fmt_t(t)}
             fr.update(analyser.analyse(img))

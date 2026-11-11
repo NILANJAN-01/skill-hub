@@ -92,7 +92,11 @@ The detection only sees the analysed frames. To catch short events (a flicker, a
 | `OpenCV cannot open this video` | Unsupported codec or damaged file. Convert it, e.g. with ffmpeg: `ffmpeg -i in.ext -c:v libx264 out.mp4` |
 | `no moov box: the file is incomplete` | The recording was interrupted or the download was cut off. Some tools can repair it (e.g. `untrunc`); otherwise record again |
 | `this is an HTML page, not a video` | The download saved a web page. Download the video file itself |
-| `The video ended at frame …` | The frame count in the header was wrong. The frames up to that point were analysed |
+| `no video track (audio only)` | The file holds only sound (e.g. a voice memo or music saved as .mp4/.m4a). There are no frames; `--info` shows its metadata |
+| `The video has N frames, slightly fewer than…` | The header's frame count was an estimate (common in fragmented or streamed MP4). Everything up to the end was analysed |
+| `The video stops at frame …` | The file is damaged or truncated. The frames up to that point were analysed |
+| `An edit list shortens the video track` | The file plays only part of its recorded frames (trimmed in an editor). Only the playing part is analysed |
+| `Fragmented MP4` warning | Streamed or live-recorded files have no frame index in the header, so the duration and frame count are estimated |
 | `Variable frame rate` warning | Frame times are estimated from the average frame rate and may be off by a few frames |
 | Short glitches are missed | Use `--every-frame --start … --end …` around the glitch, or a smaller `--every` |
 | Too many or too few scenes | Raise or lower `--scene-threshold` |
