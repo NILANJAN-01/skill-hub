@@ -2,7 +2,7 @@
 
 <!-- Generated from examples/prompts.json by tools/build_catalog.py - do not edit by hand. -->
 
-207 things you can say to your AI coding agent, for all 67 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
+211 things you can say to your AI coding agent, for all 68 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
 
 **Categories:** [Hub tools](#hub-tools) · [Android: UI test automation](#android-ui-test-automation) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
 
@@ -33,6 +33,15 @@ Install the whole category: `--plugin hub-tools`
 - “Turn this Kubernetes handbook PDF into Agent Skills.”
 - “Generate skills only for 'backup, restore, replication' from postgres-manual.pdf.”
 - “Show me the plan of skills skillforge would create from book.pdf before writing anything.”
+
+### URL to skill: build a skill from a web page
+
+[`url-to-skill`](../skills/url-to-skill/SKILL.md) · install: `--skill url-to-skill`
+
+- “Create a skill from https://docs.python.org/3/library/json.html and save it for later.”
+- “Turn the docs under https://docs.example.com/cli/ into one skill called example-cli.”
+- “Refresh the skill we generated from that web page last month.”
+- “Save this internal wiki page as a skill: http://wiki.corp.local/build-guide”
 
 ## Android: UI test automation
 

@@ -243,14 +243,15 @@
     },
     {
       "name": "hub-tools",
-      "description": "Skills for working with the hub itself: find and install skills, contribute new skills, and generate skills from technical PDFs (skillforge)",
+      "description": "Skills for working with the hub itself: find and install skills, contribute new skills, generate skills from technical PDFs (skillforge) and from web pages (url-to-skill)",
       "source": "./",
       "strict": false,
       "category": "hub-tools",
       "skills": [
         "./skills/find-skills",
         "./skills/contribute-skill",
-        "./skills/skillforge"
+        "./skills/skillforge",
+        "./skills/url-to-skill"
       ]
     }
   ]

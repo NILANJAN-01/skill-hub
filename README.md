@@ -17,7 +17,7 @@ A skill is a folder with a `SKILL.md` file in the open [Agent Skills](https://ag
 | [`android-automation`](skills/README.md#android-ui-test-automation-android-automation) | 1 | Capture the screen over adb (or read UIAutomator XML dumps) and generate keyword → resource-id locator JSON for any Android UI, incl. automotive OEM head units |
 | [`image-tools`](skills/README.md#images-pixels--description-image-tools) | 1 | Read any PNG/JPG/WebP/GIF/BMP and report exact pixel colours, regions, palette, pixel map and CSV, plus a plain-text description, EXIF and optional OCR. With OpenCV: find an icon in a screenshot, compare screenshots |
 | [`video-tools`](skills/README.md#video-frames-pixels--description-video-tools) | 1 | Analyse MP4/MOV/MKV videos: metadata, frames as images, per-frame colours and motion, scenes, black and frozen sections, pixel colour over time, text description and timeline |
-| [`hub-tools`](skills/README.md#hub-tools-hub-tools) | 3 | Find and install skills, contribute new ones, and generate skills from PDFs (`skillforge`) |
+| [`hub-tools`](skills/README.md#hub-tools-hub-tools) | 4 | Find and install skills, contribute new ones, and generate skills from PDFs (`skillforge`) or web pages (`url-to-skill`) |
 | [`git-getting-started`](skills/README.md#git-getting-started-git-getting-started) | 11 | Install and configure Git, create repos, record changes, history, undo, tags, aliases |
 | [`git-branching`](skills/README.md#git-branching--merging-git-branching) | 7 | Branches, merging, remote branches, rebasing, advanced merge conflicts, rerere |
 | [`git-collaboration`](skills/README.md#git-remotes--collaboration-git-collaboration) | 14 | Remotes, protocols, hosting Git servers, distributed workflows, GitHub, credentials |

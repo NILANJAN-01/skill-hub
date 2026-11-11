@@ -21,11 +21,13 @@ jobs:
       - name: Check generated files are up to date
         run: python tools/build_catalog.py --check
       - name: Byte-compile tools and skill scripts
-        run: python -m py_compile tools/*.py skills/skillforge/scripts/skillforge.py skills/android-uiautomator-locators/scripts/*.py skills/android-uiautomator-locators/scripts/testing/*.py skills/image-inspector/scripts/*.py skills/video-inspector/scripts/*.py
+        run: python -m py_compile tools/*.py skills/skillforge/scripts/skillforge.py skills/android-uiautomator-locators/scripts/*.py skills/android-uiautomator-locators/scripts/testing/*.py skills/image-inspector/scripts/*.py skills/video-inspector/scripts/*.py skills/url-to-skill/scripts/*.py
       - name: Skill tests (android-uiautomator-locators)
         run: python -m unittest discover -s skills/android-uiautomator-locators/scripts -p "test_*.py" -v
       - name: Skill tests (image-inspector, standard library only)
         run: python -m unittest discover -s skills/image-inspector/scripts -p "test_*.py" -v
+      - name: Skill tests (url-to-skill, local web server)
+        run: python -m unittest discover -s skills/url-to-skill/scripts -p "test_*.py" -v
       - name: Skill tests (video-inspector, standard library only)
         run: python -m unittest discover -s skills/video-inspector/scripts -p "test_*.py" -v
       - name: Skill tests (image-inspector and video-inspector, with Pillow and OpenCV)

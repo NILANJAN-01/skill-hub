@@ -339,5 +339,11 @@
     "Did the screen go black or freeze anywhere in headunit_test.mp4?",
     "Track the colour of the LED at pixel 50,900 in boot.mp4 over time.",
     "Extract the frame at 0:12.5 from clip.mp4 and give me its pixels as CSV."
+  ],
+  "url-to-skill": [
+    "Create a skill from https://docs.python.org/3/library/json.html and save it for later.",
+    "Turn the docs under https://docs.example.com/cli/ into one skill called example-cli.",
+    "Refresh the skill we generated from that web page last month.",
+    "Save this internal wiki page as a skill: http://wiki.corp.local/build-guide"
   ]
 }

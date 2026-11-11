@@ -172,7 +172,7 @@ Categories for `--plugin`:
 
 | Category | What's in it |
 |---|---|
-| `hub-tools` | Find and install skills, contribute skills, turn PDFs into skills |
+| `hub-tools` | Find and install skills, contribute skills, turn PDFs or web pages into skills |
 | `android-automation` | Capture the screen over adb (or read UIAutomator XML dumps) and generate keyword / resource-id locator JSON for Android UI tests |
 | `image-tools` | Read any image and report its pixels (exact colours, palette, pixel map, CSV) and a plain-text description; find icons in and compare screenshots (OpenCV) |
 | `video-tools` | Analyse a video: frames as images, colours, scenes, black/frozen sections, pixel colour over time, text timeline |
