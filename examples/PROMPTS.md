@@ -2,9 +2,9 @@
 
 <!-- Generated from examples/prompts.json by tools/build_catalog.py - do not edit by hand. -->
 
-211 things you can say to your AI coding agent, for all 68 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
+216 things you can say to your AI coding agent, for all 69 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
 
-**Categories:** [Hub tools](#hub-tools) · [Android: UI test automation](#android-ui-test-automation) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
+**Categories:** [Hub tools](#hub-tools) · [Android: UI test automation](#android-ui-test-automation) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
 
 ## Hub tools
 
@@ -84,6 +84,20 @@ Install the whole category: `--plugin video-tools`
 - “Did the screen go black or freeze anywhere in headunit_test.mp4?”
 - “Track the colour of the LED at pixel 50,900 in boot.mp4 over time.”
 - “Extract the frame at 0:12.5 from clip.mp4 and give me its pixels as CSV.”
+
+## Testing: unit tests & reports
+
+Install the whole category: `--plugin testing-tools`
+
+### Kotlin unit tests: class/method-wise testing, verification and HTML report
+
+[`kotlin-unit-test`](../skills/kotlin-unit-test/SKILL.md) · install: `--skill kotlin-unit-test`
+
+- “Write unit tests for every method of OrderService.kt and run them.”
+- “Run the Kotlin tests for class PriceCalculator and give me an HTML report.”
+- “Which methods in this Kotlin project have no tests, and are the existing tests actually asserting anything?”
+- “Unit test our Appium LoginPage page object without a device.”
+- “Check whether the tests for CartRepository would catch a bug (mutation check).”
 
 ## Git: getting started
 

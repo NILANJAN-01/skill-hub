@@ -253,6 +253,16 @@
         "./skills/skillforge",
         "./skills/url-to-skill"
       ]
+    },
+    {
+      "name": "testing-tools",
+      "description": "Testing: write, run and verify Kotlin unit tests class by class and method by method with Python scripts - Gradle/Maven/kotlinc runs, test-to-method mapping, quality checks (assertion-free, empty, disabled, JUnit 4 not run), coverage, mutation check, and an HTML report",
+      "source": "./",
+      "strict": false,
+      "category": "testing",
+      "skills": [
+        "./skills/kotlin-unit-test"
+      ]
     }
   ]
 }

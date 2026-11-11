@@ -345,5 +345,12 @@
     "Turn the docs under https://docs.example.com/cli/ into one skill called example-cli.",
     "Refresh the skill we generated from that web page last month.",
     "Save this internal wiki page as a skill: http://wiki.corp.local/build-guide"
+  ],
+  "kotlin-unit-test": [
+    "Write unit tests for every method of OrderService.kt and run them.",
+    "Run the Kotlin tests for class PriceCalculator and give me an HTML report.",
+    "Which methods in this Kotlin project have no tests, and are the existing tests actually asserting anything?",
+    "Unit test our Appium LoginPage page object without a device.",
+    "Check whether the tests for CartRepository would catch a bug (mutation check)."
   ]
 }

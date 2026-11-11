@@ -222,6 +222,14 @@
         "skillforge",
         "url-to-skill"
       ]
+    },
+    {
+      "name": "testing-tools",
+      "description": "Testing: write, run and verify Kotlin unit tests class by class and method by method with Python scripts - Gradle/Maven/kotlinc runs, test-to-method mapping, quality checks (assertion-free, empty, disabled, JUnit 4 not run), coverage, mutation check, and an HTML report",
+      "category": "testing",
+      "skills": [
+        "kotlin-unit-test"
+      ]
     }
   ],
   "categories": [
@@ -243,6 +251,11 @@
     {
       "name": "video-tools",
       "title": "Video: frames, pixels & description",
+      "count": 1
+    },
+    {
+      "name": "testing-tools",
+      "title": "Testing: unit tests & reports",
       "count": 1
     },
     {
@@ -1957,6 +1970,29 @@
       ],
       "files": [
         "references/output-format.md"
+      ]
+    },
+    {
+      "name": "kotlin-unit-test",
+      "title": "Kotlin unit tests: class/method-wise testing, verification and HTML report",
+      "category": "testing-tools",
+      "description": "Write, run and verify unit tests for Kotlin code (apps, libraries, Android, scripts and test-automation code such as Appium/Selenium page objects) class by class and method by method, then produce an HTML report of results, coverage and findings. Bundled Python scripts map every class and method to its tests, run the tests with Gradle, Maven or kotlinc (one class, one method, or all), and check that the tests really test something: assertion-free, empty, TODO, trivial, sleeping or disabled tests, JUnit 4 tests that never run, untested methods, and a mutation check that injects small bugs to prove the tests catch them. Use when the user asks to unit test Kotlin code, add or generate tests for a Kotlin class or method, run Kotlin tests, get a test report or coverage report, check test quality, or find untested Kotlin methods.",
+      "plugins": [
+        "testing-tools"
+      ],
+      "path": "skills/kotlin-unit-test",
+      "license": "Complete terms in the repository README",
+      "examples": [
+        "Write unit tests for every method of OrderService.kt and run them.",
+        "Run the Kotlin tests for class PriceCalculator and give me an HTML report.",
+        "Which methods in this Kotlin project have no tests, and are the existing tests actually asserting anything?",
+        "Unit test our Appium LoginPage page object without a device.",
+        "Check whether the tests for CartRepository would catch a bug (mutation check)."
+      ],
+      "files": [
+        "references/checks.md",
+        "references/setup.md",
+        "references/writing-tests.md"
       ]
     },
     {

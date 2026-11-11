@@ -87,6 +87,7 @@ CATEGORY_TITLES = {
     "android-automation": "Android: UI test automation",
     "image-tools": "Images: pixels & description",
     "video-tools": "Video: frames, pixels & description",
+    "testing-tools": "Testing: unit tests & reports",
     "git-getting-started": "Git: getting started",
     "git-branching": "Git: branching & merging",
     "git-collaboration": "Git: remotes & collaboration",
