@@ -1,6 +1,6 @@
 ---
 name: git-gitweb
-description: "GitWeb playbook extracted from \"Pro Git\". Git comes with a CGI script called GitWeb that is sometimes used for this. Use when the user asks about gitweb, simple web-based visualizer, basic read, write and read-only, read-only access, cgi script, gitweb; or mentions git instaweb --httpd, git instaweb --httpd --stop, git clone, cd, make, cp -Rf."
+description: "Browse a repository in a web browser with GitWeb (git instaweb, or the gitweb CGI under Apache). Use when the user wants a simple web viewer for a git repository."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "GitWeb"

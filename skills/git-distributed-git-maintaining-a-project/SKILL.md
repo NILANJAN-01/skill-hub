@@ -1,6 +1,6 @@
 ---
 name: git-distributed-git-maintaining-a-project
-description: "Maintaining a Project playbook extracted from \"Pro Git\". This can consist of accepting and applying patches generated via format-patch and emailed to you, or integrating changes in remote branches for repositories you’ve added as remotes to your project. Use when the user asks about maintaining a project, topic branch, git apply, git project, master, work, command; or mentions git diff, git am, git checkout -b, git branch, git apply, git apply --check; or hits errors like \"error: patch failed: ticgit.gemspec:1\"."
+description: "Maintain a project with plain git: apply emailed patches (git apply, git am), review contributor branches, merge, rebase or cherry-pick them, tag and build releases, git shortlog. Use when the user integrates other people's patches or branches, or cuts a release."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Maintaining a Project"

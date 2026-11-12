@@ -1,6 +1,6 @@
 ---
 name: android-uiautomator-locators
-description: Capture the current screen of a connected Android device over adb (uiautomator dump + pull), or read an existing UIAutomator XML dump (window_dump.xml), and generate a JSON locator file of keyword names mapped to resource-ids, with ready-made UiSelector, By, uiautomator2, Appium and XPath locators for UIAutomator-based tests. Works for any Android UI, including Android Automotive / OEM head units (multi-window dumps, Compose screens without ids, non-English text). Use when the user wants to dump the screen of a connected device or emulator, shares a uiautomator dump XML, or wants keywords, resource ids, element locators, an object repository or page objects for Android UI tests, or mentions uiautomator dump, window_dump.xml, resource-id, UiSelector, uiautomator2, Appium locators.
+description: "Dump the current screen of a connected Android device over adb, or read an existing window_dump.xml, and generate a JSON locator file with UiSelector, By, uiautomator2, Appium and XPath locators. Also handles Android Automotive head units. Use when the user wants resource-ids, element locators or page objects for Android UI tests, or mentions uiautomator dump."
 license: Complete terms in the repository README
 compatibility: Needs Python 3.8+ (standard library only). Capturing from a device needs adb (Android platform-tools) and a device or emulator with USB debugging enabled.
 metadata:

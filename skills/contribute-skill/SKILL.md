@@ -1,6 +1,6 @@
 ---
 name: contribute-skill
-description: Add a new skill (or update an existing one) in the skill-hub repository so that it validates, appears in catalog.json and the generated skill lists, and installs into every supported AI coding agent (Claude Code, Antigravity, Devin, Copilot, Cursor, Windsurf, Codex, Gemini CLI). Use when the user wants to write, add, publish, register, contribute or rename a skill in skill-hub, create a new plugin bundle, or fix validation/catalog errors from tools/validate_skills.py or tools/build_catalog.py.
+description: "Add or update a skill in the skill-hub repository so that it validates, appears in the catalog and installs into every supported agent. Use when the user wants to write, add, publish, register or rename a skill in skill-hub, create a plugin bundle, or fix errors from validate_skills.py or build_catalog.py."
 license: Complete terms in the repository README
 compatibility: Works in any agent. Edits a skill-hub checkout, so it needs file-system and shell access with Python 3.8+. Mentions agent names only to explain where skills are installed.
 metadata:

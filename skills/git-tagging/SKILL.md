@@ -1,6 +1,6 @@
 ---
 name: git-tagging
-description: "Tagging playbook extracted from \"Pro Git\". The -m specifies a tagging message, which is stored with the tag. Use when the user asks about tagging, git push, git tag, lightweight tag, remote, tag commits, command; or mentions git tag, git show, git push, git checkout, git tag -l, git tag -a -m; or hits errors like \"You are in 'detached HEAD' state. You can look around, make experimental\"."
+description: "Tags: list, create annotated or lightweight tags, tag an older commit, push tags, delete local and remote tags, check out a tag. Use when the user wants to tag a commit or mark a release version."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Tagging"

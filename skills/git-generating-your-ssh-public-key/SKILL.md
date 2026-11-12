@@ -1,6 +1,6 @@
 ---
 name: git-generating-your-ssh-public-key
-description: "Generating Your SSH Public Key playbook extracted from \"Pro Git\". The .pub file is your public key, and the other file is the corresponding private key. Use when the user asks about generating your ssh public key, git servers authenticate, ssh keys, public keys, user, file, password; or mentions ssh-keygen -o, cd, ls, cat."
+description: "Create an SSH key pair for git hosting (ssh-keygen, ~/.ssh/id_*.pub). Use when the user needs an SSH key for GitHub, GitLab or a git server, or gets 'Permission denied (publickey)'."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Generating Your SSH Public Key"

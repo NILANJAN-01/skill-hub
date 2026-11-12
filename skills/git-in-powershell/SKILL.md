@@ -1,6 +1,6 @@
 ---
 name: git-in-powershell
-description: "Git in PowerShell playbook extracted from \"Pro Git\". Before you’re able to run PowerShell scripts on your machine, you need to set your local ExecutionPolicy to RemoteSigned (basically, anything except Undefined and Restricted). Use when the user asks about git in powershell, legacy command-line terminal, customized git experience, n’t really capable, posh-git, remotesigned, scope."
+description: "Set up git in PowerShell with posh-git: execution policy, install from the PowerShell Gallery, branch status in the prompt, tab completion. Use when the user wants a git prompt or completion in PowerShell on Windows."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Git in PowerShell"

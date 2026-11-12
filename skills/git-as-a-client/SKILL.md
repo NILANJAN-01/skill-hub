@@ -1,6 +1,6 @@
 ---
 name: git-as-a-client
-description: "Git as a Client playbook extracted from \"Pro Git\". This tool allows you to use Git as a valid client to a Subversion server, so you can use all the local features of Git and then push to a Subversion server as if you were using Subversion locally. Use when the user asks about git as a client, git svn, perforce git fusion, subversion server, git commit, perforce server, git repository; or mentions git svn, git log --oneline --all, git p4, git log --oneline --graph, git push, git clone; or hits errors like \"ERROR from SVN:\"."
+description: "Work in git against a Subversion, Mercurial or Perforce server (git svn, git-remote-hg, git p4, Git Fusion). Use when the user uses git locally but the team's repository is SVN, Hg or Perforce."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Git as a Client"

@@ -1,6 +1,6 @@
 ---
 name: git-signing-your-work
-description: "Signing Your Work playbook extracted from \"Pro Git\". If you’re taking work from others on the internet and want to verify that commits are actually from a trusted source, Git has a few ways to sign and verify work using GPG. Use when the user asks about signing your work, gpg signature, cryptographically secure, git merge, gpg private key, tags, command; or mentions git merge --verify-signatures, gpg --list-keys, gpg --gen-key, git config --global, git tag -s -m, git show; or hits errors like \"error: could not verify the tag 'v1.4.2.1'\"."
+description: "Sign and verify with GPG: user.signingkey, signed tags (git tag -s, -v), signed commits (git commit -S), requiring signatures on merge. Use when the user wants to sign commits or tags, or verify who made them."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Signing Your Work"

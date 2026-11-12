@@ -1,6 +1,6 @@
 ---
 name: git-smart-http
-description: "Smart HTTP playbook extracted from \"Pro Git\". Setting up Smart HTTP is basically just enabling a CGI script that is provided with Git called git-http-backend on the server. Use when the user asks about smart http, access through ssh, cgi script, web server, http url, smart http, ssh and unauthenticated; or mentions apt-get install, a2enmod cgi, chgrp -R, htpasswd -c."
+description: "Serve git over HTTP(S) with git-http-backend under Apache, with authenticated push. Use when the user wants to host a repository over HTTP on their own web server."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Smart HTTP"

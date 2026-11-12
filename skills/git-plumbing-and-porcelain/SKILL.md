@@ -1,6 +1,6 @@
 ---
 name: git-plumbing-and-porcelain
-description: "Plumbing and Porcelain playbook extracted from \"Pro Git\". These commands are generally referred to as Git’s “plumbing” commands, while the more user-friendly commands are called “porcelain” Use when the user asks about plumbing and porcelain, full user-friendly vcs, version control system, initially a toolkit, number of subcommands, low-level work, chained together unix-style; or mentions ls -F1."
+description: "Overview of the .git directory (HEAD, index, objects, refs, config, hooks) and of plumbing versus porcelain commands. Use when the user asks what is inside the .git folder or what a low-level git command is."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Plumbing and Porcelain"

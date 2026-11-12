@@ -728,18 +728,16 @@ class Author:
         return validate(skill_dir / "SKILL.md")
 
     def description(self, title, overview, kws, keys, errors) -> str:
-        parts = [f"{title} playbook extracted from \"{self.doc.title}\"."]
-        if overview:
-            parts.append(overview if len(overview) < 260 else overview[:257].rsplit(" ", 1)[0] + "...")
+        # Agents choose a skill from this text alone, and shorten or drop it when many skills
+        # are installed. So: triggers first, no quoted prose, and short. Treat the result as a
+        # draft to rewrite by hand in the words a user would type.
+        lead = title + (f" ({', '.join(keys[:5])})" if keys else "") + "."
         use = f"Use when the user asks about {title.lower()}"
         if kws:
-            use += f", {', '.join(kws[:6])}"
-        if keys:
-            use += f"; or mentions {', '.join(keys[:6])}"
+            use += f", {', '.join(kws[:4])}"
         if errors:
-            use += f"; or hits errors like \"{errors[0][0][:80]}\""
-        parts.append(use + ".")
-        return " ".join(" ".join(parts).replace("`", "").split())[:1024]
+            use += f"; or hits errors like \"{errors[0][0][:60]}\""
+        return " ".join(f"{lead} {use}.".replace("`", "").split())[:400]
 
     def procedure(self, u: Unit, on_topic=lambda s: True, compact: bool = False) -> list[str] | None:
         max_steps, max_listing = (6, 15) if compact else (12, 40)

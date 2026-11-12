@@ -1,6 +1,6 @@
 ---
 name: git-the-refspec
-description: "The Refspec playbook extracted from \"Pro Git\". Because the refspec is <src>:<dst>, by leaving off the <src> part, this basically says to make the topic branch on the remote nothing, which deletes it. Use when the user asks about the refspec, git push origin, local git repository, git remote add, small local git, remote server, refspec; or mentions git log, git fetch, git push, git remote, git push --delete; or hits errors like \"! [rejected] master -> origin/mymaster (non fast forward)\"."
+description: "Refspecs: the +<src>:<dst> mapping in a remote's fetch and push config, fetching selected branches or namespaces, pushing to a different ref name, deleting remote refs. Use when the user edits remote.<name>.fetch or needs a custom fetch or push mapping."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "The Refspec"

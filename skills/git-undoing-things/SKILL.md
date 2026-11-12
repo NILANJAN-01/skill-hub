@@ -1,6 +1,6 @@
 ---
 name: git-undoing-things
-description: "Undoing Things playbook extracted from \"Pro Git\". One of the common undos takes place when you commit too early and possibly forget to add some files, or you mess up your commit message. Use when the user asks about undoing things, git restore, git reset, previous commit, undo, commit message, committed; or mentions git status, git add, git commit --amend, git commit -m, git reset, git checkout."
+description: "Undo mistakes: amend the last commit, unstage a file, discard changes in a file (git commit --amend, git reset HEAD, git restore, git checkout --). Use when the user committed too early, staged the wrong file, or wants to throw away local changes."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Undoing Things"

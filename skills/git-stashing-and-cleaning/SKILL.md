@@ -1,6 +1,6 @@
 ---
 name: git-stashing-and-cleaning
-description: "Stashing and Cleaning playbook extracted from \"Pro Git\". The answer to this issue is the git stash command. Use when the user asks about stashing and cleaning, git stash, working directory, git clean, remove, branch, stash apply; or mentions git stash, git clean -n -d, git stash --index, git stash --keep-index, git stash -u, git stash --patch."
+description: "Set work aside and clean up: git stash (list, apply, pop, -u, --patch, stash branch) and git clean for untracked files. Use when the user must switch branches with uncommitted changes, shelve work for later, or delete untracked files."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Stashing and Cleaning"

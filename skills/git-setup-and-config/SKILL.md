@@ -1,6 +1,6 @@
 ---
 name: git-setup-and-config
-description: "Setup and Config playbook extracted from \"Pro Git\". There are two commands that are used quite a lot, from the first invocations of Git to common every day tweaking and referencing, the config and help commands. Use when the user asks about setup and config, tweaking and referencing, common every day, day tweaking, command, git setup, default."
+description: "Quick reference for git config and git help, including the core.editor command for common editors (VS Code, Notepad++, Vim, Sublime and others). Use when the user asks how to set git's editor or where git config and git help are used."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Setup and Config"

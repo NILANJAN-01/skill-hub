@@ -1,6 +1,6 @@
 ---
 name: git-basic-snapshotting
-description: "Basic Snapshotting playbook extracted from \"Pro Git\". For the basic workflow of staging content and committing it to your history, there are only a few basic commands. Use when the user asks about basic snapshotting, staging area, git add, git diff, git commit, staged, git reset."
+description: "Quick reference for the everyday snapshot commands: git add, status, diff, difftool, commit, reset, rm, mv, clean. Use when the user asks which git command stages, commits, unstages or removes files."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Basic Snapshotting"

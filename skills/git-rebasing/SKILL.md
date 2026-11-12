@@ -1,6 +1,6 @@
 ---
 name: git-rebasing
-description: "Rebasing playbook extracted from \"Pro Git\". In Git, there are two main ways to integrate changes from one branch into another: the merge and the rebase. Use when the user asks about rebasing, commit history, rebase commits, git rebase, git pull, merge commit, topic branch; or mentions git rebase, git rebase --onto, git checkout, git merge, git branch -d."
+description: "Rebase a branch onto another (git rebase, --onto), choose between rebase and merge, and recover when rebased commits were already pushed (git pull --rebase). Use when the user wants to rebase, get a linear history, or fix a branch that diverged after a force-push."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Rebasing"

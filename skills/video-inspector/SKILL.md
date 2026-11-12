@@ -1,6 +1,6 @@
 ---
 name: video-inspector
-description: Analyse a video file (MP4, MOV, MKV, WebM, AVI) with a ready-made Python script, covering metadata (duration, fps, frame count, codec, resolution, rotation, audio, GPS), extracting frames as PNG/JPG images, per-frame colours, brightness, sharpness and motion, scene changes, black and frozen/static sections, the colour of a pixel or area over time, a per-frame pixel map or full pixel CSV, and a plain-text description and timeline (TXT, JSON, CSV). Use this skill whenever the user wants to analyse, describe or summarise a video or screen recording, split a video into frames or extract a frame at a time, check a recording for black screens, freezes or flicker, track an LED, icon or indicator colour over time, or get pixel data from video frames. Prefer it over writing one-off video code.
+description: "Analyse a video file (MP4, MOV, MKV, WebM, AVI) with a ready-made Python script: metadata, frame extraction, scene changes, black or frozen sections, motion, brightness, and the colour of a pixel or area over time. Use when the user wants to analyse or describe a video or screen recording, extract frames, check for black screens, freezes or flicker, or track an LED or indicator colour."
 license: Complete terms in the repository README
 compatibility: Needs Python 3.8+ and OpenCV (pip install opencv-python-headless, which includes numpy and FFmpeg decoding). Metadata of MP4/MOV files (--info) works with the standard library alone.
 metadata:

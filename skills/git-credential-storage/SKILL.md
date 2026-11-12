@@ -1,6 +1,6 @@
 ---
 name: git-credential-storage
-description: "Credential Storage playbook extracted from \"Pro Git\". This means that until you change your password for the Git host, you won’t ever have to type in your credentials again. Use when the user asks about credential storage, git credential, ssh transport, credential helper, file, securely transfer data, windows credential store; or mentions git credential, git credential-store --file, git credential-read-only --file, git config --global --file, git config --global."
+description: "Stop git asking for a username and password: credential helpers (cache, store, osxkeychain, Git Credential Manager) and custom helpers. Use when the user is prompted for credentials on every push or pull, or asks how git stores passwords."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Credential Storage"

@@ -1,6 +1,6 @@
 ---
 name: git-getting-help
-description: "Getting Help playbook extracted from \"Pro Git\". These channels are regularly filled with hundreds of people who are all very knowledgeable about Git and are often willing to help. Use when the user asks about getting help, comprehensive manual page, git config, git commands, manpage, offline, equivalent; or mentions git help, git --help, man, git add -h; or hits errors like \"errors\"."
+description: "Look up git documentation: git help <verb>, git <verb> --help, man git-<verb>, and the short -h summary. Use when the user asks how to find a git command's options or manual page."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Getting Help"

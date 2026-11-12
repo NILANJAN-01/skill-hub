@@ -508,7 +508,7 @@
       "name": "android-uiautomator-locators",
       "title": "Android UIAutomator dump to locators",
       "category": "android-automation",
-      "description": "Capture the current screen of a connected Android device over adb (uiautomator dump + pull), or read an existing UIAutomator XML dump (window_dump.xml), and generate a JSON locator file of keyword names mapped to resource-ids, with ready-made UiSelector, By, uiautomator2, Appium and XPath locators for UIAutomator-based tests. Works for any Android UI, including Android Automotive / OEM head units (multi-window dumps, Compose screens without ids, non-English text). Use when the user wants to dump the screen of a connected device or emulator, shares a uiautomator dump XML, or wants keywords, resource ids, element locators, an object repository or page objects for Android UI tests, or mentions uiautomator dump, window_dump.xml, resource-id, UiSelector, uiautomator2, Appium locators.",
+      "description": "Dump the current screen of a connected Android device over adb, or read an existing window_dump.xml, and generate a JSON locator file with UiSelector, By, uiautomator2, Appium and XPath locators. Also handles Android Automotive head units. Use when the user wants resource-ids, element locators or page objects for Android UI tests, or mentions uiautomator dump.",
       "plugins": [
         "android-automation"
       ],
@@ -529,7 +529,7 @@
       "name": "contribute-skill",
       "title": "Contribute a skill to the hub",
       "category": "hub-tools",
-      "description": "Add a new skill (or update an existing one) in the skill-hub repository so that it validates, appears in catalog.json and the generated skill lists, and installs into every supported AI coding agent (Claude Code, Antigravity, Devin, Copilot, Cursor, Windsurf, Codex, Gemini CLI). Use when the user wants to write, add, publish, register, contribute or rename a skill in skill-hub, create a new plugin bundle, or fix validation/catalog errors from tools/validate_skills.py or tools/build_catalog.py.",
+      "description": "Add or update a skill in the skill-hub repository so that it validates, appears in the catalog and installs into every supported agent. Use when the user wants to write, add, publish, register or rename a skill in skill-hub, create a plugin bundle, or fix errors from validate_skills.py or build_catalog.py.",
       "plugins": [
         "hub-tools"
       ],
@@ -546,7 +546,7 @@
       "name": "find-skills",
       "title": "Find & install hub skills",
       "category": "hub-tools",
-      "description": "Search the skill-hub catalog for an Agent Skill that fits the current task and install it into the AI coding agent in use (any agent that reads SKILL.md skills). Use when the user asks \"is there a skill for X\", wants to find, browse, list, recommend or install skills, asks what skills or plugins skill-hub offers, or when a task would clearly benefit from a specialized playbook (e.g. a tricky git rebase, writing a git hook, generating skills from a PDF).",
+      "description": "Search the skill-hub catalog for a skill that fits the task and install it into the agent in use. Use when the user asks \"is there a skill for X\", wants to find, browse, list or install skills, or asks what skill-hub offers.",
       "plugins": [
         "hub-tools"
       ],
@@ -563,7 +563,7 @@
       "name": "git-advanced-merging",
       "title": "Advanced Merging",
       "category": "git-branching",
-      "description": "Advanced Merging playbook extracted from \"Pro Git\". When you invoke a merge into HEAD (git merge topic), the new commit has two parents: the first one is HEAD (C6), and the second is the tip of the branch being merged in (C4). Use when the user asks about advanced merging, git merge, merge conflict, merge commit, git diff, rack, side; or mentions git merge, git merge --abort, git merge -Xignore-space-change, git merge-file -p, git merge -Xours, git merge -s; or hits errors like \"CONFLICT (content): Merge conflict in hello.rb\".",
+      "description": "Resolve hard merge conflicts: abort or redo a merge, ignore whitespace, check out the ours/theirs/base versions, diff3 markers, undo a merge commit, subtree merges. Use when a git merge has conflicts or went wrong.",
       "plugins": [
         "git-branching",
         "git-skills"
@@ -586,7 +586,7 @@
       "name": "git-aliases",
       "title": "Git Aliases",
       "category": "git-getting-started",
-      "description": "Git Aliases playbook extracted from \"Pro Git\". As you go on using Git, you’ll probably use other commands frequently as well; don’t hesitate to create new aliases. Use when the user asks about git aliases, n’t automatically infer, git commands, git config, alias, git commit, partially; or mentions git config --global, git unstage, git reset, git last.",
+      "description": "Create shortcuts for git commands with git config alias (git co, git unstage, git last). Use when the user wants a git alias or shorter git commands.",
       "plugins": [
         "git-getting-started",
         "git-skills"
@@ -608,7 +608,7 @@
       "name": "git-an-example-git-enforced-policy",
       "title": "An Example Git-Enforced Policy",
       "category": "git-customization",
-      "description": "An Example Git-Enforced Policy playbook extracted from \"Pro Git\". You’ll build client scripts that help the developer know if their push will be rejected and server scripts that actually enforce the policies. Use when the user asks about an example git-enforced policy, commit message, acl file, update script, list, scripts, server; or mentions git cat-file, git commit -am, git rev-list, git log --name-only --pretty, git push -f; or hits errors like \"error: hooks/update exited with error code 1\".",
+      "description": "Write server-side and client-side hook scripts that enforce a commit-message format, per-user file access (ACL) and fast-forward-only pushes. Use when the user wants to enforce a commit or push policy.",
       "plugins": [
         "git-customization",
         "git-skills"
@@ -631,7 +631,7 @@
       "name": "git-as-a-client",
       "title": "Git as a Client",
       "category": "git-integrations",
-      "description": "Git as a Client playbook extracted from \"Pro Git\". This tool allows you to use Git as a valid client to a Subversion server, so you can use all the local features of Git and then push to a Subversion server as if you were using Subversion locally. Use when the user asks about git as a client, git svn, perforce git fusion, subversion server, git commit, perforce server, git repository; or mentions git svn, git log --oneline --all, git p4, git log --oneline --graph, git push, git clone; or hits errors like \"ERROR from SVN:\".",
+      "description": "Work in git against a Subversion, Mercurial or Perforce server (git svn, git-remote-hg, git p4, Git Fusion). Use when the user uses git locally but the team's repository is SVN, Hg or Perforce.",
       "plugins": [
         "git-integrations",
         "git-skills"
@@ -654,7 +654,7 @@
       "name": "git-attributes",
       "title": "Git Attributes",
       "category": "git-customization",
-      "description": "Git Attributes playbook extracted from \"Pro Git\". These path-specific settings are called Git attributes and are set either in a .gitattributes file in one of your directories (normally the root of your project) or in the .git/info/attributes file if you don’t want the attributes file committed with... Use when the user asks about git attributes, git attributes, git diff, git archive, date, git log, merge; or mentions echo, git config, cat, git config --global, git diff, rm.",
+      "description": "Set per-path behaviour in .gitattributes: binary files, diffing Word or image files, keyword expansion, smudge/clean filters, export-ignore, merge strategies. Use when the user asks about .gitattributes or per-file git rules.",
       "plugins": [
         "git-customization",
         "git-skills"
@@ -677,7 +677,7 @@
       "name": "git-basic-branching-and-merging",
       "title": "Basic Branching and Merging",
       "category": "git-branching",
-      "description": "Basic Branching and Merging playbook extracted from \"Pro Git\". However, before you do that, note that if your working directory or staging area has uncommitted changes that conflict with the branch you’re checking out, Git won’t let you switch branches. Use when the user asks about basic branching and merging, git merge, merge commit, switch back, branch back, conflict, resolved; or mentions git merge, git branch -d, git branch, git checkout, vim, git commit -a -m; or hits errors like \"CONFLICT (content): Merge conflict in index.html\".",
+      "description": "Create a branch, switch to it, merge it back and resolve a basic conflict (git checkout -b, git merge, git branch -d). Use when the user wants to branch or merge, or sees 'CONFLICT (content): Merge conflict'.",
       "plugins": [
         "git-branching",
         "git-skills"
@@ -700,7 +700,7 @@
       "name": "git-basic-snapshotting",
       "title": "Basic Snapshotting",
       "category": "git-getting-started",
-      "description": "Basic Snapshotting playbook extracted from \"Pro Git\". For the basic workflow of staging content and committing it to your history, there are only a few basic commands. Use when the user asks about basic snapshotting, staging area, git add, git diff, git commit, staged, git reset.",
+      "description": "Quick reference for the everyday snapshot commands: git add, status, diff, difftool, commit, reset, rm, mv, clean. Use when the user asks which git command stages, commits, unstages or removes files.",
       "plugins": [
         "git-getting-started",
         "git-skills"
@@ -722,7 +722,7 @@
       "name": "git-branch-management",
       "title": "Branch Management",
       "category": "git-branching",
-      "description": "Branch Management playbook extracted from \"Pro Git\". This means that if you commit at this point, the master branch will be moved forward with your new work. Use when the user asks about branch management, git branch, branch-management tools, corrected branch, notice, no-merged, commit; or mentions git branch --no-merged, git branch --move, git branch --all, git branch, git branch -v, git branch --merged; or hits errors like \"error: The branch 'testing' is not fully merged.\".",
+      "description": "List, rename and delete branches, see which are merged or unmerged, rename master to main (git branch -v, --merged, --no-merged, --move, -d). Use when the user wants to list, rename, clean up or delete branches.",
       "plugins": [
         "git-branching",
         "git-skills"
@@ -745,7 +745,7 @@
       "name": "git-branches-in-a-nutshell",
       "title": "Branches in a Nutshell",
       "category": "git-branching",
-      "description": "Branches in a Nutshell playbook extracted from \"Pro Git\". In Git, this is a pointer to the local branch you’re currently on. Use when the user asks about branches in a nutshell, git log, git stores, git repository, master, git checkout, git switch; or mentions git branch, git log --oneline --decorate, git checkout, vim, git commit -a -m, git add.",
+      "description": "Explain how branches work: commits as snapshots, branch pointers, HEAD, creating and switching branches (git branch, git checkout, git switch). Use when the user asks what a branch or HEAD is, or how to create or switch one.",
       "plugins": [
         "git-branching",
         "git-skills"
@@ -767,7 +767,7 @@
       "name": "git-bundling",
       "title": "Bundling",
       "category": "git-power-tools",
-      "description": "Bundling playbook extracted from \"Pro Git\". The first command is the bundle verify command that will make sure the file is actually a valid Git bundle and that you have all the necessary ancestors to reconstitute it properly. Use when the user asks about bundling, git bundle, covered the common, range of commits, data, send, access; or mentions git bundle, git log --oneline, git log, git clone, cd repo, git fetch; or hits errors like \"error: Repository lacks these prerequisite commits:\".",
+      "description": "Pack commits into one file with git bundle to move a repository or changes offline (create, verify, clone or fetch from a bundle). Use when the user must share git history without a network or server.",
       "plugins": [
         "git-power-tools",
         "git-skills"
@@ -790,7 +790,7 @@
       "name": "git-configuration",
       "title": "Git Configuration",
       "category": "git-customization",
-      "description": "Git Configuration playbook extracted from \"Pro Git\". As you read briefly in Getting Started, you can specify Git configuration settings with the git config command. Use when the user asks about git configuration, git config, git diff, place git, git automatically, configuration, git rebase; or mentions git config --global, cat, git config --system, git chekcout, chmod, git apply --whitespace; or hits errors like \"WARNING: You called a Git command named 'chekcout', which does not exist.\".",
+      "description": "Change git settings: editor, commit template, pager, colours, external merge and diff tools, whitespace and line endings (core.autocrlf), server receive options. Use when the user wants to change a git config setting or fix CRLF or whitespace problems.",
       "plugins": [
         "git-customization",
         "git-skills"
@@ -813,7 +813,7 @@
       "name": "git-credential-storage",
       "title": "Credential Storage",
       "category": "git-collaboration",
-      "description": "Credential Storage playbook extracted from \"Pro Git\". This means that until you change your password for the Git host, you won’t ever have to type in your credentials again. Use when the user asks about credential storage, git credential, ssh transport, credential helper, file, securely transfer data, windows credential store; or mentions git credential, git credential-store --file, git credential-read-only --file, git config --global --file, git config --global.",
+      "description": "Stop git asking for a username and password: credential helpers (cache, store, osxkeychain, Git Credential Manager) and custom helpers. Use when the user is prompted for credentials on every push or pull, or asks how git stores passwords.",
       "plugins": [
         "git-collaboration",
         "git-skills"
@@ -836,7 +836,7 @@
       "name": "git-daemon",
       "title": "Git Daemon",
       "category": "git-collaboration",
-      "description": "Git Daemon playbook extracted from \"Pro Git\". The --reuseaddr option allows the server to restart without waiting for old connections to time out, while the --base-path option allows people to clone projects without specifying the entire path, and the path at the end tells the Git daemon where to... Use when the user asks about git daemon, ’re running, git daemon, daemon serving repositories, git protocol, system, git data; or mentions git daemon --reuseaddr --base-path, touch git-daemon-export-ok, cd.",
+      "description": "Serve repositories over the unauthenticated git:// protocol with git daemon (systemd service, git-daemon-export-ok). Use when the user wants fast read-only public access to a repository.",
       "plugins": [
         "git-collaboration",
         "git-skills"
@@ -858,7 +858,7 @@
       "name": "git-debugging-with-git",
       "title": "Debugging with Git",
       "category": "git-power-tools",
-      "description": "Debugging with Git playbook extracted from \"Pro Git\". If you track down a bug in your code and want to know when it was introduced and why, file annotation is often your best tool. Use when the user asks about debugging with git, git bisect, git blame, bad commit, line, good, commits; or mentions git bisect, git blame -L, git blame -C -L.",
+      "description": "Find which commit introduced a bug: git blame for line history and git bisect, manual or scripted with git bisect run. Use when the user asks who changed a line, or which commit broke something.",
       "plugins": [
         "git-power-tools",
         "git-skills"
@@ -880,7 +880,7 @@
       "name": "git-distributed-git-contributing-to-a-project",
       "title": "Contributing to a Project",
       "category": "git-collaboration",
-      "description": "Contributing to a Project playbook extracted from \"Pro Git\". Because Git is very flexible, people can and do work together in many ways, and it’s problematic to describe how you should contribute — every project is a bit different. Use when the user asks about contributing to a project, jessica emails john, git project, topic branch, push, server, john fetches jessica; or mentions cd project, git push, git commit -am, git fetch, git checkout -b, git commit; or hits errors like \"! [rejected] master -> master (non-fast forward)\".",
+      "description": "Contribute with plain git: commit guidelines, small and managed team workflows, forked public projects, patches by email (git format-patch, git send-email, git request-pull). Use when the user asks how to prepare and submit commits or patches to a team or upstream.",
       "plugins": [
         "git-collaboration",
         "git-skills"
@@ -903,7 +903,7 @@
       "name": "git-distributed-git-maintaining-a-project",
       "title": "Maintaining a Project",
       "category": "git-collaboration",
-      "description": "Maintaining a Project playbook extracted from \"Pro Git\". This can consist of accepting and applying patches generated via format-patch and emailed to you, or integrating changes in remote branches for repositories you’ve added as remotes to your project. Use when the user asks about maintaining a project, topic branch, git apply, git project, master, work, command; or mentions git diff, git am, git checkout -b, git branch, git apply, git apply --check; or hits errors like \"error: patch failed: ticgit.gemspec:1\".",
+      "description": "Maintain a project with plain git: apply emailed patches (git apply, git am), review contributor branches, merge, rebase or cherry-pick them, tag and build releases, git shortlog. Use when the user integrates other people's patches or branches, or cuts a release.",
       "plugins": [
         "git-collaboration",
         "git-skills"
@@ -926,7 +926,7 @@
       "name": "git-environment-variables",
       "title": "Environment Variables",
       "category": "git-customization",
-      "description": "Environment Variables playbook extracted from \"Pro Git\". Some of Git’s general behavior as a computer program depends on environment variables. Use when the user asks about environment variables, git diff, portable git, git behave, field, object, editor git; or mentions GIT_TRACE=true git, GIT_TRACE_PACK_ACCESS=true git, GIT_TRACE_PACKET=true git, GIT_TRACE_PERFORMANCE=true git, GIT_TRACE_SETUP=true git, GIT_REFLOG_ACTION=\"my --allow-empty -m.",
+      "description": "Git environment variables: GIT_DIR, GIT_WORK_TREE, GIT_EDITOR, GIT_SSH_COMMAND, GIT_AUTHOR_* and GIT_COMMITTER_*, proxy settings, GIT_TRACE* debugging. Use when the user asks about a GIT_* variable or wants to trace what git is doing.",
       "plugins": [
         "git-customization",
         "git-skills"
@@ -949,7 +949,7 @@
       "name": "git-first-time-git-setup",
       "title": "First-Time Git Setup",
       "category": "git-getting-started",
-      "description": "First-Time Git Setup playbook extracted from \"Pro Git\". The first thing you should do when you install Git is to set your user name and email address. Use when the user asks about first-time git setup, git config, windows system, git environment, editor, user, option; or mentions git config --global, git config --list --show-origin, git config --list, git config, git config --show-origin.",
+      "description": "Set up git for the first time: user.name, user.email, default editor, default branch name, checking settings (git config --global, --list, --show-origin). Use when the user configures git on a new machine or sees 'Please tell me who you are'.",
       "plugins": [
         "git-getting-started",
         "git-skills"
@@ -971,7 +971,7 @@
       "name": "git-generating-your-ssh-public-key",
       "title": "Generating Your SSH Public Key",
       "category": "git-collaboration",
-      "description": "Generating Your SSH Public Key playbook extracted from \"Pro Git\". The .pub file is your public key, and the other file is the corresponding private key. Use when the user asks about generating your ssh public key, git servers authenticate, ssh keys, public keys, user, file, password; or mentions ssh-keygen -o, cd, ls, cat.",
+      "description": "Create an SSH key pair for git hosting (ssh-keygen, ~/.ssh/id_*.pub). Use when the user needs an SSH key for GitHub, GitLab or a git server, or gets 'Permission denied (publickey)'.",
       "plugins": [
         "git-collaboration",
         "git-skills"
@@ -993,7 +993,7 @@
       "name": "git-getting-a-git-repository",
       "title": "Getting a Git Repository",
       "category": "git-getting-started",
-      "description": "Getting a Git Repository playbook extracted from \"Pro Git\". This is an important distinction — instead of getting just a working copy, Git receives a full copy of nearly all data that the server has. Use when the user asks about getting a git repository, git repository, git clone, existing git, files, project, typically obtain; or mentions cd, git add, git clone, git init, git commit -m.",
+      "description": "Start a repository: git init in an existing folder, or git clone a remote one. Use when the user wants to create a new git repo, put a project under version control, or clone a repository.",
       "plugins": [
         "git-getting-started",
         "git-skills"
@@ -1015,7 +1015,7 @@
       "name": "git-getting-git-on-a-server",
       "title": "Getting Git on a Server",
       "category": "git-collaboration",
-      "description": "Getting Git on a Server playbook extracted from \"Pro Git\". However, keep in mind that to collaborate with a couple of people on a private project, all you need is an SSH server and a bare repository. Use when the user asks about getting git on a server, bare repository, git server, ssh server, ssh access, directory, git repository; or mentions git clone --bare, cp -Rf, scp -r, git clone, ssh, cd.",
+      "description": "Put a repository on your own server: make a bare repo (git clone --bare), copy it over SSH, share it with a team (git init --bare --shared). Use when the user wants to host a git repository on their own machine or server.",
       "plugins": [
         "git-collaboration",
         "git-skills"
@@ -1037,7 +1037,7 @@
       "name": "git-getting-help",
       "title": "Getting Help",
       "category": "git-getting-started",
-      "description": "Getting Help playbook extracted from \"Pro Git\". These channels are regularly filled with hundreds of people who are all very knowledgeable about Git and are often willing to help. Use when the user asks about getting help, comprehensive manual page, git config, git commands, manpage, offline, equivalent; or mentions git help, git --help, man, git add -h; or hits errors like \"errors\".",
+      "description": "Look up git documentation: git help <verb>, git <verb> --help, man git-<verb>, and the short -h summary. Use when the user asks how to find a git command's options or manual page.",
       "plugins": [
         "git-getting-started",
         "git-skills"
@@ -1059,7 +1059,7 @@
       "name": "git-github-contributing-to-a-project",
       "title": "Contributing to a Project",
       "category": "git-collaboration",
-      "description": "Contributing to a Project playbook extracted from \"Pro Git\". This is the basic workflow that most GitHub projects use. Use when the user asks about contributing to a project, pull request; or mentions git push, git remote, git fetch, git checkout, git pull, git clone; or hits errors like \"CONFLICT (content): Merge conflict in blink.ino\".",
+      "description": "Contribute on GitHub: fork, topic branch, open a pull request, keep it up to date with upstream, respond to review, GitHub Flavored Markdown. Use when the user wants to fork a repo, open or update a pull request, or sync a fork.",
       "plugins": [
         "git-collaboration",
         "git-skills"
@@ -1081,7 +1081,7 @@
       "name": "git-github-maintaining-a-project",
       "title": "Maintaining a Project",
       "category": "git-collaboration",
-      "description": "Maintaining a Project playbook extracted from \"Pro Git\". Doing so will give them “push” access, which means they have both read and write access to the project and Git repository. Use when the user asks about maintaining a project, pull request, git pull; or mentions git fetch, curl, git ls-remote, git checkout.",
+      "description": "Maintain a GitHub repository: collaborators, reviewing and merging pull requests, refs/pull/* refs, mentions and notifications, README and CONTRIBUTING files, default branch, transferring a project. Use when the user administers a GitHub repo or handles incoming pull requests.",
       "plugins": [
         "git-collaboration",
         "git-skills"
@@ -1104,7 +1104,7 @@
       "name": "git-gitweb",
       "title": "GitWeb",
       "category": "git-collaboration",
-      "description": "GitWeb playbook extracted from \"Pro Git\". Git comes with a CGI script called GitWeb that is sometimes used for this. Use when the user asks about gitweb, simple web-based visualizer, basic read, write and read-only, read-only access, cgi script, gitweb; or mentions git instaweb --httpd, git instaweb --httpd --stop, git clone, cd, make, cp -Rf.",
+      "description": "Browse a repository in a web browser with GitWeb (git instaweb, or the gitweb CGI under Apache). Use when the user wants a simple web viewer for a git repository.",
       "plugins": [
         "git-collaboration",
         "git-skills"
@@ -1126,7 +1126,7 @@
       "name": "git-hooks",
       "title": "Git Hooks",
       "category": "git-customization",
-      "description": "Git Hooks playbook extracted from \"Pro Git\". This hook takes a few parameters: the path to the file that holds the commit message so far, the type of commit, and the commit SHA-1 if this is an amended commit. Use when the user asks about git hooks, hook runs, commit message, git commit, client-side hooks, push, version control systems.",
+      "description": "Git hooks: client-side (pre-commit, prepare-commit-msg, commit-msg, post-commit, pre-rebase, pre-push, post-checkout, post-merge) and server-side (pre-receive, update, post-receive). Use when the user wants a script to run automatically on commit, push or merge.",
       "plugins": [
         "git-customization",
         "git-skills"
@@ -1148,7 +1148,7 @@
       "name": "git-in-powershell",
       "title": "Git in PowerShell",
       "category": "git-integrations",
-      "description": "Git in PowerShell playbook extracted from \"Pro Git\". Before you’re able to run PowerShell scripts on your machine, you need to set your local ExecutionPolicy to RemoteSigned (basically, anything except Undefined and Restricted). Use when the user asks about git in powershell, legacy command-line terminal, customized git experience, n’t really capable, posh-git, remotesigned, scope.",
+      "description": "Set up git in PowerShell with posh-git: execution policy, install from the PowerShell Gallery, branch status in the prompt, tab completion. Use when the user wants a git prompt or completion in PowerShell on Windows.",
       "plugins": [
         "git-integrations",
         "git-skills"
@@ -1170,7 +1170,7 @@
       "name": "git-installing-git",
       "title": "Installing Git",
       "category": "git-getting-started",
-      "description": "Installing Git playbook extracted from \"Pro Git\". You can either install it as a package or via another installer, or download the source code and compile it yourself. Use when the user asks about installing git, install git, git chocolatey package, git website, debian-based distribution, fedora, download; or mentions dnf install, apt-get install, apt install, make install, git --version, ln -s.",
+      "description": "Install or upgrade git on Linux (dnf, apt), macOS or Windows, or build it from source. Use when the user needs to install git, check git --version, or gets 'git: command not found'.",
       "plugins": [
         "git-getting-started",
         "git-skills"
@@ -1193,7 +1193,7 @@
       "name": "git-interactive-staging",
       "title": "Interactive Staging",
       "category": "git-power-tools",
-      "description": "Interactive Staging playbook extracted from \"Pro Git\". You can see that this command shows you a much different view of your staging area than you’re probably used to — basically, the same information you get with git status but a bit more succinct and informative. Use when the user asks about interactive staging, big messy commit, git add, staged files, staging, diff, unstaged; or mentions git add -i.",
+      "description": "Stage only part of your changes with git add -i and git add -p (patch mode), hunk by hunk. Use when the user wants to commit only some of the changes in a file or split work into several commits.",
       "plugins": [
         "git-power-tools",
         "git-skills"
@@ -1216,7 +1216,7 @@
       "name": "git-jgit",
       "title": "JGit",
       "category": "git-integrations",
-      "description": "JGit playbook extracted from \"Pro Git\". JGit is a relatively full-featured implementation of Git written natively in Java, and is widely used in the Java community. Use when the user asks about jgit, fully featured git, featured git library, git library called, library called jgit, object, java.",
+      "description": "Use git from Java with JGit: add the dependency, open a repository, the plumbing API (Repository, ObjectId, RevWalk) and the porcelain Git class. Use when the user writes Java code that reads or changes a git repository.",
       "plugins": [
         "git-integrations",
         "git-skills"
@@ -1238,7 +1238,7 @@
       "name": "git-libgit2",
       "title": "Libgit2",
       "category": "git-integrations",
-      "description": "Libgit2 playbook extracted from \"Pro Git\". Objective-Git (https://github.com/libgit2/objective-git) is the name of the Use when the user asks about libgit2, object database, git repository, git object, structure, type, ruby; or hits errors like \"error = git_revparse_single(&head_commit, repo, \"HEAD^{commit}\");\".",
+      "description": "Use git from C and other languages with libgit2 and its bindings (Rugged for Ruby, LibGit2Sharp for .NET, objective-git, pygit2). Use when the user embeds git operations in an application through libgit2.",
       "plugins": [
         "git-integrations",
         "git-skills"
@@ -1261,7 +1261,7 @@
       "name": "git-maintenance-and-data-recovery",
       "title": "Maintenance and Data Recovery",
       "category": "git-internals",
-      "description": "Maintenance and Data Recovery playbook extracted from \"Pro Git\". Because the reflog data is kept in the .git/logs/ directory, you effectively have no reflog. Use when the user asks about maintenance and data recovery, git reflog, loose objects, git history; or mentions git log --pretty, rm -Rf, git count-objects -v, git commit -m, git gc, git gc --auto.",
+      "description": "Recover lost commits and shrink a repository: git reflog, git fsck, git gc, git count-objects, finding and removing large files from history. Use when the user lost a commit or branch (for example after reset --hard) or the repository is too big.",
       "plugins": [
         "git-internals",
         "git-skills"
@@ -1284,7 +1284,7 @@
       "name": "git-migrating-to-git",
       "title": "Migrating to Git",
       "category": "git-integrations",
-      "description": "Migrating to Git playbook extracted from \"Pro Git\". If you want to map this to better Git author data, you need a mapping from the Subversion users to the Git authors. Use when the user asks about migrating to git, git svn, git tags, git fast-import, git server, data, directory; or mentions cd, git log, ls, for --format, git remote, git push --all.",
+      "description": "Convert a repository to git from Subversion, Mercurial, Perforce or a custom source (git svn clone with an authors file, hg-fast-export, git p4, git fast-import). Use when the user wants to import another version control system's history into git.",
       "plugins": [
         "git-integrations",
         "git-skills"
@@ -1307,7 +1307,7 @@
       "name": "git-objects",
       "title": "Git Objects",
       "category": "git-internals",
-      "description": "Git Objects playbook extracted from \"Pro Git\". The next type of Git object we’ll examine is the tree, which solves the problem of storing the filename and also allows you to store a group of files together. Use when the user asks about git objects, git objects, tree object, git cat-file, git hash-object, git object database, git stores; or mentions git hash-object -w, git cat-file -p, find -type, echo, git write-tree, cat.",
+      "description": "Git internals: blob, tree and commit objects, SHA-1 content addressing, the .git/objects store (git hash-object, git cat-file, git update-index, git write-tree, git commit-tree). Use when the user asks how git stores data or wants to inspect raw objects.",
       "plugins": [
         "git-internals",
         "git-skills"
@@ -1330,7 +1330,7 @@
       "name": "git-packfiles",
       "title": "Packfiles",
       "category": "git-internals",
-      "description": "Packfiles playbook extracted from \"Pro Git\". The packfile is a single file containing the contents of all the objects that were removed from your filesystem. Use when the user asks about packfiles, git saves objects, git packs objects, test git repository, git compresses, packfile, files; or mentions find -type, git cat-file -p, git cat-file -s, curl, git checkout, git add.",
+      "description": "How git packs objects: loose objects versus packfiles, delta compression, git gc, git verify-pack. Use when the user asks how git compresses history, why .git is large, or what .pack and .idx files are.",
       "plugins": [
         "git-internals",
         "git-skills"
@@ -1353,7 +1353,7 @@
       "name": "git-plumbing-and-porcelain",
       "title": "Plumbing and Porcelain",
       "category": "git-internals",
-      "description": "Plumbing and Porcelain playbook extracted from \"Pro Git\". These commands are generally referred to as Git’s “plumbing” commands, while the more user-friendly commands are called “porcelain” Use when the user asks about plumbing and porcelain, full user-friendly vcs, version control system, initially a toolkit, number of subcommands, low-level work, chained together unix-style; or mentions ls -F1.",
+      "description": "Overview of the .git directory (HEAD, index, objects, refs, config, hooks) and of plumbing versus porcelain commands. Use when the user asks what is inside the .git folder or what a low-level git command is.",
       "plugins": [
         "git-internals",
         "git-skills"
@@ -1375,7 +1375,7 @@
       "name": "git-pro",
       "title": "Pro Git (full reference)",
       "category": "git-reference",
-      "description": "Reference knowledge extracted from the document 'Pro Git'. Covers: Introduction, Getting Started, Git Basics, Git Branching, Git on the Server, Distributed Git, GitHub, Git Tools, Customizing Git, Git and Other Systems, Git Internals, Git in Other Environments, Embedding Git in your Applications, Git Commands. Key terms: git, commit, branch, file, master, merge, command, repository. Use when the user asks about these topics, needs commands, procedures or guidance from 'Pro Git', or mentions progit.",
+      "description": "Whole-book index of Pro Git with one reference file per chapter, from basics to internals. Use when a git question spans several topics, when no more specific git-* skill covers it, or when the user cites the Pro Git book.",
       "plugins": [
         "git-reference",
         "git-skills"
@@ -1410,7 +1410,7 @@
       "name": "git-rebasing",
       "title": "Rebasing",
       "category": "git-branching",
-      "description": "Rebasing playbook extracted from \"Pro Git\". In Git, there are two main ways to integrate changes from one branch into another: the merge and the rebase. Use when the user asks about rebasing, commit history, rebase commits, git rebase, git pull, merge commit, topic branch; or mentions git rebase, git rebase --onto, git checkout, git merge, git branch -d.",
+      "description": "Rebase a branch onto another (git rebase, --onto), choose between rebase and merge, and recover when rebased commits were already pushed (git pull --rebase). Use when the user wants to rebase, get a linear history, or fix a branch that diverged after a force-push.",
       "plugins": [
         "git-branching",
         "git-skills"
@@ -1432,7 +1432,7 @@
       "name": "git-recording-changes-to-the-repository",
       "title": "Recording Changes to the Repository",
       "category": "git-getting-started",
-      "description": "Recording Changes to the Repository playbook extracted from \"Pro Git\". The CONTRIBUTING.md file appears under a section named “Changes not staged for commit” — which means that a file that is tracked has been modified in the working directory but not yet staged. Use when the user asks about recording changes to the repository, git add, git status, git diff, command, staged, git commit; or mentions git status, git add, git rm, echo, git diff, git mv.",
+      "description": "Day-to-day file workflow: git status, git add, .gitignore patterns, git diff (--staged), git commit, git rm, git mv. Use when the user wants to stage, commit, ignore, remove or rename files, or see what changed.",
       "plugins": [
         "git-getting-started",
         "git-skills"
@@ -1455,7 +1455,7 @@
       "name": "git-references",
       "title": "Git References",
       "category": "git-internals",
-      "description": "Git References playbook extracted from \"Pro Git\". That’s basically what a branch in Git is: a simple pointer or reference to the head of a line of work. Use when the user asks about git references, git branch, git object, tag object, head file, history, simple; or mentions cat, git update-ref, git symbolic-ref, git log --pretty, find, find -type; or hits errors like \"fatal: Refusing to point HEAD outside of refs/\".",
+      "description": "Git refs internals: refs/heads, HEAD as a symbolic ref, tags and remote refs (git update-ref, git symbolic-ref). Use when the user asks what a ref or HEAD really is, or needs to read or repair files under .git/refs.",
       "plugins": [
         "git-internals",
         "git-skills"
@@ -1477,7 +1477,7 @@
       "name": "git-remote-branches",
       "title": "Remote Branches",
       "category": "git-branching",
-      "description": "Remote Branches playbook extracted from \"Pro Git\". Checking out a local branch from a remote-tracking branch automatically creates what is called a “tracking branch” (and the branch it tracks is called an “upstream branch”). Use when the user asks about remote branches, remote branch, local branch, git fetch, remote-tracking branch, git server, git branch; or mentions git branch -u, git branch -vv, git checkout -b, git push, git fetch, git checkout --track.",
+      "description": "Work with remote branches: origin/<branch>, push a branch, track an upstream (-u, --track), git fetch versus git pull, delete a remote branch. Use when the user wants to push a new branch, set its upstream, check out a teammate's branch or delete one on the server.",
       "plugins": [
         "git-branching",
         "git-skills"
@@ -1499,7 +1499,7 @@
       "name": "git-replace",
       "title": "Replace",
       "category": "git-power-tools",
-      "description": "Replace playbook extracted from \"Pro Git\". The replace command lets you specify an object in Git and say \"every time you refer to this object, pretend it’s a different object\". Use when the user asks about replace, base commit, recent history, commit object, entire history, object database, git replace; or mentions git replace, git log --oneline, git log --oneline --decorate, git remote, git branch, git push.",
+      "description": "Swap one git object for another with git replace, for example to graft old history onto a shortened repository. Use when the user wants to split or join history without rewriting every commit.",
       "plugins": [
         "git-power-tools",
         "git-skills"
@@ -1522,7 +1522,7 @@
       "name": "git-rerere",
       "title": "Rerere",
       "category": "git-branching",
-      "description": "Rerere playbook extracted from \"Pro Git\". The git rerere functionality is a bit of a hidden feature. Use when the user asks about rerere, git rerere, merge conflict, topic branch, resolve, recorded, resolution; or mentions git rerere, git add, cat, git config --global, git merge, git status; or hits errors like \"CONFLICT (content): Merge conflict in hello.rb\".",
+      "description": "Reuse recorded conflict resolutions with git rerere (rerere.enabled, git rerere status, git rerere diff). Use when the user keeps resolving the same merge or rebase conflicts.",
       "plugins": [
         "git-branching",
         "git-skills"
@@ -1545,7 +1545,7 @@
       "name": "git-reset-demystified",
       "title": "Reset Demystified",
       "category": "git-power-tools",
-      "description": "Reset Demystified playbook extracted from \"Pro Git\". Like reset, checkout manipulates the three trees, and it is a bit different depending on whether you give the command a file path or not. Use when the user asks about reset demystified, head points, git commit, git reset, file, working directory, branch; or mentions git cat-file -p, git ls-tree -r, git ls-files -s, tree.",
+      "description": "Understand git reset and git checkout through the three trees (HEAD, index, working directory): --soft, --mixed, --hard, reset with a path, squashing with reset. Use when the user is unsure which reset mode to use or what reset will do to their files.",
       "plugins": [
         "git-power-tools",
         "git-skills"
@@ -1567,7 +1567,7 @@
       "name": "git-revision-selection",
       "title": "Revision Selection",
       "category": "git-power-tools",
-      "description": "Revision Selection playbook extracted from \"Pro Git\". The last major range-selection syntax is the triple-dot syntax, which specifies all the commits that are reachable by either of two references but not by both of them. Use when the user asks about revision selection, git log, git show head, single commit, objects, repository; or mentions git show, git log, git log --not, git log --abbrev-commit --pretty, git rev-parse, git reflog.",
+      "description": "Refer to commits and ranges: short SHA-1, branch names, reflog (HEAD@{n}), ancestry (HEAD^, HEAD~2), double-dot and triple-dot ranges. Use when the user asks what ^, ~, .., ... or @{} mean, or how to select specific commits.",
       "plugins": [
         "git-power-tools",
         "git-skills"
@@ -1590,7 +1590,7 @@
       "name": "git-rewriting-history",
       "title": "Rewriting History",
       "category": "git-power-tools",
-      "description": "Rewriting History playbook extracted from \"Pro Git\". filter-branch is the tool you probably want to use to scrub your entire history. Use when the user asks about rewriting history, commit message, git rebase, git commit, git applies, history, single commit; or mentions git commit --amend, git rebase -i, git log --pretty, git rebase --continue, git add, git commit -m.",
+      "description": "Rewrite commits: amend the last one, interactive rebase to reword, reorder, squash, split or drop commits, filter-branch to remove a file from all history or change an email. Use when the user wants to edit, squash or delete past commits, or purge a secret or large file.",
       "plugins": [
         "git-power-tools",
         "git-skills"
@@ -1613,7 +1613,7 @@
       "name": "git-scripting-github",
       "title": "Scripting GitHub",
       "category": "git-collaboration",
-      "description": "Scripting GitHub playbook extracted from \"Pro Git\". The Hooks and Services section of GitHub repository administration is the easiest way to have Use when the user asks about scripting github, web hook, web service, add service, service integration, continuous integration services, email; or mentions curl, curl -H.",
+      "description": "Automate GitHub with webhooks, services and the REST API (access tokens, commenting on an issue, setting a pull request status, Octokit). Use when the user wants to script GitHub or react to push and pull request events.",
       "plugins": [
         "git-collaboration",
         "git-skills"
@@ -1636,7 +1636,7 @@
       "name": "git-searching",
       "title": "Searching",
       "category": "git-power-tools",
-      "description": "Searching playbook extracted from \"Pro Git\". Another fairly advanced log search that is insanely useful is the line history search. Use when the user asks about searching, git grep, search string, git log, option, line, working directory; or mentions git grep -n, git grep --count, git grep -p, git grep --break --heading, git log -S --oneline, git log -L.",
+      "description": "Search code and history: git grep, git log -S (pickaxe), git log -G, git log -L for line or function history. Use when the user wants to find where a string or function is, or when it was added, removed or changed.",
       "plugins": [
         "git-power-tools",
         "git-skills"
@@ -1658,7 +1658,7 @@
       "name": "git-setting-up-the-server",
       "title": "Setting Up the Server",
       "category": "git-collaboration",
-      "description": "Setting Up the Server playbook extracted from \"Pro Git\". With this method, you can quickly get a read/write Git server up and running for a handful of developers. Use when the user asks about setting up the server, ssh public keys, git server, user account, walk through setting, authorized, directory; or mentions cat, cd, mkdir, git push, adduser git, su git; or hits errors like \"fatal: Interactive git shell is not enabled.\".",
+      "description": "Set up an SSH git server: a git user, authorized_keys, a bare repository, and restricting the account with git-shell. Use when the user wants several developers to push to a self-hosted repository over SSH.",
       "plugins": [
         "git-collaboration",
         "git-skills"
@@ -1681,7 +1681,7 @@
       "name": "git-setup-and-config",
       "title": "Setup and Config",
       "category": "git-getting-started",
-      "description": "Setup and Config playbook extracted from \"Pro Git\". There are two commands that are used quite a lot, from the first invocations of Git to common every day tweaking and referencing, the config and help commands. Use when the user asks about setup and config, tweaking and referencing, common every day, day tweaking, command, git setup, default.",
+      "description": "Quick reference for git config and git help, including the core.editor command for common editors (VS Code, Notepad++, Vim, Sublime and others). Use when the user asks how to set git's editor or where git config and git help are used.",
       "plugins": [
         "git-getting-started",
         "git-skills"
@@ -1704,7 +1704,7 @@
       "name": "git-signing-your-work",
       "title": "Signing Your Work",
       "category": "git-power-tools",
-      "description": "Signing Your Work playbook extracted from \"Pro Git\". If you’re taking work from others on the internet and want to verify that commits are actually from a trusted source, Git has a few ways to sign and verify work using GPG. Use when the user asks about signing your work, gpg signature, cryptographically secure, git merge, gpg private key, tags, command; or mentions git merge --verify-signatures, gpg --list-keys, gpg --gen-key, git config --global, git tag -s -m, git show; or hits errors like \"error: could not verify the tag 'v1.4.2.1'\".",
+      "description": "Sign and verify with GPG: user.signingkey, signed tags (git tag -s, -v), signed commits (git commit -S), requiring signatures on merge. Use when the user wants to sign commits or tags, or verify who made them.",
       "plugins": [
         "git-power-tools",
         "git-skills"
@@ -1727,7 +1727,7 @@
       "name": "git-smart-http",
       "title": "Smart HTTP",
       "category": "git-collaboration",
-      "description": "Smart HTTP playbook extracted from \"Pro Git\". Setting up Smart HTTP is basically just enabling a CGI script that is provided with Git called git-http-backend on the server. Use when the user asks about smart http, access through ssh, cgi script, web server, http url, smart http, ssh and unauthenticated; or mentions apt-get install, a2enmod cgi, chgrp -R, htpasswd -c.",
+      "description": "Serve git over HTTP(S) with git-http-backend under Apache, with authenticated push. Use when the user wants to host a repository over HTTP on their own web server.",
       "plugins": [
         "git-collaboration",
         "git-skills"
@@ -1749,7 +1749,7 @@
       "name": "git-stashing-and-cleaning",
       "title": "Stashing and Cleaning",
       "category": "git-power-tools",
-      "description": "Stashing and Cleaning playbook extracted from \"Pro Git\". The answer to this issue is the git stash command. Use when the user asks about stashing and cleaning, git stash, working directory, git clean, remove, branch, stash apply; or mentions git stash, git clean -n -d, git stash --index, git stash --keep-index, git stash -u, git stash --patch.",
+      "description": "Set work aside and clean up: git stash (list, apply, pop, -u, --patch, stash branch) and git clean for untracked files. Use when the user must switch branches with uncommitted changes, shelve work for later, or delete untracked files.",
       "plugins": [
         "git-power-tools",
         "git-skills"
@@ -1772,7 +1772,7 @@
       "name": "git-submodules",
       "title": "Submodules",
       "category": "git-power-tools",
-      "description": "Submodules playbook extracted from \"Pro Git\". Although DbConnector is a subdirectory in your working directory, Git sees it as a submodule and doesn’t track its contents when you’re not in that directory. Use when the user asks about submodules, git submodule update, submodule directory, git diff, main project, commits, submodule project; or mentions git submodule, git submodule --remote, git submodule --init --recursive, git submodule --remote --merge, git push --recurse-submodules, git diff --cached --submodule; or hits errors like \"error: Your local changes to the following files would be overwritten by checkou\".",
+      "description": "Git submodules: add one, clone with --recurse-submodules, init and update, pull upstream changes, publish submodule changes, resolve submodule conflicts, git submodule foreach. Use when a repository contains another repository, or submodule folders are empty or out of date.",
       "plugins": [
         "git-power-tools",
         "git-skills"
@@ -1795,7 +1795,7 @@
       "name": "git-tagging",
       "title": "Tagging",
       "category": "git-getting-started",
-      "description": "Tagging playbook extracted from \"Pro Git\". The -m specifies a tagging message, which is stored with the tag. Use when the user asks about tagging, git push, git tag, lightweight tag, remote, tag commits, command; or mentions git tag, git show, git push, git checkout, git tag -l, git tag -a -m; or hits errors like \"You are in 'detached HEAD' state. You can look around, make experimental\".",
+      "description": "Tags: list, create annotated or lightweight tags, tag an older commit, push tags, delete local and remote tags, check out a tag. Use when the user wants to tag a commit or mark a release version.",
       "plugins": [
         "git-getting-started",
         "git-skills"
@@ -1818,7 +1818,7 @@
       "name": "git-the-protocols",
       "title": "The Protocols",
       "category": "git-collaboration",
-      "description": "The Protocols playbook extracted from \"Pro Git\". The most basic is the Local protocol, in which the remote repository is in another directory on the same host. Use when the user asks about the protocols, git repository, git http smart, ssh protocol, access, http protocol, smart http; or mentions git clone, cd, git remote, git clone --bare, mv, chmod.",
+      "description": "Compare the ways to reach a git repository (local path, smart and dumb HTTP, SSH, git://) with pros and cons. Use when the user is choosing between HTTPS and SSH URLs, or deciding how to expose a repository.",
       "plugins": [
         "git-collaboration",
         "git-skills"
@@ -1840,7 +1840,7 @@
       "name": "git-the-refspec",
       "title": "The Refspec",
       "category": "git-internals",
-      "description": "The Refspec playbook extracted from \"Pro Git\". Because the refspec is <src>:<dst>, by leaving off the <src> part, this basically says to make the topic branch on the remote nothing, which deletes it. Use when the user asks about the refspec, git push origin, local git repository, git remote add, small local git, remote server, refspec; or mentions git log, git fetch, git push, git remote, git push --delete; or hits errors like \"! [rejected] master -> origin/mymaster (non fast forward)\".",
+      "description": "Refspecs: the +<src>:<dst> mapping in a remote's fetch and push config, fetching selected branches or namespaces, pushing to a different ref name, deleting remote refs. Use when the user edits remote.<name>.fetch or needs a custom fetch or push mapping.",
       "plugins": [
         "git-internals",
         "git-skills"
@@ -1863,7 +1863,7 @@
       "name": "git-transfer-protocols",
       "title": "Transfer Protocols",
       "category": "git-internals",
-      "description": "Transfer Protocols playbook extracted from \"Pro Git\". If you’re setting up a repository to be served read-only over HTTP, the dumb protocol is likely what will be used. Use when the user asks about transfer protocols, git checks, dumb protocol, commit object, head, remote, master; or mentions ssh -x, git clone, git cat-file -p.",
+      "description": "How fetch and push work on the wire: the dumb HTTP protocol, the smart protocol, send-pack and receive-pack, fetch-pack and upload-pack. Use when the user debugs clone, fetch or push at the protocol level.",
       "plugins": [
         "git-internals",
         "git-skills"
@@ -1886,7 +1886,7 @@
       "name": "git-undoing-things",
       "title": "Undoing Things",
       "category": "git-getting-started",
-      "description": "Undoing Things playbook extracted from \"Pro Git\". One of the common undos takes place when you commit too early and possibly forget to add some files, or you mess up your commit message. Use when the user asks about undoing things, git restore, git reset, previous commit, undo, commit message, committed; or mentions git status, git add, git commit --amend, git commit -m, git reset, git checkout.",
+      "description": "Undo mistakes: amend the last commit, unstage a file, discard changes in a file (git commit --amend, git reset HEAD, git restore, git checkout --). Use when the user committed too early, staged the wrong file, or wants to throw away local changes.",
       "plugins": [
         "git-getting-started",
         "git-skills"
@@ -1908,7 +1908,7 @@
       "name": "git-viewing-the-commit-history",
       "title": "Viewing the Commit History",
       "category": "git-getting-started",
-      "description": "Viewing the Commit History playbook extracted from \"Pro Git\". Another really helpful filter is the -S option (colloquially referred to as Git’s “pickaxe” option), which takes a string and shows only those commits that changed the number of occurrences of that string. Use when the user asks about viewing the commit history, git log, show commits, log output, format, command, files; or mentions git log, git log --pretty, git clone, git log -p, git log --stat, git log --pretty --graph.",
+      "description": "View history with git log: -p, --stat, --pretty=format, --graph, --oneline, and limiting by date, author, path or message. Use when the user wants to see, format or filter the commit log.",
       "plugins": [
         "git-getting-started",
         "git-skills"
@@ -1931,7 +1931,7 @@
       "name": "git-working-with-remotes",
       "title": "Working with Remotes",
       "category": "git-collaboration",
-      "description": "Working with Remotes playbook extracted from \"Pro Git\". To see which remote servers you have configured, you can run the git remote command. Use when the user asks about working with remotes, git remote, remote repositories, remote repository, remote git repository, merge, remote branches; or mentions git remote, git remote -v, git fetch, git clone, cd ticgit, cd grit.",
+      "description": "Manage remotes: git remote -v, add, fetch, pull, push, show, rename, remove. Use when the user wants to add or change a remote URL, or push to and fetch from another repository.",
       "plugins": [
         "git-collaboration",
         "git-skills"
@@ -1954,7 +1954,7 @@
       "name": "image-inspector",
       "title": "Image inspector: pixels and description",
       "category": "image-tools",
-      "description": "Inspect any image file (PNG, JPG/JPEG, WebP, GIF, BMP, TIFF) with a ready-made Python script that reports its pixels and a plain-text description, covering exact pixel colours (hex/RGBA) at coordinates, region averages, dominant colours and palette with names and percentages, transparency, brightness, contrast, size, aspect ratio, EXIF metadata, a downsampled pixel map, a full per-pixel CSV and optional OCR text. With OpenCV it also finds an icon or button inside a screenshot (coordinates to tap) and compares two screenshots (changed percent, boxes, diff image). Use this skill whenever the user asks about an image file, such as to describe or analyse an image or screenshot, what colour a pixel or area is, which colours or palette it uses, whether the background is transparent, its size or metadata, exporting pixel data, reading text in it, locating an icon in a screenshot, or what changed between two screenshots (visual regression). Prefer it over writing one-off image code.",
+      "description": "Inspect an image file (PNG, JPG, WebP, GIF, BMP, TIFF) with a ready-made Python script: pixel colours at coordinates, dominant colours and palette, transparency, size, EXIF, OCR text, finding an icon inside a screenshot, comparing two screenshots. Use when the user asks about an image or screenshot: its colours, size or text, where an icon is, or what changed between two.",
       "plugins": [
         "image-tools"
       ],
@@ -1976,7 +1976,7 @@
       "name": "kotlin-unit-test",
       "title": "Kotlin unit tests: class/method-wise testing, verification and HTML report",
       "category": "testing-tools",
-      "description": "Write, run and verify unit tests for Kotlin code (apps, libraries, Android, scripts and test-automation code such as Appium/Selenium page objects) class by class and method by method, then produce an HTML report of results, coverage and findings. Bundled Python scripts map every class and method to its tests, run the tests with Gradle, Maven or kotlinc (one class, one method, or all), and check that the tests really test something: assertion-free, empty, TODO, trivial, sleeping or disabled tests, JUnit 4 tests that never run, untested methods, and a mutation check that injects small bugs to prove the tests catch them. Use when the user asks to unit test Kotlin code, add or generate tests for a Kotlin class or method, run Kotlin tests, get a test report or coverage report, check test quality, or find untested Kotlin methods.",
+      "description": "Write, run and verify unit tests for Kotlin code (apps, libraries, Android, Appium/Selenium page objects) with Gradle, Maven or kotlinc, then produce an HTML report of results, coverage and weak tests (no assertions, disabled, untested methods, mutation check). Use when the user asks to unit test Kotlin code, add or run Kotlin tests, get a test or coverage report, or check test quality.",
       "plugins": [
         "testing-tools"
       ],
@@ -1999,7 +1999,7 @@
       "name": "skillforge",
       "title": "Skillforge: PDF to skills",
       "category": "hub-tools",
-      "description": "Turn a technical PDF (book, manual, handbook, spec) into a library of focused Agent Skills using the bundled offline generator (open-source NLP, no LLM or API key). Use when the user wants to create skills from a PDF, convert documentation or a book into SKILL.md playbooks, extract procedures/commands from a manual into skills, or regenerate/refresh skills that were built from a document.",
+      "description": "Turn a technical PDF (book, manual, handbook, spec) into a library of Agent Skills with the bundled offline generator (no LLM or API key). Use when the user wants to create skills from a PDF, convert a book or documentation into SKILL.md playbooks, or regenerate skills that were built from a document.",
       "plugins": [
         "hub-tools"
       ],
@@ -2016,7 +2016,7 @@
       "name": "url-to-skill",
       "title": "URL to skill: build a skill from a web page",
       "category": "hub-tools",
-      "description": "Turn any web page or documentation site (an http/https link) into a reusable Agent Skill with a proper name, using a bundled Python script that fetches the page, extracts the main content as Markdown (headings, steps, code, tables), and writes a skill folder with SKILL.md, references and a source record that can be refreshed later. Use when the user gives a URL and wants to create, generate, save or store a skill from it, turn online docs, a guide, a README, an API reference or a how-to page into a skill, capture a website as reusable knowledge for later, or refresh a skill that was built from a web page.",
+      "description": "Turn a web page or documentation site (an http/https link) into a reusable Agent Skill with a bundled Python script that fetches the page and writes SKILL.md, references and a refreshable source record. Use when the user gives a URL and wants to make a skill from it, turn online docs, a guide or an API reference into a skill, or refresh a skill built from a web page.",
       "plugins": [
         "hub-tools"
       ],
@@ -2034,7 +2034,7 @@
       "name": "video-inspector",
       "title": "Video inspector: frames, pixels and description",
       "category": "video-tools",
-      "description": "Analyse a video file (MP4, MOV, MKV, WebM, AVI) with a ready-made Python script, covering metadata (duration, fps, frame count, codec, resolution, rotation, audio, GPS), extracting frames as PNG/JPG images, per-frame colours, brightness, sharpness and motion, scene changes, black and frozen/static sections, the colour of a pixel or area over time, a per-frame pixel map or full pixel CSV, and a plain-text description and timeline (TXT, JSON, CSV). Use this skill whenever the user wants to analyse, describe or summarise a video or screen recording, split a video into frames or extract a frame at a time, check a recording for black screens, freezes or flicker, track an LED, icon or indicator colour over time, or get pixel data from video frames. Prefer it over writing one-off video code.",
+      "description": "Analyse a video file (MP4, MOV, MKV, WebM, AVI) with a ready-made Python script: metadata, frame extraction, scene changes, black or frozen sections, motion, brightness, and the colour of a pixel or area over time. Use when the user wants to analyse or describe a video or screen recording, extract frames, check for black screens, freezes or flicker, or track an LED or indicator colour.",
       "plugins": [
         "video-tools"
       ],

@@ -1,6 +1,6 @@
 ---
 name: git-environment-variables
-description: "Environment Variables playbook extracted from \"Pro Git\". Some of Git’s general behavior as a computer program depends on environment variables. Use when the user asks about environment variables, git diff, portable git, git behave, field, object, editor git; or mentions GIT_TRACE=true git, GIT_TRACE_PACK_ACCESS=true git, GIT_TRACE_PACKET=true git, GIT_TRACE_PERFORMANCE=true git, GIT_TRACE_SETUP=true git, GIT_REFLOG_ACTION=\"my --allow-empty -m."
+description: "Git environment variables: GIT_DIR, GIT_WORK_TREE, GIT_EDITOR, GIT_SSH_COMMAND, GIT_AUTHOR_* and GIT_COMMITTER_*, proxy settings, GIT_TRACE* debugging. Use when the user asks about a GIT_* variable or wants to trace what git is doing."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Environment Variables"

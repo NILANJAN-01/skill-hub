@@ -1,6 +1,6 @@
 ---
 name: git-pro
-description: "Reference knowledge extracted from the document 'Pro Git'. Covers: Introduction, Getting Started, Git Basics, Git Branching, Git on the Server, Distributed Git, GitHub, Git Tools, Customizing Git, Git and Other Systems, Git Internals, Git in Other Environments, Embedding Git in your Applications, Git Commands. Key terms: git, commit, branch, file, master, merge, command, repository. Use when the user asks about these topics, needs commands, procedures or guidance from 'Pro Git', or mentions progit."
+description: "Whole-book index of Pro Git with one reference file per chapter, from basics to internals. Use when a git question spans several topics, when no more specific git-* skill covers it, or when the user cites the Pro Git book."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Pro Git (full reference)"

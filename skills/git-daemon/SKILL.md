@@ -1,6 +1,6 @@
 ---
 name: git-daemon
-description: "Git Daemon playbook extracted from \"Pro Git\". The --reuseaddr option allows the server to restart without waiting for old connections to time out, while the --base-path option allows people to clone projects without specifying the entire path, and the path at the end tells the Git daemon where to... Use when the user asks about git daemon, ’re running, git daemon, daemon serving repositories, git protocol, system, git data; or mentions git daemon --reuseaddr --base-path, touch git-daemon-export-ok, cd."
+description: "Serve repositories over the unauthenticated git:// protocol with git daemon (systemd service, git-daemon-export-ok). Use when the user wants fast read-only public access to a repository."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Git Daemon"

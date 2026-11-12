@@ -1,6 +1,6 @@
 ---
 name: git-getting-a-git-repository
-description: "Getting a Git Repository playbook extracted from \"Pro Git\". This is an important distinction — instead of getting just a working copy, Git receives a full copy of nearly all data that the server has. Use when the user asks about getting a git repository, git repository, git clone, existing git, files, project, typically obtain; or mentions cd, git add, git clone, git init, git commit -m."
+description: "Start a repository: git init in an existing folder, or git clone a remote one. Use when the user wants to create a new git repo, put a project under version control, or clone a repository."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Getting a Git Repository"

@@ -1,6 +1,6 @@
 ---
 name: git-replace
-description: "Replace playbook extracted from \"Pro Git\". The replace command lets you specify an object in Git and say \"every time you refer to this object, pretend it’s a different object\". Use when the user asks about replace, base commit, recent history, commit object, entire history, object database, git replace; or mentions git replace, git log --oneline, git log --oneline --decorate, git remote, git branch, git push."
+description: "Swap one git object for another with git replace, for example to graft old history onto a shortened repository. Use when the user wants to split or join history without rewriting every commit."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Replace"

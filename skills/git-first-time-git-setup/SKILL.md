@@ -1,6 +1,6 @@
 ---
 name: git-first-time-git-setup
-description: "First-Time Git Setup playbook extracted from \"Pro Git\". The first thing you should do when you install Git is to set your user name and email address. Use when the user asks about first-time git setup, git config, windows system, git environment, editor, user, option; or mentions git config --global, git config --list --show-origin, git config --list, git config, git config --show-origin."
+description: "Set up git for the first time: user.name, user.email, default editor, default branch name, checking settings (git config --global, --list, --show-origin). Use when the user configures git on a new machine or sees 'Please tell me who you are'."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "First-Time Git Setup"

@@ -1,6 +1,6 @@
 ---
 name: git-debugging-with-git
-description: "Debugging with Git playbook extracted from \"Pro Git\". If you track down a bug in your code and want to know when it was introduced and why, file annotation is often your best tool. Use when the user asks about debugging with git, git bisect, git blame, bad commit, line, good, commits; or mentions git bisect, git blame -L, git blame -C -L."
+description: "Find which commit introduced a bug: git blame for line history and git bisect, manual or scripted with git bisect run. Use when the user asks who changed a line, or which commit broke something."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Debugging with Git"

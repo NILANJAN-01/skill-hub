@@ -1,6 +1,6 @@
 ---
 name: git-setting-up-the-server
-description: "Setting Up the Server playbook extracted from \"Pro Git\". With this method, you can quickly get a read/write Git server up and running for a handful of developers. Use when the user asks about setting up the server, ssh public keys, git server, user account, walk through setting, authorized, directory; or mentions cat, cd, mkdir, git push, adduser git, su git; or hits errors like \"fatal: Interactive git shell is not enabled.\"."
+description: "Set up an SSH git server: a git user, authorized_keys, a bare repository, and restricting the account with git-shell. Use when the user wants several developers to push to a self-hosted repository over SSH."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Setting Up the Server"

@@ -1,6 +1,6 @@
 ---
 name: git-submodules
-description: "Submodules playbook extracted from \"Pro Git\". Although DbConnector is a subdirectory in your working directory, Git sees it as a submodule and doesn’t track its contents when you’re not in that directory. Use when the user asks about submodules, git submodule update, submodule directory, git diff, main project, commits, submodule project; or mentions git submodule, git submodule --remote, git submodule --init --recursive, git submodule --remote --merge, git push --recurse-submodules, git diff --cached --submodule; or hits errors like \"error: Your local changes to the following files would be overwritten by checkou\"."
+description: "Git submodules: add one, clone with --recurse-submodules, init and update, pull upstream changes, publish submodule changes, resolve submodule conflicts, git submodule foreach. Use when a repository contains another repository, or submodule folders are empty or out of date."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Submodules"

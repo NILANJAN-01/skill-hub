@@ -1,6 +1,6 @@
 ---
 name: git-configuration
-description: "Git Configuration playbook extracted from \"Pro Git\". As you read briefly in Getting Started, you can specify Git configuration settings with the git config command. Use when the user asks about git configuration, git config, git diff, place git, git automatically, configuration, git rebase; or mentions git config --global, cat, git config --system, git chekcout, chmod, git apply --whitespace; or hits errors like \"WARNING: You called a Git command named 'chekcout', which does not exist.\"."
+description: "Change git settings: editor, commit template, pager, colours, external merge and diff tools, whitespace and line endings (core.autocrlf), server receive options. Use when the user wants to change a git config setting or fix CRLF or whitespace problems."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Git Configuration"

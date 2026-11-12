@@ -1,6 +1,6 @@
 ---
 name: git-reset-demystified
-description: "Reset Demystified playbook extracted from \"Pro Git\". Like reset, checkout manipulates the three trees, and it is a bit different depending on whether you give the command a file path or not. Use when the user asks about reset demystified, head points, git commit, git reset, file, working directory, branch; or mentions git cat-file -p, git ls-tree -r, git ls-files -s, tree."
+description: "Understand git reset and git checkout through the three trees (HEAD, index, working directory): --soft, --mixed, --hard, reset with a path, squashing with reset. Use when the user is unsure which reset mode to use or what reset will do to their files."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Reset Demystified"

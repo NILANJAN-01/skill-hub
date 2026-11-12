@@ -1,6 +1,6 @@
 ---
 name: git-references
-description: "Git References playbook extracted from \"Pro Git\". That’s basically what a branch in Git is: a simple pointer or reference to the head of a line of work. Use when the user asks about git references, git branch, git object, tag object, head file, history, simple; or mentions cat, git update-ref, git symbolic-ref, git log --pretty, find, find -type; or hits errors like \"fatal: Refusing to point HEAD outside of refs/\"."
+description: "Git refs internals: refs/heads, HEAD as a symbolic ref, tags and remote refs (git update-ref, git symbolic-ref). Use when the user asks what a ref or HEAD really is, or needs to read or repair files under .git/refs."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Git References"

@@ -1,6 +1,6 @@
 ---
 name: git-getting-git-on-a-server
-description: "Getting Git on a Server playbook extracted from \"Pro Git\". However, keep in mind that to collaborate with a couple of people on a private project, all you need is an SSH server and a bare repository. Use when the user asks about getting git on a server, bare repository, git server, ssh server, ssh access, directory, git repository; or mentions git clone --bare, cp -Rf, scp -r, git clone, ssh, cd."
+description: "Put a repository on your own server: make a bare repo (git clone --bare), copy it over SSH, share it with a team (git init --bare --shared). Use when the user wants to host a git repository on their own machine or server."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Getting Git on a Server"

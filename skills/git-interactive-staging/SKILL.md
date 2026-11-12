@@ -1,6 +1,6 @@
 ---
 name: git-interactive-staging
-description: "Interactive Staging playbook extracted from \"Pro Git\". You can see that this command shows you a much different view of your staging area than you’re probably used to — basically, the same information you get with git status but a bit more succinct and informative. Use when the user asks about interactive staging, big messy commit, git add, staged files, staging, diff, unstaged; or mentions git add -i."
+description: "Stage only part of your changes with git add -i and git add -p (patch mode), hunk by hunk. Use when the user wants to commit only some of the changes in a file or split work into several commits."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Interactive Staging"

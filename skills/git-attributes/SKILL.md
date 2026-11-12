@@ -1,6 +1,6 @@
 ---
 name: git-attributes
-description: "Git Attributes playbook extracted from \"Pro Git\". These path-specific settings are called Git attributes and are set either in a .gitattributes file in one of your directories (normally the root of your project) or in the .git/info/attributes file if you don’t want the attributes file committed with... Use when the user asks about git attributes, git attributes, git diff, git archive, date, git log, merge; or mentions echo, git config, cat, git config --global, git diff, rm."
+description: "Set per-path behaviour in .gitattributes: binary files, diffing Word or image files, keyword expansion, smudge/clean filters, export-ignore, merge strategies. Use when the user asks about .gitattributes or per-file git rules."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Git Attributes"

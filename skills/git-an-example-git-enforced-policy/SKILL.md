@@ -1,6 +1,6 @@
 ---
 name: git-an-example-git-enforced-policy
-description: "An Example Git-Enforced Policy playbook extracted from \"Pro Git\". You’ll build client scripts that help the developer know if their push will be rejected and server scripts that actually enforce the policies. Use when the user asks about an example git-enforced policy, commit message, acl file, update script, list, scripts, server; or mentions git cat-file, git commit -am, git rev-list, git log --name-only --pretty, git push -f; or hits errors like \"error: hooks/update exited with error code 1\"."
+description: "Write server-side and client-side hook scripts that enforce a commit-message format, per-user file access (ACL) and fast-forward-only pushes. Use when the user wants to enforce a commit or push policy."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "An Example Git-Enforced Policy"

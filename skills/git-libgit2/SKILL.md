@@ -1,6 +1,6 @@
 ---
 name: git-libgit2
-description: "Libgit2 playbook extracted from \"Pro Git\". Objective-Git (https://github.com/libgit2/objective-git) is the name of the Use when the user asks about libgit2, object database, git repository, git object, structure, type, ruby; or hits errors like \"error = git_revparse_single(&head_commit, repo, \"HEAD^{commit}\");\"."
+description: "Use git from C and other languages with libgit2 and its bindings (Rugged for Ruby, LibGit2Sharp for .NET, objective-git, pygit2). Use when the user embeds git operations in an application through libgit2."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Libgit2"

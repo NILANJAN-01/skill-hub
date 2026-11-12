@@ -1,6 +1,6 @@
 ---
 name: git-branches-in-a-nutshell
-description: "Branches in a Nutshell playbook extracted from \"Pro Git\". In Git, this is a pointer to the local branch you’re currently on. Use when the user asks about branches in a nutshell, git log, git stores, git repository, master, git checkout, git switch; or mentions git branch, git log --oneline --decorate, git checkout, vim, git commit -a -m, git add."
+description: "Explain how branches work: commits as snapshots, branch pointers, HEAD, creating and switching branches (git branch, git checkout, git switch). Use when the user asks what a branch or HEAD is, or how to create or switch one."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Branches in a Nutshell"

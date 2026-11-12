@@ -1,6 +1,6 @@
 ---
 name: git-github-contributing-to-a-project
-description: "Contributing to a Project playbook extracted from \"Pro Git\". This is the basic workflow that most GitHub projects use. Use when the user asks about contributing to a project, pull request; or mentions git push, git remote, git fetch, git checkout, git pull, git clone; or hits errors like \"CONFLICT (content): Merge conflict in blink.ino\"."
+description: "Contribute on GitHub: fork, topic branch, open a pull request, keep it up to date with upstream, respond to review, GitHub Flavored Markdown. Use when the user wants to fork a repo, open or update a pull request, or sync a fork."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Contributing to a Project"

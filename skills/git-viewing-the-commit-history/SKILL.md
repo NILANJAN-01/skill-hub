@@ -1,6 +1,6 @@
 ---
 name: git-viewing-the-commit-history
-description: "Viewing the Commit History playbook extracted from \"Pro Git\". Another really helpful filter is the -S option (colloquially referred to as Git’s “pickaxe” option), which takes a string and shows only those commits that changed the number of occurrences of that string. Use when the user asks about viewing the commit history, git log, show commits, log output, format, command, files; or mentions git log, git log --pretty, git clone, git log -p, git log --stat, git log --pretty --graph."
+description: "View history with git log: -p, --stat, --pretty=format, --graph, --oneline, and limiting by date, author, path or message. Use when the user wants to see, format or filter the commit log."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Viewing the Commit History"

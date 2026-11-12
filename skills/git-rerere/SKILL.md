@@ -1,6 +1,6 @@
 ---
 name: git-rerere
-description: "Rerere playbook extracted from \"Pro Git\". The git rerere functionality is a bit of a hidden feature. Use when the user asks about rerere, git rerere, merge conflict, topic branch, resolve, recorded, resolution; or mentions git rerere, git add, cat, git config --global, git merge, git status; or hits errors like \"CONFLICT (content): Merge conflict in hello.rb\"."
+description: "Reuse recorded conflict resolutions with git rerere (rerere.enabled, git rerere status, git rerere diff). Use when the user keeps resolving the same merge or rebase conflicts."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Rerere"

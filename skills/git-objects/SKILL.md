@@ -1,6 +1,6 @@
 ---
 name: git-objects
-description: "Git Objects playbook extracted from \"Pro Git\". The next type of Git object we’ll examine is the tree, which solves the problem of storing the filename and also allows you to store a group of files together. Use when the user asks about git objects, git objects, tree object, git cat-file, git hash-object, git object database, git stores; or mentions git hash-object -w, git cat-file -p, find -type, echo, git write-tree, cat."
+description: "Git internals: blob, tree and commit objects, SHA-1 content addressing, the .git/objects store (git hash-object, git cat-file, git update-index, git write-tree, git commit-tree). Use when the user asks how git stores data or wants to inspect raw objects."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Git Objects"

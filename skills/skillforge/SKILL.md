@@ -1,6 +1,6 @@
 ---
 name: skillforge
-description: Turn a technical PDF (book, manual, handbook, spec) into a library of focused Agent Skills using the bundled offline generator (open-source NLP, no LLM or API key). Use when the user wants to create skills from a PDF, convert documentation or a book into SKILL.md playbooks, extract procedures/commands from a manual into skills, or regenerate/refresh skills that were built from a document.
+description: "Turn a technical PDF (book, manual, handbook, spec) into a library of Agent Skills with the bundled offline generator (no LLM or API key). Use when the user wants to create skills from a PDF, convert a book or documentation into SKILL.md playbooks, or regenerate skills that were built from a document."
 license: Complete terms in the repository README
 metadata:
   title: "Skillforge: PDF to skills"
@@ -52,7 +52,7 @@ Python 3.10+ is required. All paths below are relative to this skill's folder. U
    ```
    Other options: `--prefix` (skill-name prefix, guessed by default), `--max-skills` (default 60), `--min-commands` (default 3), `--replan`.
 4. **Review** the output. The script prints any problems per skill (for example "no procedures"). Open a few `SKILL.md` files and check:
-   - the `description` names real triggers (the topics and commands a user would mention);
+   - the `description` is rewritten by hand. The generated one is only a draft, and the description is the only text an agent reads when it decides whether to load the skill. Start with the task in the words a user would type ("Undo mistakes: amend the last commit, unstage a file ..."), then "Use when ..." with real commands and error messages. Keep it under about 300 characters, because agents shorten or drop descriptions when many skills are installed;
    - the procedures are in order and the commands are complete;
    - noisy or irrelevant bullets are removed (extraction is faithful but can be noisy).
 5. **Publish into the hub** (when working in the skill-hub repo): follow the `contribute-skill` skill. Copy the reviewed folders into `skills/`, add `license` and `metadata` (title, category, source, pages) to each frontmatter, register them in `.claude-plugin/marketplace.json`, then run `python tools/build_catalog.py` and `python tools/validate_skills.py`.

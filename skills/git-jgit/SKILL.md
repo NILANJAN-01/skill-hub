@@ -1,6 +1,6 @@
 ---
 name: git-jgit
-description: "JGit playbook extracted from \"Pro Git\". JGit is a relatively full-featured implementation of Git written natively in Java, and is widely used in the Java community. Use when the user asks about jgit, fully featured git, featured git library, git library called, library called jgit, object, java."
+description: "Use git from Java with JGit: add the dependency, open a repository, the plumbing API (Repository, ObjectId, RevWalk) and the porcelain Git class. Use when the user writes Java code that reads or changes a git repository."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "JGit"

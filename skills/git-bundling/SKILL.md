@@ -1,6 +1,6 @@
 ---
 name: git-bundling
-description: "Bundling playbook extracted from \"Pro Git\". The first command is the bundle verify command that will make sure the file is actually a valid Git bundle and that you have all the necessary ancestors to reconstitute it properly. Use when the user asks about bundling, git bundle, covered the common, range of commits, data, send, access; or mentions git bundle, git log --oneline, git log, git clone, cd repo, git fetch; or hits errors like \"error: Repository lacks these prerequisite commits:\"."
+description: "Pack commits into one file with git bundle to move a repository or changes offline (create, verify, clone or fetch from a bundle). Use when the user must share git history without a network or server."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Bundling"

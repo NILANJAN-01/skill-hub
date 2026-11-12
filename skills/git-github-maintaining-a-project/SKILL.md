@@ -1,6 +1,6 @@
 ---
 name: git-github-maintaining-a-project
-description: "Maintaining a Project playbook extracted from \"Pro Git\". Doing so will give them “push” access, which means they have both read and write access to the project and Git repository. Use when the user asks about maintaining a project, pull request, git pull; or mentions git fetch, curl, git ls-remote, git checkout."
+description: "Maintain a GitHub repository: collaborators, reviewing and merging pull requests, refs/pull/* refs, mentions and notifications, README and CONTRIBUTING files, default branch, transferring a project. Use when the user administers a GitHub repo or handles incoming pull requests."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Maintaining a Project"

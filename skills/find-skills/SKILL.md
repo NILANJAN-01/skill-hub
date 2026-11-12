@@ -1,6 +1,6 @@
 ---
 name: find-skills
-description: Search the skill-hub catalog for an Agent Skill that fits the current task and install it into the AI coding agent in use (any agent that reads SKILL.md skills). Use when the user asks "is there a skill for X", wants to find, browse, list, recommend or install skills, asks what skills or plugins skill-hub offers, or when a task would clearly benefit from a specialized playbook (e.g. a tricky git rebase, writing a git hook, generating skills from a PDF).
+description: "Search the skill-hub catalog for a skill that fits the task and install it into the agent in use. Use when the user asks \"is there a skill for X\", wants to find, browse, list or install skills, or asks what skill-hub offers."
 license: Complete terms in the repository README
 compatibility: Works in any agent. Installing writes into the agent's skills folder (needs file-system access and Python 3.8+, or Node for npx); reading the online catalog needs web access.
 metadata:

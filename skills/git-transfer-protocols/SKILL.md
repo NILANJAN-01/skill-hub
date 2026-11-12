@@ -1,6 +1,6 @@
 ---
 name: git-transfer-protocols
-description: "Transfer Protocols playbook extracted from \"Pro Git\". If you’re setting up a repository to be served read-only over HTTP, the dumb protocol is likely what will be used. Use when the user asks about transfer protocols, git checks, dumb protocol, commit object, head, remote, master; or mentions ssh -x, git clone, git cat-file -p."
+description: "How fetch and push work on the wire: the dumb HTTP protocol, the smart protocol, send-pack and receive-pack, fetch-pack and upload-pack. Use when the user debugs clone, fetch or push at the protocol level."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Transfer Protocols"

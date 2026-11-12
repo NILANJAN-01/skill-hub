@@ -1,6 +1,6 @@
 ---
 name: git-revision-selection
-description: "Revision Selection playbook extracted from \"Pro Git\". The last major range-selection syntax is the triple-dot syntax, which specifies all the commits that are reachable by either of two references but not by both of them. Use when the user asks about revision selection, git log, git show head, single commit, objects, repository; or mentions git show, git log, git log --not, git log --abbrev-commit --pretty, git rev-parse, git reflog."
+description: "Refer to commits and ranges: short SHA-1, branch names, reflog (HEAD@{n}), ancestry (HEAD^, HEAD~2), double-dot and triple-dot ranges. Use when the user asks what ^, ~, .., ... or @{} mean, or how to select specific commits."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Revision Selection"

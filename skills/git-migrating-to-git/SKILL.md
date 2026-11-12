@@ -1,6 +1,6 @@
 ---
 name: git-migrating-to-git
-description: "Migrating to Git playbook extracted from \"Pro Git\". If you want to map this to better Git author data, you need a mapping from the Subversion users to the Git authors. Use when the user asks about migrating to git, git svn, git tags, git fast-import, git server, data, directory; or mentions cd, git log, ls, for --format, git remote, git push --all."
+description: "Convert a repository to git from Subversion, Mercurial, Perforce or a custom source (git svn clone with an authors file, hg-fast-export, git p4, git fast-import). Use when the user wants to import another version control system's history into git."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Migrating to Git"

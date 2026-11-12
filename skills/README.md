@@ -8,132 +8,132 @@
 
 | Skill | Description |
 |---|---|
-| [`contribute-skill`](contribute-skill/SKILL.md) | Add a new skill (or update an existing one) in the skill-hub repository so that it validates, appears in catalog.json and the generated skill lists, and... |
-| [`find-skills`](find-skills/SKILL.md) | Search the skill-hub catalog for an Agent Skill that fits the current task and install it into the AI coding agent in use (any agent that reads SKILL.md... |
-| [`skillforge`](skillforge/SKILL.md) | Turn a technical PDF (book, manual, handbook, spec) into a library of focused Agent Skills using the bundled offline generator (open-source NLP, no LLM or... |
-| [`url-to-skill`](url-to-skill/SKILL.md) | Turn any web page or documentation site (an http/https link) into a reusable Agent Skill with a proper name, using a bundled Python script that fetches the... |
+| [`contribute-skill`](contribute-skill/SKILL.md) | Add or update a skill in the skill-hub repository so that it validates, appears in the catalog and installs into every supported agent. Use when the user... |
+| [`find-skills`](find-skills/SKILL.md) | Search the skill-hub catalog for a skill that fits the task and install it into the agent in use. Use when the user asks "is there a skill for X", wants to... |
+| [`skillforge`](skillforge/SKILL.md) | Turn a technical PDF (book, manual, handbook, spec) into a library of Agent Skills with the bundled offline generator (no LLM or API key). Use when the user... |
+| [`url-to-skill`](url-to-skill/SKILL.md) | Turn a web page or documentation site (an http/https link) into a reusable Agent Skill with a bundled Python script that fetches the page and writes... |
 
 ## Android: UI test automation (`android-automation`)
 
 | Skill | Description |
 |---|---|
-| [`android-uiautomator-locators`](android-uiautomator-locators/SKILL.md) | Capture the current screen of a connected Android device over adb (uiautomator dump + pull), or read an existing UIAutomator XML dump (window_dump.xml), and... |
+| [`android-uiautomator-locators`](android-uiautomator-locators/SKILL.md) | Dump the current screen of a connected Android device over adb, or read an existing window_dump.xml, and generate a JSON locator file with UiSelector, By,... |
 
 ## Images: pixels & description (`image-tools`)
 
 | Skill | Description |
 |---|---|
-| [`image-inspector`](image-inspector/SKILL.md) | Inspect any image file (PNG, JPG/JPEG, WebP, GIF, BMP, TIFF) with a ready-made Python script that reports its pixels and a plain-text description, covering... |
+| [`image-inspector`](image-inspector/SKILL.md) | Inspect an image file (PNG, JPG, WebP, GIF, BMP, TIFF) with a ready-made Python script: pixel colours at coordinates, dominant colours and palette,... |
 
 ## Video: frames, pixels & description (`video-tools`)
 
 | Skill | Description |
 |---|---|
-| [`video-inspector`](video-inspector/SKILL.md) | Analyse a video file (MP4, MOV, MKV, WebM, AVI) with a ready-made Python script, covering metadata (duration, fps, frame count, codec, resolution, rotation,... |
+| [`video-inspector`](video-inspector/SKILL.md) | Analyse a video file (MP4, MOV, MKV, WebM, AVI) with a ready-made Python script: metadata, frame extraction, scene changes, black or frozen sections,... |
 
 ## Testing: unit tests & reports (`testing-tools`)
 
 | Skill | Description |
 |---|---|
-| [`kotlin-unit-test`](kotlin-unit-test/SKILL.md) | Write, run and verify unit tests for Kotlin code (apps, libraries, Android, scripts and test-automation code such as Appium/Selenium page objects) class by... |
+| [`kotlin-unit-test`](kotlin-unit-test/SKILL.md) | Write, run and verify unit tests for Kotlin code (apps, libraries, Android, Appium/Selenium page objects) with Gradle, Maven or kotlinc, then produce an... |
 
 ## Git: getting started (`git-getting-started`)
 
 | Skill | Description |
 |---|---|
-| [`git-basic-snapshotting`](git-basic-snapshotting/SKILL.md) | Basic Snapshotting playbook extracted from "Pro Git". For the basic workflow of staging content and committing it to your history, there are only a few... |
-| [`git-first-time-git-setup`](git-first-time-git-setup/SKILL.md) | First-Time Git Setup playbook extracted from "Pro Git". The first thing you should do when you install Git is to set your user name and email address. Use... |
-| [`git-getting-a-git-repository`](git-getting-a-git-repository/SKILL.md) | Getting a Git Repository playbook extracted from "Pro Git". This is an important distinction — instead of getting just a working copy, Git receives a full... |
-| [`git-getting-help`](git-getting-help/SKILL.md) | Getting Help playbook extracted from "Pro Git". These channels are regularly filled with hundreds of people who are all very knowledgeable about Git and are... |
-| [`git-aliases`](git-aliases/SKILL.md) | Git Aliases playbook extracted from "Pro Git". As you go on using Git, you’ll probably use other commands frequently as well; don’t hesitate to create new... |
-| [`git-installing-git`](git-installing-git/SKILL.md) | Installing Git playbook extracted from "Pro Git". You can either install it as a package or via another installer, or download the source code and compile... |
-| [`git-recording-changes-to-the-repository`](git-recording-changes-to-the-repository/SKILL.md) | Recording Changes to the Repository playbook extracted from "Pro Git". The CONTRIBUTING.md file appears under a section named “Changes not staged for... |
-| [`git-setup-and-config`](git-setup-and-config/SKILL.md) | Setup and Config playbook extracted from "Pro Git". There are two commands that are used quite a lot, from the first invocations of Git to common every day... |
-| [`git-tagging`](git-tagging/SKILL.md) | Tagging playbook extracted from "Pro Git". The -m specifies a tagging message, which is stored with the tag. Use when the user asks about tagging, git push,... |
-| [`git-undoing-things`](git-undoing-things/SKILL.md) | Undoing Things playbook extracted from "Pro Git". One of the common undos takes place when you commit too early and possibly forget to add some files, or... |
-| [`git-viewing-the-commit-history`](git-viewing-the-commit-history/SKILL.md) | Viewing the Commit History playbook extracted from "Pro Git". Another really helpful filter is the -S option (colloquially referred to as Git’s “pickaxe”... |
+| [`git-basic-snapshotting`](git-basic-snapshotting/SKILL.md) | Quick reference for the everyday snapshot commands: git add, status, diff, difftool, commit, reset, rm, mv, clean. Use when the user asks which git command... |
+| [`git-first-time-git-setup`](git-first-time-git-setup/SKILL.md) | Set up git for the first time: user.name, user.email, default editor, default branch name, checking settings (git config --global, --list, --show-origin).... |
+| [`git-getting-a-git-repository`](git-getting-a-git-repository/SKILL.md) | Start a repository: git init in an existing folder, or git clone a remote one. Use when the user wants to create a new git repo, put a project under version... |
+| [`git-getting-help`](git-getting-help/SKILL.md) | Look up git documentation: git help <verb>, git <verb> --help, man git-<verb>, and the short -h summary. Use when the user asks how to find a git command's... |
+| [`git-aliases`](git-aliases/SKILL.md) | Create shortcuts for git commands with git config alias (git co, git unstage, git last). Use when the user wants a git alias or shorter git commands. |
+| [`git-installing-git`](git-installing-git/SKILL.md) | Install or upgrade git on Linux (dnf, apt), macOS or Windows, or build it from source. Use when the user needs to install git, check git --version, or gets... |
+| [`git-recording-changes-to-the-repository`](git-recording-changes-to-the-repository/SKILL.md) | Day-to-day file workflow: git status, git add, .gitignore patterns, git diff (--staged), git commit, git rm, git mv. Use when the user wants to stage,... |
+| [`git-setup-and-config`](git-setup-and-config/SKILL.md) | Quick reference for git config and git help, including the core.editor command for common editors (VS Code, Notepad++, Vim, Sublime and others). Use when... |
+| [`git-tagging`](git-tagging/SKILL.md) | Tags: list, create annotated or lightweight tags, tag an older commit, push tags, delete local and remote tags, check out a tag. Use when the user wants to... |
+| [`git-undoing-things`](git-undoing-things/SKILL.md) | Undo mistakes: amend the last commit, unstage a file, discard changes in a file (git commit --amend, git reset HEAD, git restore, git checkout --). Use when... |
+| [`git-viewing-the-commit-history`](git-viewing-the-commit-history/SKILL.md) | View history with git log: -p, --stat, --pretty=format, --graph, --oneline, and limiting by date, author, path or message. Use when the user wants to see,... |
 
 ## Git: branching & merging (`git-branching`)
 
 | Skill | Description |
 |---|---|
-| [`git-advanced-merging`](git-advanced-merging/SKILL.md) | Advanced Merging playbook extracted from "Pro Git". When you invoke a merge into HEAD (git merge topic), the new commit has two parents: the first one is... |
-| [`git-basic-branching-and-merging`](git-basic-branching-and-merging/SKILL.md) | Basic Branching and Merging playbook extracted from "Pro Git". However, before you do that, note that if your working directory or staging area has... |
-| [`git-branch-management`](git-branch-management/SKILL.md) | Branch Management playbook extracted from "Pro Git". This means that if you commit at this point, the master branch will be moved forward with your new... |
-| [`git-branches-in-a-nutshell`](git-branches-in-a-nutshell/SKILL.md) | Branches in a Nutshell playbook extracted from "Pro Git". In Git, this is a pointer to the local branch you’re currently on. Use when the user asks about... |
-| [`git-rebasing`](git-rebasing/SKILL.md) | Rebasing playbook extracted from "Pro Git". In Git, there are two main ways to integrate changes from one branch into another: the merge and the rebase. Use... |
-| [`git-remote-branches`](git-remote-branches/SKILL.md) | Remote Branches playbook extracted from "Pro Git". Checking out a local branch from a remote-tracking branch automatically creates what is called a... |
-| [`git-rerere`](git-rerere/SKILL.md) | Rerere playbook extracted from "Pro Git". The git rerere functionality is a bit of a hidden feature. Use when the user asks about rerere, git rerere, merge... |
+| [`git-advanced-merging`](git-advanced-merging/SKILL.md) | Resolve hard merge conflicts: abort or redo a merge, ignore whitespace, check out the ours/theirs/base versions, diff3 markers, undo a merge commit, subtree... |
+| [`git-basic-branching-and-merging`](git-basic-branching-and-merging/SKILL.md) | Create a branch, switch to it, merge it back and resolve a basic conflict (git checkout -b, git merge, git branch -d). Use when the user wants to branch or... |
+| [`git-branch-management`](git-branch-management/SKILL.md) | List, rename and delete branches, see which are merged or unmerged, rename master to main (git branch -v, --merged, --no-merged, --move, -d). Use when the... |
+| [`git-branches-in-a-nutshell`](git-branches-in-a-nutshell/SKILL.md) | Explain how branches work: commits as snapshots, branch pointers, HEAD, creating and switching branches (git branch, git checkout, git switch). Use when the... |
+| [`git-rebasing`](git-rebasing/SKILL.md) | Rebase a branch onto another (git rebase, --onto), choose between rebase and merge, and recover when rebased commits were already pushed (git pull... |
+| [`git-remote-branches`](git-remote-branches/SKILL.md) | Work with remote branches: origin/<branch>, push a branch, track an upstream (-u, --track), git fetch versus git pull, delete a remote branch. Use when the... |
+| [`git-rerere`](git-rerere/SKILL.md) | Reuse recorded conflict resolutions with git rerere (rerere.enabled, git rerere status, git rerere diff). Use when the user keeps resolving the same merge... |
 
 ## Git: remotes & collaboration (`git-collaboration`)
 
 | Skill | Description |
 |---|---|
-| [`git-distributed-git-contributing-to-a-project`](git-distributed-git-contributing-to-a-project/SKILL.md) | Contributing to a Project playbook extracted from "Pro Git". Because Git is very flexible, people can and do work together in many ways, and it’s... |
-| [`git-github-contributing-to-a-project`](git-github-contributing-to-a-project/SKILL.md) | Contributing to a Project playbook extracted from "Pro Git". This is the basic workflow that most GitHub projects use. Use when the user asks about... |
-| [`git-credential-storage`](git-credential-storage/SKILL.md) | Credential Storage playbook extracted from "Pro Git". This means that until you change your password for the Git host, you won’t ever have to type in your... |
-| [`git-generating-your-ssh-public-key`](git-generating-your-ssh-public-key/SKILL.md) | Generating Your SSH Public Key playbook extracted from "Pro Git". The .pub file is your public key, and the other file is the corresponding private key. Use... |
-| [`git-getting-git-on-a-server`](git-getting-git-on-a-server/SKILL.md) | Getting Git on a Server playbook extracted from "Pro Git". However, keep in mind that to collaborate with a couple of people on a private project, all you... |
-| [`git-daemon`](git-daemon/SKILL.md) | Git Daemon playbook extracted from "Pro Git". The --reuseaddr option allows the server to restart without waiting for old connections to time out, while the... |
-| [`git-gitweb`](git-gitweb/SKILL.md) | GitWeb playbook extracted from "Pro Git". Git comes with a CGI script called GitWeb that is sometimes used for this. Use when the user asks about gitweb,... |
-| [`git-distributed-git-maintaining-a-project`](git-distributed-git-maintaining-a-project/SKILL.md) | Maintaining a Project playbook extracted from "Pro Git". This can consist of accepting and applying patches generated via format-patch and emailed to you,... |
-| [`git-github-maintaining-a-project`](git-github-maintaining-a-project/SKILL.md) | Maintaining a Project playbook extracted from "Pro Git". Doing so will give them “push” access, which means they have both read and write access to the... |
-| [`git-scripting-github`](git-scripting-github/SKILL.md) | Scripting GitHub playbook extracted from "Pro Git". The Hooks and Services section of GitHub repository administration is the easiest way to have Use when... |
-| [`git-setting-up-the-server`](git-setting-up-the-server/SKILL.md) | Setting Up the Server playbook extracted from "Pro Git". With this method, you can quickly get a read/write Git server up and running for a handful of... |
-| [`git-smart-http`](git-smart-http/SKILL.md) | Smart HTTP playbook extracted from "Pro Git". Setting up Smart HTTP is basically just enabling a CGI script that is provided with Git called... |
-| [`git-the-protocols`](git-the-protocols/SKILL.md) | The Protocols playbook extracted from "Pro Git". The most basic is the Local protocol, in which the remote repository is in another directory on the same... |
-| [`git-working-with-remotes`](git-working-with-remotes/SKILL.md) | Working with Remotes playbook extracted from "Pro Git". To see which remote servers you have configured, you can run the git remote command. Use when the... |
+| [`git-distributed-git-contributing-to-a-project`](git-distributed-git-contributing-to-a-project/SKILL.md) | Contribute with plain git: commit guidelines, small and managed team workflows, forked public projects, patches by email (git format-patch, git send-email,... |
+| [`git-github-contributing-to-a-project`](git-github-contributing-to-a-project/SKILL.md) | Contribute on GitHub: fork, topic branch, open a pull request, keep it up to date with upstream, respond to review, GitHub Flavored Markdown. Use when the... |
+| [`git-credential-storage`](git-credential-storage/SKILL.md) | Stop git asking for a username and password: credential helpers (cache, store, osxkeychain, Git Credential Manager) and custom helpers. Use when the user is... |
+| [`git-generating-your-ssh-public-key`](git-generating-your-ssh-public-key/SKILL.md) | Create an SSH key pair for git hosting (ssh-keygen, ~/.ssh/id_*.pub). Use when the user needs an SSH key for GitHub, GitLab or a git server, or gets... |
+| [`git-getting-git-on-a-server`](git-getting-git-on-a-server/SKILL.md) | Put a repository on your own server: make a bare repo (git clone --bare), copy it over SSH, share it with a team (git init --bare --shared). Use when the... |
+| [`git-daemon`](git-daemon/SKILL.md) | Serve repositories over the unauthenticated git:// protocol with git daemon (systemd service, git-daemon-export-ok). Use when the user wants fast read-only... |
+| [`git-gitweb`](git-gitweb/SKILL.md) | Browse a repository in a web browser with GitWeb (git instaweb, or the gitweb CGI under Apache). Use when the user wants a simple web viewer for a git... |
+| [`git-distributed-git-maintaining-a-project`](git-distributed-git-maintaining-a-project/SKILL.md) | Maintain a project with plain git: apply emailed patches (git apply, git am), review contributor branches, merge, rebase or cherry-pick them, tag and build... |
+| [`git-github-maintaining-a-project`](git-github-maintaining-a-project/SKILL.md) | Maintain a GitHub repository: collaborators, reviewing and merging pull requests, refs/pull/* refs, mentions and notifications, README and CONTRIBUTING... |
+| [`git-scripting-github`](git-scripting-github/SKILL.md) | Automate GitHub with webhooks, services and the REST API (access tokens, commenting on an issue, setting a pull request status, Octokit). Use when the user... |
+| [`git-setting-up-the-server`](git-setting-up-the-server/SKILL.md) | Set up an SSH git server: a git user, authorized_keys, a bare repository, and restricting the account with git-shell. Use when the user wants several... |
+| [`git-smart-http`](git-smart-http/SKILL.md) | Serve git over HTTP(S) with git-http-backend under Apache, with authenticated push. Use when the user wants to host a repository over HTTP on their own web... |
+| [`git-the-protocols`](git-the-protocols/SKILL.md) | Compare the ways to reach a git repository (local path, smart and dumb HTTP, SSH, git://) with pros and cons. Use when the user is choosing between HTTPS... |
+| [`git-working-with-remotes`](git-working-with-remotes/SKILL.md) | Manage remotes: git remote -v, add, fetch, pull, push, show, rename, remove. Use when the user wants to add or change a remote URL, or push to and fetch... |
 
 ## Git: power tools (`git-power-tools`)
 
 | Skill | Description |
 |---|---|
-| [`git-bundling`](git-bundling/SKILL.md) | Bundling playbook extracted from "Pro Git". The first command is the bundle verify command that will make sure the file is actually a valid Git bundle and... |
-| [`git-debugging-with-git`](git-debugging-with-git/SKILL.md) | Debugging with Git playbook extracted from "Pro Git". If you track down a bug in your code and want to know when it was introduced and why, file annotation... |
-| [`git-interactive-staging`](git-interactive-staging/SKILL.md) | Interactive Staging playbook extracted from "Pro Git". You can see that this command shows you a much different view of your staging area than you’re... |
-| [`git-replace`](git-replace/SKILL.md) | Replace playbook extracted from "Pro Git". The replace command lets you specify an object in Git and say "every time you refer to this object, pretend it’s... |
-| [`git-reset-demystified`](git-reset-demystified/SKILL.md) | Reset Demystified playbook extracted from "Pro Git". Like reset, checkout manipulates the three trees, and it is a bit different depending on whether you... |
-| [`git-revision-selection`](git-revision-selection/SKILL.md) | Revision Selection playbook extracted from "Pro Git". The last major range-selection syntax is the triple-dot syntax, which specifies all the commits that... |
-| [`git-rewriting-history`](git-rewriting-history/SKILL.md) | Rewriting History playbook extracted from "Pro Git". filter-branch is the tool you probably want to use to scrub your entire history. Use when the user asks... |
-| [`git-searching`](git-searching/SKILL.md) | Searching playbook extracted from "Pro Git". Another fairly advanced log search that is insanely useful is the line history search. Use when the user asks... |
-| [`git-signing-your-work`](git-signing-your-work/SKILL.md) | Signing Your Work playbook extracted from "Pro Git". If you’re taking work from others on the internet and want to verify that commits are actually from a... |
-| [`git-stashing-and-cleaning`](git-stashing-and-cleaning/SKILL.md) | Stashing and Cleaning playbook extracted from "Pro Git". The answer to this issue is the git stash command. Use when the user asks about stashing and... |
-| [`git-submodules`](git-submodules/SKILL.md) | Submodules playbook extracted from "Pro Git". Although DbConnector is a subdirectory in your working directory, Git sees it as a submodule and doesn’t track... |
+| [`git-bundling`](git-bundling/SKILL.md) | Pack commits into one file with git bundle to move a repository or changes offline (create, verify, clone or fetch from a bundle). Use when the user must... |
+| [`git-debugging-with-git`](git-debugging-with-git/SKILL.md) | Find which commit introduced a bug: git blame for line history and git bisect, manual or scripted with git bisect run. Use when the user asks who changed a... |
+| [`git-interactive-staging`](git-interactive-staging/SKILL.md) | Stage only part of your changes with git add -i and git add -p (patch mode), hunk by hunk. Use when the user wants to commit only some of the changes in a... |
+| [`git-replace`](git-replace/SKILL.md) | Swap one git object for another with git replace, for example to graft old history onto a shortened repository. Use when the user wants to split or join... |
+| [`git-reset-demystified`](git-reset-demystified/SKILL.md) | Understand git reset and git checkout through the three trees (HEAD, index, working directory): --soft, --mixed, --hard, reset with a path, squashing with... |
+| [`git-revision-selection`](git-revision-selection/SKILL.md) | Refer to commits and ranges: short SHA-1, branch names, reflog (HEAD@{n}), ancestry (HEAD^, HEAD~2), double-dot and triple-dot ranges. Use when the user... |
+| [`git-rewriting-history`](git-rewriting-history/SKILL.md) | Rewrite commits: amend the last one, interactive rebase to reword, reorder, squash, split or drop commits, filter-branch to remove a file from all history... |
+| [`git-searching`](git-searching/SKILL.md) | Search code and history: git grep, git log -S (pickaxe), git log -G, git log -L for line or function history. Use when the user wants to find where a string... |
+| [`git-signing-your-work`](git-signing-your-work/SKILL.md) | Sign and verify with GPG: user.signingkey, signed tags (git tag -s, -v), signed commits (git commit -S), requiring signatures on merge. Use when the user... |
+| [`git-stashing-and-cleaning`](git-stashing-and-cleaning/SKILL.md) | Set work aside and clean up: git stash (list, apply, pop, -u, --patch, stash branch) and git clean for untracked files. Use when the user must switch... |
+| [`git-submodules`](git-submodules/SKILL.md) | Git submodules: add one, clone with --recurse-submodules, init and update, pull upstream changes, publish submodule changes, resolve submodule conflicts,... |
 
 ## Git: customization & hooks (`git-customization`)
 
 | Skill | Description |
 |---|---|
-| [`git-an-example-git-enforced-policy`](git-an-example-git-enforced-policy/SKILL.md) | An Example Git-Enforced Policy playbook extracted from "Pro Git". You’ll build client scripts that help the developer know if their push will be rejected... |
-| [`git-environment-variables`](git-environment-variables/SKILL.md) | Environment Variables playbook extracted from "Pro Git". Some of Git’s general behavior as a computer program depends on environment variables. Use when the... |
-| [`git-attributes`](git-attributes/SKILL.md) | Git Attributes playbook extracted from "Pro Git". These path-specific settings are called Git attributes and are set either in a .gitattributes file in one... |
-| [`git-configuration`](git-configuration/SKILL.md) | Git Configuration playbook extracted from "Pro Git". As you read briefly in Getting Started, you can specify Git configuration settings with the git config... |
-| [`git-hooks`](git-hooks/SKILL.md) | Git Hooks playbook extracted from "Pro Git". This hook takes a few parameters: the path to the file that holds the commit message so far, the type of... |
+| [`git-an-example-git-enforced-policy`](git-an-example-git-enforced-policy/SKILL.md) | Write server-side and client-side hook scripts that enforce a commit-message format, per-user file access (ACL) and fast-forward-only pushes. Use when the... |
+| [`git-environment-variables`](git-environment-variables/SKILL.md) | Git environment variables: GIT_DIR, GIT_WORK_TREE, GIT_EDITOR, GIT_SSH_COMMAND, GIT_AUTHOR_* and GIT_COMMITTER_*, proxy settings, GIT_TRACE* debugging. Use... |
+| [`git-attributes`](git-attributes/SKILL.md) | Set per-path behaviour in .gitattributes: binary files, diffing Word or image files, keyword expansion, smudge/clean filters, export-ignore, merge... |
+| [`git-configuration`](git-configuration/SKILL.md) | Change git settings: editor, commit template, pager, colours, external merge and diff tools, whitespace and line endings (core.autocrlf), server receive... |
+| [`git-hooks`](git-hooks/SKILL.md) | Git hooks: client-side (pre-commit, prepare-commit-msg, commit-msg, post-commit, pre-rebase, pre-push, post-checkout, post-merge) and server-side... |
 
 ## Git: internals (`git-internals`)
 
 | Skill | Description |
 |---|---|
-| [`git-objects`](git-objects/SKILL.md) | Git Objects playbook extracted from "Pro Git". The next type of Git object we’ll examine is the tree, which solves the problem of storing the filename and... |
-| [`git-references`](git-references/SKILL.md) | Git References playbook extracted from "Pro Git". That’s basically what a branch in Git is: a simple pointer or reference to the head of a line of work. Use... |
-| [`git-maintenance-and-data-recovery`](git-maintenance-and-data-recovery/SKILL.md) | Maintenance and Data Recovery playbook extracted from "Pro Git". Because the reflog data is kept in the .git/logs/ directory, you effectively have no... |
-| [`git-packfiles`](git-packfiles/SKILL.md) | Packfiles playbook extracted from "Pro Git". The packfile is a single file containing the contents of all the objects that were removed from your... |
-| [`git-plumbing-and-porcelain`](git-plumbing-and-porcelain/SKILL.md) | Plumbing and Porcelain playbook extracted from "Pro Git". These commands are generally referred to as Git’s “plumbing” commands, while the more... |
-| [`git-the-refspec`](git-the-refspec/SKILL.md) | The Refspec playbook extracted from "Pro Git". Because the refspec is <src>:<dst>, by leaving off the <src> part, this basically says to make the topic... |
-| [`git-transfer-protocols`](git-transfer-protocols/SKILL.md) | Transfer Protocols playbook extracted from "Pro Git". If you’re setting up a repository to be served read-only over HTTP, the dumb protocol is likely what... |
+| [`git-objects`](git-objects/SKILL.md) | Git internals: blob, tree and commit objects, SHA-1 content addressing, the .git/objects store (git hash-object, git cat-file, git update-index, git... |
+| [`git-references`](git-references/SKILL.md) | Git refs internals: refs/heads, HEAD as a symbolic ref, tags and remote refs (git update-ref, git symbolic-ref). Use when the user asks what a ref or HEAD... |
+| [`git-maintenance-and-data-recovery`](git-maintenance-and-data-recovery/SKILL.md) | Recover lost commits and shrink a repository: git reflog, git fsck, git gc, git count-objects, finding and removing large files from history. Use when the... |
+| [`git-packfiles`](git-packfiles/SKILL.md) | How git packs objects: loose objects versus packfiles, delta compression, git gc, git verify-pack. Use when the user asks how git compresses history, why... |
+| [`git-plumbing-and-porcelain`](git-plumbing-and-porcelain/SKILL.md) | Overview of the .git directory (HEAD, index, objects, refs, config, hooks) and of plumbing versus porcelain commands. Use when the user asks what is inside... |
+| [`git-the-refspec`](git-the-refspec/SKILL.md) | Refspecs: the +<src>:<dst> mapping in a remote's fetch and push config, fetching selected branches or namespaces, pushing to a different ref name, deleting... |
+| [`git-transfer-protocols`](git-transfer-protocols/SKILL.md) | How fetch and push work on the wire: the dumb HTTP protocol, the smart protocol, send-pack and receive-pack, fetch-pack and upload-pack. Use when the user... |
 
 ## Git: other systems & APIs (`git-integrations`)
 
 | Skill | Description |
 |---|---|
-| [`git-as-a-client`](git-as-a-client/SKILL.md) | Git as a Client playbook extracted from "Pro Git". This tool allows you to use Git as a valid client to a Subversion server, so you can use all the local... |
-| [`git-in-powershell`](git-in-powershell/SKILL.md) | Git in PowerShell playbook extracted from "Pro Git". Before you’re able to run PowerShell scripts on your machine, you need to set your local... |
-| [`git-jgit`](git-jgit/SKILL.md) | JGit playbook extracted from "Pro Git". JGit is a relatively full-featured implementation of Git written natively in Java, and is widely used in the Java... |
-| [`git-libgit2`](git-libgit2/SKILL.md) | Libgit2 playbook extracted from "Pro Git". Objective-Git (https://github.com/libgit2/objective-git) is the name of the Use when the user asks about libgit2,... |
-| [`git-migrating-to-git`](git-migrating-to-git/SKILL.md) | Migrating to Git playbook extracted from "Pro Git". If you want to map this to better Git author data, you need a mapping from the Subversion users to the... |
+| [`git-as-a-client`](git-as-a-client/SKILL.md) | Work in git against a Subversion, Mercurial or Perforce server (git svn, git-remote-hg, git p4, Git Fusion). Use when the user uses git locally but the... |
+| [`git-in-powershell`](git-in-powershell/SKILL.md) | Set up git in PowerShell with posh-git: execution policy, install from the PowerShell Gallery, branch status in the prompt, tab completion. Use when the... |
+| [`git-jgit`](git-jgit/SKILL.md) | Use git from Java with JGit: add the dependency, open a repository, the plumbing API (Repository, ObjectId, RevWalk) and the porcelain Git class. Use when... |
+| [`git-libgit2`](git-libgit2/SKILL.md) | Use git from C and other languages with libgit2 and its bindings (Rugged for Ruby, LibGit2Sharp for .NET, objective-git, pygit2). Use when the user embeds... |
+| [`git-migrating-to-git`](git-migrating-to-git/SKILL.md) | Convert a repository to git from Subversion, Mercurial, Perforce or a custom source (git svn clone with an authors file, hg-fast-export, git p4, git... |
 
 ## Git: full reference (`git-reference`)
 
 | Skill | Description |
 |---|---|
-| [`git-pro`](git-pro/SKILL.md) | Reference knowledge extracted from the document 'Pro Git'. Covers: Introduction, Getting Started, Git Basics, Git Branching, Git on the Server, Distributed... |
+| [`git-pro`](git-pro/SKILL.md) | Whole-book index of Pro Git with one reference file per chapter, from basics to internals. Use when a git question spans several topics, when no more... |

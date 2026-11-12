@@ -1,6 +1,6 @@
 ---
 name: url-to-skill
-description: Turn any web page or documentation site (an http/https link) into a reusable Agent Skill with a proper name, using a bundled Python script that fetches the page, extracts the main content as Markdown (headings, steps, code, tables), and writes a skill folder with SKILL.md, references and a source record that can be refreshed later. Use when the user gives a URL and wants to create, generate, save or store a skill from it, turn online docs, a guide, a README, an API reference or a how-to page into a skill, capture a website as reusable knowledge for later, or refresh a skill that was built from a web page.
+description: "Turn a web page or documentation site (an http/https link) into a reusable Agent Skill with a bundled Python script that fetches the page and writes SKILL.md, references and a refreshable source record. Use when the user gives a URL and wants to make a skill from it, turn online docs, a guide or an API reference into a skill, or refresh a skill built from a web page."
 license: Complete terms in the repository README
 compatibility: Needs Python 3.8+ (standard library only) and internet access to the site. Pages that only render with JavaScript cannot be read.
 metadata:

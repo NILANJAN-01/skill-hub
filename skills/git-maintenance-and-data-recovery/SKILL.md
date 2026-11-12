@@ -1,6 +1,6 @@
 ---
 name: git-maintenance-and-data-recovery
-description: "Maintenance and Data Recovery playbook extracted from \"Pro Git\". Because the reflog data is kept in the .git/logs/ directory, you effectively have no reflog. Use when the user asks about maintenance and data recovery, git reflog, loose objects, git history; or mentions git log --pretty, rm -Rf, git count-objects -v, git commit -m, git gc, git gc --auto."
+description: "Recover lost commits and shrink a repository: git reflog, git fsck, git gc, git count-objects, finding and removing large files from history. Use when the user lost a commit or branch (for example after reset --hard) or the repository is too big."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Maintenance and Data Recovery"

@@ -1,6 +1,6 @@
 ---
 name: git-scripting-github
-description: "Scripting GitHub playbook extracted from \"Pro Git\". The Hooks and Services section of GitHub repository administration is the easiest way to have Use when the user asks about scripting github, web hook, web service, add service, service integration, continuous integration services, email; or mentions curl, curl -H."
+description: "Automate GitHub with webhooks, services and the REST API (access tokens, commenting on an issue, setting a pull request status, Octokit). Use when the user wants to script GitHub or react to push and pull request events."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Scripting GitHub"

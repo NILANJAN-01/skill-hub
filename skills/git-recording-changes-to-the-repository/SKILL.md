@@ -1,6 +1,6 @@
 ---
 name: git-recording-changes-to-the-repository
-description: "Recording Changes to the Repository playbook extracted from \"Pro Git\". The CONTRIBUTING.md file appears under a section named “Changes not staged for commit” — which means that a file that is tracked has been modified in the working directory but not yet staged. Use when the user asks about recording changes to the repository, git add, git status, git diff, command, staged, git commit; or mentions git status, git add, git rm, echo, git diff, git mv."
+description: "Day-to-day file workflow: git status, git add, .gitignore patterns, git diff (--staged), git commit, git rm, git mv. Use when the user wants to stage, commit, ignore, remove or rename files, or see what changed."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Recording Changes to the Repository"

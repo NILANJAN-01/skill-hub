@@ -1,6 +1,6 @@
 ---
 name: git-searching
-description: "Searching playbook extracted from \"Pro Git\". Another fairly advanced log search that is insanely useful is the line history search. Use when the user asks about searching, git grep, search string, git log, option, line, working directory; or mentions git grep -n, git grep --count, git grep -p, git grep --break --heading, git log -S --oneline, git log -L."
+description: "Search code and history: git grep, git log -S (pickaxe), git log -G, git log -L for line or function history. Use when the user wants to find where a string or function is, or when it was added, removed or changed."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Searching"

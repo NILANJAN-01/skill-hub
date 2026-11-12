@@ -1,6 +1,6 @@
 ---
 name: git-branch-management
-description: "Branch Management playbook extracted from \"Pro Git\". This means that if you commit at this point, the master branch will be moved forward with your new work. Use when the user asks about branch management, git branch, branch-management tools, corrected branch, notice, no-merged, commit; or mentions git branch --no-merged, git branch --move, git branch --all, git branch, git branch -v, git branch --merged; or hits errors like \"error: The branch 'testing' is not fully merged.\"."
+description: "List, rename and delete branches, see which are merged or unmerged, rename master to main (git branch -v, --merged, --no-merged, --move, -d). Use when the user wants to list, rename, clean up or delete branches."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Branch Management"

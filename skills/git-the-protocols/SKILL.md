@@ -1,6 +1,6 @@
 ---
 name: git-the-protocols
-description: "The Protocols playbook extracted from \"Pro Git\". The most basic is the Local protocol, in which the remote repository is in another directory on the same host. Use when the user asks about the protocols, git repository, git http smart, ssh protocol, access, http protocol, smart http; or mentions git clone, cd, git remote, git clone --bare, mv, chmod."
+description: "Compare the ways to reach a git repository (local path, smart and dumb HTTP, SSH, git://) with pros and cons. Use when the user is choosing between HTTPS and SSH URLs, or deciding how to expose a repository."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "The Protocols"

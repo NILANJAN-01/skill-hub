@@ -1,6 +1,6 @@
 ---
 name: git-hooks
-description: "Git Hooks playbook extracted from \"Pro Git\". This hook takes a few parameters: the path to the file that holds the commit message so far, the type of commit, and the commit SHA-1 if this is an amended commit. Use when the user asks about git hooks, hook runs, commit message, git commit, client-side hooks, push, version control systems."
+description: "Git hooks: client-side (pre-commit, prepare-commit-msg, commit-msg, post-commit, pre-rebase, pre-push, post-checkout, post-merge) and server-side (pre-receive, update, post-receive). Use when the user wants a script to run automatically on commit, push or merge."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Git Hooks"

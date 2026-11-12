@@ -1,6 +1,6 @@
 ---
 name: git-installing-git
-description: "Installing Git playbook extracted from \"Pro Git\". You can either install it as a package or via another installer, or download the source code and compile it yourself. Use when the user asks about installing git, install git, git chocolatey package, git website, debian-based distribution, fedora, download; or mentions dnf install, apt-get install, apt install, make install, git --version, ln -s."
+description: "Install or upgrade git on Linux (dnf, apt), macOS or Windows, or build it from source. Use when the user needs to install git, check git --version, or gets 'git: command not found'."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Installing Git"

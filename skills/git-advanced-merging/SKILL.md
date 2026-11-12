@@ -1,6 +1,6 @@
 ---
 name: git-advanced-merging
-description: "Advanced Merging playbook extracted from \"Pro Git\". When you invoke a merge into HEAD (git merge topic), the new commit has two parents: the first one is HEAD (C6), and the second is the tip of the branch being merged in (C4). Use when the user asks about advanced merging, git merge, merge conflict, merge commit, git diff, rack, side; or mentions git merge, git merge --abort, git merge -Xignore-space-change, git merge-file -p, git merge -Xours, git merge -s; or hits errors like \"CONFLICT (content): Merge conflict in hello.rb\"."
+description: "Resolve hard merge conflicts: abort or redo a merge, ignore whitespace, check out the ours/theirs/base versions, diff3 markers, undo a merge commit, subtree merges. Use when a git merge has conflicts or went wrong."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Advanced Merging"

@@ -1,6 +1,6 @@
 ---
 name: git-basic-branching-and-merging
-description: "Basic Branching and Merging playbook extracted from \"Pro Git\". However, before you do that, note that if your working directory or staging area has uncommitted changes that conflict with the branch you’re checking out, Git won’t let you switch branches. Use when the user asks about basic branching and merging, git merge, merge commit, switch back, branch back, conflict, resolved; or mentions git merge, git branch -d, git branch, git checkout, vim, git commit -a -m; or hits errors like \"CONFLICT (content): Merge conflict in index.html\"."
+description: "Create a branch, switch to it, merge it back and resolve a basic conflict (git checkout -b, git merge, git branch -d). Use when the user wants to branch or merge, or sees 'CONFLICT (content): Merge conflict'."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Basic Branching and Merging"

@@ -1,6 +1,6 @@
 ---
 name: git-aliases
-description: "Git Aliases playbook extracted from \"Pro Git\". As you go on using Git, you’ll probably use other commands frequently as well; don’t hesitate to create new aliases. Use when the user asks about git aliases, n’t automatically infer, git commands, git config, alias, git commit, partially; or mentions git config --global, git unstage, git reset, git last."
+description: "Create shortcuts for git commands with git config alias (git co, git unstage, git last). Use when the user wants a git alias or shorter git commands."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Git Aliases"

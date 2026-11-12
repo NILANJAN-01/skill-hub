@@ -1,6 +1,6 @@
 ---
 name: git-remote-branches
-description: "Remote Branches playbook extracted from \"Pro Git\". Checking out a local branch from a remote-tracking branch automatically creates what is called a “tracking branch” (and the branch it tracks is called an “upstream branch”). Use when the user asks about remote branches, remote branch, local branch, git fetch, remote-tracking branch, git server, git branch; or mentions git branch -u, git branch -vv, git checkout -b, git push, git fetch, git checkout --track."
+description: "Work with remote branches: origin/<branch>, push a branch, track an upstream (-u, --track), git fetch versus git pull, delete a remote branch. Use when the user wants to push a new branch, set its upstream, check out a teammate's branch or delete one on the server."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Remote Branches"
