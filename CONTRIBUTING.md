@@ -39,6 +39,8 @@ The description is the only thing Claude sees before deciding to load a skill.
 
 - Good: `Rebase a branch onto another, resolve rebase conflicts and clean up history with interactive rebase. Use when the user mentions git rebase, --onto, squash commits, or "rebase onto main".`
 - Every agent decides from the description alone, so avoid agent-specific phrasing there too.
+- Start with the task in the words a user would type, not with where the skill came from. `Undo mistakes: amend the last commit, unstage a file ...` triggers; `Undoing Things playbook extracted from "Pro Git" ...` does not.
+- Keep it short: aim for under 300 characters, and put the trigger words in the first 150. Agents give the whole skill list a fixed amount of space, so when many skills are installed, long descriptions get shortened or dropped and those skills stop triggering. `validate_skills.py` warns above 500 characters.
 - Too vague: `Helps with git.`
 
 ## Ground rules

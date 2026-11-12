@@ -57,6 +57,9 @@ def check_skill(d: Path, plugin_names: set[str], listed: set[str]) -> tuple[list
         errors.append(f"description is longer than 1024 characters ({len(desc)})")
     elif "use when" not in desc.lower() and "use this" not in desc.lower():
         warns.append("description should say when to use the skill (e.g. 'Use when ...')")
+    elif len(desc) > 500:
+        warns.append(f"description is {len(desc)} characters; agents shorten or drop long descriptions "
+                     "when many skills are installed, so aim for under 300")
 
     if "compatibility" in fm and len(str(fm["compatibility"])) > 500:
         errors.append("compatibility is longer than 500 characters")
