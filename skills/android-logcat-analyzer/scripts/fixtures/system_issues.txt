@@ -1,0 +1,59 @@
+--------- beginning of system
+11-12 11:00:00.000  1500  1533 I ActivityManager: Start proc 5001:com.example.player/u0a150 for service {com.example.player/com.example.player.PlaybackService}
+11-12 11:00:01.000  1500  1560 I ActivityTaskManager: START u0 {act=android.intent.action.MAIN cmp=com.example.player/.ui.PlayerActivity} from uid 10150
+11-12 11:00:14.000  5001  5001 D PlayerActivity: decoding cover art on main thread
+11-12 11:00:21.000  1500  1700 E ActivityManager: ANR in com.example.player (com.example.player/.ui.PlayerActivity)
+11-12 11:00:21.000  1500  1700 E ActivityManager: PID: 5001
+11-12 11:00:21.000  1500  1700 E ActivityManager: Reason: Input dispatching timed out (a1b2c3d com.example.player/com.example.player.ui.PlayerActivity (server) is not responding. Waited 5001ms for MotionEvent)
+11-12 11:00:21.000  1500  1700 E ActivityManager: Parent: com.example.player/.ui.PlayerActivity
+11-12 11:00:21.000  1500  1700 E ActivityManager: Frozen: false
+11-12 11:00:21.000  1500  1700 E ActivityManager: Load: 12.5 / 8.1 / 4.2
+11-12 11:00:21.000  1500  1700 E ActivityManager: CPU usage from 0ms to 6012ms later (2026-11-12 11:00:15.000 to 2026-11-12 11:00:21.012):
+11-12 11:00:21.000  1500  1700 E ActivityManager:   98% 5001/com.example.player: 95% user + 3% kernel / faults: 1200 minor
+11-12 11:00:21.000  1500  1700 E ActivityManager:   12% 1500/system_server: 7% user + 5% kernel / faults: 300 minor
+11-12 11:00:21.000  1500  1700 E ActivityManager: 35% TOTAL: 28% user + 6% kernel + 0.4% iowait + 0.6% softirq
+11-12 11:00:21.050  1500  1700 I am_anr  : [0,5001,com.example.player,815316,Input dispatching timed out (a1b2c3d com.example.player/com.example.player.ui.PlayerActivity (server) is not responding. Waited 5001ms for MotionEvent)]
+11-12 11:00:21.100  1500  1700 I ActivityManager: Dumping to /data/anr/anr_2026-11-12-11-00-21-000
+11-12 11:00:30.000  1500  1700 I ActivityManager: Killing 5001:com.example.player/u0a150 (adj 0): user request after error
+11-12 11:00:30.100  1500  1600 I ActivityManager: Process com.example.player (pid 5001) has died: fg  TOP
+11-12 11:00:30.101  1500  1600 W ActivityManager: Scheduling restart of crashed service com.example.player/.PlaybackService in 1000ms for connection
+--------- beginning of crash
+11-12 11:05:00.000  6001  6020 F libc    : Fatal signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x0 in tid 6020 (RenderThread), pid 6001 (example.camera)
+11-12 11:05:00.200  6100  6100 F DEBUG   : *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+11-12 11:05:00.200  6100  6100 F DEBUG   : Build fingerprint: 'google/panther/panther:14/UP1A.231005.007/10754064:user/release-keys'
+11-12 11:05:00.200  6100  6100 F DEBUG   : Revision: 'MP1.0'
+11-12 11:05:00.200  6100  6100 F DEBUG   : ABI: 'arm64'
+11-12 11:05:00.200  6100  6100 F DEBUG   : Timestamp: 2026-11-12 11:05:00.150+0530
+11-12 11:05:00.200  6100  6100 F DEBUG   : Process uptime: 12s
+11-12 11:05:00.200  6100  6100 F DEBUG   : Cmdline: com.example.camera
+11-12 11:05:00.200  6100  6100 F DEBUG   : pid: 6001, tid: 6020, name: RenderThread  >>> com.example.camera <<<
+11-12 11:05:00.200  6100  6100 F DEBUG   : uid: 10160
+11-12 11:05:00.200  6100  6100 F DEBUG   : signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x0000000000000000
+11-12 11:05:00.200  6100  6100 F DEBUG   : Cause: null pointer dereference
+11-12 11:05:00.200  6100  6100 F DEBUG   :     x0  0000000000000000  x1  0000007b1c2d3e40  x2  0000000000000010  x3  0000000000000000
+11-12 11:05:00.200  6100  6100 F DEBUG   : backtrace:
+11-12 11:05:00.200  6100  6100 F DEBUG   :       #00 pc 0000000000012a4c  /data/app/~~abc==/com.example.camera-xyz==/lib/arm64/libimgproc.so (ImageFilter::apply(unsigned char*, int)+44) (BuildId: 1a2b3c4d)
+11-12 11:05:00.200  6100  6100 F DEBUG   :       #01 pc 0000000000013f10  /data/app/~~abc==/com.example.camera-xyz==/lib/arm64/libimgproc.so (Java_com_example_camera_NativeFilter_apply+128) (BuildId: 1a2b3c4d)
+11-12 11:05:00.200  6100  6100 F DEBUG   :       #02 pc 0000000000222244  /apex/com.android.art/lib64/libart.so (art_quick_generic_jni_trampoline+148) (BuildId: ff00ff00)
+11-12 11:05:00.400   900   900 E tombstoned: Tombstone written to: /data/tombstones/tombstone_07
+11-12 11:05:00.450  1500  1600 I ActivityManager: Process com.example.camera (pid 6001) has died: fg  TOP
+11-12 11:05:00.460  1500  1533 I Zygote  : Process 6001 exited due to signal 11 (Segmentation fault)
+--------- beginning of main
+11-12 11:06:00.000   700   700 I lowmemorykiller: Kill 'com.example.maps' (7001), uid 10170, oom_score_adj 200 to free 151234kB rss, 40000kB swap; reason: low watermark is breached and swap is low
+11-12 11:06:00.100  1500  1600 I ActivityManager: Process com.example.maps (pid 7001) has died: prcp FGS
+11-12 11:06:10.000  1500  1700 I ActivityManager: Killing 7100:com.example.notes/u0a171 (adj 985): empty #17
+11-12 11:06:10.050  1500  1600 I ActivityManager: Process com.example.notes (pid 7100) has died: cch+85 CEM
+11-12 11:06:15.000  1500  1600 I ActivityManager: Process com.example.clock (pid 7150) has died: vis  BFGS
+11-12 11:06:20.000     1     1 I init    : Service 'vendor.gnss-hal' (pid 812) received signal 6
+11-12 11:06:20.001     1     1 I init    : starting service 'vendor.gnss-hal'...
+11-12 11:06:21.000     1     1 I init    : Service 'bootanim' (pid 400) exited with status 0
+11-12 11:06:30.000  1500  1700 W ActivityManager: Background start not allowed: service Intent { cmp=com.example.mail/.FetchService } to com.example.mail/.FetchService from pid=7300 uid=10180 pkg=com.example.mail startFg?=false
+11-12 11:06:40.000  7400  7400 E audit   : type=1400 audit(0.0:123): avc: denied { read } for name="stats" dev="proc" scontext=u:r:untrusted_app:s0:c512,c768 tcontext=u:object_r:proc_stat:s0 tclass=file permissive=0 app=com.example.mail
+11-12 11:06:50.000  7500  7500 D StrictMode: StrictMode policy violation; ~duration=312 ms: android.os.strictmode.DiskReadViolation
+11-12 11:06:50.000  7500  7500 D StrictMode: 	at android.os.StrictMode$AndroidBlockGuardPolicy.onReadFromDisk(StrictMode.java:1596)
+11-12 11:06:50.000  7500  7500 D StrictMode: 	at com.example.mail.Prefs.load(Prefs.kt:20)
+11-12 11:07:00.000  1500  1800 W Watchdog: *** WATCHDOG KILLING SYSTEM PROCESS: Blocked in handler on foreground thread (android.fg)
+11-12 11:07:10.000  7600  7600 F MyApp   : wtf: impossible state reached
+11-12 11:07:20.000  7700  7700 E JavaBinder: !!! FAILED BINDER TRANSACTION !!!  (parcel size = 1048600)
+11-12 11:07:30.000  8000  8000 I am_crash: [8000,0,com.example.widget,952680005,java.lang.IllegalArgumentException,bad id,WidgetProvider.java,31]
+11-12 11:07:40.000  8100  8105 F libc    : Fatal signal 6 (SIGABRT), code -1 (SI_QUEUE) in tid 8105 (worker), pid 8100 (example.game)

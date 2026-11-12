@@ -84,7 +84,7 @@ REPOSITORY = "https://github.com/NILANJAN-01/skill-hub"
 # Display titles for categories (= focused plugin names), in website order.
 CATEGORY_TITLES = {
     "hub-tools": "Hub tools",
-    "android-automation": "Android: UI test automation",
+    "android-automation": "Android: UI tests & logcat",
     "image-tools": "Images: pixels & description",
     "video-tools": "Video: frames, pixels & description",
     "testing-tools": "Testing: unit tests & reports",

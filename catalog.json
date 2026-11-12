@@ -190,10 +190,11 @@
     },
     {
       "name": "android-automation",
-      "description": "Android UI test automation: capture the screen over adb (or read UIAutomator XML dumps) and generate keyword/resource-id locator JSON for any Android UI, including automotive OEM head units",
+      "description": "Android test automation and debugging: generate keyword/resource-id locator JSON from the screen of a device or a UIAutomator XML dump (including automotive OEM head units), and analyse logcat for crashes, ANRs and service failures",
       "category": "android",
       "skills": [
-        "android-uiautomator-locators"
+        "android-uiautomator-locators",
+        "android-logcat-analyzer"
       ]
     },
     {
@@ -240,8 +241,8 @@
     },
     {
       "name": "android-automation",
-      "title": "Android: UI test automation",
-      "count": 1
+      "title": "Android: UI tests & logcat",
+      "count": 2
     },
     {
       "name": "image-tools",
@@ -504,6 +505,24 @@
     }
   ],
   "skills": [
+    {
+      "name": "android-logcat-analyzer",
+      "title": "Android logcat analyzer",
+      "category": "android-automation",
+      "description": "Analyse Android logcat output (a file, a bugreport zip, or a connected device over adb) with a ready-made Python script that reports fatal exceptions, native crashes, ANRs, service crashes, low-memory kills and other problems, with stacks and usual causes. Use when the user shares a logcat or bugreport, or asks why an Android app crashed, froze, restarted or was killed.",
+      "plugins": [
+        "android-automation"
+      ],
+      "path": "skills/android-logcat-analyzer",
+      "license": "Complete terms in the repository README",
+      "examples": [
+        "Here's logcat.txt from the failed test run. Why did the app crash?",
+        "The app froze and then closed on my phone. It's still plugged in, can you check the device log?",
+        "Find all the ANRs and service crashes for com.example.player in this bugreport zip.",
+        "Our head unit keeps restarting the media service. What does this logcat say?"
+      ],
+      "files": []
+    },
     {
       "name": "android-uiautomator-locators",
       "title": "Android UIAutomator dump to locators",

@@ -325,6 +325,12 @@
     "Dump the current screen from the connected device and generate the locator JSON.",
     "This Compose screen has no resource-ids. Give me the best locators you can from this uiautomator dump."
   ],
+  "android-logcat-analyzer": [
+    "Here's logcat.txt from the failed test run. Why did the app crash?",
+    "The app froze and then closed on my phone. It's still plugged in, can you check the device log?",
+    "Find all the ANRs and service crashes for com.example.player in this bugreport zip.",
+    "Our head unit keeps restarting the media service. What does this logcat say?"
+  ],
   "image-inspector": [
     "Describe this screenshot.png for me: size, main colours and what's on it.",
     "What is the exact hex colour of the pixel at 120,48 in banner.jpg?",

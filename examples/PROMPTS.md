@@ -2,9 +2,9 @@
 
 <!-- Generated from examples/prompts.json by tools/build_catalog.py - do not edit by hand. -->
 
-216 things you can say to your AI coding agent, for all 69 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
+220 things you can say to your AI coding agent, for all 70 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
 
-**Categories:** [Hub tools](#hub-tools) · [Android: UI test automation](#android-ui-test-automation) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
+**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
 
 ## Hub tools
 
@@ -43,9 +43,18 @@ Install the whole category: `--plugin hub-tools`
 - “Refresh the skill we generated from that web page last month.”
 - “Save this internal wiki page as a skill: http://wiki.corp.local/build-guide”
 
-## Android: UI test automation
+## Android: UI tests & logcat
 
 Install the whole category: `--plugin android-automation`
+
+### Android logcat analyzer
+
+[`android-logcat-analyzer`](../skills/android-logcat-analyzer/SKILL.md) · install: `--skill android-logcat-analyzer`
+
+- “Here's logcat.txt from the failed test run. Why did the app crash?”
+- “The app froze and then closed on my phone. It's still plugged in, can you check the device log?”
+- “Find all the ANRs and service crashes for com.example.player in this bugreport zip.”
+- “Our head unit keeps restarting the media service. What does this logcat say?”
 
 ### Android UIAutomator dump to locators
 

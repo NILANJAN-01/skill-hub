@@ -213,12 +213,13 @@
     },
     {
       "name": "android-automation",
-      "description": "Android UI test automation: capture the screen over adb (or read UIAutomator XML dumps) and generate keyword/resource-id locator JSON for any Android UI, including automotive OEM head units",
+      "description": "Android test automation and debugging: generate keyword/resource-id locator JSON from the screen of a device or a UIAutomator XML dump (including automotive OEM head units), and analyse logcat for crashes, ANRs and service failures",
       "source": "./",
       "strict": false,
       "category": "android",
       "skills": [
-        "./skills/android-uiautomator-locators"
+        "./skills/android-uiautomator-locators",
+        "./skills/android-logcat-analyzer"
       ]
     },
     {
