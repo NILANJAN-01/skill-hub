@@ -1,0 +1,16 @@
+[project]
+name = "skillhub-mcp"
+version = "0.1.0"
+description = "MCP server (stdio) exposing the skill-hub Agent Skills catalog"
+requires-python = ">=3.8"
+dependencies = []
+
+[project.scripts]
+skillhub-mcp = "skillhub_mcp.__main__:main"
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["skillhub_mcp"]
