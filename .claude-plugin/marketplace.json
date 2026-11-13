@@ -254,7 +254,7 @@
     },
     {
       "name": "hub-tools",
-      "description": "Skills for working with the hub itself: find and install skills, contribute new skills, generate skills from technical PDFs (skillforge) and from web pages (url-to-skill)",
+      "description": "Skills for working with the hub itself: find and install skills, contribute new skills, generate skills from technical PDFs (skillforge) and from web pages (url-to-skill); chain several skills with skill-orchestrator",
       "source": "./",
       "strict": false,
       "category": "hub-tools",
@@ -262,7 +262,8 @@
         "./skills/find-skills",
         "./skills/contribute-skill",
         "./skills/skillforge",
-        "./skills/url-to-skill"
+        "./skills/url-to-skill",
+        "./skills/skill-orchestrator"
       ]
     },
     {
@@ -285,6 +286,16 @@
         "./skills/gitlab-ci-pipeline-authoring",
         "./skills/gitlab-ci-debugging",
         "./skills/gitlab-ci-optimization"
+      ]
+    },
+    {
+      "name": "writing-tools",
+      "description": "Writing: prepare blog posts, CVs (tailor to a job post, review), cover letters and technical docs, with templates and a checker script",
+      "source": "./",
+      "strict": false,
+      "category": "writing-tools",
+      "skills": [
+        "./skills/professional-writing"
       ]
     }
   ]

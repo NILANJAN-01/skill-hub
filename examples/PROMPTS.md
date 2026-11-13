@@ -2,9 +2,9 @@
 
 <!-- Generated from examples/prompts.json by tools/build_catalog.py - do not edit by hand. -->
 
-233 things you can say to your AI coding agent, for all 74 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
+241 things you can say to your AI coding agent, for all 76 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
 
-**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
+**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
 
 ## Hub tools
 
@@ -25,6 +25,15 @@ Install the whole category: `--plugin hub-tools`
 - “Is there a skill in skill-hub for git submodules? Which plugin has it?”
 - “What skills does skill-hub offer for working with Git remotes?”
 - “Find me a skill that helps with resolving merge conflicts and install it for this project.”
+
+### Skill orchestrator
+
+[`skill-orchestrator`](../skills/skill-orchestrator/SKILL.md) · install: `--skill skill-orchestrator`
+
+- “Which of my installed skills should I use to analyse this logcat and write a bug report?”
+- “Chain the right skills to read this repo and then write a blog post about it.”
+- “Check that the skills I need for Android UI testing have everything they need installed.”
+- “Plan this job step by step across skills and keep track of the results as we go.”
 
 ### Skillforge: PDF to skills
 
@@ -105,6 +114,19 @@ Install the whole category: `--plugin gitlab-ci-tools`
 - “Create a .gitlab-ci.yml that builds, tests and deploys my Node app.”
 - “Add a job that only runs on merge requests when files in src/ change.”
 - “Split our huge .gitlab-ci.yml into includes and reusable templates.”
+
+## Writing: blog, CV & docs
+
+Install the whole category: `--plugin writing-tools`
+
+### Professional writing: blog, CV, docs
+
+[`professional-writing`](../skills/professional-writing/SKILL.md) · install: `--skill professional-writing`
+
+- “Help me write a blog post comparing test tools for Android: Espresso, UI Automator and Appium.”
+- “Here's my CV and a job post. Tailor my CV to this role without making anything up.”
+- “Review my CV and tell me the top 3 things to fix.”
+- “Draft a README and a how-to guide for my project.”
 
 ## Images: pixels & description
 

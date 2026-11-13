@@ -1,0 +1,68 @@
+{
+  "workflows": {
+    "android-crash-report": {
+      "description": "Find why an Android app crashed or froze from a logcat or bugreport, then write it up as a report or blog post",
+      "triggers": ["android crash report", "logcat write up", "anr analysis report", "bug report from logcat"],
+      "steps": [
+        {"skill": "android-logcat-analyzer", "purpose": "Analyse the log and list crashes, ANRs and likely causes", "input": "task", "output": "01-logcat-findings.md"},
+        {"skill": "professional-writing", "purpose": "Turn the findings into a clear bug report or blog post and check it", "input": "01-logcat-findings.md", "input_from": ["01-logcat-findings.md"], "output": "02-report.md"}
+      ]
+    },
+    "android-ui-test-suite": {
+      "description": "Capture an Android screen, build locators, then write and verify Kotlin tests that use them",
+      "triggers": ["android ui tests", "page objects kotlin", "appium locators tests", "test automation locators"],
+      "steps": [
+        {"skill": "android-uiautomator-locators", "purpose": "Dump the screen and generate keyword to resource-id locators", "input": "task", "output": "01-locators.json"},
+        {"skill": "kotlin-unit-test", "purpose": "Write and run tests for the page objects built on those locators, then check test quality", "input": "01-locators.json", "input_from": ["01-locators.json"], "output": "02-test-report.html"}
+      ]
+    },
+    "screen-recording-bug-report": {
+      "description": "Analyse a screen recording of a bug (freezes, black frames, colour changes) and write the bug report",
+      "triggers": ["screen recording bug", "video freeze report", "flicker black screen video report"],
+      "steps": [
+        {"skill": "video-inspector", "purpose": "Extract timeline, frozen or black sections and key frames", "input": "task", "output": "01-video-findings.txt"},
+        {"skill": "image-inspector", "purpose": "Inspect the key frames: colours, text, differences", "input": "01-video-findings.txt", "input_from": ["01-video-findings.txt"], "output": "02-frame-findings.txt"},
+        {"skill": "professional-writing", "purpose": "Write the bug report with evidence and reproduction steps", "input": "02-frame-findings.txt", "input_from": ["02-frame-findings.txt"], "output": "03-bug-report.md"}
+      ]
+    },
+    "repo-to-blog": {
+      "description": "Read a repository to learn how it works, then write a blog post or technical document about it",
+      "triggers": ["blog about this repo", "write article about codebase", "document project architecture post"],
+      "steps": [
+        {"skill": "repo-learnings", "purpose": "Read the whole repository and write LEARNINGS.md", "input": "task", "output": "01-LEARNINGS.md"},
+        {"skill": "professional-writing", "purpose": "Draft the post from the learnings, with accurate details, then check it", "input": "01-LEARNINGS.md", "input_from": ["01-LEARNINGS.md"], "output": "02-post.md"}
+      ]
+    },
+    "docs-to-skill": {
+      "description": "Turn a web documentation page into a skill and add it to the hub",
+      "triggers": ["make a skill from a url", "documentation page to skill", "add web docs as skill"],
+      "steps": [
+        {"skill": "url-to-skill", "purpose": "Fetch the page and generate a skill folder", "input": "task", "output": "01-skill-folder"},
+        {"skill": "contribute-skill", "purpose": "Register, validate and build the generated skill in the hub", "input": "01-skill-folder", "input_from": ["01-skill-folder"], "output": "02-registered.md"}
+      ]
+    },
+    "gitlab-pipeline-tune": {
+      "description": "Fix a failing or stuck GitLab pipeline, then make it faster and cheaper",
+      "triggers": ["gitlab pipeline broken then speed up", "fix and optimise gitlab ci"],
+      "steps": [
+        {"skill": "gitlab-ci-debugging", "purpose": "Find and fix why the pipeline fails or is stuck", "input": "task", "output": "01-fix.md"},
+        {"skill": "gitlab-ci-optimization", "purpose": "Measure and speed up the working pipeline", "input": "01-fix.md", "input_from": ["01-fix.md"], "output": "02-optimized.md"}
+      ]
+    },
+    "cv-for-job": {
+      "description": "Tailor a CV to a job post, review it, and draft a cover letter",
+      "triggers": ["cv for job post", "resume tailor job ad", "cover letter application"],
+      "steps": [
+        {"skill": "professional-writing", "purpose": "Tailor and review the CV against the job post, then draft the cover letter", "input": "task", "output": "01-cv-and-letter.md"}
+      ]
+    },
+    "pdf-to-skills": {
+      "description": "Generate skills from a PDF book or manual and add them to the hub",
+      "triggers": ["skills from pdf", "book chapters to skills", "manual to skills"],
+      "steps": [
+        {"skill": "skillforge", "purpose": "Split the PDF and generate skill folders", "input": "task", "output": "01-skills"},
+        {"skill": "contribute-skill", "purpose": "Register and validate the generated skills", "input": "01-skills", "input_from": ["01-skills"], "output": "02-registered.md"}
+      ]
+    }
+  }
+}

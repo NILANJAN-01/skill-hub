@@ -223,13 +223,14 @@
     },
     {
       "name": "hub-tools",
-      "description": "Skills for working with the hub itself: find and install skills, contribute new skills, generate skills from technical PDFs (skillforge) and from web pages (url-to-skill)",
+      "description": "Skills for working with the hub itself: find and install skills, contribute new skills, generate skills from technical PDFs (skillforge) and from web pages (url-to-skill); chain several skills with skill-orchestrator",
       "category": "hub-tools",
       "skills": [
         "find-skills",
         "contribute-skill",
         "skillforge",
-        "url-to-skill"
+        "url-to-skill",
+        "skill-orchestrator"
       ]
     },
     {
@@ -249,13 +250,21 @@
         "gitlab-ci-debugging",
         "gitlab-ci-optimization"
       ]
+    },
+    {
+      "name": "writing-tools",
+      "description": "Writing: prepare blog posts, CVs (tailor to a job post, review), cover letters and technical docs, with templates and a checker script",
+      "category": "writing-tools",
+      "skills": [
+        "professional-writing"
+      ]
     }
   ],
   "categories": [
     {
       "name": "hub-tools",
       "title": "Hub tools",
-      "count": 4
+      "count": 5
     },
     {
       "name": "android-automation",
@@ -271,6 +280,11 @@
       "name": "gitlab-ci-tools",
       "title": "GitLab: CI/CD pipelines",
       "count": 3
+    },
+    {
+      "name": "writing-tools",
+      "title": "Writing: blog, CV & docs",
+      "count": 1
     },
     {
       "name": "image-tools",
@@ -2164,6 +2178,33 @@
       ]
     },
     {
+      "name": "professional-writing",
+      "title": "Professional writing: blog, CV, docs",
+      "category": "writing-tools",
+      "description": "Write, tailor and review professional documents: blog posts, CVs/resumes (tailor to a job post, review), cover letters, technical docs and READMEs, with a checker script and templates. Use when the user wants to write a blog post or article, prepare or improve a CV, match a CV to a job ad, or draft documentation.",
+      "plugins": [
+        "writing-tools"
+      ],
+      "path": "skills/professional-writing",
+      "license": "Complete terms in the repository README",
+      "compatibility": "Scripts need Python 3.8+ (standard library only). They read .md, .txt and .docx; export a PDF to text or .docx first.",
+      "examples": [
+        "Help me write a blog post comparing test tools for Android: Espresso, UI Automator and Appium.",
+        "Here's my CV and a job post. Tailor my CV to this role without making anything up.",
+        "Review my CV and tell me the top 3 things to fix.",
+        "Draft a README and a how-to guide for my project."
+      ],
+      "files": [
+        "assets/blog-post.md",
+        "assets/cover-letter.md",
+        "assets/cv.md",
+        "assets/readme.md",
+        "assets/technical-doc.md",
+        "references/blog.md",
+        "references/cv.md"
+      ]
+    },
+    {
       "name": "repo-learnings",
       "title": "Repository deep read to LEARNINGS.md",
       "category": "repo-tools",
@@ -2179,6 +2220,25 @@
         "I just joined this project. Go through the codebase deeply and create an onboarding document.",
         "Clone https://github.com/owner/project and document what you learn: architecture, how to build it, key files and gotchas.",
         "Study the src and docs folders line by line and give me a LEARNINGS.md."
+      ],
+      "files": []
+    },
+    {
+      "name": "skill-orchestrator",
+      "title": "Skill orchestrator",
+      "category": "hub-tools",
+      "description": "Combine several installed skills to finish a multi-step task: find which skills are installed, pick the right ones, check they can run (adb, Python packages), run them in order and pass each result to the next. Use when a task needs more than one skill, or the user asks which skills to use, to chain skills, or to plan and track a multi-skill job.",
+      "plugins": [
+        "hub-tools"
+      ],
+      "path": "skills/skill-orchestrator",
+      "license": "Complete terms in the repository README",
+      "compatibility": "Needs Python 3.8+ (standard library only). It reads skill folders and writes only inside a run folder you choose.",
+      "examples": [
+        "Which of my installed skills should I use to analyse this logcat and write a bug report?",
+        "Chain the right skills to read this repo and then write a blog post about it.",
+        "Check that the skills I need for Android UI testing have everything they need installed.",
+        "Plan this job step by step across skills and keep track of the results as we go."
       ],
       "files": []
     },

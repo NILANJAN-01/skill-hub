@@ -379,5 +379,17 @@
     "Our GitLab pipeline takes 40 minutes. How can we speed it up?",
     "The cache doesn't seem to help in our pipeline. Can you tune it?",
     "We're burning CI minutes on duplicate pipelines. How do I cut them?"
+  ],
+  "professional-writing": [
+    "Help me write a blog post comparing test tools for Android: Espresso, UI Automator and Appium.",
+    "Here's my CV and a job post. Tailor my CV to this role without making anything up.",
+    "Review my CV and tell me the top 3 things to fix.",
+    "Draft a README and a how-to guide for my project."
+  ],
+  "skill-orchestrator": [
+    "Which of my installed skills should I use to analyse this logcat and write a bug report?",
+    "Chain the right skills to read this repo and then write a blog post about it.",
+    "Check that the skills I need for Android UI testing have everything they need installed.",
+    "Plan this job step by step across skills and keep track of the results as we go."
   ]
 }
