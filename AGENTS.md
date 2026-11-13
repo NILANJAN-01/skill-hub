@@ -8,7 +8,7 @@ A hub of **agent-neutral** Agent Skills (`skills/<name>/SKILL.md`, open format f
 
 ## Golden rules
 
-1. **Never hand-edit generated files**: `catalog.json`, `skills/README.md`, `examples/PROMPTS.md`, `prompts.html`, the `<!-- agents:start/end -->` block in `README.md`, and the `<!-- agents-simple:start/end -->` block in `GUIDE.md`. Change the sources, then run `python tools/build_catalog.py`.
+1. **Never hand-edit generated files**: `catalog.json`, `skills/README.md`, `examples/PROMPTS.md`, `prompts.html`, the `<!-- agents:start/end -->` block in `README.md`, the `<!-- agents-simple:start/end -->` block in `GUIDE.md`, and the `categories`, `plugin-names` and `counts` blocks in `README.md`. Change the sources, then run `python tools/build_catalog.py`.
 2. **Sources of truth:**
    - The skill itself: `skills/<name>/SKILL.md` (+ `references/`, `scripts/`, `assets/`).
    - Which plugin/category a skill is in: `.claude-plugin/marketplace.json`.

@@ -465,6 +465,27 @@ def guided(root: Path, args) -> None:
 
 
 # ============================================================================ CLI
+def remove_skills(names: list, agents: list, use_global: bool, project: Path, yes: bool, dry: bool) -> None:
+    """Delete installed copies of the named hub skills from every folder the agents read."""
+    folders = list(dict.fromkeys(f for a in agents for f in reads(a, use_global, project)))
+    found = [(f, s) for f in folders for s in names if (f / s / "SKILL.md").is_file()]
+    if not found:
+        print("Nothing to remove. None of the selected skills are installed for these agents.")
+        return
+    print("\nInstalled copies found:")
+    for f, s in found:
+        print(f"  - {fmt(f / s)}")
+    if dry:
+        print(f"\nWould remove {len(found)} skill folder(s).")
+        return
+    if not yes and not yes_no("\nDelete these skill folders?", False):
+        print("Cancelled. Nothing was changed.")
+        return
+    for f, s in found:
+        shutil.rmtree(f / s)
+    print(f"\nRemoved {len(found)} skill folder(s).")
+
+
 def make_zips(root: Path, names: list, out: Path) -> None:
     out.mkdir(parents=True, exist_ok=True)
     for n in names:
@@ -518,6 +539,8 @@ def main() -> None:
     ap.add_argument("--each", action="store_true",
                     help="copy into every agent's own folder instead of the fewest shared folders")
     ap.add_argument("--force", action="store_true", help="replace installed skills that differ from the hub")
+    ap.add_argument("--update", action="store_true", help="same as --force: refresh installed skills from the hub")
+    ap.add_argument("--remove", action="store_true", help="uninstall the selected skills from the selected agents")
     ap.add_argument("--tidy", action="store_true", help="remove redundant identical copies the plan finds")
     ap.add_argument("--yes", "-y", action="store_true", help="don't ask for confirmation")
     ap.add_argument("--dry-run", action="store_true", help="show what would happen, change nothing")
@@ -579,6 +602,10 @@ def main() -> None:
             sys.exit(", ".join(AGENTS[a]["name"] for a in nohome) + " has no user-level skills folder. "
                      "Install into the project instead (omit --global).")
 
+    if args.remove:
+        remove_skills(names, agents, args.use_global, project, args.yes, args.dry_run)
+        return
+    args.force = args.force or args.update
     plan = make_plan(root, names, agents, args.use_global, project, each=args.each)
     show_plan(plan, agents)
     if plan["outdated"] and not args.force:

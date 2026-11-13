@@ -2,9 +2,9 @@
 
 <!-- Generated from examples/prompts.json by tools/build_catalog.py - do not edit by hand. -->
 
-224 things you can say to your AI coding agent, for all 71 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
+233 things you can say to your AI coding agent, for all 74 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
 
-**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [Repositories: read & document](#repositories-read--document) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
+**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
 
 ## Hub tools
 
@@ -77,6 +77,34 @@ Install the whole category: `--plugin repo-tools`
 - “I just joined this project. Go through the codebase deeply and create an onboarding document.”
 - “Clone https://github.com/owner/project and document what you learn: architecture, how to build it, key files and gotchas.”
 - “Study the src and docs folders line by line and give me a LEARNINGS.md.”
+
+## GitLab: CI/CD pipelines
+
+Install the whole category: `--plugin gitlab-ci-tools`
+
+### GitLab CI debugging
+
+[`gitlab-ci-debugging`](../skills/gitlab-ci-debugging/SKILL.md) · install: `--skill gitlab-ci-debugging`
+
+- “My GitLab job says it's stuck because the project doesn't have any runners online. Why?”
+- “Here's the job log. Why did it fail with exit code 137?”
+- “My pipeline shows 'Pipeline will not run for the selected trigger'. What's wrong with my rules?”
+
+### GitLab CI optimization
+
+[`gitlab-ci-optimization`](../skills/gitlab-ci-optimization/SKILL.md) · install: `--skill gitlab-ci-optimization`
+
+- “Our GitLab pipeline takes 40 minutes. How can we speed it up?”
+- “The cache doesn't seem to help in our pipeline. Can you tune it?”
+- “We're burning CI minutes on duplicate pipelines. How do I cut them?”
+
+### GitLab CI pipeline authoring
+
+[`gitlab-ci-pipeline-authoring`](../skills/gitlab-ci-pipeline-authoring/SKILL.md) · install: `--skill gitlab-ci-pipeline-authoring`
+
+- “Create a .gitlab-ci.yml that builds, tests and deploys my Node app.”
+- “Add a job that only runs on merge requests when files in src/ change.”
+- “Split our huge .gitlab-ci.yml into includes and reusable templates.”
 
 ## Images: pixels & description
 

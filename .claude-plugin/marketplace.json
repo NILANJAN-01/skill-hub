@@ -274,6 +274,18 @@
       "skills": [
         "./skills/kotlin-unit-test"
       ]
+    },
+    {
+      "name": "gitlab-ci-tools",
+      "description": "GitLab CI/CD: write .gitlab-ci.yml pipelines, debug failing or stuck pipelines, and make pipelines faster and cheaper",
+      "source": "./",
+      "strict": false,
+      "category": "gitlab-ci-tools",
+      "skills": [
+        "./skills/gitlab-ci-pipeline-authoring",
+        "./skills/gitlab-ci-debugging",
+        "./skills/gitlab-ci-optimization"
+      ]
     }
   ]
 }

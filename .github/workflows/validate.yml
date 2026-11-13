@@ -20,18 +20,18 @@ jobs:
         run: python tools/validate_skills.py
       - name: Check generated files are up to date
         run: python tools/build_catalog.py --check
-      - name: Byte-compile tools and skill scripts
-        run: python -m py_compile tools/*.py skills/skillforge/scripts/skillforge.py skills/android-uiautomator-locators/scripts/*.py skills/android-uiautomator-locators/scripts/testing/*.py skills/image-inspector/scripts/*.py skills/video-inspector/scripts/*.py skills/url-to-skill/scripts/*.py skills/kotlin-unit-test/scripts/*.py
-      - name: Skill tests (android-uiautomator-locators)
-        run: python -m unittest discover -s skills/android-uiautomator-locators/scripts -p "test_*.py" -v
-      - name: Skill tests (image-inspector, standard library only)
-        run: python -m unittest discover -s skills/image-inspector/scripts -p "test_*.py" -v
-      - name: Skill tests (kotlin-unit-test, fake Gradle build)
-        run: python -m unittest discover -s skills/kotlin-unit-test/scripts -p "test_*.py" -v
-      - name: Skill tests (url-to-skill, local web server)
-        run: python -m unittest discover -s skills/url-to-skill/scripts -p "test_*.py" -v
-      - name: Skill tests (video-inspector, standard library only)
-        run: python -m unittest discover -s skills/video-inspector/scripts -p "test_*.py" -v
+      - name: Byte-compile tools and every skill script
+        run: python -m compileall -q tools skills
+      - name: Skill tests (every skill with tests, standard library only)
+        shell: bash
+        run: |
+          set -e
+          for d in skills/*/scripts; do
+            if ls "$d"/test_*.py >/dev/null 2>&1; then
+              echo "== $d"
+              python -m unittest discover -s "$d" -p "test_*.py" -v
+            fi
+          done
       - name: Skill tests (image-inspector and video-inspector, with Pillow and OpenCV)
         run: |
           python -m pip install --quiet Pillow opencv-python-headless

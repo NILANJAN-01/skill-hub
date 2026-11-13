@@ -364,5 +364,20 @@
     "Which methods in this Kotlin project have no tests, and are the existing tests actually asserting anything?",
     "Unit test our Appium LoginPage page object without a device.",
     "Check whether the tests for CartRepository would catch a bug (mutation check)."
+  ],
+  "gitlab-ci-pipeline-authoring": [
+    "Create a .gitlab-ci.yml that builds, tests and deploys my Node app.",
+    "Add a job that only runs on merge requests when files in src/ change.",
+    "Split our huge .gitlab-ci.yml into includes and reusable templates."
+  ],
+  "gitlab-ci-debugging": [
+    "My GitLab job says it's stuck because the project doesn't have any runners online. Why?",
+    "Here's the job log. Why did it fail with exit code 137?",
+    "My pipeline shows 'Pipeline will not run for the selected trigger'. What's wrong with my rules?"
+  ],
+  "gitlab-ci-optimization": [
+    "Our GitLab pipeline takes 40 minutes. How can we speed it up?",
+    "The cache doesn't seem to help in our pipeline. Can you tune it?",
+    "We're burning CI minutes on duplicate pipelines. How do I cut them?"
   ]
 }

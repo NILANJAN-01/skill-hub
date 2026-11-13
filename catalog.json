@@ -239,6 +239,16 @@
       "skills": [
         "kotlin-unit-test"
       ]
+    },
+    {
+      "name": "gitlab-ci-tools",
+      "description": "GitLab CI/CD: write .gitlab-ci.yml pipelines, debug failing or stuck pipelines, and make pipelines faster and cheaper",
+      "category": "gitlab-ci-tools",
+      "skills": [
+        "gitlab-ci-pipeline-authoring",
+        "gitlab-ci-debugging",
+        "gitlab-ci-optimization"
+      ]
     }
   ],
   "categories": [
@@ -256,6 +266,11 @@
       "name": "repo-tools",
       "title": "Repositories: read & document",
       "count": 1
+    },
+    {
+      "name": "gitlab-ci-tools",
+      "title": "GitLab: CI/CD pipelines",
+      "count": 3
     },
     {
       "name": "image-tools",
@@ -528,6 +543,7 @@
       ],
       "path": "skills/android-logcat-analyzer",
       "license": "Complete terms in the repository README",
+      "compatibility": "Needs Python 3.8+ (standard library only). Reading from a device needs adb (Android platform-tools) and a device or emulator with USB debugging enabled.",
       "examples": [
         "Here's logcat.txt from the failed test run. Why did the app crash?",
         "The app froze and then closed on my phone. It's still plugged in, can you check the device log?",
@@ -546,6 +562,7 @@
       ],
       "path": "skills/android-uiautomator-locators",
       "license": "Complete terms in the repository README",
+      "compatibility": "Needs Python 3.8+ (standard library only). Capturing from a device needs adb (Android platform-tools) and a device or emulator with USB debugging enabled.",
       "examples": [
         "Here's window_dump.xml from our head unit. Generate a JSON with keyword names and resource ids for our tests.",
         "Convert all the window_dump.xml files in dumps/ into locator JSON files in tests/locators.",
@@ -567,6 +584,7 @@
       ],
       "path": "skills/contribute-skill",
       "license": "Complete terms in the repository README",
+      "compatibility": "Works in any agent. Edits a skill-hub checkout, so it needs file-system and shell access with Python 3.8+. Mentions agent names only to explain where skills are installed.",
       "examples": [
         "Add a new skill called docker-compose-basics to skill-hub.",
         "validate_skills.py says my skill is 'not listed in any plugin'. How do I fix it?",
@@ -584,6 +602,7 @@
       ],
       "path": "skills/find-skills",
       "license": "Complete terms in the repository README",
+      "compatibility": "Works in any agent. Installing writes into the agent's skills folder (needs file-system access and Python 3.8+, or Node for npx); reading the online catalog needs web access.",
       "examples": [
         "Is there a skill in skill-hub for git submodules? Which plugin has it?",
         "What skills does skill-hub offer for working with Git remotes?",
@@ -602,6 +621,7 @@
       ],
       "path": "skills/git-advanced-merging",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "277-294",
       "examples": [
@@ -625,6 +645,7 @@
       ],
       "path": "skills/git-aliases",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "66-68",
       "examples": [
@@ -647,6 +668,7 @@
       ],
       "path": "skills/git-an-example-git-enforced-policy",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "363-372",
       "examples": [
@@ -670,6 +692,7 @@
       ],
       "path": "skills/git-as-a-client",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "373-405",
       "examples": [
@@ -693,6 +716,7 @@
       ],
       "path": "skills/git-attributes",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "352-360",
       "examples": [
@@ -716,6 +740,7 @@
       ],
       "path": "skills/git-basic-branching-and-merging",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "76-85",
       "examples": [
@@ -739,6 +764,7 @@
       ],
       "path": "skills/git-basic-snapshotting",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "487-489",
       "examples": [
@@ -761,6 +787,7 @@
       ],
       "path": "skills/git-branch-management",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "85-88",
       "examples": [
@@ -784,6 +811,7 @@
       ],
       "path": "skills/git-branches-in-a-nutshell",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "69-76",
       "examples": [
@@ -806,6 +834,7 @@
       ],
       "path": "skills/git-bundling",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "324-328",
       "examples": [
@@ -829,6 +858,7 @@
       ],
       "path": "skills/git-configuration",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "342-352",
       "examples": [
@@ -852,6 +882,7 @@
       ],
       "path": "skills/git-credential-storage",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "336-341",
       "examples": [
@@ -875,6 +906,7 @@
       ],
       "path": "skills/git-daemon",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "122-123",
       "examples": [
@@ -897,6 +929,7 @@
       ],
       "path": "skills/git-debugging-with-git",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "301-304",
       "examples": [
@@ -919,6 +952,7 @@
       ],
       "path": "skills/git-distributed-git-contributing-to-a-project",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "135-156",
       "examples": [
@@ -942,6 +976,7 @@
       ],
       "path": "skills/git-distributed-git-maintaining-a-project",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "156-171",
       "examples": [
@@ -965,6 +1000,7 @@
       ],
       "path": "skills/git-environment-variables",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "453-458",
       "examples": [
@@ -988,6 +1024,7 @@
       ],
       "path": "skills/git-first-time-git-setup",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "27-30",
       "examples": [
@@ -1010,6 +1047,7 @@
       ],
       "path": "skills/git-generating-your-ssh-public-key",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "118-119",
       "examples": [
@@ -1032,6 +1070,7 @@
       ],
       "path": "skills/git-getting-a-git-repository",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "32-34",
       "examples": [
@@ -1054,6 +1093,7 @@
       ],
       "path": "skills/git-getting-git-on-a-server",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "116-118",
       "examples": [
@@ -1076,6 +1116,7 @@
       ],
       "path": "skills/git-getting-help",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "30-31",
       "examples": [
@@ -1098,6 +1139,7 @@
       ],
       "path": "skills/git-github-contributing-to-a-project",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "177-197",
       "examples": [
@@ -1120,6 +1162,7 @@
       ],
       "path": "skills/git-github-maintaining-a-project",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "197-211",
       "examples": [
@@ -1143,6 +1186,7 @@
       ],
       "path": "skills/git-gitweb",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "125-127",
       "examples": [
@@ -1165,6 +1209,7 @@
       ],
       "path": "skills/git-hooks",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "360-363",
       "examples": [
@@ -1187,6 +1232,7 @@
       ],
       "path": "skills/git-in-powershell",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "469-471",
       "examples": [
@@ -1209,6 +1255,7 @@
       ],
       "path": "skills/git-installing-git",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "24-27",
       "examples": [
@@ -1232,6 +1279,7 @@
       ],
       "path": "skills/git-interactive-staging",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "232-236",
       "examples": [
@@ -1255,6 +1303,7 @@
       ],
       "path": "skills/git-jgit",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "477-480",
       "examples": [
@@ -1277,6 +1326,7 @@
       ],
       "path": "skills/git-libgit2",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "472-477",
       "examples": [
@@ -1300,6 +1350,7 @@
       ],
       "path": "skills/git-maintenance-and-data-recovery",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "446-453",
       "examples": [
@@ -1323,6 +1374,7 @@
       ],
       "path": "skills/git-migrating-to-git",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "405-419",
       "examples": [
@@ -1346,6 +1398,7 @@
       ],
       "path": "skills/git-objects",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "421-431",
       "examples": [
@@ -1369,6 +1422,7 @@
       ],
       "path": "skills/git-packfiles",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "435-438",
       "examples": [
@@ -1392,6 +1446,7 @@
       ],
       "path": "skills/git-plumbing-and-porcelain",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "420-421",
       "examples": [
@@ -1414,6 +1469,7 @@
       ],
       "path": "skills/git-pro",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "1-501",
       "examples": [
@@ -1449,6 +1505,7 @@
       ],
       "path": "skills/git-rebasing",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "101-110",
       "examples": [
@@ -1471,6 +1528,7 @@
       ],
       "path": "skills/git-recording-changes-to-the-repository",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "34-46",
       "examples": [
@@ -1494,6 +1552,7 @@
       ],
       "path": "skills/git-references",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "431-435",
       "examples": [
@@ -1516,6 +1575,7 @@
       ],
       "path": "skills/git-remote-branches",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "91-101",
       "examples": [
@@ -1538,6 +1598,7 @@
       ],
       "path": "skills/git-replace",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "328-336",
       "examples": [
@@ -1561,6 +1622,7 @@
       ],
       "path": "skills/git-rerere",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "294-301",
       "examples": [
@@ -1584,6 +1646,7 @@
       ],
       "path": "skills/git-reset-demystified",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "257-277",
       "examples": [
@@ -1606,6 +1669,7 @@
       ],
       "path": "skills/git-revision-selection",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "224-232",
       "examples": [
@@ -1629,6 +1693,7 @@
       ],
       "path": "skills/git-rewriting-history",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "249-257",
       "examples": [
@@ -1652,6 +1717,7 @@
       ],
       "path": "skills/git-scripting-github",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "214-223",
       "examples": [
@@ -1675,6 +1741,7 @@
       ],
       "path": "skills/git-searching",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "245-249",
       "examples": [
@@ -1697,6 +1764,7 @@
       ],
       "path": "skills/git-setting-up-the-server",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "119-122",
       "examples": [
@@ -1720,6 +1788,7 @@
       ],
       "path": "skills/git-setup-and-config",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "484-486",
       "examples": [
@@ -1743,6 +1812,7 @@
       ],
       "path": "skills/git-signing-your-work",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "242-245",
       "examples": [
@@ -1766,6 +1836,7 @@
       ],
       "path": "skills/git-smart-http",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "123-125",
       "examples": [
@@ -1788,6 +1859,7 @@
       ],
       "path": "skills/git-stashing-and-cleaning",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "236-242",
       "examples": [
@@ -1811,6 +1883,7 @@
       ],
       "path": "skills/git-submodules",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "304-324",
       "examples": [
@@ -1834,6 +1907,7 @@
       ],
       "path": "skills/git-tagging",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "61-66",
       "examples": [
@@ -1857,6 +1931,7 @@
       ],
       "path": "skills/git-the-protocols",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "111-116",
       "examples": [
@@ -1879,6 +1954,7 @@
       ],
       "path": "skills/git-the-refspec",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "438-441",
       "examples": [
@@ -1902,6 +1978,7 @@
       ],
       "path": "skills/git-transfer-protocols",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "441-446",
       "examples": [
@@ -1925,6 +2002,7 @@
       ],
       "path": "skills/git-undoing-things",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "52-56",
       "examples": [
@@ -1947,6 +2025,7 @@
       ],
       "path": "skills/git-viewing-the-commit-history",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "46-52",
       "examples": [
@@ -1970,6 +2049,7 @@
       ],
       "path": "skills/git-working-with-remotes",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
       "source": "Pro Git, 2nd edition",
       "pages": "56-61",
       "examples": [
@@ -1983,6 +2063,60 @@
       ]
     },
     {
+      "name": "gitlab-ci-debugging",
+      "title": "GitLab CI debugging",
+      "category": "gitlab-ci-tools",
+      "description": "Diagnose a failing, stuck, skipped or wrongly triggered GitLab CI pipeline or job from its log and .gitlab-ci.yml. Use when the user says a GitLab pipeline is stuck, pending, not running, created no jobs, or a job fails (exit code, runner, rules, artifacts, Docker).",
+      "plugins": [
+        "gitlab-ci-tools"
+      ],
+      "path": "skills/gitlab-ci-debugging",
+      "license": "Complete terms in the repository README",
+      "compatibility": "",
+      "examples": [
+        "My GitLab job says it's stuck because the project doesn't have any runners online. Why?",
+        "Here's the job log. Why did it fail with exit code 137?",
+        "My pipeline shows 'Pipeline will not run for the selected trigger'. What's wrong with my rules?"
+      ],
+      "files": []
+    },
+    {
+      "name": "gitlab-ci-optimization",
+      "title": "GitLab CI optimization",
+      "category": "gitlab-ci-tools",
+      "description": "Make a GitLab CI pipeline faster and cheaper: needs (DAG), cache, parallel jobs, rules:changes, interruptible, smaller images, Docker layer caching. Use when the user says a GitLab pipeline is slow or wastes CI minutes.",
+      "plugins": [
+        "gitlab-ci-tools"
+      ],
+      "path": "skills/gitlab-ci-optimization",
+      "license": "Complete terms in the repository README",
+      "compatibility": "",
+      "examples": [
+        "Our GitLab pipeline takes 40 minutes. How can we speed it up?",
+        "The cache doesn't seem to help in our pipeline. Can you tune it?",
+        "We're burning CI minutes on duplicate pipelines. How do I cut them?"
+      ],
+      "files": []
+    },
+    {
+      "name": "gitlab-ci-pipeline-authoring",
+      "title": "GitLab CI pipeline authoring",
+      "category": "gitlab-ci-tools",
+      "description": "Write or change a GitLab CI pipeline (.gitlab-ci.yml): stages, jobs, rules, needs, artifacts, cache, includes and merge request pipelines. Use when the user asks to create or extend a GitLab pipeline or job, or run a job only on certain branches, tags or changes.",
+      "plugins": [
+        "gitlab-ci-tools"
+      ],
+      "path": "skills/gitlab-ci-pipeline-authoring",
+      "license": "Complete terms in the repository README",
+      "compatibility": "",
+      "examples": [
+        "Create a .gitlab-ci.yml that builds, tests and deploys my Node app.",
+        "Add a job that only runs on merge requests when files in src/ change.",
+        "Split our huge .gitlab-ci.yml into includes and reusable templates."
+      ],
+      "files": []
+    },
+    {
       "name": "image-inspector",
       "title": "Image inspector: pixels and description",
       "category": "image-tools",
@@ -1992,6 +2126,7 @@
       ],
       "path": "skills/image-inspector",
       "license": "Complete terms in the repository README",
+      "compatibility": "Needs Python 3.8+. Pillow (pip install Pillow) is recommended and required for JPEG, WebP, GIF and TIFF; PNG and BMP also work with the standard library alone. OCR is optional and needs pytesseract plus the Tesseract program. Finding and comparing images needs OpenCV (pip install opencv-python-headless).",
       "examples": [
         "Describe this screenshot.png for me: size, main colours and what's on it.",
         "What is the exact hex colour of the pixel at 120,48 in banner.jpg?",
@@ -2014,6 +2149,7 @@
       ],
       "path": "skills/kotlin-unit-test",
       "license": "Complete terms in the repository README",
+      "compatibility": "Needs Python 3.8+ (standard library only) to run the scripts, and a JDK with the project's build tool (Gradle wrapper, Maven, or kotlinc plus the JUnit console launcher) to run the tests. Coverage needs JaCoCo or Kover configured in the build.",
       "examples": [
         "Write unit tests for every method of OrderService.kt and run them.",
         "Run the Kotlin tests for class PriceCalculator and give me an HTML report.",
@@ -2037,6 +2173,7 @@
       ],
       "path": "skills/repo-learnings",
       "license": "Complete terms in the repository README",
+      "compatibility": "Needs Python 3.8+ (standard library only). git is optional. With git, the file list follows .gitignore and a repository can be cloned from a URL.",
       "examples": [
         "Read this whole repo, every folder and file, and write a learnings .md so I understand how it works.",
         "I just joined this project. Go through the codebase deeply and create an onboarding document.",
@@ -2055,6 +2192,7 @@
       ],
       "path": "skills/skillforge",
       "license": "Complete terms in the repository README",
+      "compatibility": "",
       "examples": [
         "Turn this Kubernetes handbook PDF into Agent Skills.",
         "Generate skills only for 'backup, restore, replication' from postgres-manual.pdf.",
@@ -2072,6 +2210,7 @@
       ],
       "path": "skills/url-to-skill",
       "license": "Complete terms in the repository README",
+      "compatibility": "Needs Python 3.8+ (standard library only) and internet access to the site. Pages that only render with JavaScript cannot be read.",
       "examples": [
         "Create a skill from https://docs.python.org/3/library/json.html and save it for later.",
         "Turn the docs under https://docs.example.com/cli/ into one skill called example-cli.",
@@ -2090,6 +2229,7 @@
       ],
       "path": "skills/video-inspector",
       "license": "Complete terms in the repository README",
+      "compatibility": "Needs Python 3.8+ and OpenCV (pip install opencv-python-headless, which includes numpy and FFmpeg decoding). Metadata of MP4/MOV files (--info) works with the standard library alone.",
       "examples": [
         "Analyse recording.mp4 and describe what happens in it, with a timeline.",
         "Split demo.mp4 into frames, one every 2 seconds, and save them as PNG.",
