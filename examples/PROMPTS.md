@@ -2,7 +2,7 @@
 
 <!-- Generated from examples/prompts.json by tools/build_catalog.py - do not edit by hand. -->
 
-241 things you can say to your AI coding agent, for all 76 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
+245 things you can say to your AI coding agent, for all 77 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
 
 **Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
 
@@ -170,6 +170,15 @@ Install the whole category: `--plugin testing-tools`
 - “Which methods in this Kotlin project have no tests, and are the existing tests actually asserting anything?”
 - “Unit test our Appium LoginPage page object without a device.”
 - “Check whether the tests for CartRepository would catch a bug (mutation check).”
+
+### Python unit tests: write, run, diagnose and suggest fixes
+
+[`python-unit-test`](../skills/python-unit-test/SKILL.md) · install: `--skill python-unit-test`
+
+- “Write unit tests for every function in utils.py and run them.”
+- “Unit test parser.py and suggest a fix for whatever fails.”
+- “Why does test_billing.py fail? Show me the bug and the fix.”
+- “Which functions in this .py file have no tests, and are the existing tests asserting anything?”
 
 ## Git: getting started
 

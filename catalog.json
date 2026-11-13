@@ -235,10 +235,11 @@
     },
     {
       "name": "testing-tools",
-      "description": "Testing: write, run and verify Kotlin unit tests class by class and method by method with Python scripts - Gradle/Maven/kotlinc runs, test-to-method mapping, quality checks (assertion-free, empty, disabled, JUnit 4 not run), coverage, mutation check, and an HTML report",
+      "description": "Testing: write, run and verify Kotlin unit tests class by class and method by method with Python scripts - Gradle/Maven/kotlinc runs, test-to-method mapping, quality checks (assertion-free, empty, disabled, JUnit 4 not run), coverage, mutation check, and an HTML report; Python: unit-test any .py file, run it, diagnose failures and suggest fixes",
       "category": "testing",
       "skills": [
-        "kotlin-unit-test"
+        "kotlin-unit-test",
+        "python-unit-test"
       ]
     },
     {
@@ -299,7 +300,7 @@
     {
       "name": "testing-tools",
       "title": "Testing: unit tests & reports",
-      "count": 1
+      "count": 2
     },
     {
       "name": "git-getting-started",
@@ -2202,6 +2203,28 @@
         "assets/technical-doc.md",
         "references/blog.md",
         "references/cv.md"
+      ]
+    },
+    {
+      "name": "python-unit-test",
+      "title": "Python unit tests: write, run, diagnose and suggest fixes",
+      "category": "testing-tools",
+      "description": "Unit test any Python (.py) file function by function and method by method, run the tests, and get a diagnosis with a suggested fix for each failure, plus static bug findings (mutable defaults, bare except, swallowed errors) and weak-test checks. Use when the user asks to unit test, add or run tests for a .py file, find why a Python test fails, fix a failing pytest/unittest test, find untested functions, or check Python code for bugs.",
+      "plugins": [
+        "testing-tools"
+      ],
+      "path": "skills/python-unit-test",
+      "license": "Complete terms in the repository README",
+      "compatibility": "Needs Python 3.8+ (standard library only) to run the script. It uses pytest when installed and falls back to unittest. Line coverage needs the coverage package.",
+      "examples": [
+        "Write unit tests for every function in utils.py and run them.",
+        "Unit test parser.py and suggest a fix for whatever fails.",
+        "Why does test_billing.py fail? Show me the bug and the fix.",
+        "Which functions in this .py file have no tests, and are the existing tests asserting anything?"
+      ],
+      "files": [
+        "references/diagnosis.md",
+        "references/writing-tests.md"
       ]
     },
     {

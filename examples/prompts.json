@@ -365,6 +365,12 @@
     "Unit test our Appium LoginPage page object without a device.",
     "Check whether the tests for CartRepository would catch a bug (mutation check)."
   ],
+  "python-unit-test": [
+    "Write unit tests for every function in utils.py and run them.",
+    "Unit test parser.py and suggest a fix for whatever fails.",
+    "Why does test_billing.py fail? Show me the bug and the fix.",
+    "Which functions in this .py file have no tests, and are the existing tests asserting anything?"
+  ],
   "gitlab-ci-pipeline-authoring": [
     "Create a .gitlab-ci.yml that builds, tests and deploys my Node app.",
     "Add a job that only runs on merge requests when files in src/ change.",

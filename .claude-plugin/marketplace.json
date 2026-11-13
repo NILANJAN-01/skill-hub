@@ -268,12 +268,13 @@
     },
     {
       "name": "testing-tools",
-      "description": "Testing: write, run and verify Kotlin unit tests class by class and method by method with Python scripts - Gradle/Maven/kotlinc runs, test-to-method mapping, quality checks (assertion-free, empty, disabled, JUnit 4 not run), coverage, mutation check, and an HTML report",
+      "description": "Testing: write, run and verify Kotlin unit tests class by class and method by method with Python scripts - Gradle/Maven/kotlinc runs, test-to-method mapping, quality checks (assertion-free, empty, disabled, JUnit 4 not run), coverage, mutation check, and an HTML report; Python: unit-test any .py file, run it, diagnose failures and suggest fixes",
       "source": "./",
       "strict": false,
       "category": "testing",
       "skills": [
-        "./skills/kotlin-unit-test"
+        "./skills/kotlin-unit-test",
+        "./skills/python-unit-test"
       ]
     },
     {
