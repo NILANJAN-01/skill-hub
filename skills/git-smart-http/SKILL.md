@@ -1,6 +1,6 @@
 ---
 name: git-smart-http
-description: "Serve git over HTTP(S) with git-http-backend under Apache, with authenticated push. Use when the user wants to host a repository over HTTP on their own web server."
+description: "Serve git over HTTP(S) with git-http-backend and authenticated push. Use when you need to host a repo over HTTP."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Smart HTTP"

@@ -1,6 +1,6 @@
 ---
 name: git-setup-and-config
-description: "Quick reference for git config and git help, including the core.editor command for common editors (VS Code, Notepad++, Vim, Sublime and others). Use when the user asks how to set git's editor or where git config and git help are used."
+description: "Quick reference for git config and git help, including core.editor for common editors. Use when you need to set the git editor."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Setup and Config"

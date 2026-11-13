@@ -1,6 +1,6 @@
 ---
 name: git-branch-management
-description: "List, rename and delete branches, see which are merged or unmerged, rename master to main (git branch -v, --merged, --no-merged, --move, -d). Use when the user wants to list, rename, clean up or delete branches."
+description: "List, rename and delete git branches; find merged or unmerged ones; rename master to main. Use when you need to clean up branches."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Branch Management"

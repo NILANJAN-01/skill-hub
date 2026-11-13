@@ -1,6 +1,6 @@
 ---
 name: git-rebasing
-description: "Rebase a branch onto another (git rebase, --onto), choose between rebase and merge, and recover when rebased commits were already pushed (git pull --rebase). Use when the user wants to rebase, get a linear history, or fix a branch that diverged after a force-push."
+description: "Rebase a branch (git rebase, --onto), rebase vs merge, fix pushed rebases. Use when handling rebasing or a linear history."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Rebasing"

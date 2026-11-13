@@ -1,6 +1,6 @@
 ---
 name: git-installing-git
-description: "Install or upgrade git on Linux (dnf, apt), macOS or Windows, or build it from source. Use when the user needs to install git, check git --version, or gets 'git: command not found'."
+description: "Install or upgrade git on Linux, macOS or Windows. Use when you need to install git or for git: command not found."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Installing Git"

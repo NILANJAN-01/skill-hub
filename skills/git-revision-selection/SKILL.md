@@ -1,6 +1,6 @@
 ---
 name: git-revision-selection
-description: "Refer to commits and ranges: short SHA-1, branch names, reflog (HEAD@{n}), ancestry (HEAD^, HEAD~2), double-dot and triple-dot ranges. Use when the user asks what ^, ~, .., ... or @{} mean, or how to select specific commits."
+description: "Pick commits and ranges: SHA, HEAD~2, HEAD^, .., ..., @{n}. Use when asked what ^, ~ or .. mean."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Revision Selection"

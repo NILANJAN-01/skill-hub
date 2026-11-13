@@ -1,6 +1,6 @@
 ---
 name: git-searching
-description: "Search code and history: git grep, git log -S (pickaxe), git log -G, git log -L for line or function history. Use when the user wants to find where a string or function is, or when it was added, removed or changed."
+description: "Search code and history: git grep, log -S, log -G, log -L. Use when you need to find where something is or when it changed."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Searching"

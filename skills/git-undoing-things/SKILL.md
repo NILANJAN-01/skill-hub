@@ -1,6 +1,6 @@
 ---
 name: git-undoing-things
-description: "Undo mistakes: amend the last commit, unstage a file, discard changes in a file (git commit --amend, git reset HEAD, git restore, git checkout --). Use when the user committed too early, staged the wrong file, or wants to throw away local changes."
+description: "Undo git mistakes: amend, unstage, discard changes (restore, reset). Use when committed too early or staged the wrong file."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Undoing Things"

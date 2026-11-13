@@ -1,6 +1,6 @@
 ---
 name: git-rerere
-description: "Reuse recorded conflict resolutions with git rerere (rerere.enabled, git rerere status, git rerere diff). Use when the user keeps resolving the same merge or rebase conflicts."
+description: "Reuse recorded merge conflict resolutions with git rerere. Use when resolving the same conflict repeatedly."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Rerere"

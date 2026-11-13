@@ -1,6 +1,6 @@
 ---
 name: git-github-maintaining-a-project
-description: "Maintain a GitHub repository: collaborators, reviewing and merging pull requests, refs/pull/* refs, mentions and notifications, README and CONTRIBUTING files, default branch, transferring a project. Use when the user administers a GitHub repo or handles incoming pull requests."
+description: "Maintain a GitHub repo: collaborators, merging pull requests, notifications, README. Use when administering a GitHub project."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Maintaining a Project"

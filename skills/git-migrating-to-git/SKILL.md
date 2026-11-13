@@ -1,6 +1,6 @@
 ---
 name: git-migrating-to-git
-description: "Convert a repository to git from Subversion, Mercurial, Perforce or a custom source (git svn clone with an authors file, hg-fast-export, git p4, git fast-import). Use when the user wants to import another version control system's history into git."
+description: "Convert a Subversion, Mercurial or Perforce repository to git. Use when you need to import another VCS history."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Migrating to Git"

@@ -1,6 +1,6 @@
 ---
 name: git-the-protocols
-description: "Compare the ways to reach a git repository (local path, smart and dumb HTTP, SSH, git://) with pros and cons. Use when the user is choosing between HTTPS and SSH URLs, or deciding how to expose a repository."
+description: "Compare local, HTTP, SSH and git:// protocols for a repository. Use when you need to choose between HTTPS and SSH URLs."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "The Protocols"

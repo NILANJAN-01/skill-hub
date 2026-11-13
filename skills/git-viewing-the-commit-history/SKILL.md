@@ -1,6 +1,6 @@
 ---
 name: git-viewing-the-commit-history
-description: "View history with git log: -p, --stat, --pretty=format, --graph, --oneline, and limiting by date, author, path or message. Use when the user wants to see, format or filter the commit log."
+description: "View and filter history with git log (--oneline, --graph, --stat, by author or date). Use when you need to see or format the commit log."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Viewing the Commit History"

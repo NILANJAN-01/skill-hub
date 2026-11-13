@@ -1,6 +1,6 @@
 ---
 name: git-submodules
-description: "Git submodules: add one, clone with --recurse-submodules, init and update, pull upstream changes, publish submodule changes, resolve submodule conflicts, git submodule foreach. Use when a repository contains another repository, or submodule folders are empty or out of date."
+description: "Use git submodules: add, clone --recurse-submodules, update, publish. Use when a repo contains another repo or submodule folders are empty."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Submodules"

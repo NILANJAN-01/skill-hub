@@ -1,6 +1,6 @@
 ---
 name: git-configuration
-description: "Change git settings: editor, commit template, pager, colours, external merge and diff tools, whitespace and line endings (core.autocrlf), server receive options. Use when the user wants to change a git config setting or fix CRLF or whitespace problems."
+description: "Change git settings: editor, pager, colours, diff/merge tools, autocrlf, whitespace. Use when handling git config or CRLF problems."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Git Configuration"

@@ -1,6 +1,6 @@
 ---
 name: git-rewriting-history
-description: "Rewrite commits: amend the last one, interactive rebase to reword, reorder, squash, split or drop commits, filter-branch to remove a file from all history or change an email. Use when the user wants to edit, squash or delete past commits, or purge a secret or large file."
+description: "Amend, squash, reorder or drop commits; remove a file or secret from all history. Use when you need to edit past commits."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Rewriting History"

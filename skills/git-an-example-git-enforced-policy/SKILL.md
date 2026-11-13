@@ -1,6 +1,6 @@
 ---
 name: git-an-example-git-enforced-policy
-description: "Write server-side and client-side hook scripts that enforce a commit-message format, per-user file access (ACL) and fast-forward-only pushes. Use when the user wants to enforce a commit or push policy."
+description: "Enforce commit-message format, file ACLs and push rules with git hook scripts. Use when handling a team commit or push policy."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "An Example Git-Enforced Policy"

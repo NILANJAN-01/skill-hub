@@ -1,6 +1,6 @@
 ---
 name: git-hooks
-description: "Git hooks: client-side (pre-commit, prepare-commit-msg, commit-msg, post-commit, pre-rebase, pre-push, post-checkout, post-merge) and server-side (pre-receive, update, post-receive). Use when the user wants a script to run automatically on commit, push or merge."
+description: "Write git hooks (pre-commit, commit-msg, pre-push, pre-receive). Use when you need to run a script automatically on commit, push or merge."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Git Hooks"

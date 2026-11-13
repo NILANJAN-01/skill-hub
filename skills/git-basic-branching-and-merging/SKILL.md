@@ -1,6 +1,6 @@
 ---
 name: git-basic-branching-and-merging
-description: "Create a branch, switch to it, merge it back and resolve a basic conflict (git checkout -b, git merge, git branch -d). Use when the user wants to branch or merge, or sees 'CONFLICT (content): Merge conflict'."
+description: "Create, switch, merge and delete a branch and resolve a basic conflict. Use when handling branch or merge tasks or CONFLICT (content)."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Basic Branching and Merging"

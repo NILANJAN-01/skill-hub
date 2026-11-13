@@ -1,6 +1,6 @@
 ---
 name: git-objects
-description: "Git internals: blob, tree and commit objects, SHA-1 content addressing, the .git/objects store (git hash-object, git cat-file, git update-index, git write-tree, git commit-tree). Use when the user asks how git stores data or wants to inspect raw objects."
+description: "Git internals: blob, tree and commit objects and the .git/objects store. Use when you need to inspect how git stores data."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Git Objects"

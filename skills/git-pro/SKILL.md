@@ -1,6 +1,6 @@
 ---
 name: git-pro
-description: "Whole-book index of Pro Git with one reference file per chapter, from basics to internals. Use when a git question spans several topics, when no more specific git-* skill covers it, or when the user cites the Pro Git book."
+description: "Index of the Pro Git book, one reference per chapter. Use when a git question spans topics or no other git skill fits."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Pro Git (full reference)"

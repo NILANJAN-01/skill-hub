@@ -1,6 +1,6 @@
 ---
 name: git-the-refspec
-description: "Refspecs: the +<src>:<dst> mapping in a remote's fetch and push config, fetching selected branches or namespaces, pushing to a different ref name, deleting remote refs. Use when the user edits remote.<name>.fetch or needs a custom fetch or push mapping."
+description: "Git refspecs: custom fetch and push mappings (+src:dst). Use when editing remote.<name>.fetch or mapping refs."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "The Refspec"

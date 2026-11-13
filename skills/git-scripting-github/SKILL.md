@@ -1,6 +1,6 @@
 ---
 name: git-scripting-github
-description: "Automate GitHub with webhooks, services and the REST API (access tokens, commenting on an issue, setting a pull request status, Octokit). Use when the user wants to script GitHub or react to push and pull request events."
+description: "Automate GitHub with webhooks, the REST API and Octokit. Use when you need to script GitHub or react to push and PR events."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Scripting GitHub"

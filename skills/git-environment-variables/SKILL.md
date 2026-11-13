@@ -1,6 +1,6 @@
 ---
 name: git-environment-variables
-description: "Git environment variables: GIT_DIR, GIT_WORK_TREE, GIT_EDITOR, GIT_SSH_COMMAND, GIT_AUTHOR_* and GIT_COMMITTER_*, proxy settings, GIT_TRACE* debugging. Use when the user asks about a GIT_* variable or wants to trace what git is doing."
+description: "Git environment variables (GIT_DIR, GIT_EDITOR, GIT_SSH_COMMAND, GIT_TRACE). Use when handling a GIT_* variable or to trace git."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Environment Variables"

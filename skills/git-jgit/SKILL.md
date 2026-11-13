@@ -1,6 +1,6 @@
 ---
 name: git-jgit
-description: "Use git from Java with JGit: add the dependency, open a repository, the plumbing API (Repository, ObjectId, RevWalk) and the porcelain Git class. Use when the user writes Java code that reads or changes a git repository."
+description: "Use git from Java with the JGit library. Use when writing Java code that reads or changes a git repository."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "JGit"

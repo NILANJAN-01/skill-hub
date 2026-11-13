@@ -1,6 +1,6 @@
 ---
 name: git-getting-git-on-a-server
-description: "Put a repository on your own server: make a bare repo (git clone --bare), copy it over SSH, share it with a team (git init --bare --shared). Use when the user wants to host a git repository on their own machine or server."
+description: "Host a git repository on your own server: bare repo over SSH. Use when you need to self-host a repository."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Getting Git on a Server"
