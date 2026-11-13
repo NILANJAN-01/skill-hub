@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to use the skill-hub MCP server</title>
+<style>
+  :root { --bg:#fafaf9; --fg:#1c1917; --mute:#57534e; --card:#fff; --line:#e7e5e4; --accent:#0f766e; --code:#f5f5f4; --warn:#b45309; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0c0a09; --fg:#f5f5f4; --mute:#a8a29e; --card:#1c1917; --line:#292524; --accent:#2dd4bf; --code:#262322; --warn:#fbbf24; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  .wrap { max-width:860px; margin:0 auto; padding:32px 16px 64px; }
+  h1 { font-size:2rem; margin:0 0 8px; }
+  h2 { font-size:1.35rem; margin:40px 0 12px; padding-top:8px; border-top:1px solid var(--line); }
+  h3 { font-size:1.05rem; margin:20px 0 6px; }
+  p, li { color:var(--fg); }
+  .lead { color:var(--mute); font-size:1.1rem; margin:0 0 20px; }
+  nav { display:flex; flex-wrap:wrap; gap:8px; margin:16px 0 8px; }
+  nav a { font-size:.9rem; padding:4px 12px; border:1px solid var(--line); border-radius:999px; color:var(--accent); text-decoration:none; background:var(--card); }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px; margin:12px 0; }
+  .step { display:flex; gap:14px; align-items:flex-start; }
+  .num { flex:none; width:30px; height:30px; border-radius:50%; background:var(--accent); color:var(--bg); font-weight:700; display:grid; place-items:center; }
+  pre { margin:8px 0; padding:12px 14px; background:var(--code); border:1px solid var(--line); border-radius:8px; overflow-x:auto; font:13.5px/1.5 ui-monospace,Consolas,monospace; position:relative; }
+  code { font:0.92em ui-monospace,Consolas,monospace; background:var(--code); padding:1px 5px; border-radius:4px; }
+  pre code { background:none; padding:0; }
+  button.copy { position:absolute; top:6px; right:6px; font:12px system-ui; padding:2px 8px; border:1px solid var(--line); border-radius:6px; background:var(--card); color:var(--mute); cursor:pointer; }
+  table { width:100%; border-collapse:collapse; margin:8px 0; font-size:.95rem; }
+  th, td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { color:var(--mute); font-weight:600; }
+  .chat { display:grid; gap:8px; margin:8px 0; }
+  .you, .agent { padding:10px 14px; border-radius:12px; max-width:92%; }
+  .you { background:var(--accent); color:var(--bg); justify-self:end; }
+  .agent { background:var(--code); border:1px solid var(--line); }
+  .agent small { display:block; color:var(--mute); margin-top:4px; }
+  .note { border-left:4px solid var(--warn); padding:6px 14px; background:var(--card); border-radius:0 8px 8px 0; margin:12px 0; }
+  .tabs { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+  .tabs button { padding:6px 12px; border:1px solid var(--line); background:var(--card); color:var(--fg); border-radius:8px; cursor:pointer; font:inherit; font-size:.9rem; }
+  .tabs button[aria-selected="true"] { background:var(--accent); color:var(--bg); border-color:var(--accent); }
+  [role="tabpanel"][hidden] { display:none; }
+  footer { margin-top:48px; color:var(--mute); font-size:.9rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>How to use the skill-hub MCP server</h1>
+<p class="lead">Let your AI agent find and read the right skill by itself, so you don't have to type a magic prompt.</p>
+<nav>
+  <a href="#what">What it is</a><a href="#quick">Quick start</a><a href="#connect">Connect an agent</a>
+  <a href="#use">Using it</a><a href="#tools">Tools</a><a href="#trouble">Troubleshooting</a>
+</nav>
+
+<h2 id="what">What it is</h2>
+<p>skill-hub has more than 70 skills. Agents only see a one-line description of each, and often trim the list, so a skill is applied only when your request happens to match. The MCP server fixes this: it gives the agent <strong>tools to search the catalog and read any skill's full playbook on demand</strong>.</p>
+<div class="card">
+  <strong>You:</strong> "undo my last commit" &rarr; agent calls <code>recommend_skills</code> &rarr; reads <code>git-undoing-things</code> with <code>get_skill</code> &rarr; follows its steps.
+</div>
+<ul>
+  <li><strong>Read-only.</strong> It never writes files or runs commands. Install commands are only <em>shown</em> to you.</li>
+  <li><strong>No dependencies.</strong> Python 3.8+ standard library only.</li>
+  <li><strong>Local or online.</strong> Reads your clone of skill-hub, or GitHub with <code>--remote</code>.</li>
+</ul>
+
+<h2 id="quick">Quick start</h2>
+<div class="card step"><div class="num">1</div><div>
+  <strong>Get the repository</strong> (skip if you already have a clone).
+  <pre><code>git clone https://github.com/NILANJAN-01/skill-hub.git
+cd skill-hub/mcp-server</code></pre></div></div>
+<div class="card step"><div class="num">2</div><div>
+  <strong>Check that it starts.</strong> You should see the number of skills loaded.
+  <pre><code>python -m skillhub_mcp --check
+# skillhub_mcp 0.1.0: 76 skills from local clone at ...</code></pre></div></div>
+<div class="card step"><div class="num">3</div><div>
+  <strong>Add it to your agent</strong> (next section), restart the agent, then just ask for what you want.
+</div></div>
+
+<h2 id="connect">Connect an agent</h2>
+<p>Replace <code>/path/to/skill-hub</code> with the real absolute path. On Windows use forward slashes, e.g. <code>C:/Users/you/skill-hub</code>.</p>
+<div class="tabs" role="tablist">
+  <button role="tab" aria-selected="true" data-tab="t-json">JSON config (most agents)</button>
+  <button role="tab" aria-selected="false" data-tab="t-cc">Claude Code</button>
+  <button role="tab" aria-selected="false" data-tab="t-remote">No clone (GitHub)</button>
+</div>
+<div id="t-json" role="tabpanel">
+<pre><code>{
+  "mcpServers": {
+    "skill-hub": {
+      "command": "python",
+      "args": ["-m", "skillhub_mcp"],
+      "env": { "PYTHONPATH": "/path/to/skill-hub/mcp-server" }
+    }
+  }
+}</code></pre>
+<p>Put this in your agent's MCP configuration file (see your agent's documentation for where it lives). If it supports a working directory option you can use <code>"cwd": "/path/to/skill-hub/mcp-server"</code> instead of <code>env</code>.</p>
+</div>
+<div id="t-cc" role="tabpanel" hidden>
+<pre><code>claude mcp add skill-hub --env PYTHONPATH=/path/to/skill-hub/mcp-server -- python -m skillhub_mcp</code></pre>
+<p>Then run <code>claude mcp list</code>: <code>skill-hub</code> should show as connected.</p>
+</div>
+<div id="t-remote" role="tabpanel" hidden>
+<pre><code>{
+  "mcpServers": {
+    "skill-hub": {
+      "command": "python",
+      "args": ["-m", "skillhub_mcp", "--remote"],
+      "env": { "PYTHONPATH": "/path/to/skill-hub/mcp-server" }
+    }
+  }
+}</code></pre>
+<p><code>--remote</code> reads the catalog from GitHub (cached for 15 minutes) so the data is always the latest on <code>main</code>. You still need the <code>mcp-server</code> folder for the code. Use <code>--ref BRANCH</code> to read another branch.</p>
+</div>
+
+<h2 id="use">Using it</h2>
+<p>Talk normally. The agent decides when to call the tools. You can also name the server to be sure.</p>
+<div class="chat">
+  <div class="you">I committed to the wrong branch. How do I fix it?</div>
+  <div class="agent">Found a matching skill and following its steps&hellip;<small>tools: recommend_skills &rarr; get_skill (git-undoing-things)</small></div>
+  <div class="you">Which skills do you have for testing?</div>
+  <div class="agent">Lists the skills in the testing category.<small>tools: list_categories &rarr; search_skills (category = testing-tools)</small></div>
+  <div class="you">How do I install git-rebasing for Cursor?</div>
+  <div class="agent">Shows the install commands for you to run.<small>tools: get_install_instructions (does not run anything)</small></div>
+</div>
+<h3>Built-in prompts</h3>
+<p>Some agents show these in a prompt menu: <code>find_skill</code> (give it a task) and <code>use_skill</code> (give it a skill name).</p>
+<h3>Skills as resources</h3>
+<p>Every skill is also available as a resource, <code>skillhub://skill/&lt;name&gt;</code>, for agents that let you attach resources to a chat.</p>
+
+<h2 id="tools">The 8 tools</h2>
+<table>
+  <tr><th>Tool</th><th>What it does</th></tr>
+  <tr><td><code>search_skills</code></td><td>Ranked keyword search. Options: <code>category</code>, <code>limit</code> (1&ndash;25).</td></tr>
+  <tr><td><code>recommend_skills</code></td><td>Best 1&ndash;5 skills for a task, with example prompts and install command.</td></tr>
+  <tr><td><code>get_skill</code></td><td>A skill's full instructions and file list.</td></tr>
+  <tr><td><code>read_skill_file</code></td><td>A text file inside a skill (<code>references/…</code>, <code>scripts/…</code>), up to 200 KB.</td></tr>
+  <tr><td><code>list_categories</code></td><td>All categories with skill counts.</td></tr>
+  <tr><td><code>list_plugins</code></td><td>Installable skill bundles, optionally for one category.</td></tr>
+  <tr><td><code>list_agents</code></td><td>Supported AI agents and their skill folders.</td></tr>
+  <tr><td><code>get_install_instructions</code></td><td>Installer, <code>npx skills</code> and native-plugin commands for a skill or plugin.</td></tr>
+</table>
+<div class="note"><strong>Safe by design:</strong> file reads are limited to skill folders and reject <code>..</code> and absolute paths. Nothing is ever installed or executed by the server.</div>
+
+<h2 id="trouble">Troubleshooting</h2>
+<table>
+  <tr><th>Problem</th><th>Fix</th></tr>
+  <tr><td><code>No module named skillhub_mcp</code></td><td>The agent can't find the code. Set <code>PYTHONPATH</code> (or <code>cwd</code>) to the <code>mcp-server</code> folder, with an absolute path.</td></tr>
+  <tr><td><code>no catalog.json in …</code></td><td><code>--root</code> must point at the repository root. Or use <code>--remote</code>.</td></tr>
+  <tr><td>Agent shows the server as failed</td><td>Run <code>python -m skillhub_mcp --check</code> in a terminal with the same settings and read the message. Logs go to stderr only.</td></tr>
+  <tr><td><code>python</code> not found</td><td>Use the full path to Python in <code>command</code>, or <code>python3</code> / <code>py</code>.</td></tr>
+  <tr><td>Agent never uses the tools</td><td>Restart the agent after editing the config, and name the server once: "use skill-hub to find a skill for …".</td></tr>
+  <tr><td>Remote mode errors</td><td>Needs internet access to raw.githubusercontent.com and api.github.com. Otherwise use a local clone.</td></tr>
+</table>
+
+<h3>Try it by hand</h3>
+<p>You can talk to the server without an agent. It reads one JSON message per line from stdin:</p>
+<pre><code>echo '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"search_skills","arguments":{"query":"rebase"}}}' | python -m skillhub_mcp</code></pre>
+
+<footer>Source and tests: <code>mcp-server/</code> in the skill-hub repository. Run the tests with <code>python -m unittest discover -s mcp-server/tests -v</code>. More detail: <code>mcp-server/README.md</code>.</footer>
+</div>
+<script>
+  document.querySelectorAll("pre").forEach(function (pre) {
+    var b = document.createElement("button");
+    b.className = "copy"; b.type = "button"; b.textContent = "Copy";
+    b.addEventListener("click", function () {
+      var text = pre.querySelector("code").innerText;
+      var done = function () { b.textContent = "Copied"; setTimeout(function () { b.textContent = "Copy"; }, 1500); };
+      if (navigator.clipboard) { navigator.clipboard.writeText(text).then(done, function () {}); }
+    });
+    pre.appendChild(b);
+  });
+  var tabs = document.querySelectorAll("[role=tab]");
+  tabs.forEach(function (t) {
+    t.addEventListener("click", function () {
+      tabs.forEach(function (o) {
+        var on = o === t;
+        o.setAttribute("aria-selected", on);
+        document.getElementById(o.dataset.tab).hidden = !on;
+      });
+    });
+  });
+</script>
+</body>
+</html>

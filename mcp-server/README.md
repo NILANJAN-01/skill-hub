@@ -6,6 +6,8 @@ An [MCP](https://modelcontextprotocol.io) server that exposes the skill-hub cata
 - **Read-only.** It never writes files or runs commands. `get_install_instructions` only *returns* commands for you to run.
 - Reads a local clone of this repo, or GitHub (`--remote`) when there is no clone.
 
+A step-by-step guide with screenshots-free walkthrough, agent configs and troubleshooting: [how-to-use.html](how-to-use.html) (open it in a browser after cloning).
+
 ## Tools
 
 | Tool | Purpose |
