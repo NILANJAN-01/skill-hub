@@ -331,6 +331,12 @@
     "Find all the ANRs and service crashes for com.example.player in this bugreport zip.",
     "Our head unit keeps restarting the media service. What does this logcat say?"
   ],
+  "repo-learnings": [
+    "Read this whole repo, every folder and file, and write a learnings .md so I understand how it works.",
+    "I just joined this project. Go through the codebase deeply and create an onboarding document.",
+    "Clone https://github.com/owner/project and document what you learn: architecture, how to build it, key files and gotchas.",
+    "Study the src and docs folders line by line and give me a LEARNINGS.md."
+  ],
   "image-inspector": [
     "Describe this screenshot.png for me: size, main colours and what's on it.",
     "What is the exact hex colour of the pixel at 120,48 in banner.jpg?",

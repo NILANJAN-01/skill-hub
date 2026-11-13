@@ -223,6 +223,16 @@
       ]
     },
     {
+      "name": "repo-tools",
+      "description": "Repositories: read a whole codebase file by file and write a LEARNINGS.md, with a script that plans the read and checks nothing was missed",
+      "source": "./",
+      "strict": false,
+      "category": "repositories",
+      "skills": [
+        "./skills/repo-learnings"
+      ]
+    },
+    {
       "name": "image-tools",
       "description": "Images: read any PNG/JPG/WebP/GIF/BMP with a Python script and report pixels (exact colours, regions, palette, pixel map, CSV) plus a plain-text description, EXIF and optional OCR; with OpenCV, find icons in screenshots and compare screenshots",
       "source": "./",

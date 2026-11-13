@@ -198,6 +198,14 @@
       ]
     },
     {
+      "name": "repo-tools",
+      "description": "Repositories: read a whole codebase file by file and write a LEARNINGS.md, with a script that plans the read and checks nothing was missed",
+      "category": "repositories",
+      "skills": [
+        "repo-learnings"
+      ]
+    },
+    {
       "name": "image-tools",
       "description": "Images: read any PNG/JPG/WebP/GIF/BMP with a Python script and report pixels (exact colours, regions, palette, pixel map, CSV) plus a plain-text description, EXIF and optional OCR; with OpenCV, find icons in screenshots and compare screenshots",
       "category": "image",
@@ -243,6 +251,11 @@
       "name": "android-automation",
       "title": "Android: UI tests & logcat",
       "count": 2
+    },
+    {
+      "name": "repo-tools",
+      "title": "Repositories: read & document",
+      "count": 1
     },
     {
       "name": "image-tools",
@@ -2013,6 +2026,24 @@
         "references/setup.md",
         "references/writing-tests.md"
       ]
+    },
+    {
+      "name": "repo-learnings",
+      "title": "Repository deep read to LEARNINGS.md",
+      "category": "repo-tools",
+      "description": "Read a whole git repository, every folder and file, line by line, and write a LEARNINGS.md: purpose, build and run steps, folder map, architecture, key files, conventions, gotchas and file-by-file notes. A bundled Python script plans the read and checks that no file was missed. Use when the user wants to study, understand, document or onboard onto a codebase or repo, local or by git URL.",
+      "plugins": [
+        "repo-tools"
+      ],
+      "path": "skills/repo-learnings",
+      "license": "Complete terms in the repository README",
+      "examples": [
+        "Read this whole repo, every folder and file, and write a learnings .md so I understand how it works.",
+        "I just joined this project. Go through the codebase deeply and create an onboarding document.",
+        "Clone https://github.com/owner/project and document what you learn: architecture, how to build it, key files and gotchas.",
+        "Study the src and docs folders line by line and give me a LEARNINGS.md."
+      ],
+      "files": []
     },
     {
       "name": "skillforge",

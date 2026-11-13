@@ -2,9 +2,9 @@
 
 <!-- Generated from examples/prompts.json by tools/build_catalog.py - do not edit by hand. -->
 
-220 things you can say to your AI coding agent, for all 70 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
+224 things you can say to your AI coding agent, for all 71 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
 
-**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
+**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [Repositories: read & document](#repositories-read--document) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
 
 ## Hub tools
 
@@ -64,6 +64,19 @@ Install the whole category: `--plugin android-automation`
 - “Convert all the window_dump.xml files in dumps/ into locator JSON files in tests/locators.”
 - “Dump the current screen from the connected device and generate the locator JSON.”
 - “This Compose screen has no resource-ids. Give me the best locators you can from this uiautomator dump.”
+
+## Repositories: read & document
+
+Install the whole category: `--plugin repo-tools`
+
+### Repository deep read to LEARNINGS.md
+
+[`repo-learnings`](../skills/repo-learnings/SKILL.md) · install: `--skill repo-learnings`
+
+- “Read this whole repo, every folder and file, and write a learnings .md so I understand how it works.”
+- “I just joined this project. Go through the codebase deeply and create an onboarding document.”
+- “Clone https://github.com/owner/project and document what you learn: architecture, how to build it, key files and gotchas.”
+- “Study the src and docs folders line by line and give me a LEARNINGS.md.”
 
 ## Images: pixels & description
 
