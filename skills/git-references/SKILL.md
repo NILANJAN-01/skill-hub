@@ -1,6 +1,6 @@
 ---
 name: git-references
-description: "Git refs internals: refs/heads, HEAD as a symbolic ref, tags and remote refs (git update-ref, git symbolic-ref). Use when the user asks what a ref or HEAD really is, or needs to read or repair files under .git/refs."
+description: "Git refs internals: refs/heads, HEAD, update-ref, symbolic-ref. Use when asked what a ref is or to repair .git/refs."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Git References"

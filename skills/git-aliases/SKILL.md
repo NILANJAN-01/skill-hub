@@ -1,6 +1,6 @@
 ---
 name: git-aliases
-description: "Create shortcuts for git commands with git config alias (git co, git unstage, git last). Use when the user wants a git alias or shorter git commands."
+description: "Create git command shortcuts with git config alias. Use when the user wants a git alias or shorter commands."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Git Aliases"

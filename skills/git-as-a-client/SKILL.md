@@ -1,6 +1,6 @@
 ---
 name: git-as-a-client
-description: "Work in git against a Subversion, Mercurial or Perforce server (git svn, git-remote-hg, git p4, Git Fusion). Use when the user uses git locally but the team's repository is SVN, Hg or Perforce."
+description: "Use git against a Subversion, Mercurial or Perforce server (git svn, git p4). Use when the team repo is not git."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Git as a Client"

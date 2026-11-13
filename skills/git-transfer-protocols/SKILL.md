@@ -1,6 +1,6 @@
 ---
 name: git-transfer-protocols
-description: "How fetch and push work on the wire: the dumb HTTP protocol, the smart protocol, send-pack and receive-pack, fetch-pack and upload-pack. Use when the user debugs clone, fetch or push at the protocol level."
+description: "How git fetch and push work on the wire: dumb and smart HTTP, send-pack, upload-pack. Use when you need to debug protocol-level problems."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Transfer Protocols"

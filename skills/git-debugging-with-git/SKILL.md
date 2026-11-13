@@ -1,6 +1,6 @@
 ---
 name: git-debugging-with-git
-description: "Find which commit introduced a bug: git blame for line history and git bisect, manual or scripted with git bisect run. Use when the user asks who changed a line, or which commit broke something."
+description: "Find which commit broke something with git blame and git bisect. Use when asked who changed a line or what introduced a bug."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Debugging with Git"

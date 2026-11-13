@@ -1,6 +1,6 @@
 ---
 name: git-distributed-git-contributing-to-a-project
-description: "Contribute with plain git: commit guidelines, small and managed team workflows, forked public projects, patches by email (git format-patch, git send-email, git request-pull). Use when the user asks how to prepare and submit commits or patches to a team or upstream."
+description: "Contribute with plain git: commit guidelines, team workflows, patches by email. Use when you need to prepare commits or patches for upstream."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Contributing to a Project"

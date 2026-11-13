@@ -1,6 +1,6 @@
 ---
 name: git-getting-a-git-repository
-description: "Start a repository: git init in an existing folder, or git clone a remote one. Use when the user wants to create a new git repo, put a project under version control, or clone a repository."
+description: "Start a repository with git init or git clone. Use when you need to create a repo, put a project under git, or clone one."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Getting a Git Repository"

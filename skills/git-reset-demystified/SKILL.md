@@ -1,6 +1,6 @@
 ---
 name: git-reset-demystified
-description: "Understand git reset and git checkout through the three trees (HEAD, index, working directory): --soft, --mixed, --hard, reset with a path, squashing with reset. Use when the user is unsure which reset mode to use or what reset will do to their files."
+description: "Explain git reset and checkout: --soft, --mixed, --hard and the three trees. Use when unsure which reset mode to use."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Reset Demystified"

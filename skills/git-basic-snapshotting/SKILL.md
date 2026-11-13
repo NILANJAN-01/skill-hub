@@ -1,6 +1,6 @@
 ---
 name: git-basic-snapshotting
-description: "Quick reference for the everyday snapshot commands: git add, status, diff, difftool, commit, reset, rm, mv, clean. Use when the user asks which git command stages, commits, unstages or removes files."
+description: "Quick reference for git add, status, diff, commit, reset, rm, mv. Use when asked which git command stages, commits or removes files."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Basic Snapshotting"

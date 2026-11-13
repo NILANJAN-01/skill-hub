@@ -1,6 +1,6 @@
 ---
 name: git-stashing-and-cleaning
-description: "Set work aside and clean up: git stash (list, apply, pop, -u, --patch, stash branch) and git clean for untracked files. Use when the user must switch branches with uncommitted changes, shelve work for later, or delete untracked files."
+description: "Shelve work with git stash and remove untracked files with git clean. Use when you need to switch branches with uncommitted changes."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Stashing and Cleaning"

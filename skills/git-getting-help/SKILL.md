@@ -1,6 +1,6 @@
 ---
 name: git-getting-help
-description: "Look up git documentation: git help <verb>, git <verb> --help, man git-<verb>, and the short -h summary. Use when the user asks how to find a git command's options or manual page."
+description: "Look up git docs with git help, --help and man. Use when asked how to find a git command's options."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Getting Help"

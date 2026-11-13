@@ -1,6 +1,6 @@
 ---
 name: git-replace
-description: "Swap one git object for another with git replace, for example to graft old history onto a shortened repository. Use when the user wants to split or join history without rewriting every commit."
+description: "Swap one git object for another with git replace to graft history. Use when you need to join or split history without rewriting it."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Replace"

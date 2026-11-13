@@ -1,6 +1,6 @@
 ---
 name: git-credential-storage
-description: "Stop git asking for a username and password: credential helpers (cache, store, osxkeychain, Git Credential Manager) and custom helpers. Use when the user is prompted for credentials on every push or pull, or asks how git stores passwords."
+description: "Stop git asking for passwords: credential helpers and Git Credential Manager. Use when git prompts on every push or pull."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Credential Storage"

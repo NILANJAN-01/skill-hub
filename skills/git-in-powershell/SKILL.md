@@ -1,6 +1,6 @@
 ---
 name: git-in-powershell
-description: "Set up git in PowerShell with posh-git: execution policy, install from the PowerShell Gallery, branch status in the prompt, tab completion. Use when the user wants a git prompt or completion in PowerShell on Windows."
+description: "Set up git in PowerShell with posh-git: prompt status and tab completion. Use when handling a git prompt on Windows PowerShell."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Git in PowerShell"

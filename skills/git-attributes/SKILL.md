@@ -1,6 +1,6 @@
 ---
 name: git-attributes
-description: "Set per-path behaviour in .gitattributes: binary files, diffing Word or image files, keyword expansion, smudge/clean filters, export-ignore, merge strategies. Use when the user asks about .gitattributes or per-file git rules."
+description: "Set per-file git behaviour in .gitattributes: binary files, diff filters, export-ignore. Use when handling .gitattributes questions."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Git Attributes"

@@ -1,6 +1,6 @@
 ---
 name: git-bundling
-description: "Pack commits into one file with git bundle to move a repository or changes offline (create, verify, clone or fetch from a bundle). Use when the user must share git history without a network or server."
+description: "Move git history in one file with git bundle, no network. Use when you need to share a repository offline."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Bundling"

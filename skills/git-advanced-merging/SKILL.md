@@ -1,6 +1,6 @@
 ---
 name: git-advanced-merging
-description: "Resolve hard merge conflicts: abort or redo a merge, ignore whitespace, check out the ours/theirs/base versions, diff3 markers, undo a merge commit, subtree merges. Use when a git merge has conflicts or went wrong."
+description: "Fix hard git merge conflicts: abort, redo, ours/theirs, undo a merge. Use when a merge has conflicts or went wrong."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Advanced Merging"

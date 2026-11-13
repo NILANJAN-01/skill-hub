@@ -1,6 +1,6 @@
 ---
 name: git-recording-changes-to-the-repository
-description: "Day-to-day file workflow: git status, git add, .gitignore patterns, git diff (--staged), git commit, git rm, git mv. Use when the user wants to stage, commit, ignore, remove or rename files, or see what changed."
+description: "Everyday git: status, add, .gitignore, diff, commit, rm, mv. Use when you need to stage, commit, ignore or rename files."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Recording Changes to the Repository"

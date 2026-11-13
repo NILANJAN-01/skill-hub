@@ -1,6 +1,6 @@
 ---
 name: git-packfiles
-description: "How git packs objects: loose objects versus packfiles, delta compression, git gc, git verify-pack. Use when the user asks how git compresses history, why .git is large, or what .pack and .idx files are."
+description: "How git packs objects: loose vs packfiles, delta compression, git gc. Use when asked why .git is large or what .pack files are."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Packfiles"

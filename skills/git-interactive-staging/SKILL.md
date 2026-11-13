@@ -1,6 +1,6 @@
 ---
 name: git-interactive-staging
-description: "Stage only part of your changes with git add -i and git add -p (patch mode), hunk by hunk. Use when the user wants to commit only some of the changes in a file or split work into several commits."
+description: "Stage part of a file with git add -p or git add -i. Use when you need to commit only some changes or split a commit."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Interactive Staging"

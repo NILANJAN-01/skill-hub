@@ -1,6 +1,6 @@
 ---
 name: git-remote-branches
-description: "Work with remote branches: origin/<branch>, push a branch, track an upstream (-u, --track), git fetch versus git pull, delete a remote branch. Use when the user wants to push a new branch, set its upstream, check out a teammate's branch or delete one on the server."
+description: "Push branches, track upstreams, fetch vs pull, delete remote branches. Use when handling origin/<branch> tasks."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Remote Branches"

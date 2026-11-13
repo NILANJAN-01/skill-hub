@@ -1,6 +1,6 @@
 ---
 name: git-libgit2
-description: "Use git from C and other languages with libgit2 and its bindings (Rugged for Ruby, LibGit2Sharp for .NET, objective-git, pygit2). Use when the user embeds git operations in an application through libgit2."
+description: "Use git from C, Ruby, .NET or Python through libgit2 bindings. Use when you need to embed git operations in an application."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Libgit2"

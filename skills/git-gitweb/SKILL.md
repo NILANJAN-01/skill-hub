@@ -1,6 +1,6 @@
 ---
 name: git-gitweb
-description: "Browse a repository in a web browser with GitWeb (git instaweb, or the gitweb CGI under Apache). Use when the user wants a simple web viewer for a git repository."
+description: "Browse a git repository in a web browser with GitWeb or git instaweb. Use when handling a simple web viewer."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "GitWeb"

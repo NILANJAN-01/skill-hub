@@ -1,6 +1,6 @@
 ---
 name: git-working-with-remotes
-description: "Manage remotes: git remote -v, add, fetch, pull, push, show, rename, remove. Use when the user wants to add or change a remote URL, or push to and fetch from another repository."
+description: "Manage git remotes: add, show, fetch, pull, push, rename, remove. Use when you need to add or change a remote URL."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Working with Remotes"

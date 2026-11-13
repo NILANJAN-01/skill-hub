@@ -1,6 +1,6 @@
 ---
 name: git-signing-your-work
-description: "Sign and verify with GPG: user.signingkey, signed tags (git tag -s, -v), signed commits (git commit -S), requiring signatures on merge. Use when the user wants to sign commits or tags, or verify who made them."
+description: "Sign and verify git commits and tags with GPG. Use when you need to sign commits or tags."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Signing Your Work"

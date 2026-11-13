@@ -1,6 +1,6 @@
 ---
 name: git-setting-up-the-server
-description: "Set up an SSH git server: a git user, authorized_keys, a bare repository, and restricting the account with git-shell. Use when the user wants several developers to push to a self-hosted repository over SSH."
+description: "Set up an SSH git server: git user, authorized_keys, bare repo, git-shell. Use when you need to self-host for several developers."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Setting Up the Server"

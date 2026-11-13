@@ -1,6 +1,6 @@
 ---
 name: git-github-contributing-to-a-project
-description: "Contribute on GitHub: fork, topic branch, open a pull request, keep it up to date with upstream, respond to review, GitHub Flavored Markdown. Use when the user wants to fork a repo, open or update a pull request, or sync a fork."
+description: "Contribute on GitHub: fork, branch, pull request, sync with upstream. Use when you need to open or update a pull request or sync a fork."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Contributing to a Project"

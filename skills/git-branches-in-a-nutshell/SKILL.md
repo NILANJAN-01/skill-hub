@@ -1,6 +1,6 @@
 ---
 name: git-branches-in-a-nutshell
-description: "Explain how branches work: commits as snapshots, branch pointers, HEAD, creating and switching branches (git branch, git checkout, git switch). Use when the user asks what a branch or HEAD is, or how to create or switch one."
+description: "Explain git branches, HEAD and commits as snapshots. Use when asked what a branch or HEAD is."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Branches in a Nutshell"

@@ -1,6 +1,6 @@
 ---
 name: git-daemon
-description: "Serve repositories over the unauthenticated git:// protocol with git daemon (systemd service, git-daemon-export-ok). Use when the user wants fast read-only public access to a repository."
+description: "Serve git repositories read-only over git:// with git daemon. Use when handling fast public read access."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Git Daemon"

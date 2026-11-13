@@ -1,6 +1,6 @@
 ---
 name: git-distributed-git-maintaining-a-project
-description: "Maintain a project with plain git: apply emailed patches (git apply, git am), review contributor branches, merge, rebase or cherry-pick them, tag and build releases, git shortlog. Use when the user integrates other people's patches or branches, or cuts a release."
+description: "Maintain a project with plain git: apply patches, review branches, cut releases. Use when integrating other people's work."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Maintaining a Project"

@@ -1,6 +1,6 @@
 ---
 name: git-plumbing-and-porcelain
-description: "Overview of the .git directory (HEAD, index, objects, refs, config, hooks) and of plumbing versus porcelain commands. Use when the user asks what is inside the .git folder or what a low-level git command is."
+description: "What is inside .git and plumbing vs porcelain commands. Use when asked what the .git folder contains."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Plumbing and Porcelain"

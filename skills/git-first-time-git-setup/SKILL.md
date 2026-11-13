@@ -1,6 +1,6 @@
 ---
 name: git-first-time-git-setup
-description: "Set up git for the first time: user.name, user.email, default editor, default branch name, checking settings (git config --global, --list, --show-origin). Use when the user configures git on a new machine or sees 'Please tell me who you are'."
+description: "Set up git on a new machine: user.name, email, editor, default branch. Use when handling first-time setup or Please tell me who you are."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "First-Time Git Setup"

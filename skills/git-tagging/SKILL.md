@@ -1,6 +1,6 @@
 ---
 name: git-tagging
-description: "Tags: list, create annotated or lightweight tags, tag an older commit, push tags, delete local and remote tags, check out a tag. Use when the user wants to tag a commit or mark a release version."
+description: "Create, list, push and delete git tags. Use when you need to tag a commit or mark a release version."
 license: CC BY-NC-SA 3.0. Derived from "Pro Git" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md
 metadata:
   title: "Tagging"
