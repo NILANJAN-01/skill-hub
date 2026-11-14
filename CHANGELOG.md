@@ -4,6 +4,8 @@ Notable changes to skill-hub. Newest first. Skills are listed by name; see `git 
 
 ## Unreleased
 
+## 1.1.0 - 2026-11-14
+
 - Added: `repo-architecture` (in `repo-tools`): scans a repository and drafts `ARCHITECTURE.md` (Mermaid) and a self-contained `architecture.html` (layered SVG), then guides the reader to describe components and flows.
 - Added: `powershell-commands` (new `shell-tools` category): PowerShell playbook for agents with a bash-to-PowerShell map and references for files, text and data, processes, network, dev tools, scripting and troubleshooting.
 

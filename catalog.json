@@ -1,7 +1,7 @@
 {
   "name": "skill-hub",
   "description": "skill-hub: a centralized, curated collection of Agent Skills for Claude Code, Claude.ai and the Claude API",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "repository": "https://github.com/NILANJAN-01/skill-hub",
   "plugins": [
     {
