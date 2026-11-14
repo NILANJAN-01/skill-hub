@@ -3,8 +3,16 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 @AGENTS.md
+@rule/01-generated-files.md
+@rule/02-sources-of-truth.md
+@rule/03-skill-content.md
+@rule/04-checks.md
+@rule/05-tooling.md
+@rule/06-pull-requests.md
+@rule/07-common-tasks.md
+@rule/08-releases.md
 
-The golden rules, sources of truth and per-task steps live in AGENTS.md (imported above). The sections below add commands and architecture that AGENTS.md doesn't cover.
+The golden rules, sources of truth and per-task steps live in the `rule/` folder (imported above, indexed from AGENTS.md). The sections below add commands and architecture that the rules don't cover.
 
 ## Commands
 
