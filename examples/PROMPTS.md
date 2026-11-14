@@ -2,7 +2,7 @@
 
 <!-- Generated from examples/prompts.json by tools/build_catalog.py - do not edit by hand. -->
 
-249 things you can say to your AI coding agent, for all 78 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
+253 things you can say to your AI coding agent, for all 79 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
 
 **Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Shell: PowerShell on Windows](#shell-powershell-on-windows) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
 
@@ -77,6 +77,15 @@ Install the whole category: `--plugin android-automation`
 ## Repositories: read & document
 
 Install the whole category: `--plugin repo-tools`
+
+### Repo walkthrough and architecture diagram
+
+[`repo-architecture`](../skills/repo-architecture/SKILL.md) · install: `--skill repo-architecture`
+
+- “Make an architecture diagram of this repo as ARCHITECTURE.md and an HTML page.”
+- “Give me a walkthrough of this codebase: what the main parts are, how they depend on each other and what to read first.”
+- “Draw a component diagram for https://github.com/owner/project and explain the main request flow.”
+- “I'm onboarding onto this repo. Prepare an architecture overview I can share with the team.”
 
 ### Repository deep read to LEARNINGS.md
 

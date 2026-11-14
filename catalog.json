@@ -200,10 +200,11 @@
     },
     {
       "name": "repo-tools",
-      "description": "Repositories: read a whole codebase file by file and write a LEARNINGS.md, with a script that plans the read and checks nothing was missed",
+      "description": "Repositories: read a whole codebase file by file and write a LEARNINGS.md, with a script that plans the read and checks nothing was missed; draw the architecture as ARCHITECTURE.md plus an HTML diagram (repo-architecture)",
       "category": "repositories",
       "skills": [
-        "repo-learnings"
+        "repo-learnings",
+        "repo-architecture"
       ]
     },
     {
@@ -284,7 +285,7 @@
     {
       "name": "repo-tools",
       "title": "Repositories: read & document",
-      "count": 1
+      "count": 2
     },
     {
       "name": "gitlab-ci-tools",
@@ -2267,6 +2268,25 @@
         "references/diagnosis.md",
         "references/writing-tests.md"
       ]
+    },
+    {
+      "name": "repo-architecture",
+      "title": "Repo walkthrough and architecture diagram",
+      "category": "repo-tools",
+      "description": "Walk through a repository and produce an architecture diagram as ARCHITECTURE.md (with Mermaid) and a self-contained architecture.html: components, dependencies, entry points, flows, reading order. A bundled script drafts it from the code. Use when the user asks for an architecture diagram, a system overview, a repo walkthrough or onboarding map of a codebase.",
+      "plugins": [
+        "repo-tools"
+      ],
+      "path": "skills/repo-architecture",
+      "license": "MIT",
+      "compatibility": "Needs Python 3.8+ (standard library only). git is optional; with git the file list follows .gitignore and a repository can be cloned from a URL.",
+      "examples": [
+        "Make an architecture diagram of this repo as ARCHITECTURE.md and an HTML page.",
+        "Give me a walkthrough of this codebase: what the main parts are, how they depend on each other and what to read first.",
+        "Draw a component diagram for https://github.com/owner/project and explain the main request flow.",
+        "I'm onboarding onto this repo. Prepare an architecture overview I can share with the team."
+      ],
+      "files": []
     },
     {
       "name": "repo-learnings",

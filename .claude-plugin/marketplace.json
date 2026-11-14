@@ -224,12 +224,13 @@
     },
     {
       "name": "repo-tools",
-      "description": "Repositories: read a whole codebase file by file and write a LEARNINGS.md, with a script that plans the read and checks nothing was missed",
+      "description": "Repositories: read a whole codebase file by file and write a LEARNINGS.md, with a script that plans the read and checks nothing was missed; draw the architecture as ARCHITECTURE.md plus an HTML diagram (repo-architecture)",
       "source": "./",
       "strict": false,
       "category": "repositories",
       "skills": [
-        "./skills/repo-learnings"
+        "./skills/repo-learnings",
+        "./skills/repo-architecture"
       ]
     },
     {

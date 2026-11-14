@@ -403,5 +403,11 @@
     "Translate this bash one-liner to PowerShell: grep -rn TODO src | wc -l",
     "Write a PowerShell command to find the 10 biggest files under C:\\src and show their sizes in MB.",
     "My PowerShell script writes UTF-16 files and the other tool can't read them. Fix the encoding."
+  ],
+  "repo-architecture": [
+    "Make an architecture diagram of this repo as ARCHITECTURE.md and an HTML page.",
+    "Give me a walkthrough of this codebase: what the main parts are, how they depend on each other and what to read first.",
+    "Draw a component diagram for https://github.com/owner/project and explain the main request flow.",
+    "I'm onboarding onto this repo. Prepare an architecture overview I can share with the team."
   ]
 }
