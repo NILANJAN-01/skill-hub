@@ -26,6 +26,7 @@ import argparse
 import io
 import json
 import os
+import re
 import shutil
 import sys
 import tempfile
@@ -33,7 +34,11 @@ import urllib.request
 import zipfile
 from pathlib import Path
 
-REPO = "NILANJAN-01/skill-hub"
+DEFAULT_REPO = "NILANJAN-01/skill-hub"
+# Forks can set SKILLHUB_REPO=owner/name (or pass --repo). Release builds replace DEFAULT_REF with
+# the release tag, so an install.py downloaded from a release installs that same release.
+DEFAULT_REF = "main"
+REPO = os.environ.get("SKILLHUB_REPO") or DEFAULT_REPO
 
 # --------------------------------------------------------------------------------------------
 # Every agent the hub supports. SOURCE OF TRUTH: build_catalog.py copies this table into
@@ -130,7 +135,7 @@ def find_local_root() -> Path | None:
 
 
 def download_hub(ref: str) -> Path:
-    url = f"https://codeload.github.com/{REPO}/zip/refs/heads/{ref}"
+    url = f"https://codeload.github.com/{REPO}/zip/{ref}"      # works for branches and tags
     print(f"Downloading {REPO}@{ref} ...")
     req = urllib.request.Request(url, headers={"User-Agent": "skill-hub-installer"})
     with urllib.request.urlopen(req, timeout=60) as r:
@@ -524,6 +529,7 @@ def print_list(root: Path) -> None:
 
 
 def main() -> None:
+    global REPO
     ap = argparse.ArgumentParser(description="Install skill-hub skills into AI coding agents. "
                                              "Run with no options for the guided mode.",
                                  formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -545,9 +551,14 @@ def main() -> None:
     ap.add_argument("--yes", "-y", action="store_true", help="don't ask for confirmation")
     ap.add_argument("--dry-run", action="store_true", help="show what would happen, change nothing")
     ap.add_argument("--detect", action="store_true", help="only show which agents are installed")
-    ap.add_argument("--ref", default="main", help="branch to download when not run from a clone")
+    ap.add_argument("--ref", default=DEFAULT_REF, help="branch or release tag to download when not run from a clone")
+    ap.add_argument("--repo", metavar="OWNER/NAME", help="GitHub repository to download from (default: %s, or $SKILLHUB_REPO)" % REPO)
     ap.add_argument("--list", action="store_true", help="list agents, plugins and skills")
     args = ap.parse_args()
+    if args.repo:
+        if not re.fullmatch(r"[\w.-]+/[\w.-]+", args.repo):
+            ap.error("--repo must look like owner/name")
+        REPO = args.repo
 
     if args.detect:
         print_detect()

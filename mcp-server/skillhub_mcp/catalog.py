@@ -13,7 +13,7 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-REPO = "NILANJAN-01/skill-hub"
+REPO = os.environ.get("SKILLHUB_REPO") or "NILANJAN-01/skill-hub"
 MAX_FILE_BYTES = 200_000
 CACHE_SECONDS = 900
 STOP = {"a", "an", "the", "to", "of", "in", "on", "for", "and", "or", "my", "i", "me", "how", "do", "is", "it", "with",

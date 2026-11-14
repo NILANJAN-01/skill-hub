@@ -184,6 +184,7 @@ def build() -> tuple[str, str, str, str, dict]:
     catalog = {
         "name": market.get("name", "skill-hub"),
         "description": market.get("metadata", {}).get("description", ""),
+        "version": market.get("metadata", {}).get("version", ""),
         "repository": REPOSITORY,
         "plugins": [{"name": p["name"], "description": p.get("description", ""),
                      "category": p.get("category", ""), "skills": plugin_skill_names(p)} for p in plugins],
