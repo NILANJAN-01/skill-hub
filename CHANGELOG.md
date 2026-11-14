@@ -4,6 +4,12 @@ Notable changes to skill-hub. Newest first. Skills are listed by name; see `git 
 
 ## Unreleased
 
+## 1.0.0 - 2026-11-14
+
+- Release: tagged releases (`v*`) now publish a GitHub Release with a version-pinned `install.py`, `catalog.json`, one zip per skill, a full-repo zip and `SHA256SUMS`. The version lives in `.claude-plugin/marketplace.json` and is stamped into `catalog.json`.
+- Installer: `--ref` accepts release tags, new `--repo owner/name` (or `SKILLHUB_REPO`) so forks can distribute their own copy. The MCP server honours `SKILLHUB_REPO` too.
+- MCP server: `publish-mcp.yml` publishes `skillhub-mcp` to PyPI on `mcp-v*` tags; without a clone it falls back to reading GitHub.
+- Repo health: `SECURITY.md`, `CODE_OF_CONDUCT.md`, issue templates; README licence section explains the CC BY-NC-SA `git-*` skills.
 - Added: `skill-orchestrator` (in `hub-tools`): finds installed skills, plans multi-skill workflows, checks requirements and tracks hand-offs between steps.
 - Added: `professional-writing` (new `writing-tools` category): blog posts, CVs, cover letters and technical docs, with templates and a checker script.
 - Added: `repo-learnings` (new `repo-tools` category).

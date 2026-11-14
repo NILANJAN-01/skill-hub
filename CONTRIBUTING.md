@@ -25,6 +25,13 @@ If you use an AI agent to contribute, it follows [AGENTS.md](AGENTS.md).
 - Title: `Add <name> skill` for new skills, `Update <name> skill: <what changed>` for changes, `Rename <old> skill to <new>` for renames.
 - Fill in the PR template checklist. CI validates skills, checks that generated files are fresh, and tests the installer on Linux, Windows and macOS.
 
+## Releasing (maintainers)
+
+1. Move the `## Unreleased` entries in `CHANGELOG.md` under a new `## <version> - <date>` heading.
+2. Set `metadata.version` in `.claude-plugin/marketplace.json` to `<version>`, then run `python tools/build_catalog.py`.
+3. Commit, then tag and push: `git tag v<version> && git push origin v<version>`. The `release.yml` workflow checks that the tag, the marketplace version and the changelog agree, then publishes the release.
+4. MCP server: bump `version` in `mcp-server/pyproject.toml` and `VERSION` in `skillhub_mcp/server.py`, then push the tag `mcp-v<version>` (needs the one-time PyPI trusted-publisher setup).
+
 ## Supporting a new agent
 
 Add an entry to the `AGENTS` dict in `tools/install.py`, using only the vendor's official documentation (link it in `docs`). Fill in its skill folders and its `detect` hints (commands on PATH, app install folders, config folders) so the guided installer can find it. Then run `python tools/build_catalog.py`, which updates the agent tables in `README.md` and `GUIDE.md` and `catalog.json`.

@@ -74,6 +74,14 @@ python install.py
 python tools/install.py
 ```
 
+Those commands read the latest `main`. For a fixed, reproducible version, use the installer attached to a [release](https://github.com/NILANJAN-01/skill-hub/releases); it installs that same release:
+
+```bash
+curl -fsSL https://github.com/NILANJAN-01/skill-hub/releases/latest/download/install.py | python3 -
+```
+
+Each release also lists `SHA256SUMS`, one zip per skill (for upload UIs such as Claude.ai) and `catalog.json`. Running a fork? Use `--repo owner/name` (or set `SKILLHUB_REPO`) and `--ref <branch-or-tag>`.
+
 The installer:
 - **Reads the machine fresh on every run.** It looks for installed apps, commands on your PATH and the agents' config folders.
 - **Writes to the fewest folders** that cover every agent you pick. For example, Copilot also reads Claude Code's and Codex's folders, so nothing gets installed twice.
@@ -189,6 +197,7 @@ Skills are provided as-is, for productivity and education. Generated skills are 
 ## Credits & licenses
 
 - The hub's own code and skills are released under the [MIT License](LICENSE), unless a skill's `license` field says otherwise.
+- **Commercial use:** the 61 `git-*` skills are **non-commercial** (CC BY-NC-SA 3.0, below), and redistributing them means keeping that license and the attribution. They live in their own plugins (`git-skills` and the `git-*` bundles), so you can install the other plugins (`hub-tools`, `android-automation`, `repo-tools`, `image-tools`, `video-tools`, `testing-tools`, `gitlab-ci-tools`, `writing-tools`) without them. If you redistribute the hub commercially, remove `skills/git-*` first.
 - The `git-*` skills are derived from [*Pro Git*](https://git-scm.com/book) by Scott Chacon and Ben Straub, licensed under [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/). See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 - Each skill declares its license in the `license` field of its frontmatter.
 - The hub layout follows [anthropics/skills](https://github.com/anthropics/skills). Skill paths come from each vendor's documentation, linked in the table above.
