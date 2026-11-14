@@ -163,6 +163,76 @@ class RenderTests(unittest.TestCase):
         self.assertIn("The engine.", self.read("ARCHITECTURE.md"))
 
 
+def build(files):
+    d = tempfile.mkdtemp(prefix="ra-t-")
+    for rel, text in files.items():
+        p = os.path.join(d, *rel.split("/"))
+        os.makedirs(os.path.dirname(p), exist_ok=True)
+        with open(p, "w", encoding="utf-8") as fh:
+            fh.write(text)
+    return d
+
+
+class OtherLayouts(unittest.TestCase):
+    def edges(self, model):
+        return {(e["from"], e["to"]) for e in model["edges"]}
+
+    def test_flat_package_is_split_into_files(self):
+        files = {f"pkg/m{i}.py": ("from pkg import m0\n" if i else "X = 1\n") for i in range(6)}
+        files["pkg/__init__.py"] = ""
+        model = ra.analyze_repo(build(files))
+        names = {c["name"] for c in model["components"]}
+        self.assertIn("pkg/m3.py", names)
+        self.assertIn(("pkg/m3.py", "pkg/m0.py"), self.edges(model))
+
+    def test_granularity_folder_never_splits(self):
+        files = {f"pkg/m{i}.py": "X = 1\n" for i in range(8)}
+        model = ra.analyze_repo(build(files), granularity="folder")
+        self.assertEqual(model["split_files"], 0)
+
+    def test_big_folder_is_opened(self):
+        files = {}
+        for sub in ("api", "db", "ui"):
+            for i in range(6):
+                files[f"app/src/main/java/com/acme/{sub}/F{i}.kt"] = "package com.acme.%s\nclass F%d\n" % (sub, i)
+        files["app/src/main/java/com/acme/api/Server.kt"] = "package com.acme.api\nimport com.acme.db.F1\n"
+        files["other/a.py"] = "x=1\n"
+        files["lib/b.py"] = "x=1\n"
+        model = ra.analyze_repo(build(files))
+        names = {c["name"] for c in model["components"]}
+        self.assertTrue(any(n.endswith("/com/acme/db") for n in names), names)
+        self.assertTrue(any(a.endswith("/api") and b.endswith("/db") for a, b in self.edges(model)))
+
+    def test_rust_modules(self):
+        rust = {"Cargo.toml": "[dependencies]\nserde = '1'\n",
+                "src/main.rs": "mod exec;\nuse crate::fmt::out;\nuse serde::Serialize;\n",
+                "src/exec/mod.rs": "use crate::fmt::out;\n", "src/fmt/mod.rs": "pub fn out() {}\n"}
+        for i in range(4):
+            rust[f"src/exec/e{i}.rs"] = "fn f() {}\n"
+            rust[f"src/fmt/f{i}.rs"] = "fn f() {}\n"
+        m = ra.analyze_repo(build(rust))
+        self.assertIn(("src/exec", "src/fmt"), self.edges(m))
+        self.assertIn(("src", "src/exec"), self.edges(m))
+        self.assertIn("serde", {x["name"] for x in m["externals"]})
+
+    def test_go_packages(self):
+        go = {"go.mod": "module example.com/app\n\ngo 1.21\n",
+              "cmd/app/main.go": 'package main\nimport (\n\t"fmt"\n\t"example.com/app/internal/store"\n\t"github.com/spf13/cobra"\n)\n',
+              "internal/store/s.go": "package store\n", "internal/web/w.go": "package web\n"}
+        m = ra.analyze_repo(build(go))
+        self.assertIn(("cmd/app", "internal/store"), self.edges(m))
+        self.assertIn("github.com/spf13/cobra", {x["name"] for x in m["externals"]})
+
+    def test_docs_only_repo_still_renders(self):
+        m = ra.analyze_repo(build({"README.md": "# x\n", "docs/a.md": "a\n"}))
+        self.assertEqual(m["edges"], [])
+        self.assertTrue(ra.render_html(m, ra.new_annotations(m)).startswith("<!doctype html>"))
+
+    def test_entry_points_skip_tests_and_examples(self):
+        m = ra.analyze_repo(build({"main.py": "x=1\n", "tests/main.py": "x=1\n", "examples/app.py": "x=1\n"}))
+        self.assertEqual(m["entry_points"], ["main.py"])
+
+
 class SmallPieces(unittest.TestCase):
     def test_shown_caps_nodes(self):
         comps = [{"name": f"c{i}", "kind": "source", "files": 1, "lines": i, "language": "", "key_files": []} for i in range(50)]

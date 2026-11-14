@@ -119,7 +119,7 @@ def read_text(root: str, rel: str) -> str:
         return ""
     if b"\0" in data[:4096]:
         return ""
-    return data.decode("utf-8", "replace")
+    return data.decode("utf-8", "replace").replace("\r\n", "\n").replace("\r", "\n")   # CRLF files must parse like LF ones
 
 
 # ------------------------------------------------------------------ components
@@ -138,15 +138,83 @@ def component_dirs(files: list, depth: int) -> list:
     return sorted(dirs)
 
 
-def make_comp_of(cdirs: list):
+def make_comp_of(cdirs: list, split_files=()):
+    """Map a path to its component: a folder, or the file itself for files in `split_files`."""
     ordered = sorted(cdirs, key=len, reverse=True)
+    split = set(split_files)
+    stems = {}
+    for f in split:
+        s = f.rsplit(".", 1)[0] if "." in f.rsplit("/", 1)[-1] else f
+        stems[s] = f
+        if s.rsplit("/", 1)[-1] in ("index", "mod", "__init__") and "/" in s:
+            stems.setdefault(s.rsplit("/", 1)[0], f)
 
     def comp_of(path: str) -> str:
+        if split:
+            q = path[:-2] if path.endswith("/_") else path
+            if q in split:
+                return q
+            if q in stems:
+                return stems[q]
         for d in ordered:
             if path == d or path.startswith(d + "/"):
                 return d
         return "(root)"
     return comp_of
+
+
+def refine_dirs(files: list, cdirs: list) -> list:
+    """Open up a folder that holds most of the code (for example app/src/main, or gson/src/main/java/...)."""
+    code = [f for f in files if (f.rsplit(".", 1)[-1].lower() if "." in f else "") in LANG]
+    cdirs = list(cdirs)
+    for _ in range(4):
+        comp_of = make_comp_of(cdirs)
+        count = {}
+        for f in code:
+            count[comp_of(f)] = count.get(comp_of(f), 0) + 1
+        srcs = {c: n for c, n in count.items() if guess_kind(c, {"py": 1}) in ("source", "web")}
+        big = [c for c, n in srcs.items() if c != "(root)" and n >= 12 and n >= 0.4 * sum(srcs.values())]
+        if not big:
+            break
+        d = big[0]
+        under = [f for f in code if comp_of(f) == d]
+        kids = set()
+        for f in under:
+            rel = f[len(d) + 1:].split("/")[:-1]
+            if not rel:
+                continue
+            child = d + "/" + rel[0]
+            while True:                      # follow a chain of single sub-folders (java/com/acme/app)
+                inside = [x for x in under if x.startswith(child + "/")]
+                direct = [x for x in inside if "/" not in x[len(child) + 1:]]
+                subs = {x[len(child) + 1:].split("/")[0] for x in inside if "/" in x[len(child) + 1:]}
+                if direct or len(subs) != 1:
+                    break
+                child += "/" + next(iter(subs))
+            kids.add(child)
+        if not kids:
+            break
+        cdirs.extend(sorted(kids))      # a single kid is the real package root; the next round opens it
+    return sorted(set(cdirs))
+
+
+def choose_split(files: list, cdirs: list, granularity: str) -> list:
+    """Files to treat as their own components when the folders alone say too little."""
+    if granularity == "folder":
+        return []
+    comp_of = make_comp_of(cdirs)
+    by = {}
+    for p in files:
+        ext = p.rsplit(".", 1)[-1].lower() if "." in p else ""
+        if ext in LANG:
+            by.setdefault(comp_of(p), []).append(p)
+    code = [c for c in by if guess_kind(c, {"py": 1}) in ("source", "web")]
+    if granularity == "auto" and len(code) >= 3:
+        return []
+    if not code:
+        return []
+    best = max(code, key=lambda c: len(by[c]))
+    return sorted(by[best])[:80] if len(by[best]) >= (5 if granularity == "auto" else 2) else []
 
 
 def guess_kind(cdir: str, exts: dict) -> str:
@@ -181,7 +249,7 @@ RE_JAVA_PKG = re.compile(r"^[ \t]*package[ \t]+([\w.]+)", re.M)
 RE_CS_USING = re.compile(r"^[ \t]*using[ \t]+(?:static[ \t]+)?([\w.]+)[ \t]*;", re.M)
 RE_CS_NS = re.compile(r"^[ \t]*namespace[ \t]+([\w.]+)", re.M)
 RE_GO = re.compile(r'^[ \t]*(?:import[ \t]+)?(?:[\w.]+[ \t]+)?"([\w./\-~]+)"[ \t]*$', re.M)
-RE_RS = re.compile(r"^[ \t]*(?:pub[ \t]+)?use[ \t]+([\w]+)::", re.M)
+RE_RS = re.compile(r"^[ \t]*(?:pub(?:\([^)]*\))?[ \t]+)?(?:use[ \t]+(crate::)?(\w+)|mod[ \t]+(\w+)[ \t]*;)", re.M)
 RE_C = re.compile(r'^[ \t]*#[ \t]*include[ \t]+"([^"\n]+)"', re.M)
 RE_RB = re.compile(r"""^[ \t]*require_relative[ \t]+['"]([^'"\n]+)['"]""", re.M)
 
@@ -200,7 +268,8 @@ class Resolver:
             self.names.setdefault(norm_name(d.split("/")[-1]), d)
         self.pymods = {}         # dotted module -> component (None = ambiguous)
         self.packages = {}       # java/kotlin/c# package or namespace -> set(component)
-        self.gomod = ""
+        self.gomods = []         # (module path, dir) for every go.mod
+        self.rust = {}           # module name -> files that can define it
         self.by_base = {}
         for p in files:
             self.by_base.setdefault(p.rsplit("/", 1)[-1], []).append(p)
@@ -214,6 +283,12 @@ class Resolver:
                 m = RE_JAVA_PKG.search(read_text(root, p))
                 if m:
                     self.packages.setdefault(m.group(1), set()).add(comp_of(p))
+                    cls = m.group(1) + "." + p.rsplit("/", 1)[-1].rsplit(".", 1)[0]
+                    self.packages.setdefault(cls, set()).add(comp_of(p))
+            elif ext == "rs":
+                stem = p.rsplit("/", 1)[-1][:-3]
+                name = p.rsplit("/", 2)[-2] if stem == "mod" and "/" in p else stem
+                self.rust.setdefault(name, []).append(p)
             elif ext == "cs":
                 for m in RE_CS_NS.finditer(read_text(root, p)):
                     self.packages.setdefault(m.group(1), set()).add(comp_of(p))
@@ -225,9 +300,11 @@ class Resolver:
                 if name:
                     self.names[norm_name(name.split("/")[-1])] = comp_of(p)
                     self.names[norm_name(name)] = comp_of(p)
-            elif p.endswith("go.mod") and p == "go.mod":
+            elif p.rsplit("/", 1)[-1] == "go.mod":
                 m = re.search(r"^module[ \t]+(\S+)", read_text(root, p), re.M)
-                self.gomod = m.group(1) if m else ""
+                if m:
+                    self.gomods.append((m.group(1), posixpath.dirname(p)))
+                    self.gomods.sort(key=lambda x: -len(x[0]))
 
     def _index_py(self, p: str, pydirs: set) -> None:
         segs = p[:-3].split("/")
@@ -270,10 +347,19 @@ class Resolver:
             yield from self._go(text)
         elif ext == "rs":
             for m in RE_RS.finditer(text):
-                n = m.group(1)
-                if n in ("crate", "self", "super", "std", "core", "alloc"):
+                local, n, modname = m.group(1), m.group(2), m.group(3)
+                n = modname or n
+                if n in ("self", "super", "std", "core", "alloc", "crate"):
                     continue
-                yield (self.names.get(norm_name(n)), None if norm_name(n) in self.names else n)
+                cands = self.rust.get(n)
+                if (local or modname) and cands:
+                    here = p.split("/")[:-1]
+                    best = max(cands, key=lambda f: len(posixpath.commonprefix([f.split("/")[:-1], here])))
+                    yield (self.comp_of(best), None)
+                elif norm_name(n) in self.names:
+                    yield (self.names[norm_name(n)], None)
+                elif not local and not modname and n[:1].islower():
+                    yield (None, n)
         elif ext in ("c", "h", "cpp", "cc", "cxx", "hpp"):
             for m in RE_C.finditer(text):
                 yield self._c(p, m.group(1))
@@ -294,9 +380,18 @@ class Resolver:
                 for _ in range(len(dots) - 1):
                     base = posixpath.dirname(base)
                 target = posixpath.join(base, mod.replace(".", "/")) if mod else base
-                yield (self.comp_of(target + "/_"), None)
+                subs = self._names(names) if not mod else []
+                for s in subs or [None]:        # "from . import x": x is a module next to this file
+                    yield (self.comp_of((posixpath.join(target, s) if s else target) + "/_"), None)
             else:
-                yield self._pymod(mod)
+                subs = [mod + "." + s for s in self._names(names) if mod + "." + s in self.pymods]
+                for s in subs or [mod]:         # "from pkg import mod": mod may be a submodule of pkg
+                    yield self._pymod(s)
+
+    @staticmethod
+    def _names(raw: str) -> list:
+        raw = raw.split("#")[0].strip().strip("()")
+        return [x.strip().split(" as ")[0].strip() for x in raw.split(",") if re.fullmatch(r"\w+(\s+as\s+\w+)?", x.strip())]
 
     def _pymod(self, dotted: str):
         parts = dotted.split(".")
@@ -346,8 +441,10 @@ class Resolver:
     def _go(self, text):
         for m in RE_GO.finditer(text):
             path = m.group(1)
-            if self.gomod and path.startswith(self.gomod):
-                yield (self.comp_of(path[len(self.gomod):].lstrip("/") + "/_"), None)
+            hit = next(((mp, d) for mp, d in self.gomods if path == mp or path.startswith(mp + "/")), None)
+            if hit:
+                rest = path[len(hit[0]):].lstrip("/")
+                yield (self.comp_of(posixpath.join(hit[1], rest) + "/_"), None)
             elif "." in path.split("/")[0]:
                 yield (None, "/".join(path.split("/")[:3]))
 
@@ -371,11 +468,13 @@ def find_entry_points(files: list) -> list:
     for p in files:
         low = p.rsplit("/", 1)[-1].lower()
         parts = p.split("/")
+        if {x.lower() for x in parts[:-1]} & (TEST_PARTS | EXAMPLE_PARTS | DOC_PARTS):
+            continue
         if low in ENTRY_NAMES and len(parts) <= 4:
             out.append(p)
         elif len(parts) >= 2 and parts[0] in ("cmd", "bin") and len(parts) <= 3:
             out.append(p)
-    return sorted(out)[:25]
+    return sorted(out, key=lambda x: (x.count("/"), x))[:10]
 
 
 def find_commands(root: str, files: list) -> list:
@@ -463,12 +562,13 @@ def find_ci(files: list) -> list:
 
 
 # ------------------------------------------------------------------ analysis
-def analyze_repo(root: str, depth: int = 2) -> dict:
+def analyze_repo(root: str, depth: int = 2, granularity: str = "auto") -> dict:
     files = list_files(root)
     if not files:
         raise SystemExit("error: no readable files found")
-    cdirs = component_dirs(files, depth)
-    comp_of = make_comp_of(cdirs)
+    cdirs = refine_dirs(files, component_dirs(files, depth))
+    split = choose_split(files, cdirs, granularity)
+    comp_of = make_comp_of(cdirs, split)
     res = Resolver(files, root, comp_of, cdirs)
     comps = {}
     texts = {}
@@ -500,7 +600,7 @@ def analyze_repo(root: str, depth: int = 2) -> dict:
         src = [(s, n) for s, n in e["samples"] if s.rsplit(".", 1)[-1].lower() in LANG]
         pick = (key or [s for s, _ in sorted(src, key=lambda x: -x[1])] or [s for s, _ in e["samples"]])[:3]
         langs = sorted(e["langs"].items(), key=lambda x: -x[1])
-        components.append({"name": name, "kind": guess_kind(name, e["exts"]), "files": e["files"],
+        components.append({"name": name, "kind": guess_kind(name, e["exts"]) if name not in split else "source", "files": e["files"],
                            "lines": e["lines"], "language": langs[0][0] if langs else "",
                            "key_files": pick})
     names = {c["name"] for c in components}
@@ -512,7 +612,7 @@ def analyze_repo(root: str, depth: int = 2) -> dict:
     for c in comps.values():
         for k, v in c["langs"].items():
             langs_total[k] = langs_total.get(k, 0) + v
-    model = {"name": os.path.basename(os.path.abspath(root)) or "repo", "files": len(files),
+    model = {"name": os.path.basename(os.path.abspath(root)) or "repo", "files": len(files), "split_files": len(split),
              "lines": sum(c["lines"] for c in comps.values()), "languages": dict(sorted(langs_total.items(), key=lambda x: -x[1])),
              "components": components, "edges": elist, "externals": externals,
              "entry_points": find_entry_points(files), "commands": find_commands(root, files),
@@ -887,7 +987,8 @@ def cmd_analyze(a) -> int:
     if re.match(r"^(https?://|ssh://|git@|git://)", src):
         cleanup = tempfile.mkdtemp(prefix="repo-arch-")
         print(f"cloning {src} ...")
-        r = subprocess.run(["git", "clone", "--depth", "1", src, cleanup], capture_output=True, text=True)
+        cmd = ["git", "clone", "--depth", "1"] + (["--branch", a.branch] if a.branch else []) + ["--", src, cleanup]
+        r = subprocess.run(cmd, capture_output=True, text=True)
         if r.returncode != 0:
             raise SystemExit("error: git clone failed: " + r.stderr.strip()[-300:])
         root = cleanup
@@ -898,7 +999,7 @@ def cmd_analyze(a) -> int:
             raise SystemExit(f"error: {src} is not a folder or a git URL")
         name = os.path.basename(root)
     try:
-        model = analyze_repo(root, a.depth)
+        model = analyze_repo(root, a.depth, a.granularity)
     finally:
         if cleanup:
             shutil.rmtree(cleanup, ignore_errors=True)
@@ -935,7 +1036,10 @@ def main(argv=None) -> int:
     p = sub.add_parser("analyze", help="scan a repository and write the first draft")
     p.add_argument("source", help="folder or git URL")
     p.add_argument("--out", help="output folder (default repo-architecture/<name>)")
+    p.add_argument("--branch", help="branch or tag to clone when source is a URL (default: the remote's default branch)")
     p.add_argument("--depth", type=int, default=2, help="how many container folders (src, packages, ...) to look into (default 2)")
+    p.add_argument("--granularity", choices=("auto", "folder", "file"), default="auto",
+                   help="auto (default): folders, but files when the code sits in too few folders; folder; file")
     p.set_defaults(fn=cmd_analyze)
     p = sub.add_parser("render", help="rebuild the documents after editing annotations.json")
     p.add_argument("folder")

@@ -54,15 +54,33 @@ python scripts/repo_architecture.py analyze https://github.com/owner/project.git
 
 Output goes to `repo-architecture/<name>/` in the current folder (`--out` changes it). The command prints the numbers (files, lines, components, dependencies, entry points); tell the user.
 
-Options: `--depth N` looks N levels into container folders such as `src`, `packages`, `services`, `cmd`, `skills` (default 2). Use `--depth 1` for a coarser picture, or `3` for a monorepo.
+Options:
 
-How components are chosen: each top-level folder is a component; container folders are opened one level so `src/api` and `src/db` are separate. Files in the repository root form `(root)`. Imports are read for Python, JavaScript/TypeScript, Java, Kotlin, Scala, C#, Go, Rust, C/C++ and Ruby. Other languages still appear as components, without arrows.
+| Option | Use |
+|---|---|
+| `--depth N` | How many container folders (`src`, `packages`, `services`, `cmd`, `skills`, ...) to open (default 2). `1` is coarser, `3` for deep monorepos |
+| `--granularity auto\|folder\|file` | `auto` (default) draws folders, and draws files when the code sits in too few folders (a flat package, one `lib/`). `folder` never splits; `file` always splits the biggest code folder |
+| `--branch NAME` | Branch or tag to clone when the source is a URL |
+| `--out DIR` | Output folder |
+
+The source can be a local folder (a git clone or not) or any git URL that `git clone` accepts (https, ssh, other hosts). Windows (CRLF) and Unix files are read the same way.
+
+How components are chosen, so a repository of any shape gives a readable picture:
+
+1. Each top-level folder is a component; container folders are opened so `src/api` and `src/db` are separate. Files in the repository root form `(root)`.
+2. If one code folder still holds most of the code (for example `app/src/main/java/com/acme/...` or `django/`), it is opened further, following single-folder chains down to the real package root.
+3. If the code is in only one or two folders (a flat package, a single `lib/`), each file becomes a component (up to 80 files).
+4. At most 30 components are drawn, chosen by code first, then connections, then size. All of them stay in the table.
+
+Imports (the arrows) are read for Python, JavaScript/TypeScript (relative paths, `@/` aliases, workspace package names), Java, Kotlin, Scala, C#, Go (`go.mod` modules), Rust (`mod`, `use crate::`), C/C++ (`#include "..."`) and Ruby (`require_relative`). Other languages and file types still appear as components, without arrows. Outside packages are listed from imports and from manifests (npm, pip, go, cargo, gradle, maven, nuget, gem, composer).
+
+Checked on public repositories of different shapes: Python (requests, flask, django), JavaScript (express), a TypeScript monorepo (vuejs/core), Go (cobra), Rust (fd, ripgrep), Java (gson), Android/Kotlin (architecture-samples), C# (Newtonsoft.Json) and a single-file C project. Each ran in under two seconds. Quality still depends on the layout, so always do step 2.
 
 ### 2. Check the draft against the code
 
 Open `model.json` and `ARCHITECTURE.md`. Before describing anything, check that the structure is believable:
 
-- Are the components what a maintainer would call the parts? If one folder holds several unrelated parts, or the repo layout hides the real modules, re-run with another `--depth`.
+- Are the components what a maintainer would call the parts? If one folder holds several unrelated parts, or the repo layout hides the real modules, re-run with another `--depth` or `--granularity`.
 - Do the arrows look right? Open two or three files and confirm. Missing arrows are normal for languages not parsed or for dynamic wiring; add those in the flows and notes, do not invent arrows.
 - Is a big component only docs, data or generated code? Say so in its description.
 
@@ -128,12 +146,13 @@ Give the paths of both files, the counts, the 3 or 4 most important things about
 | `error: ... is not a folder or a git URL` | Check the path, or give a full `https://`, `ssh://` or `git@host:` URL |
 | `error: git clone failed` | Check URL, network and access. For a private repository, ask the user to clone it and give the folder |
 | `error: no readable files found` | The folder is empty or holds only binary files |
-| One giant component, or only `(root)` | The code sits in a folder not recognised as a container. Re-run with `--depth 3`, or ask the user which folders are the modules |
+| One giant component, or only `(root)` | Re-run with `--granularity file`, or `--depth 3`, or ask the user which folders are the modules. A single-file project really is one box: describe its functions in the flows |
 | No arrows at all | The language is not parsed, or each part imports through a shared name the script cannot map. Describe the relations in flows and notes |
 | Build output or `node_modules` appears | The folder is not a git repository so `.gitignore` is not applied. Common folders are skipped; copy the sources elsewhere if needed |
 | `annotations.json is not valid JSON` | Fix the quoting or trailing comma, then run `render` again |
 | Descriptions vanished after `analyze` | `analyze` only overwrites `model.json`; `annotations.json` is kept. Check the output folder, and for components renamed by `--depth` re-add their text |
-| Diagram too crowded | Only 30 components are drawn. Use `--depth 1`, or analyze a sub-folder as its own repo |
+| Diagram too crowded | Only 30 components are drawn. Use `--depth 1`, `--granularity folder`, or analyze a sub-folder as its own repo |
+| Only test or example folders have arrows | The real code is in a language or import style the script does not parse. Say so in the notes and describe the relations in the flows |
 
 ## Tests
 
