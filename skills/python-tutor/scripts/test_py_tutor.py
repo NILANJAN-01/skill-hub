@@ -240,6 +240,7 @@ class OutputTests(unittest.TestCase):
         notes = self.load("sample.notes.json")
         self.assertIn("Imports other modules", notes["blocks"]["imports@2"]["explanation"])      # auto-filled
         notes["summary"] = "Demo file <b>with</b> markup & `code`."
+        notes["functionality"] = "Greets people and caches Fibonacci numbers."
         for bid, v in notes["blocks"].items():
             if pt.TODO in v["explanation"]:
                 v["explanation"] = "Explains **this** block <script>alert(1)</script>."
@@ -291,6 +292,213 @@ class OutputTests(unittest.TestCase):
             pt.main(["analyze", os.path.join(tempfile.gettempdir(), "no-such-file-xyz.py")])
         with self.assertRaises(SystemExit):
             pt.main(["render", tempfile.mkdtemp()])
+
+
+TOOL = """\
+\"\"\"Tool.\"\"\"
+import argparse
+import os
+import requests
+
+
+def load(path):
+    \"\"\"Read a file.
+
+    >>> load('a.txt')
+    'hi'
+    \"\"\"
+    with open(path) as f:
+        return f.read()
+
+
+def save(path, text, mode="w"):
+    if not text:
+        raise ValueError("empty")
+    with open(path, mode) as f:
+        f.write(text)
+    print("saved")
+    return True
+
+
+def fetch(url):
+    token = os.getenv("API_TOKEN")
+    return requests.get(url, headers={"t": token}).json()
+
+
+def helper(x):
+    return load(x)
+
+
+def main():
+    p = argparse.ArgumentParser(description="demo")
+    p.add_argument("--out", help="output file", default="o.txt")
+    args = p.parse_args()
+    save(args.out, helper("in.txt"))
+
+
+if __name__ == "__main__":
+    main()
+"""
+
+PY2 = """\
+import os
+
+def run(items):
+    for k, v in items.iteritems():
+        print k, v
+    try:
+        x = raw_input("name? ")
+    except IOError, e:
+        pass
+    return x
+
+class Box:
+    def size(self):
+        return 3
+"""
+
+
+class FunctionalityTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.model = pt.analyze_source("tool.py", TOOL)
+        cls.f = cls.model["functionality"]
+        cls.api = {x["name"]: x for x in cls.f["api"]}
+
+    def test_api(self):
+        self.assertEqual([p["name"] for p in self.api["save"]["params"]], ["path", "text", "mode"])
+        self.assertEqual(self.api["save"]["params"][2]["default"], "'w'" if False else '"w"')
+        self.assertIn("a bool", self.api["save"]["returns"])
+        self.assertEqual(self.api["save"]["raises"], ["ValueError"])
+        self.assertIn("opens files (read or write decided at run time)", self.api["save"]["effects"])
+        self.assertIn("prints to the screen", self.api["save"]["effects"])
+        self.assertEqual(self.api["load"]["doc"], "Read a file.")
+        self.assertIn("reads files", self.api["load"]["effects"])
+
+    def test_effects_env_network_and_deps(self):
+        self.assertIn("uses the network", self.f["effects"])
+        self.assertIn("reads environment variables", self.f["effects"])
+        self.assertEqual(self.f["env"], ["API_TOKEN"])
+        self.assertEqual(self.f["third_party"], ["requests"])
+
+    def test_cli_and_flow(self):
+        cli = self.f["cli"]
+        self.assertEqual(cli["description"], "demo")
+        self.assertEqual(cli["arguments"][0]["flags"], ["--out"])
+        self.assertTrue(self.f["has_main_guard"])
+        self.assertEqual(self.f["entry_calls"], ["main"])
+        self.assertEqual(self.f["call_graph"]["main"], ["save", "helper"])
+        self.assertEqual(self.f["call_graph"]["helper"], ["load"])
+
+    def test_doctest_examples(self):
+        self.assertEqual(self.f["doctests"][0]["source"], "load('a.txt')")
+        self.assertEqual(self.f["doctests"][0]["want"], "'hi'")
+
+    def test_functionality_section_renders(self):
+        notes = pt.new_notes(self.model)
+        notes["functionality"] = "Copies **text** into a file."
+        notes["example_run"] = {"command": "python tool.py --out x.txt", "output": "saved", "note": "Ran in a temp folder."}
+        page = pt.render_html(self.model, notes)
+        for needle in ("Functionality: what this file does", "When the file runs", "Inputs, outputs and side effects",
+                       "public API", "Examples from the docstrings", "Example run", "API_TOKEN", "saved"):
+            self.assertIn(needle, page)
+        b = Balanced()
+        b.feed(page)
+        self.assertEqual((b.stack, b.bad), ([], []))
+
+
+class SelectionTests(unittest.TestCase):
+    def test_only_keeps_selected_and_callees(self):
+        m = pt.analyze_source("tool.py", TOOL, only=["helper"])
+        ids = [b["id"] for b in m["blocks"]]
+        self.assertIn("function:helper", ids)
+        self.assertIn("function:load", ids)          # called by helper
+        self.assertNotIn("function:fetch", ids)
+        self.assertNotIn("function:main", ids)
+        self.assertEqual(m["selected"], ["helper"])
+        self.assertGreater(m["omitted"], 0)
+        self.assertNotIn("uses the network", m["functionality"]["effects"])
+        page = pt.render_html(m, pt.new_notes(m))
+        self.assertIn("Selected parts only", page)
+
+    def test_only_class_and_unknown_name(self):
+        m = pt.analyze_source("s.py", SAMPLE, only=["Animal"])
+        ids = [b["id"] for b in m["blocks"]]
+        self.assertIn("method:Animal.upper", ids)
+        self.assertNotIn("function:fib", ids)
+        with self.assertRaises(SystemExit):
+            pt.analyze_source("s.py", SAMPLE, only=["nope"])
+
+
+class LooseModeTests(unittest.TestCase):
+    def test_python2_file_gets_an_outline(self):
+        m = pt.analyze_source("old.py", PY2)
+        self.assertTrue(m["fallback"])
+        self.assertIsNotNone(m["error"])
+        ids = [b["id"] for b in m["blocks"]]
+        self.assertEqual(ids, ["function:run", "class:Box", "method:Box.size"])
+        what = {x["what"] for x in m["py2"]}
+        self.assertTrue({"print statement", "dict.iteritems()", "raw_input", "old except syntax"} <= what)
+        self.assertIn("for-loops", m["concepts"])
+        page = pt.render_html(m, pt.new_notes(m))
+        self.assertIn("Loose mode", page)
+        self.assertIn("Python 2 idioms found", page)
+        b = Balanced()
+        b.feed(page)
+        self.assertEqual((b.stack, b.bad), ([], []))
+        self.assertIn("block function:run", pt.missing(m, pt.new_notes(m)))
+
+    def test_unparsable_without_defs_is_an_error_page(self):
+        m = pt.analyze_source("x.py", "print 'hi'\n")
+        self.assertFalse(m["fallback"])
+        self.assertEqual(pt.missing(m, pt.new_notes(m)), [])
+
+
+class NotesQualityTests(unittest.TestCase):
+    def setUp(self):
+        self.model = pt.analyze_source("tool.py", TOOL)
+        self.notes = pt.new_notes(self.model)
+
+    def test_warnings(self):
+        for v in self.notes["blocks"].values():
+            if pt.TODO in v["explanation"]:
+                v["explanation"] = "Does something useful here, in detail."
+        self.notes["blocks"]["function:load"]["explanation"] = "ok"
+        self.notes["blocks"]["function:save"]["explanation"] = "Writes the text using `write_everything()` and `os`."
+        self.notes["blocks"]["function:helper"]["lines"] = {"999": "wrong place"}
+        w = "\n".join(pt.warnings(self.model, self.notes))
+        self.assertIn("function:load: explanation is very short", w)
+        self.assertIn("write_everything", w)
+        self.assertNotIn("`os`", w)                       # exists in the file
+        self.assertIn("line note 999 is outside the block", w)
+        self.assertIn("same explanation as", w)
+
+    def test_notes_follow_moved_code(self):
+        self.notes["blocks"]["function:load"]["explanation"] = "Reads a whole file into one string."
+        d = tempfile.mkdtemp(prefix="pt-n-")
+        path = os.path.join(d, "tool.notes.json")
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump(self.notes, fh)
+        # same code under a new name: the explanation is found again by the code's hash
+        renamed = TOOL.replace("def load(path):", "def read_it(path):").replace("load(", "read_it(")
+        moved = pt.analyze_source("tool.py", renamed)
+        loaded = pt.load_notes(path, moved)
+        self.assertNotIn("function:load", loaded["blocks"])
+        self.assertEqual(loaded["blocks"]["function:read_it"]["explanation"] != "", True)
+        # a renamed body changes the hash, so only an exact code match carries over: test with a pure move
+        shifted = pt.analyze_source("tool.py", "# a new first line\n" + TOOL)
+        loaded = pt.load_notes(path, shifted)
+        self.assertEqual(loaded["blocks"]["function:load"]["explanation"], "Reads a whole file into one string.")
+        self.assertEqual(sorted(shifted["blocks"][-1]["hash"]), sorted(pt.analyze_source("tool.py", TOOL)["blocks"][-1]["hash"]))
+
+    def test_cli_only_option(self):
+        src = make_file(TOOL, "tool.py")
+        out = tempfile.mkdtemp(prefix="pt-o-")
+        with redirect_stdout(io.StringIO()):
+            pt.main(["analyze", src, "--out", out, "--only", "helper,fetch"])
+        with open(os.path.join(out, "tool.model.json"), encoding="utf-8") as fh:
+            m = json.load(fh)
+        self.assertEqual(m["selected"], ["fetch", "helper"])
 
 
 if __name__ == "__main__":

@@ -18,6 +18,7 @@ from __future__ import annotations
 import argparse
 import ast
 import builtins
+import hashlib
 import html
 import io
 import json
@@ -28,6 +29,7 @@ import tokenize
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from py_tutor_concepts import CONCEPTS, FUNDAMENTALS, LEVELS, ORDER  # noqa: E402
+from py_tutor_behaviour import functionality, loose_concepts, loose_gotchas, loose_outline, loose_py2  # noqa: E402
 
 TODO = "TODO(tutor)"
 MAX_BYTES = 1_000_000
@@ -600,12 +602,86 @@ def level_name(concepts: dict) -> str:
     return "Beginner"
 
 
-def analyze_source(rel: str, source: str) -> dict:
+def block_hash(lines: list, b: dict) -> str:
+    text = "\n".join(x.rstrip() for x in lines[b["start"] - 1:b["end"]] if x.strip())
+    return hashlib.sha1(text.encode("utf-8", "replace")).hexdigest()[:12]
+
+
+def _loose(model: dict, lines: list) -> None:
+    """Line-pattern analysis for files that do not parse (Python 2, syntax errors)."""
+    outline = loose_outline(lines)
+    if not outline:
+        return
+    blocks = []
+    for kind, name, parent, s, e in outline:
+        c = {k: v for k, v in loose_concepts(lines, s, e).items() if k in CONCEPTS}
+        m = re.search(r"def\s+\w+\s*(\([^)]*\))", lines[s - 1])
+        blocks.append({"kind": kind, "name": name, "parent": parent, "start": s, "end": e, "concepts": c,
+                       "level": max([CONCEPTS[x]["level"] for x in c] or [1]), "signature": m.group(1) if m else ""})
+    assign_ids(blocks)
+    for b in blocks:
+        b["hash"] = block_hash(lines, b)
+    total = {k: v for k, v in loose_concepts(lines).items() if k in CONCEPTS}
+    model.update(fallback=True, blocks=blocks, concepts=total, level=level_name(total), gotchas=loose_gotchas(lines),
+                 py2=loose_py2(lines))
+    model["source_lines"] = mask_secret_lines(lines, model["gotchas"])
+    model["functions"] = sum(1 for b in blocks if b["kind"] in ("function", "method"))
+    model["classes"] = sum(1 for b in blocks if b["kind"] == "class")
+
+
+def full_name(b: dict) -> str:
+    return (b["parent"] + "." if b["parent"] else "") + b["name"]
+
+
+def apply_selection(model: dict, only: list) -> None:
+    """Keep only the selected functions/classes (and what they call in this file)."""
+    names = {x.strip() for x in only if x.strip()}
+    graph = (model.get("functionality") or {}).get("call_graph", {})
+    sel = [b for b in model["blocks"] if b["kind"] in ("function", "method", "class")
+           and (b["name"] in names or full_name(b) in names or b["parent"].split(".")[0] in names)]
+    if not sel:
+        raise SystemExit(f"error: none of {sorted(names)} found in {model['file']} "
+                         "(use a function name, Class.method or a class name)")
+    keep = {full_name(b) for b in sel}
+    stack = list(keep)
+    while stack:
+        for callee in graph.get(stack.pop(), []):
+            if callee not in keep:
+                keep.add(callee)
+                stack.append(callee)
+    owners = {k.split(".")[0] for k in keep if "." in k}
+    kept = [b for b in model["blocks"] if b["kind"] in ("imports", "docstring") or full_name(b) in keep
+            or (b["kind"] == "class" and b["name"] in owners and not b["parent"])]
+    model["omitted"] = len(model["blocks"]) - len(kept)
+    model["selected"] = sorted(names)
+    model["blocks"] = kept
+    total: dict = {}
+    for b in kept:
+        for cid, ln in b["concepts"].items():
+            total.setdefault(cid, []).extend(ln)
+    model["concepts"] = {k: sorted(set(v)) for k, v in total.items()}
+    model["level"] = level_name(model["concepts"])
+    spans = [(b["start"], b["end"]) for b in kept]
+    inside = lambda n: any(s <= n <= e for s, e in spans)  # noqa: E731
+    model["gotchas"] = [g for g in model["gotchas"] if inside(g["line"])]
+    f = model.get("functionality")
+    if f:
+        f["api"] = [x for x in f["api"] if x["name"] in keep or x["name"] in owners]
+        f["effects"] = {k: [n for n in v if inside(n)] for k, v in f["effects"].items()}
+        f["effects"] = {k: v for k, v in f["effects"].items() if v}
+        f["doctests"] = [d for d in f["doctests"] if d["in"] in keep or d["in"] in owners or d["in"] in names]
+        f["files"] = [x for x in f["files"] if inside(x["line"])]
+        f["cli"]["arguments"] = [x for x in f["cli"]["arguments"] if inside(x["line"])]
+    model["functions"] = sum(1 for b in kept if b["kind"] in ("function", "method"))
+    model["classes"] = sum(1 for b in kept if b["kind"] == "class")
+
+
+def analyze_source(rel: str, source: str, only=None) -> dict:
     lines = source.split("\n")
     if lines and lines[-1] == "":
         lines = lines[:-1]
     model = {"file": rel, "line_count": len(lines), "source_lines": lines, "error": None, "blocks": [], "concepts": {},
-             "gotchas": [], "level": "Beginner", "comments": 0, "functions": 0, "classes": 0}
+             "gotchas": [], "level": "Beginner", "comments": 0, "functions": 0, "classes": 0, "fallback": False}
     try:
         for tok in tokenize.generate_tokens(io.StringIO(source).readline):
             if tok.type == tokenize.COMMENT:
@@ -617,24 +693,31 @@ def analyze_source(rel: str, source: str) -> dict:
     except SyntaxError as e:
         hint = ""
         if re.search(r"^\s*print\s+[^(\s=]", source, re.M):
-            hint = "This looks like Python 2 code (print statement). The notes tool reads Python 3 syntax."
+            hint = "This looks like Python 2 code (print statement)."
         elif "match" in source and sys.version_info < (3, 10):
             hint = "The file may use features newer than this Python version."
         model["error"] = {"message": e.msg, "line": e.lineno or 0, "hint": hint}
+        _loose(model, lines)
         return model
     except (ValueError, RecursionError) as e:
         model["error"] = {"message": str(e), "line": 0, "hint": ""}
+        _loose(model, lines)
         return model
     model["gotchas"] = find_gotchas(tree)
     model["source_lines"] = mask_secret_lines(lines, model["gotchas"])
     blocks = make_blocks(tree.body, lines)
     assign_ids(blocks)
+    for b in blocks:
+        b["hash"] = block_hash(lines, b)
     total = detect(tree)
     if model["comments"]:
         total["docstrings"] = sorted(set(total.get("docstrings", []) + [0]))
     model.update(blocks=blocks, concepts=total, level=level_name(total))
     model["functions"] = sum(1 for b in blocks if b["kind"] in ("function", "method"))
     model["classes"] = sum(1 for b in blocks if b["kind"] == "class")
+    model["functionality"] = functionality(tree, source, STDLIB)
+    if only:
+        apply_selection(model, only)
     return model
 
 
@@ -642,10 +725,17 @@ def new_notes(model: dict) -> dict:
     blocks = {}
     for b in model["blocks"]:
         auto = auto_text(b)
-        blocks[b["id"]] = {"explanation": auto or f"{TODO}: explain this block in plain words for a beginner", "deeper": "", "lines": {}}
+        blocks[b["id"]] = {"explanation": auto or f"{TODO}: explain this block in plain words for a beginner", "deeper": "",
+                           "lines": {}, "hash": b.get("hash", "")}
     return {"summary": f"{TODO}: what this file does, in two or three sentences",
-            "how_to_run": "", "blocks": blocks,
+            "functionality": f"{TODO}: what the file does when it runs or is imported: inputs, processing, outputs, side effects",
+            "how_to_run": "", "example_run": {"command": "", "output": "", "note": ""}, "blocks": blocks,
             "interview_questions": [], "exercises": [], "notes": []}
+
+
+def _is_default(entry: dict) -> bool:
+    e = entry.get("explanation", "")
+    return not e.strip() or TODO in e
 
 
 def load_notes(path: str, model: dict) -> dict:
@@ -656,26 +746,75 @@ def load_notes(path: str, model: dict) -> dict:
                 have = json.load(fh)
         except ValueError as e:
             raise SystemExit(f"error: {path} is not valid JSON: {e}")
-        for k in ("summary", "how_to_run", "interview_questions", "exercises", "notes"):
+        for k in ("summary", "functionality", "how_to_run", "example_run", "interview_questions", "exercises", "notes"):
             if k in have:
                 notes[k] = have[k]
-        for bid, v in (have.get("blocks") or {}).items():
-            if bid in notes["blocks"] and isinstance(v, dict):
+        old = have.get("blocks") or {}
+        by_hash = {b.get("hash"): b["id"] for b in model["blocks"] if b.get("hash")}
+        for bid, v in old.items():
+            if not isinstance(v, dict):
+                continue
+            if bid in notes["blocks"]:
+                keep_hash = notes["blocks"][bid]["hash"]
                 notes["blocks"][bid].update(v)
+                notes["blocks"][bid]["hash"] = keep_hash
+            else:                       # the block moved or was renamed: find it again by its code
+                tid = by_hash.get(v.get("hash"))
+                if tid and tid not in old and _is_default(notes["blocks"][tid]):
+                    keep_hash = notes["blocks"][tid]["hash"]
+                    notes["blocks"][tid].update(v)
+                    notes["blocks"][tid]["hash"] = keep_hash
     return notes
 
 
 def missing(model: dict, notes: dict) -> list:
     out = []
-    if model.get("error"):
+    if model.get("error") and not model.get("fallback"):
         return out
     if TODO in notes["summary"] or not notes["summary"].strip():
         out.append("summary")
+    if model.get("functionality") and (TODO in notes.get("functionality", "") or not notes.get("functionality", "").strip()):
+        out.append("functionality")
     for b in model["blocks"]:
         e = notes["blocks"].get(b["id"], {}).get("explanation", "")
         if not e.strip() or TODO in e:
             out.append("block " + b["id"])
     return out
+
+
+TICKED = re.compile(r"`([A-Za-z_][\w]*(?:\.[\w]+)*)(?:\(\))?`")
+
+
+def warnings(model: dict, notes: dict) -> list:
+    """Cheap sanity checks on the written explanations (they never block, unless --strict)."""
+    out = []
+    src = "\n".join(model.get("source_lines", []))
+    known = set(re.findall(r"[A-Za-z_]\w*", src)) | BUILTIN_NAMES | set(STDLIB) | {"self", "cls", "True", "False", "None"} | \
+        set(__import__("keyword").kwlist)
+    seen = {}
+    texts = [("summary", notes.get("summary", "")), ("functionality", notes.get("functionality", ""))]
+    for b in model["blocks"]:
+        nb = notes["blocks"].get(b["id"], {})
+        texts.append((b["id"], nb.get("explanation", "") + "\n" + nb.get("deeper", "")))
+        e = nb.get("explanation", "").strip()
+        if e and TODO not in e and not auto_text(b):
+            if len(e) < 25:
+                out.append(f"{b['id']}: explanation is very short ({len(e)} characters)")
+            if e in seen:
+                out.append(f"{b['id']}: same explanation as {seen[e]}")
+            seen.setdefault(e, b["id"])
+        for k in (nb.get("lines") or {}):
+            try:
+                if not b["start"] <= int(k) <= b["end"]:
+                    out.append(f"{b['id']}: line note {k} is outside the block (lines {b['start']}-{b['end']})")
+            except ValueError:
+                out.append(f"{b['id']}: line note key {k!r} is not a line number")
+    for where, text in texts:
+        for m in TICKED.finditer(text):
+            first = m.group(1).split(".")[0]
+            if first not in known and len(first) > 1:
+                out.append(f"{where}: mentions `{m.group(1)}`, which does not appear in the file (check for a mistake)")
+    return sorted(set(out))
 
 
 # ------------------------------------------------------------------ HTML
@@ -755,9 +894,121 @@ def complexity_note(b: dict) -> str:
     return "; ".join(bits)
 
 
+def render_banners(model: dict) -> str:
+    out = []
+    if model.get("selected"):
+        out.append('<div class="warn"><b>Selected parts only:</b> ' + ", ".join(f"<code>{esc(x)}</code>" for x in model["selected"])
+                   + f" and the functions in this file that they call. {model.get('omitted', 0)} other block(s) are left out.</div>")
+    if model.get("fallback"):
+        e = model["error"]
+        out.append(f'<div class="err"><b>Loose mode.</b> This file could not be parsed as Python 3 (line {e["line"]}: {esc(e["message"])}). '
+                   + (esc(e["hint"]) + " " if e["hint"] else "")
+                   + "The outline, concepts and gotchas below come from line patterns, so they can be incomplete.</div>")
+        if model.get("py2"):
+            rows = "".join(f'<tr><td>{x["line"]}</td><td>{esc(x["what"])}</td><td>{md_inline(x["fix"])}</td></tr>' for x in model["py2"][:25])
+            out.append('<h3>Python 2 idioms found</h3><table class="idx"><tr><th>Line</th><th>Found</th><th>Python 3</th></tr>' + rows + "</table>")
+    return "".join(out)
+
+
+def sig_text(entry: dict) -> str:
+    ps = []
+    for p in entry["params"]:
+        s = p["name"].replace(" (keyword-only)", "")
+        if p["type"]:
+            s += ": " + p["type"]
+        if p["default"] is not None:
+            s += " = " + p["default"]
+        ps.append(s)
+    return f'{entry["name"]}({", ".join(ps)})' + (f' -> {entry["returns_type"]}' if entry["returns_type"] else "")
+
+
+INPUT_EFFECTS = {"reads command-line arguments", "asks the user for input", "reads environment variables", "reads files",
+                 "reads data files", "reads standard input"}
+OUTPUT_EFFECTS = {"prints to the screen", "writes files", "writes data files", "uses the network", "writes log messages",
+                  "ends the program", "creates folders or copies files", "deletes, renames or moves files"}
+
+
+def render_functionality(model: dict, notes: dict) -> str:
+    f = model.get("functionality")
+    if not f:
+        return ""
+    out = ['<h2 id="functionality">Functionality: what this file does</h2>']
+    out.append(paragraphs(notes.get("functionality", "")))
+    docs = {x["name"]: x["doc"] for x in f["api"]}
+    # when it runs
+    out.append("<h3>When the file runs</h3>")
+    if f["entry_calls"]:
+        shown = set()
+
+        def tree(name, depth, trail):
+            d = f' <span class="mut">{esc(docs[name])}</span>' if docs.get(name) else ""
+            if name in shown:                    # each function is expanded once; later mentions point back
+                return f'<li><code>{esc(name)}()</code> <span class="mut">(see above)</span></li>'
+            shown.add(name)
+            kids = [] if depth >= 4 or name in trail else [c for c in f["call_graph"].get(name, []) if c not in trail]
+            inner = "<ul>" + "".join(tree(c, depth + 1, trail + [name]) for c in kids[:8]) + "</ul>" if kids else ""
+            return f"<li><code>{esc(name)}()</code>{d}{inner}</li>"
+        why = "Starting at the main guard" if f["has_main_guard"] else "Importing or running the file executes top-level code that calls"
+        out.append(f"<p>{why}, the program goes through:</p><ul>" + "".join(tree(c, 0, []) for c in f["entry_calls"][:6]) + "</ul>")
+        if f["runs_on_import"]:
+            out.append('<p class="warn">Code at the top level runs as soon as the file is imported, not only when it is run directly.</p>')
+    else:
+        out.append("<p>Nothing runs automatically. The file is a module of functions and classes meant to be imported and called.</p>")
+    # inputs / outputs
+    rows = []
+    cli = f["cli"]
+    if cli["arguments"] or cli["subcommands"]:
+        flags = "; ".join("<code>" + esc(" ".join(a["flags"]) or "argument") + "</code>" + (f" {esc(a['help'])}" if a["help"] else "") for a in cli["arguments"][:12])
+        rows.append(("Input", "command-line options" + (f" (subcommands: {', '.join(cli['subcommands'])})" if cli["subcommands"] else ""), flags, ""))
+    for label, lines_ in f["effects"].items():
+        kind = "Input" if label in INPUT_EFFECTS else "Output" if label in OUTPUT_EFFECTS else "Other effect"
+        extra = ""
+        if label == "reads environment variables" and f["env"]:
+            extra = "variables: " + ", ".join(f"<code>{esc(v)}</code>" for v in f["env"])
+        elif label in ("reads files", "writes files") and f["files"]:
+            mode = (lambda m: any(c in m for c in "wax+"))
+            extra = "files: " + ", ".join(f"<code>{esc(x['path'])}</code>" for x in f["files"] if mode(x["mode"]) == (label == "writes files"))[:300]
+        elif label == "uses the network" and f["urls"]:
+            extra = "URLs: " + ", ".join(f"<code>{esc(u)}</code>" for u in f["urls"][:4])
+        rows.append((kind, esc(label), extra, "line" + ("s " if len(lines_) > 1 else " ") + ", ".join(map(str, lines_[:8]))))
+    out.append("<h3>Inputs, outputs and side effects</h3>")
+    if rows:
+        out.append('<table class="idx"><tr><th></th><th>What</th><th>Details</th><th>Where</th></tr>'
+                   + "".join(f"<tr><td>{a}</td><td>{b}</td><td>{c}</td><td>{d}</td></tr>" for a, b, c, d in rows) + "</table>")
+    else:
+        out.append("<p>No input, output or side effects were detected: the code only computes values. (Static analysis can miss effects hidden behind other libraries.)</p>")
+    if f["third_party"]:
+        out.append("<p><b>Needs these non-standard-library packages:</b> " + ", ".join(f"<code>{esc(x)}</code>" for x in f["third_party"]) + "</p>")
+    # API
+    pub = [x for x in f["api"] if x["public"]]
+    if pub:
+        out.append("<h3>What you can call (public API)</h3>")
+        rows = []
+        for x in pub:
+            if x["kind"] == "class":
+                sig = "class " + x["name"] + (f"({', '.join(x['bases'])})" if x.get("bases") else "")
+            else:
+                sig = sig_text(x)
+            ret = "; ".join(x["returns"]) if x["kind"] != "class" else ""
+            rows.append(f"<tr><td><code>{esc(sig)}</code><br><span class=mut>line {x['line']}</span></td><td>{esc(x['doc'])}</td>"
+                        f"<td>{esc(ret)}</td><td>{esc(', '.join(x['raises']))}</td><td>{esc(', '.join(x['effects']))}</td></tr>")
+        out.append('<div style="overflow-x:auto"><table class="idx"><tr><th>Signature</th><th>Docstring</th><th>Returns</th><th>Can raise</th><th>Side effects</th></tr>'
+                   + "".join(rows) + "</table></div>")
+    if f["doctests"]:
+        out.append("<h3>Examples from the docstrings</h3><p class=mut>Written by the code's author; not run here.</p>")
+        for d in f["doctests"][:10]:
+            out.append(f'<pre class="code" style="padding:8px 12px">&gt;&gt;&gt; {esc(d["source"])}\n{esc(d["want"])}</pre>')
+    er = notes.get("example_run") or {}
+    if isinstance(er, dict) and (er.get("command") or er.get("output")):
+        out.append('<h3>Example run</h3><p class="mut">Recorded by the reader with the owner\'s permission; the script itself never runs the file.</p>'
+                   f'<pre class="code" style="padding:8px 12px">$ {esc(er.get("command", ""))}\n{esc(er.get("output", ""))}</pre>'
+                   + (f'<p>{md_inline(er["note"])}</p>' if er.get("note") else ""))
+    return "".join(out)
+
+
 def render_html(model: dict, notes: dict) -> str:
     name = model["file"]
-    if model.get("error"):
+    if model.get("error") and not model.get("fallback"):
         e = model["error"]
         src = "".join(f'<tr><td class="n">{i}</td><td class="t">{esc(t)}</td></tr>' for i, t in enumerate(model["source_lines"][:200], 1))
         body = (f'<div class="err"><b>Could not parse {esc(name)}</b><br>Line {e["line"]}: {esc(e["message"])}'
@@ -772,8 +1023,10 @@ def render_html(model: dict, notes: dict) -> str:
     out.append(f'<h1>Notes: <code>{esc(name)}</code> {badge({"Beginner": 1, "Intermediate": 2, "Advanced": 3}[model["level"]])}</h1>')
     out.append('<div class="bar" role="group" aria-label="Choose your level"><b>Show up to:</b>'
                '<button data-n="1">Beginner</button><button data-n="2">Intermediate</button><button data-n="3" aria-pressed="true">Advanced</button></div>')
-    out.append('<nav><a href="#overview">Overview</a><a href="#walkthrough">Walkthrough</a><a href="#concepts">Concepts</a>'
+    out.append('<nav><a href="#overview">Overview</a>' + ('<a href="#functionality">Functionality</a>' if model.get("functionality") else "")
+               + '<a href="#walkthrough">Walkthrough</a><a href="#concepts">Concepts</a>'
                '<a href="#gotchas">Gotchas</a><a href="#interview">Interview</a><a href="#revise">Revise</a></nav>')
+    out.append(render_banners(model))
     out.append('<h2 id="overview">Overview</h2>' + paragraphs(notes["summary"]))
     if notes.get("how_to_run"):
         out.append("<p><b>How to run:</b> " + md_inline(notes["how_to_run"]) + "</p>")
@@ -784,6 +1037,7 @@ def render_html(model: dict, notes: dict) -> str:
         ("comments", model["comments"]), ("concepts used", len(found)))) + "</div>")
     out.append(f'<p class="mut">Concepts by level: {badge(1)} {counts[1]} &nbsp; {badge(2)} {counts[2]} &nbsp; {badge(3)} {counts[3]}. '
                "Read the walkthrough top to bottom; use the buttons above to hide concepts beyond your level.</p>")
+    out.append(render_functionality(model, notes))
     # walkthrough
     out.append('<h2 id="walkthrough">Walkthrough</h2>')
     for b in model["blocks"]:
@@ -903,6 +1157,7 @@ def collect(paths) -> list:
 
 
 def cmd_analyze(a) -> int:
+    only = [x for x in (a.only or '').split(',') if x.strip()]
     files = collect(a.paths)
     first = a.paths[0].rstrip("/\\")
     name = os.path.splitext(os.path.basename(first))[0] if os.path.isfile(first) else os.path.basename(os.path.abspath(first))
@@ -910,7 +1165,7 @@ def cmd_analyze(a) -> int:
     os.makedirs(out, exist_ok=True)
     models = []
     for rel, full in files:
-        model = analyze_source(rel, read_py(full))
+        model = analyze_source(rel, read_py(full), only)
         model["slug"] = slugify(rel)
         write(os.path.join(out, model["slug"] + ".model.json"), json.dumps(model, indent=2, ensure_ascii=False) + "\n")
         models.append(model)
@@ -927,9 +1182,11 @@ def render_one(out: str, model: dict) -> None:
     notes = load_notes(npath, model)
     write(npath, json.dumps(notes, indent=2, ensure_ascii=False) + "\n")
     write(os.path.join(out, model["slug"] + ".html"), render_html(model, notes))
-    if model.get("error"):
+    if model.get("error") and not model.get("fallback"):
         print(f"  {model['file']}: could not parse (line {model['error']['line']}: {model['error']['message']}); a page with the error was written")
         return
+    if model.get("fallback"):
+        print(f"  {model['file']}: could not parse (line {model['error']['line']}: {model['error']['message']}); using loose mode")
     todo = missing(model, notes)
     print(f"  {model['file']}: {model['level']}, {len(model['concepts'])} concepts, {len(model['blocks'])} blocks, "
           f"{len(model['gotchas'])} gotchas; {len(todo)} still to explain")
@@ -956,16 +1213,23 @@ def cmd_render(a) -> int:
 
 
 def cmd_check(a) -> int:
-    bad = 0
+    bad = warned = 0
     for m in load_models(a.folder):
-        todo = missing(m, load_notes(os.path.join(a.folder, m["slug"] + ".notes.json"), m))
+        notes = load_notes(os.path.join(a.folder, m["slug"] + ".notes.json"), m)
+        todo = missing(m, notes)
         if todo:
             bad += 1
             print(f"{m['file']}: not complete, still to explain:")
-            for t in todo[:40]:
-                print("  -", t)
-    print("Result: " + ("not complete" if bad else "complete"))
-    return 1 if bad else 0
+            for x in todo[:40]:
+                print("  -", x)
+        warn = warnings(m, notes) if not m.get("error") or m.get("fallback") else []
+        if warn:
+            warned += 1
+            print(f"{m['file']}: {len(warn)} warning(s) about the explanations:")
+            for x in warn[:30]:
+                print("  ?", x)
+    print("Result: " + ("not complete" if bad else "complete") + (f" ({warned} file(s) with warnings)" if warned else ""))
+    return 1 if bad or (a.strict and warned) else 0
 
 
 def main(argv=None) -> int:
@@ -974,12 +1238,14 @@ def main(argv=None) -> int:
     p = sub.add_parser("analyze", help="parse files and write the first draft of the notes")
     p.add_argument("paths", nargs="+", help=".py files or folders")
     p.add_argument("--out", help="output folder (default python-tutor/<name>)")
+    p.add_argument("--only", help="comma-separated functions, Class.method or classes to explain; the functions they call in the same file come along")
     p.set_defaults(fn=cmd_analyze)
     p = sub.add_parser("render", help="rebuild the HTML after editing *.notes.json")
     p.add_argument("folder")
     p.set_defaults(fn=cmd_render)
-    p = sub.add_parser("check", help="list blocks that still have no explanation")
+    p = sub.add_parser("check", help="list blocks that still have no explanation, and suspicious explanations")
     p.add_argument("folder")
+    p.add_argument("--strict", action="store_true", help="also fail on warnings")
     p.set_defaults(fn=cmd_check)
     args = ap.parse_args(argv)
     return args.fn(args)
