@@ -298,6 +298,16 @@
       "skills": [
         "./skills/professional-writing"
       ]
+    },
+    {
+      "name": "shell-tools",
+      "description": "Shell: run files, text, process, network, Git and build tasks correctly in PowerShell on Windows, with a bash-to-PowerShell map and troubleshooting",
+      "source": "./",
+      "strict": false,
+      "category": "shell-tools",
+      "skills": [
+        "./skills/powershell-commands"
+      ]
     }
   ]
 }

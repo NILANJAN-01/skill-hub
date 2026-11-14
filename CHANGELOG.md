@@ -4,6 +4,8 @@ Notable changes to skill-hub. Newest first. Skills are listed by name; see `git 
 
 ## Unreleased
 
+- Added: `powershell-commands` (new `shell-tools` category): PowerShell playbook for agents with a bash-to-PowerShell map and references for files, text and data, processes, network, dev tools, scripting and troubleshooting.
+
 ## 1.0.0 - 2026-11-14
 
 - Release: tagged releases (`v*`) now publish a GitHub Release with a version-pinned `install.py`, `catalog.json`, one zip per skill, a full-repo zip and `SHA256SUMS`. The version lives in `.claude-plugin/marketplace.json` and is stamped into `catalog.json`.

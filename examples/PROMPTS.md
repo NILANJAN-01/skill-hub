@@ -2,9 +2,9 @@
 
 <!-- Generated from examples/prompts.json by tools/build_catalog.py - do not edit by hand. -->
 
-245 things you can say to your AI coding agent, for all 77 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
+249 things you can say to your AI coding agent, for all 78 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
 
-**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
+**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Shell: PowerShell on Windows](#shell-powershell-on-windows) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
 
 ## Hub tools
 
@@ -179,6 +179,19 @@ Install the whole category: `--plugin testing-tools`
 - “Unit test parser.py and suggest a fix for whatever fails.”
 - “Why does test_billing.py fail? Show me the bug and the fix.”
 - “Which functions in this .py file have no tests, and are the existing tests asserting anything?”
+
+## Shell: PowerShell on Windows
+
+Install the whole category: `--plugin shell-tools`
+
+### PowerShell Commands for Agents
+
+[`powershell-commands`](../skills/powershell-commands/SKILL.md) · install: `--skill powershell-commands`
+
+- “This `git add . && git commit` fails in PowerShell with a token '&&' error. How do I run it?”
+- “Translate this bash one-liner to PowerShell: grep -rn TODO src | wc -l”
+- “Write a PowerShell command to find the 10 biggest files under C:\src and show their sizes in MB.”
+- “My PowerShell script writes UTF-16 files and the other tool can't read them. Fix the encoding.”
 
 ## Git: getting started
 

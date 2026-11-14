@@ -260,6 +260,14 @@
       "skills": [
         "professional-writing"
       ]
+    },
+    {
+      "name": "shell-tools",
+      "description": "Shell: run files, text, process, network, Git and build tasks correctly in PowerShell on Windows, with a bash-to-PowerShell map and troubleshooting",
+      "category": "shell-tools",
+      "skills": [
+        "powershell-commands"
+      ]
     }
   ],
   "categories": [
@@ -302,6 +310,11 @@
       "name": "testing-tools",
       "title": "Testing: unit tests & reports",
       "count": 2
+    },
+    {
+      "name": "shell-tools",
+      "title": "Shell: PowerShell on Windows",
+      "count": 1
     },
     {
       "name": "git-getting-started",
@@ -2177,6 +2190,33 @@
         "references/checks.md",
         "references/setup.md",
         "references/writing-tests.md"
+      ]
+    },
+    {
+      "name": "powershell-commands",
+      "title": "PowerShell Commands for Agents",
+      "category": "shell-tools",
+      "description": "Run shell tasks correctly in PowerShell on Windows: files, text search, processes, network, Git, builds, with a bash-to-PowerShell map. Use when the shell is PowerShell, a `&&`, `grep`, `head` or `export` command fails, or quoting, encoding or exit codes go wrong.",
+      "plugins": [
+        "shell-tools"
+      ],
+      "path": "skills/powershell-commands",
+      "license": "MIT",
+      "compatibility": "Windows PowerShell 5.1 and PowerShell 7+ (commands marked 7+ do not work in 5.1). Most commands also work on macOS/Linux with PowerShell 7.",
+      "examples": [
+        "This `git add . && git commit` fails in PowerShell with a token '&&' error. How do I run it?",
+        "Translate this bash one-liner to PowerShell: grep -rn TODO src | wc -l",
+        "Write a PowerShell command to find the 10 biggest files under C:\\src and show their sizes in MB.",
+        "My PowerShell script writes UTF-16 files and the other tool can't read them. Fix the encoding."
+      ],
+      "files": [
+        "references/dev-tools.md",
+        "references/files-and-paths.md",
+        "references/network-and-web.md",
+        "references/processes-system.md",
+        "references/scripting-patterns.md",
+        "references/text-and-data.md",
+        "references/troubleshooting.md"
       ]
     },
     {

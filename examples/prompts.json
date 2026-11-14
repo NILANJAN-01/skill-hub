@@ -397,5 +397,11 @@
     "Chain the right skills to read this repo and then write a blog post about it.",
     "Check that the skills I need for Android UI testing have everything they need installed.",
     "Plan this job step by step across skills and keep track of the results as we go."
+  ],
+  "powershell-commands": [
+    "This `git add . && git commit` fails in PowerShell with a token '&&' error. How do I run it?",
+    "Translate this bash one-liner to PowerShell: grep -rn TODO src | wc -l",
+    "Write a PowerShell command to find the 10 biggest files under C:\\src and show their sizes in MB.",
+    "My PowerShell script writes UTF-16 files and the other tool can't read them. Fix the encoding."
   ]
 }
