@@ -1,0 +1,21 @@
+name: Skill request
+description: Ask for a new skill
+labels: [skill-request]
+body:
+  - type: textarea
+    id: task
+    attributes:
+      label: What task should the skill help with?
+      description: Say it the way you would ask your agent.
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: Source material
+      description: Docs, a book or a web page the skill could be based on (mind its license).
+  - type: input
+    id: agent
+    attributes:
+      label: Agent you use
+      placeholder: Claude Code, Cursor, Copilot, Codex ...

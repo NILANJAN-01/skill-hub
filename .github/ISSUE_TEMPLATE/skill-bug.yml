@@ -1,0 +1,26 @@
+name: Skill or installer bug
+description: A skill gives wrong advice, does not trigger, or the installer misbehaves
+labels: [bug]
+body:
+  - type: input
+    id: what
+    attributes:
+      label: Skill or tool
+      placeholder: git-rebasing, tools/install.py, mcp-server ...
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Hub version or commit
+  - type: input
+    id: agent
+    attributes:
+      label: Agent and OS
+  - type: textarea
+    id: details
+    attributes:
+      label: What happened, and what did you expect?
+      description: Include the prompt you used or the command and its output.
+    validations:
+      required: true
