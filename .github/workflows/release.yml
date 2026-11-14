@@ -1,0 +1,55 @@
+name: Release
+
+# Push a tag like v1.1.0 to publish a GitHub Release. The tag must equal the version in
+# .claude-plugin/marketplace.json (metadata.version) and CHANGELOG.md must have a "## <version>" section.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check tag, version and changelog agree
+        run: |
+          set -e
+          version=$(python -c "import json;print(json.load(open('.claude-plugin/marketplace.json'))['metadata']['version'])")
+          [ "v$version" = "$GITHUB_REF_NAME" ] || { echo "Tag $GITHUB_REF_NAME != marketplace version v$version"; exit 1; }
+          grep -q "^## $version\b" CHANGELOG.md || { echo "CHANGELOG.md has no '## $version' section"; exit 1; }
+          python - "$version" > release-notes.md <<'PY'
+          import re, sys
+          v = sys.argv[1]
+          text = open("CHANGELOG.md", encoding="utf-8").read()
+          m = re.search(r"^## " + re.escape(v) + r".*?\n(.*?)(?=^## |\Z)", text, re.S | re.M)
+          print(m.group(1).strip())
+          PY
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+      - name: Validate
+        run: |
+          python tools/validate_skills.py
+          python tools/build_catalog.py --check
+          python -m unittest discover -s mcp-server/tests
+      - name: Build release assets
+        run: |
+          set -e
+          mkdir dist
+          # install.py pinned to this release, so it installs the same version it was downloaded from
+          sed "s/^DEFAULT_REF = \"main\"/DEFAULT_REF = \"$GITHUB_REF_NAME\"/" tools/install.py > dist/install.py
+          grep -q "DEFAULT_REF = \"$GITHUB_REF_NAME\"" dist/install.py
+          python tools/install.py --zip dist/skills --all
+          cp catalog.json dist/catalog.json
+          git archive --format=zip --prefix="skill-hub-$VERSION/" -o "dist/skill-hub-$VERSION.zip" "$GITHUB_REF_NAME"
+          (cd dist && sha256sum install.py catalog.json "skill-hub-$VERSION.zip" skills/*.zip > SHA256SUMS)
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" --title "skill-hub $VERSION" --notes-file release-notes.md \
+            dist/install.py dist/catalog.json "dist/skill-hub-$VERSION.zip" dist/SHA256SUMS dist/skills/*.zip

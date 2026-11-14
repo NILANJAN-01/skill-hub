@@ -33,6 +33,14 @@ python -m skillhub_mcp --remote     # read from GitHub, no clone needed (still r
 
 Options: `--root DIR` (a clone; also `SKILLHUB_ROOT`), `--remote`, `--ref BRANCH`, `--check`.
 
+## Install from PyPI (no clone)
+
+```bash
+uvx skillhub-mcp --check        # or: pipx run skillhub-mcp --check
+```
+
+With no clone nearby the server reads the catalog from GitHub (set `SKILLHUB_REPO=owner/name` for a fork). Releases are published from `mcp-v*` tags by `.github/workflows/publish-mcp.yml`.
+
 ## Add it to an agent
 
 Most agents take the same JSON shape. Use absolute paths:
