@@ -309,6 +309,16 @@
       "skills": [
         "./skills/powershell-commands"
       ]
+    },
+    {
+      "name": "learning-tools",
+      "description": "Learning: explain any Python file from beginner to advanced and generate study-notes HTML for interview preparation (concepts, gotchas, Q&A, fundamentals checklist)",
+      "source": "./",
+      "strict": false,
+      "category": "learning-tools",
+      "skills": [
+        "./skills/python-tutor"
+      ]
     }
   ]
 }

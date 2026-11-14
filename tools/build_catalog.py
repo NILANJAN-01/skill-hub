@@ -121,6 +121,7 @@ CATEGORY_TITLES = {
     "video-tools": "Video: frames, pixels & description",
     "testing-tools": "Testing: unit tests & reports",
     "shell-tools": "Shell: PowerShell on Windows",
+    "learning-tools": "Learning: Python tutor & interview notes",
     "git-getting-started": "Git: getting started",
     "git-branching": "Git: branching & merging",
     "git-collaboration": "Git: remotes & collaboration",

@@ -269,6 +269,14 @@
       "skills": [
         "powershell-commands"
       ]
+    },
+    {
+      "name": "learning-tools",
+      "description": "Learning: explain any Python file from beginner to advanced and generate study-notes HTML for interview preparation (concepts, gotchas, Q&A, fundamentals checklist)",
+      "category": "learning-tools",
+      "skills": [
+        "python-tutor"
+      ]
     }
   ],
   "categories": [
@@ -315,6 +323,11 @@
     {
       "name": "shell-tools",
       "title": "Shell: PowerShell on Windows",
+      "count": 1
+    },
+    {
+      "name": "learning-tools",
+      "title": "Learning: Python tutor & interview notes",
       "count": 1
     },
     {
@@ -2246,6 +2259,25 @@
         "references/blog.md",
         "references/cv.md"
       ]
+    },
+    {
+      "name": "python-tutor",
+      "title": "Python tutor: explain a file and make interview notes",
+      "category": "learning-tools",
+      "description": "Explain any .py file from beginner to advanced and make study-notes HTML for interview prep: line-by-line walkthrough, concepts found, gotchas, interview Q&A, fundamentals checklist. A bundled script analyses the file without running it. Use when the user wants to learn, understand or revise a Python file or prepare for a Python interview.",
+      "plugins": [
+        "learning-tools"
+      ],
+      "path": "skills/python-tutor",
+      "license": "MIT",
+      "compatibility": "Needs Python 3.8+ (standard library only). The analysed file must be Python 3 source. The file is parsed, never imported or executed.",
+      "examples": [
+        "Explain this Python file to me like I'm a beginner, then go deeper, and make me an HTML study page.",
+        "I have a Python interview next week. Use utils.py to prepare notes and questions for me.",
+        "Walk me through app.py line by line and tell me which concepts I should revise.",
+        "Make interview-prep notes in HTML for every .py file in this folder."
+      ],
+      "files": []
     },
     {
       "name": "python-unit-test",

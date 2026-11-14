@@ -4,6 +4,7 @@ Notable changes to skill-hub. Newest first. Skills are listed by name; see `git 
 
 ## Unreleased
 
+- Added: `python-tutor` (new `learning-tools` category): explains any `.py` file from beginner to advanced and generates self-contained study-notes HTML (walkthrough, ~75 concepts by level, gotchas, interview Q&A, fundamentals checklist). The file is parsed, never run.
 ## 1.1.0 - 2026-11-14
 
 - Added: `repo-architecture` (in `repo-tools`): scans a repository and drafts `ARCHITECTURE.md` (Mermaid) and a self-contained `architecture.html` (layered SVG), then guides the reader to describe components and flows.

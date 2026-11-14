@@ -409,5 +409,11 @@
     "Give me a walkthrough of this codebase: what the main parts are, how they depend on each other and what to read first.",
     "Draw a component diagram for https://github.com/owner/project and explain the main request flow.",
     "I'm onboarding onto this repo. Prepare an architecture overview I can share with the team."
+  ],
+  "python-tutor": [
+    "Explain this Python file to me like I'm a beginner, then go deeper, and make me an HTML study page.",
+    "I have a Python interview next week. Use utils.py to prepare notes and questions for me.",
+    "Walk me through app.py line by line and tell me which concepts I should revise.",
+    "Make interview-prep notes in HTML for every .py file in this folder."
   ]
 }
