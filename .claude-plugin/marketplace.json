@@ -319,6 +319,16 @@
       "skills": [
         "./skills/python-tutor"
       ]
+    },
+    {
+      "name": "ai-efficiency-tools",
+      "description": "AI efficiency: audit a project for token waste and save tokens and cost in any AI IDE, agent or model",
+      "source": "./",
+      "strict": false,
+      "category": "ai-efficiency-tools",
+      "skills": [
+        "./skills/ai-token-saver"
+      ]
     }
   ]
 }

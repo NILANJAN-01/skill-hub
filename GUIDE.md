@@ -275,7 +275,7 @@ Download or clone the repo and copy `skills/<name>/` into your agent's folder:
 |---|---|
 | `python3: command not found` (macOS/Linux) | Install Python 3, or try `python` instead of `python3` |
 | `python` opens the Microsoft Store (Windows) | Install Python from python.org with "Add to PATH" ticked, or use `py install.py ...` |
-| On Windows, `curl ... \| python3 -` fails | Use the PowerShell commands from Step 2 (`irm ... -OutFile install.py`, then `python install.py`) |
+| On Windows, `curl ... \| python3 -` fails | In Command Prompt use `python` (not `python3`): `curl -fsSL <url> \| python -`. In PowerShell use the commands from Step 2 (`irm ... -OutFile install.py`, then `python install.py`) |
 | `differ from the hub` in the plan | The installed copy is older or was edited locally. Answer `y` to replace it, or add `--force` |
 | `No terminal available for questions` | You ran it somewhere it can't ask questions (CI, scripts). Use options instead, e.g. `--agent detected --all --global --yes` |
 | My agent isn't detected | Pick it by number anyway (it's listed as *not detected*), or pass `--agent <id>`. Detection looks for the app, its command, or its config folder |

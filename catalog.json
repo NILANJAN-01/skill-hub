@@ -277,6 +277,14 @@
       "skills": [
         "python-tutor"
       ]
+    },
+    {
+      "name": "ai-efficiency-tools",
+      "description": "AI efficiency: audit a project for token waste and save tokens and cost in any AI IDE, agent or model",
+      "category": "ai-efficiency-tools",
+      "skills": [
+        "ai-token-saver"
+      ]
     }
   ],
   "categories": [
@@ -328,6 +336,11 @@
     {
       "name": "learning-tools",
       "title": "Learning: Python tutor & interview notes",
+      "count": 1
+    },
+    {
+      "name": "ai-efficiency-tools",
+      "title": "AI efficiency: save tokens & cost",
       "count": 1
     },
     {
@@ -576,6 +589,26 @@
     }
   ],
   "skills": [
+    {
+      "name": "ai-token-saver",
+      "title": "AI token saver: audit a project and spend fewer tokens",
+      "category": "ai-efficiency-tools",
+      "description": "Cut AI token usage and cost in any AI IDE, coding agent or chat model: audit a project for context waste (huge files, lockfiles, logs, bloated instruction files, missing ignore files) with a bundled script, then apply prompting and session habits that save tokens. Use when the user says tokens, usage limit, context window, cost, bill, rate limit, or asks to make AI use cheaper, shorter or faster.",
+      "plugins": [
+        "ai-efficiency-tools"
+      ],
+      "path": "skills/ai-token-saver",
+      "license": "MIT",
+      "compatibility": "Needs Python 3.8+ (standard library only) for the audit script. The advice applies to any model or IDE. Token counts are estimates (characters / 4).",
+      "examples": [
+        "I keep hitting my AI usage limit. Audit this repo and tell me what to exclude.",
+        "How do I reduce token usage and cost when coding with an AI IDE?",
+        "My chat context is full and answers got worse. How do I restart without losing progress?"
+      ],
+      "files": [
+        "references/tools.md"
+      ]
+    },
     {
       "name": "android-logcat-analyzer",
       "title": "Android logcat analyzer",

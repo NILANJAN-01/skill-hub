@@ -415,5 +415,10 @@
     "I have a Python interview next week. Use utils.py to prepare notes and questions for me.",
     "Walk me through app.py line by line and tell me which concepts I should revise.",
     "Make interview-prep notes in HTML for every .py file in this folder."
+  ],
+  "ai-token-saver": [
+    "I keep hitting my AI usage limit. Audit this repo and tell me what to exclude.",
+    "How do I reduce token usage and cost when coding with an AI IDE?",
+    "My chat context is full and answers got worse. How do I restart without losing progress?"
   ]
 }

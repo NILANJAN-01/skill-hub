@@ -122,6 +122,7 @@ CATEGORY_TITLES = {
     "testing-tools": "Testing: unit tests & reports",
     "shell-tools": "Shell: PowerShell on Windows",
     "learning-tools": "Learning: Python tutor & interview notes",
+    "ai-efficiency-tools": "AI efficiency: save tokens & cost",
     "git-getting-started": "Git: getting started",
     "git-branching": "Git: branching & merging",
     "git-collaboration": "Git: remotes & collaboration",
