@@ -4,6 +4,8 @@ Notable changes to skill-hub. Newest first. Skills are listed by name; see `git 
 
 ## Unreleased
 
+- `skill-orchestrator`: hand-off briefings for inter-skill communication. `run done` records `--fact key=value` and `--question` beside the note and outputs, and the new `run handoff DIR [N]` prints one briefing of everything earlier steps passed on.
+
 ## 1.2.0 - 2026-11-14
 
 - Added: `python-tutor` (new `learning-tools` category): explains any `.py` file from beginner to advanced and generates self-contained study-notes HTML (walkthrough, ~75 concepts by level, gotchas, interview Q&A, fundamentals checklist). The file is parsed, never run.

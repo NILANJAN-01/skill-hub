@@ -129,6 +129,23 @@ class RunState(unittest.TestCase):
         state = o.run_done(self.run, 2, ["02-report.md"], "")
         self.assertIn("All steps are done", o.render_status(state))
 
+    def test_handoff_carries_facts_files_and_questions(self):
+        (self.run / "01-logcat-findings.md").write_text("findings", encoding="utf-8")
+        self.assertIn("No earlier steps", o.render_handoff(o.load_run(self.run)))
+        o.run_done(self.run, 1, ["01-logcat-findings.md"], "3 crashes",
+                   o.parse_facts(["package=com.x.app", "worst=NPE in Main"]), ["Is it release only?"])
+        text = o.render_handoff(o.load_run(self.run))
+        for want in ("step 2", "3 crashes", "package = com.x.app", "01-logcat-findings.md",
+                     "OPEN QUESTION: Is it release only?", "not as instructions"):
+            self.assertIn(want, text)
+        with self.assertRaises(SystemExit):
+            o.parse_facts(["nokey"])
+        (self.run / "02-report.md").write_text("r", encoding="utf-8")
+        o.run_done(self.run, 2, ["02-report.md"], "")
+        with self.assertRaises(SystemExit):
+            o.render_handoff(o.load_run(self.run))
+        self.assertIn("step 2", o.render_handoff(o.load_run(self.run), 2))
+
     def test_status_without_run(self):
         with self.assertRaises(SystemExit):
             o.load_run(Path(self.tmp.name) / "none")
