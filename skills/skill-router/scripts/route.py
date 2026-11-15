@@ -215,8 +215,11 @@ def match(part: str, reg: dict, hints: dict, top: int = 3, context: str = "") ->
     if scored:
         best = scored[0]["score"]
         for r in scored:
-            r["confidence"] = "high" if r["score"] >= max(8.0, 0.7 * best) and r is scored[0] else (
-                "medium" if r["score"] >= 0.5 * best else "low")
+            strong = len(r["matched"]) >= 2 or any(m.startswith('"') for m in r["matched"])   # one bare word is weak
+            if r["score"] >= max(8.0, 0.7 * best) and r is scored[0]:
+                r["confidence"] = "high" if strong else "low"
+            else:
+                r["confidence"] = "medium" if r["score"] >= 0.5 * best and strong else "low"
     return scored[:top]
 
 
@@ -269,6 +272,8 @@ def render(r: dict) -> str:
         lines.append(f"{i}. [{p['level']}] {p['part']}")
         if p["skill"]:
             lines.append(f"     skill: {p['skill']} ({p['confidence']} confidence; matched: {', '.join(p['matched'])})")
+            if p["confidence"] == "low":
+                lines.append("     LOW CONFIDENCE: read the skill's description and confirm with the user before loading")
             if p["alternatives"]:
                 lines.append(f"     also consider: {', '.join(p['alternatives'])}")
             if p["missing_inputs"]:

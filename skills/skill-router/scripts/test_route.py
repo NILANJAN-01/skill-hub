@@ -74,6 +74,11 @@ class Routing(unittest.TestCase):
         res = r.route("Look at my python file. Write unit tests for it.", reg, {})
         self.assertEqual(res["parts"][1]["skill"], "python-unit-test")
 
+    def test_single_weak_word_is_low_confidence(self):
+        res = r.route("clean this up", self.reg, {})
+        for p in res["parts"]:
+            self.assertIn(p["confidence"], (None, "low"))
+
     def test_no_match_is_handled_directly(self):
         res = r.route("what is the capital of France", self.reg, self.hints)
         self.assertEqual(res["load"], [])

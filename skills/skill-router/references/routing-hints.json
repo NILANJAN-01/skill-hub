@@ -48,7 +48,7 @@
     },
     "professional-writing": {
       "keywords": ["resume", "cv", "cover", "letter", "blog", "readme", "article", "docs"],
-      "phrases": ["cover letter", "blog post", "job ad", "job post"],
+      "phrases": ["cover letter", "blog post", "job ad", "job post", "resume", "my cv", "readme"],
       "needs": []
     },
     "url-to-skill": {
