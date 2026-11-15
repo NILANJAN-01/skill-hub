@@ -1,0 +1,12 @@
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+An exception occurred applying plugin request [id: 'com.android.application']
+> Failed to apply plugin 'com.android.internal.application'.
+   > Minimum supported Gradle version is 9.6.0. Current version is 8.7. If using the gradle wrapper, try editing the distributionUrl in gradle-wrapper.properties to gradle-9.6.0-bin.zip
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+Execution failed for task ':app:mergeDebugResources'.
+> Could not resolve com.squareup.retrofit2:retrofit:2.99.0.
+SDK location not found. Define a valid SDK location with an ANDROID_HOME environment variable

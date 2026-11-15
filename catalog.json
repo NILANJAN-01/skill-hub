@@ -199,6 +199,14 @@
       ]
     },
     {
+      "name": "gradle-tools",
+      "description": "Gradle for Android: set up the wrapper, JDK, SDK and version catalog, check JDK/Gradle/AGP/Kotlin compatibility, diagnose build failures from a log, add libraries, and run unit and instrumented tests, with a Python doctor script based on the official Gradle and Android docs",
+      "category": "gradle-tools",
+      "skills": [
+        "gradle-android"
+      ]
+    },
+    {
       "name": "repo-tools",
       "description": "Repositories: read a whole codebase file by file and write a LEARNINGS.md, with a script that plans the read and checks nothing was missed; draw the architecture as ARCHITECTURE.md plus an HTML diagram (repo-architecture)",
       "category": "repositories",
@@ -298,6 +306,11 @@
       "name": "android-automation",
       "title": "Android: UI tests & logcat",
       "count": 2
+    },
+    {
+      "name": "gradle-tools",
+      "title": "Gradle: Android setup, diagnosis & tests",
+      "count": 1
     },
     {
       "name": "repo-tools",
@@ -2192,6 +2205,33 @@
         "Split our huge .gitlab-ci.yml into includes and reusable templates."
       ],
       "files": []
+    },
+    {
+      "name": "gradle-android",
+      "title": "Gradle for Android: setup, diagnosis, libraries and testing",
+      "category": "gradle-tools",
+      "description": "Set up Gradle for Android apps and fix Gradle problems: wrapper, JDK, Android Gradle Plugin (AGP) and Kotlin compatibility, SDK path, version catalogs, adding libraries, running unit and instrumented tests, and diagnosing build failures with a bundled script. Use when a Gradle or Android build fails or will not sync, the user asks how to set up, upgrade or speed up Gradle, add a dependency, or run Android tests.",
+      "plugins": [
+        "gradle-tools"
+      ],
+      "path": "skills/gradle-android",
+      "license": "Complete terms in the repository README",
+      "compatibility": "Needs Python 3.8+ (standard library only) for the scripts. Running builds needs a JDK 17+ and the Android SDK; the project's own Gradle wrapper is used.",
+      "examples": [
+        "My Android build fails with 'Unsupported class file major version 65'. Find out why and fix it.",
+        "Check my Gradle setup: JDK, wrapper, AGP and Kotlin versions, and SDK path.",
+        "Add Retrofit to the app module using the version catalog.",
+        "Run only the CartTest.totalIsSummed unit test and tell me where the report is.",
+        "Here is my Gradle build log: why did the sync fail and what is the fix?"
+      ],
+      "files": [
+        "references/android-testing.md",
+        "references/compatibility.md",
+        "references/dependencies.md",
+        "references/diagnosis.md",
+        "references/setup.md",
+        "references/sources.md"
+      ]
     },
     {
       "name": "image-inspector",

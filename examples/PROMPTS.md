@@ -2,9 +2,9 @@
 
 <!-- Generated from examples/prompts.json by tools/build_catalog.py - do not edit by hand. -->
 
-264 things you can say to your AI coding agent, for all 82 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
+269 things you can say to your AI coding agent, for all 83 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
 
-**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Shell: PowerShell on Windows](#shell-powershell-on-windows) · [Learning: Python tutor & interview notes](#learning-python-tutor--interview-notes) · [AI efficiency: save tokens & cost](#ai-efficiency-save-tokens--cost) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
+**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [Gradle: Android setup, diagnosis & tests](#gradle-android-setup-diagnosis--tests) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Shell: PowerShell on Windows](#shell-powershell-on-windows) · [Learning: Python tutor & interview notes](#learning-python-tutor--interview-notes) · [AI efficiency: save tokens & cost](#ai-efficiency-save-tokens--cost) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
 
 ## Hub tools
 
@@ -82,6 +82,20 @@ Install the whole category: `--plugin android-automation`
 - “Convert all the window_dump.xml files in dumps/ into locator JSON files in tests/locators.”
 - “Dump the current screen from the connected device and generate the locator JSON.”
 - “This Compose screen has no resource-ids. Give me the best locators you can from this uiautomator dump.”
+
+## Gradle: Android setup, diagnosis & tests
+
+Install the whole category: `--plugin gradle-tools`
+
+### Gradle for Android: setup, diagnosis, libraries and testing
+
+[`gradle-android`](../skills/gradle-android/SKILL.md) · install: `--skill gradle-android`
+
+- “My Android build fails with 'Unsupported class file major version 65'. Find out why and fix it.”
+- “Check my Gradle setup: JDK, wrapper, AGP and Kotlin versions, and SDK path.”
+- “Add Retrofit to the app module using the version catalog.”
+- “Run only the CartTest.totalIsSummed unit test and tell me where the report is.”
+- “Here is my Gradle build log: why did the sync fail and what is the fix?”
 
 ## Repositories: read & document
 
