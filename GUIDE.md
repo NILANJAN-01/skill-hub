@@ -38,6 +38,8 @@ python install.py
 
 (If you have a clone of this repo, `python tools/install.py` does the same.)
 
+**Windows, one shot:** from a clone, double-click or run `install.bat`. It checks Python 3.8+, that your profile folder is writable, and that the installer can be found (it downloads `tools/install.py` if you only have the `.bat`), lists the agents it detects, then installs every skill into every detected agent for your user. It shows the plan and asks `y/n` first. `install.bat --check` only checks; `install.bat --yes` skips the question; any other options (for example `--plugin hub-tools --agent claude-code`) go straight to the installer.
+
 It asks four questions:
 
 ```
