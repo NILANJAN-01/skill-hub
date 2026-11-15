@@ -31,6 +31,9 @@ class Split(unittest.TestCase):
         parts = r.split_request("Analyse this logcat and write a report.\n- tailor my cv\n2) check the screenshot")
         self.assertEqual(parts, ["Analyse this logcat", "write a report.", "tailor my cv", "check the screenshot"])
 
+    def test_and_also_leaves_no_dangling_and(self):
+        self.assertEqual(r.split_request("the pipeline is stuck and also slow"), ["the pipeline is stuck", "slow"])
+
     def test_urls_stay_whole(self):
         parts = r.split_request("Turn https://docs.example.com/a.b into a skill. Then explain it")
         self.assertEqual(parts[0], "Turn https://docs.example.com/a.b into a skill.")
@@ -62,6 +65,14 @@ class Routing(unittest.TestCase):
         self.assertEqual(res["load"], ["android-logcat-analyzer", "professional-writing"])
         self.assertTrue(res["chain"])
         self.assertIn("skill-orchestrator", r.render(res))
+
+    def test_context_resolves_it(self):
+        root = Path(self.tmp.name) / "skills"
+        make_skill(root, "kotlin-unit-test", "Write and run unit tests for Kotlin code")
+        make_skill(root, "python-unit-test", "Write and run unit tests for a Python file")
+        reg = r.scan([str(root)], defaults=False)
+        res = r.route("Look at my python file. Write unit tests for it.", reg, {})
+        self.assertEqual(res["parts"][1]["skill"], "python-unit-test")
 
     def test_no_match_is_handled_directly(self):
         res = r.route("what is the capital of France", self.reg, self.hints)

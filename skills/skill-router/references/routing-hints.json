@@ -68,7 +68,7 @@
     },
     "gitlab-ci-optimization": {
       "keywords": ["slow", "faster", "cache", "minutes", "gitlab"],
-      "phrases": ["pipeline is slow", "speed up the pipeline"],
+      "phrases": ["pipeline is slow", "speed up the pipeline", "takes forever", "takes too long"],
       "needs": []
     },
     "powershell-commands": {

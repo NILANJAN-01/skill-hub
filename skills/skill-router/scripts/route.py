@@ -146,7 +146,7 @@ def stem(t: str) -> str:
 def split_request(text: str) -> list:
     """Split a prompt into separate asks: lines, bullets, sentences, 'then', ';' and 'and <action>'."""
     text = re.sub(r"https?://\S+", lambda m: m.group(0).replace(".", "․"), text)   # keep URLs whole
-    parts = re.split(r"\n+|(?<=[.!?])\s+|;\s*|\s+(?:and then|after that|afterwards|then|also|plus)\s+", text)
+    parts = re.split(r"\n+|(?<=[.!?])\s+|;\s*|\s+(?:and then|and also|after that|afterwards|then|also|plus)\s+", text)
     out = []
     for p in parts:
         p = re.sub(r"^\s*(?:[-*•]|\d+[.)])\s*", "", p).strip(" ,")
@@ -174,9 +174,12 @@ def missing_inputs(part: str, whole: str, needs: list) -> list:
 
 
 # ----------------------------------------------------------------------------- matching
-def match(part: str, reg: dict, hints: dict, top: int = 3) -> list:
-    """Rank skills: term overlap with name (x3), description (x1) and routing hints (x2); rare terms count more."""
+def match(part: str, reg: dict, hints: dict, top: int = 3, context: str = "") -> list:
+    """Rank skills: term overlap with name (x3), description (x1) and routing hints (x2); rare terms count more.
+    Words that appear only in the surrounding request (context) count at 30%, so 'write tests for it' follows
+    'this python file'."""
     q = list(dict.fromkeys(stem(t) for t in tokens(part)))
+    ctx = [t for t in dict.fromkeys(stem(t) for t in tokens(context)) if t not in q]
     low = part.lower()
     if not q or not reg:
         return []
@@ -196,6 +199,11 @@ def match(part: str, reg: dict, hints: dict, top: int = 3) -> list:
             if w:
                 score += w * idf
                 why.append(t)
+        for t in ctx:
+            df = sum(1 for a, b, c in docs.values() if t in a or t in b or t in c)
+            w = (3.0 if t in nt else 0) + (1.0 if t in dt else 0) + (2.0 if t in ht else 0)
+            if w and df:
+                score += 0.3 * w * math.log((n + 1) / (df + 0.5))
         for phrase in hints.get(name, {}).get("phrases", []):
             if phrase.lower() in low:
                 score += 6.0
@@ -237,7 +245,7 @@ def route(text: str, reg: dict, hints: dict, top: int = 3) -> dict:
     installed = {k: v for k, v in reg.items() if v["installed"]}
     parts = []
     for p in split_request(text):
-        cands = match(p, reg, hints, top)
+        cands = match(p, reg, hints, top, text)
         inst = [c for c in cands if c["installed"]]
         pick = inst[0] if inst and inst[0]["score"] >= 0.5 * cands[0]["score"] else None
         suggest = [c for c in cands if not c["installed"]][:1]
