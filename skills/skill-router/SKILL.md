@@ -1,6 +1,6 @@
 ---
 name: skill-router
-description: "Front door for every task: read the user's request, split it into parts, grade each as basic or advanced, check the basics are given (file, link, device, tools) and pick the right installed skills before starting. Use when starting any non-trivial request, especially a vague or multi-part one, when the user has not named a skill, or asks which skill fits, to route, triage or plan before doing the work."
+description: "Route a request to the right installed skills: split it into parts, grade basic or advanced, check the needed file, link or tools are given. Use when starting any non-trivial, vague or multi-part task, or when the user asks which skill fits."
 license: Complete terms in the repository README
 compatibility: Needs Python 3.8+ (standard library only). It reads skill folders and never writes, installs or runs anything.
 metadata:
