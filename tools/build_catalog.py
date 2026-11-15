@@ -114,6 +114,7 @@ REPOSITORY = "https://github.com/NILANJAN-01/skill-hub"
 CATEGORY_TITLES = {
     "hub-tools": "Hub tools",
     "android-automation": "Android: UI tests & logcat",
+    "adb-tools": "ADB: connect, control & debug Android devices",
     "gradle-tools": "Gradle: Android setup, diagnosis & tests",
     "repo-tools": "Repositories: read & document",
     "gitlab-ci-tools": "GitLab: CI/CD pipelines",

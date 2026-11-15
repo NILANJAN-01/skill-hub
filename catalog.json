@@ -199,6 +199,17 @@
       ]
     },
     {
+      "name": "adb-tools",
+      "description": "ADB (Android Debug Bridge) skill set from the official docs: adb-tool is the central skill with all 139 commands, risk levels and one Python script; adb-connect sets up adb and fixes USB and wireless connections; adb-device-control installs apps, moves files, takes screenshots and records the screen; adb-debug reads logcat, dumpsys and bug reports",
+      "category": "adb-tools",
+      "skills": [
+        "adb-tool",
+        "adb-connect",
+        "adb-device-control",
+        "adb-debug"
+      ]
+    },
+    {
       "name": "gradle-tools",
       "description": "Gradle for Android: set up the wrapper, JDK, SDK and version catalog, check JDK/Gradle/AGP/Kotlin compatibility, diagnose build failures from a log, add libraries, and run unit and instrumented tests, with a Python doctor script based on the official Gradle and Android docs",
       "category": "gradle-tools",
@@ -306,6 +317,11 @@
       "name": "android-automation",
       "title": "Android: UI tests & logcat",
       "count": 2
+    },
+    {
+      "name": "adb-tools",
+      "title": "ADB: connect, control & debug Android devices",
+      "count": 4
     },
     {
       "name": "gradle-tools",
@@ -603,6 +619,97 @@
     }
   ],
   "skills": [
+    {
+      "name": "adb-connect",
+      "title": "adb setup, USB and wireless connection, troubleshooting",
+      "category": "adb-tools",
+      "description": "Install and set up adb (Android Platform-Tools), enable USB debugging, install USB drivers, pair and connect over Wi-Fi (wireless debugging, adb tcpip), and fix adb connection problems: no devices, unauthorized, offline, no permissions, more than one device, daemon or port 5037 errors, mDNS not working. Use when adb is missing, adb devices shows nothing or the wrong state, or the user wants to connect a phone or emulator wirelessly.",
+      "plugins": [
+        "adb-tools"
+      ],
+      "path": "skills/adb-connect",
+      "license": "Complete terms in the repository README",
+      "compatibility": "Needs Python 3.8+ and the script from the adb-tool skill (install the adb-tools bundle). Needs adb on PATH or in the Android SDK platform-tools folder; the script says how to install it if missing.",
+      "examples": [
+        "adb devices shows my phone as unauthorized. How do I fix it?",
+        "Pair my Android 14 phone with adb over Wi-Fi.",
+        "adb is not recognized on Windows. Install it and get my device connected.",
+        "adb says more than one device/emulator. Help me pick the right one."
+      ],
+      "files": [
+        "references/connection-troubleshooting.md",
+        "references/install-and-usb.md",
+        "references/wireless-debugging.md"
+      ]
+    },
+    {
+      "name": "adb-debug",
+      "title": "adb debugging: logcat, dumpsys, bug reports, snapshots",
+      "category": "adb-tools",
+      "description": "Debug Android apps and devices with adb: read and filter logcat (by app, tag, level, buffer, time), capture crashes and ANRs, run dumpsys for memory, graphics, battery and activities, collect a snapshot or a bug report, take heap dumps, and run instrumented tests with am instrument. Use when the user asks why an app crashed or is slow, wants logs from a device, needs a bug report, or wants memory, frame or battery data.",
+      "plugins": [
+        "adb-tools"
+      ],
+      "path": "skills/adb-debug",
+      "license": "Complete terms in the repository README",
+      "compatibility": "Needs Python 3.8+ and the script from the adb-tool skill (install the adb-tools bundle), adb on PATH, and one connected device or emulator (see adb-connect). Analysing a saved log file is done by android-logcat-analyzer.",
+      "examples": [
+        "Show me the logcat errors from com.example.app and save them to a file.",
+        "My app crashed on the device. Capture the crash log and tell me what happened.",
+        "Create a bug report and a memory and graphics snapshot of my app.",
+        "Run the instrumented test CartTest#totalIsSummed through adb and show the result."
+      ],
+      "files": [
+        "references/debugging-workflows.md",
+        "references/dumpsys-and-bugreport.md",
+        "references/logcat.md"
+      ]
+    },
+    {
+      "name": "adb-device-control",
+      "title": "adb device control: apps, files, screen, settings",
+      "category": "adb-tools",
+      "description": "Control an Android device or emulator with adb: install, uninstall, start and stop apps, list packages and app info, grant permissions, clear data, send intents with am, copy files with push and pull, take screenshots, record the screen, override display size or density, and read or change settings. Use when the user wants to install an APK, push or pull a file, capture the screen, reset an app, or script device actions.",
+      "plugins": [
+        "adb-tools"
+      ],
+      "path": "skills/adb-device-control",
+      "license": "Complete terms in the repository README",
+      "compatibility": "Needs Python 3.8+ and the script from the adb-tool skill (install the adb-tools bundle), adb on PATH, and one connected device or emulator with USB or wireless debugging on (see adb-connect).",
+      "examples": [
+        "Install app-debug.apk on my connected phone and start it.",
+        "Take a screenshot and a 20 second screen recording of the device.",
+        "Pull the Download folder report.pdf from the phone to my computer.",
+        "Grant the camera permission to com.example.app and show its version and permissions."
+      ],
+      "files": [
+        "references/activity-manager.md",
+        "references/apps-and-packages.md",
+        "references/files-screen-input.md"
+      ]
+    },
+    {
+      "name": "adb-tool",
+      "title": "adb: command reference, safety check and central script",
+      "category": "adb-tools",
+      "description": "Central skill for adb (Android Debug Bridge): every adb, am, pm, dpm and shell command with syntax and risk level, plus one Python script that diagnoses adb, lists devices, runs any adb command with a safety check, and looks up commands by keyword. Use when the user mentions adb, an Android device or emulator command, asks which adb command does X, or needs a safe way to run adb.",
+      "plugins": [
+        "adb-tools"
+      ],
+      "path": "skills/adb-tool",
+      "license": "Complete terms in the repository README",
+      "compatibility": "Needs Python 3.8+ (standard library only). Running device commands needs adb (Android SDK Platform-Tools) and a device or emulator with USB debugging or wireless debugging enabled. The related skills adb-connect, adb-device-control and adb-debug use this skill's script, so install them together (the adb-tools bundle).",
+      "examples": [
+        "Which adb command copies a file from my phone to the computer, and is it safe to run?",
+        "List every adb command that can delete data or reboot the device.",
+        "Run adb shell pm clear on my test app, but check the risk first.",
+        "Check my adb setup and tell me what is wrong."
+      ],
+      "files": [
+        "references/command-reference.md",
+        "references/sources.md"
+      ]
+    },
     {
       "name": "ai-token-saver",
       "title": "AI token saver: audit a project and spend fewer tokens",

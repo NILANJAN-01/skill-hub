@@ -2,9 +2,9 @@
 
 <!-- Generated from examples/prompts.json by tools/build_catalog.py - do not edit by hand. -->
 
-269 things you can say to your AI coding agent, for all 83 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
+285 things you can say to your AI coding agent, for all 87 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
 
-**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [Gradle: Android setup, diagnosis & tests](#gradle-android-setup-diagnosis--tests) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Shell: PowerShell on Windows](#shell-powershell-on-windows) · [Learning: Python tutor & interview notes](#learning-python-tutor--interview-notes) · [AI efficiency: save tokens & cost](#ai-efficiency-save-tokens--cost) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
+**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [ADB: connect, control & debug Android devices](#adb-connect-control--debug-android-devices) · [Gradle: Android setup, diagnosis & tests](#gradle-android-setup-diagnosis--tests) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Shell: PowerShell on Windows](#shell-powershell-on-windows) · [Learning: Python tutor & interview notes](#learning-python-tutor--interview-notes) · [AI efficiency: save tokens & cost](#ai-efficiency-save-tokens--cost) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
 
 ## Hub tools
 
@@ -82,6 +82,46 @@ Install the whole category: `--plugin android-automation`
 - “Convert all the window_dump.xml files in dumps/ into locator JSON files in tests/locators.”
 - “Dump the current screen from the connected device and generate the locator JSON.”
 - “This Compose screen has no resource-ids. Give me the best locators you can from this uiautomator dump.”
+
+## ADB: connect, control & debug Android devices
+
+Install the whole category: `--plugin adb-tools`
+
+### adb debugging: logcat, dumpsys, bug reports, snapshots
+
+[`adb-debug`](../skills/adb-debug/SKILL.md) · install: `--skill adb-debug`
+
+- “Show me the logcat errors from com.example.app and save them to a file.”
+- “My app crashed on the device. Capture the crash log and tell me what happened.”
+- “Create a bug report and a memory and graphics snapshot of my app.”
+- “Run the instrumented test CartTest#totalIsSummed through adb and show the result.”
+
+### adb device control: apps, files, screen, settings
+
+[`adb-device-control`](../skills/adb-device-control/SKILL.md) · install: `--skill adb-device-control`
+
+- “Install app-debug.apk on my connected phone and start it.”
+- “Take a screenshot and a 20 second screen recording of the device.”
+- “Pull the Download folder report.pdf from the phone to my computer.”
+- “Grant the camera permission to com.example.app and show its version and permissions.”
+
+### adb setup, USB and wireless connection, troubleshooting
+
+[`adb-connect`](../skills/adb-connect/SKILL.md) · install: `--skill adb-connect`
+
+- “adb devices shows my phone as unauthorized. How do I fix it?”
+- “Pair my Android 14 phone with adb over Wi-Fi.”
+- “adb is not recognized on Windows. Install it and get my device connected.”
+- “adb says more than one device/emulator. Help me pick the right one.”
+
+### adb: command reference, safety check and central script
+
+[`adb-tool`](../skills/adb-tool/SKILL.md) · install: `--skill adb-tool`
+
+- “Which adb command copies a file from my phone to the computer, and is it safe to run?”
+- “List every adb command that can delete data or reboot the device.”
+- “Run adb shell pm clear on my test app, but check the risk first.”
+- “Check my adb setup and tell me what is wrong.”
 
 ## Gradle: Android setup, diagnosis & tests
 

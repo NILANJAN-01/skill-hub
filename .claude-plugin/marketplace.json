@@ -223,6 +223,19 @@
       ]
     },
     {
+      "name": "adb-tools",
+      "description": "ADB (Android Debug Bridge) skill set from the official docs: adb-tool is the central skill with all 139 commands, risk levels and one Python script; adb-connect sets up adb and fixes USB and wireless connections; adb-device-control installs apps, moves files, takes screenshots and records the screen; adb-debug reads logcat, dumpsys and bug reports",
+      "source": "./",
+      "strict": false,
+      "category": "adb-tools",
+      "skills": [
+        "./skills/adb-tool",
+        "./skills/adb-connect",
+        "./skills/adb-device-control",
+        "./skills/adb-debug"
+      ]
+    },
+    {
       "name": "gradle-tools",
       "description": "Gradle for Android: set up the wrapper, JDK, SDK and version catalog, check JDK/Gradle/AGP/Kotlin compatibility, diagnose build failures from a log, add libraries, and run unit and instrumented tests, with a Python doctor script based on the official Gradle and Android docs",
       "source": "./",

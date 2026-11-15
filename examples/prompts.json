@@ -365,6 +365,30 @@
     "Unit test our Appium LoginPage page object without a device.",
     "Check whether the tests for CartRepository would catch a bug (mutation check)."
   ],
+  "adb-tool": [
+    "Which adb command copies a file from my phone to the computer, and is it safe to run?",
+    "List every adb command that can delete data or reboot the device.",
+    "Run adb shell pm clear on my test app, but check the risk first.",
+    "Check my adb setup and tell me what is wrong."
+  ],
+  "adb-connect": [
+    "adb devices shows my phone as unauthorized. How do I fix it?",
+    "Pair my Android 14 phone with adb over Wi-Fi.",
+    "adb is not recognized on Windows. Install it and get my device connected.",
+    "adb says more than one device/emulator. Help me pick the right one."
+  ],
+  "adb-device-control": [
+    "Install app-debug.apk on my connected phone and start it.",
+    "Take a screenshot and a 20 second screen recording of the device.",
+    "Pull the Download folder report.pdf from the phone to my computer.",
+    "Grant the camera permission to com.example.app and show its version and permissions."
+  ],
+  "adb-debug": [
+    "Show me the logcat errors from com.example.app and save them to a file.",
+    "My app crashed on the device. Capture the crash log and tell me what happened.",
+    "Create a bug report and a memory and graphics snapshot of my app.",
+    "Run the instrumented test CartTest#totalIsSummed through adb and show the result."
+  ],
   "gradle-android": [
     "My Android build fails with 'Unsupported class file major version 65'. Find out why and fix it.",
     "Check my Gradle setup: JDK, wrapper, AGP and Kotlin versions, and SDK path.",
