@@ -14,6 +14,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 The golden rules, sources of truth and per-task steps live in the `rule/` folder (imported above, indexed from AGENTS.md). The sections below add commands and architecture that the rules don't cover.
 
+## Using skills
+
+At the start of every non-trivial task, use the `skill-router` skill first (`python skills/skill-router/scripts/route.py "<the user's request>"`), so vague or multi-part requests still reach the right skills. Skip it only when the user names a skill or the task is a trivial one-liner.
+
 ## Commands
 
 Everything is Python standard library only; there is no build step or package install.
