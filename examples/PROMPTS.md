@@ -2,7 +2,7 @@
 
 <!-- Generated from examples/prompts.json by tools/build_catalog.py - do not edit by hand. -->
 
-260 things you can say to your AI coding agent, for all 81 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
+264 things you can say to your AI coding agent, for all 82 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
 
 **Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Shell: PowerShell on Windows](#shell-powershell-on-windows) · [Learning: Python tutor & interview notes](#learning-python-tutor--interview-notes) · [AI efficiency: save tokens & cost](#ai-efficiency-save-tokens--cost) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
 
@@ -34,6 +34,15 @@ Install the whole category: `--plugin hub-tools`
 - “Chain the right skills to read this repo and then write a blog post about it.”
 - “Check that the skills I need for Android UI testing have everything they need installed.”
 - “Plan this job step by step across skills and keep track of the results as we go.”
+
+### Skill router
+
+[`skill-router`](../skills/skill-router/SKILL.md) · install: `--skill skill-router`
+
+- “Which of my skills fits this request: my app keeps crashing after the last update?”
+- “Break this down and pick the right skills: analyse the logcat, then write up a bug report for the team.”
+- “Before you start, check what you need from me and which installed skills apply to this task.”
+- “I'm not sure which skill to use for this. Route it for me.”
 
 ### Skillforge: PDF to skills
 

@@ -255,7 +255,7 @@
     },
     {
       "name": "hub-tools",
-      "description": "Skills for working with the hub itself: find and install skills, contribute new skills, generate skills from technical PDFs (skillforge) and from web pages (url-to-skill); chain several skills with skill-orchestrator",
+      "description": "Skills for working with the hub itself: find and install skills, contribute new skills, generate skills from technical PDFs (skillforge) and from web pages (url-to-skill); chain several skills with skill-orchestrator; route any request to the right skills with skill-router",
       "source": "./",
       "strict": false,
       "category": "hub-tools",
@@ -264,7 +264,8 @@
         "./skills/contribute-skill",
         "./skills/skillforge",
         "./skills/url-to-skill",
-        "./skills/skill-orchestrator"
+        "./skills/skill-orchestrator",
+        "./skills/skill-router"
       ]
     },
     {

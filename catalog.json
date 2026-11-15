@@ -225,14 +225,15 @@
     },
     {
       "name": "hub-tools",
-      "description": "Skills for working with the hub itself: find and install skills, contribute new skills, generate skills from technical PDFs (skillforge) and from web pages (url-to-skill); chain several skills with skill-orchestrator",
+      "description": "Skills for working with the hub itself: find and install skills, contribute new skills, generate skills from technical PDFs (skillforge) and from web pages (url-to-skill); chain several skills with skill-orchestrator; route any request to the right skills with skill-router",
       "category": "hub-tools",
       "skills": [
         "find-skills",
         "contribute-skill",
         "skillforge",
         "url-to-skill",
-        "skill-orchestrator"
+        "skill-orchestrator",
+        "skill-router"
       ]
     },
     {
@@ -291,7 +292,7 @@
     {
       "name": "hub-tools",
       "title": "Hub tools",
-      "count": 5
+      "count": 6
     },
     {
       "name": "android-automation",
@@ -2388,6 +2389,25 @@
         "Chain the right skills to read this repo and then write a blog post about it.",
         "Check that the skills I need for Android UI testing have everything they need installed.",
         "Plan this job step by step across skills and keep track of the results as we go."
+      ],
+      "files": []
+    },
+    {
+      "name": "skill-router",
+      "title": "Skill router",
+      "category": "hub-tools",
+      "description": "Front door for every task: read the user's request, split it into parts, grade each as basic or advanced, check the basics are given (file, link, device, tools) and pick the right installed skills before starting. Use when starting any non-trivial request, especially a vague or multi-part one, when the user has not named a skill, or asks which skill fits, to route, triage or plan before doing the work.",
+      "plugins": [
+        "hub-tools"
+      ],
+      "path": "skills/skill-router",
+      "license": "Complete terms in the repository README",
+      "compatibility": "Needs Python 3.8+ (standard library only). It reads skill folders and never writes, installs or runs anything.",
+      "examples": [
+        "Which of my skills fits this request: my app keeps crashing after the last update?",
+        "Break this down and pick the right skills: analyse the logcat, then write up a bug report for the team.",
+        "Before you start, check what you need from me and which installed skills apply to this task.",
+        "I'm not sure which skill to use for this. Route it for me."
       ],
       "files": []
     },

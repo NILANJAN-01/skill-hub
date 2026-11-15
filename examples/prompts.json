@@ -398,6 +398,12 @@
     "Check that the skills I need for Android UI testing have everything they need installed.",
     "Plan this job step by step across skills and keep track of the results as we go."
   ],
+  "skill-router": [
+    "Which of my skills fits this request: my app keeps crashing after the last update?",
+    "Break this down and pick the right skills: analyse the logcat, then write up a bug report for the team.",
+    "Before you start, check what you need from me and which installed skills apply to this task.",
+    "I'm not sure which skill to use for this. Route it for me."
+  ],
   "powershell-commands": [
     "This `git add . && git commit` fails in PowerShell with a token '&&' error. How do I run it?",
     "Translate this bash one-liner to PowerShell: grep -rn TODO src | wc -l",

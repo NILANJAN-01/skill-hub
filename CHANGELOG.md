@@ -4,6 +4,8 @@ Notable changes to skill-hub. Newest first. Skills are listed by name; see `git 
 
 ## Unreleased
 
+- Added: `skill-router` (in `hub-tools`): front door for any request. Splits it into parts, grades each basic or advanced, checks the basics are given (file, link, device, tools), and picks the installed skills to load, with editable routing hints and a hand-off to `skill-orchestrator` for multi-skill jobs.
+
 - `skill-orchestrator`: hand-off briefings for inter-skill communication. `run done` records `--fact key=value` and `--question` beside the note and outputs, and the new `run handoff DIR [N]` prints one briefing of everything earlier steps passed on.
 
 ## 1.2.0 - 2026-11-14

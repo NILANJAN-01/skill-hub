@@ -1,0 +1,90 @@
+{
+  "_about": "Extra words and phrases people use for a skill, and inputs it needs. Edit freely; skills not listed are matched on name and description only. needs kinds: url, file, image, video, python-file, repo, device.",
+  "skills": {
+    "android-logcat-analyzer": {
+      "keywords": ["crash", "crashed", "anr", "freeze", "froze", "bugreport", "exception", "stacktrace", "oom"],
+      "phrases": ["app crashed", "app keeps crashing", "not responding"],
+      "needs": ["file"]
+    },
+    "android-uiautomator-locators": {
+      "keywords": ["locator", "locators", "xpath", "appium", "selector", "resource-id", "page object"],
+      "phrases": ["ui test", "find element"],
+      "needs": ["device"]
+    },
+    "image-inspector": {
+      "keywords": ["screenshot", "pixel", "colour", "color", "palette", "ocr", "exif"],
+      "phrases": ["what colour", "what color", "text in the image"],
+      "needs": ["image"]
+    },
+    "video-inspector": {
+      "keywords": ["recording", "frames", "flicker", "freeze", "blackscreen", "led"],
+      "phrases": ["screen recording", "black screen"],
+      "needs": ["video"]
+    },
+    "python-unit-test": {
+      "keywords": ["pytest", "unittest", "coverage", "failing"],
+      "phrases": ["unit test", "add tests", "tests fail", "failing test"],
+      "needs": ["python-file"]
+    },
+    "kotlin-unit-test": {
+      "keywords": ["junit", "gradle", "kotlin"],
+      "phrases": ["unit test", "kotlin test"],
+      "needs": []
+    },
+    "python-tutor": {
+      "keywords": ["interview", "beginner", "explain", "learn", "revise"],
+      "phrases": ["explain this python", "python interview", "walk me through"],
+      "needs": ["python-file"]
+    },
+    "repo-architecture": {
+      "keywords": ["architecture", "diagram", "mermaid", "onboarding", "overview"],
+      "phrases": ["how is this repo structured", "system overview"],
+      "needs": ["repo"]
+    },
+    "repo-learnings": {
+      "keywords": ["onboard", "understand", "codebase", "study"],
+      "phrases": ["understand this repo", "learn this codebase"],
+      "needs": ["repo"]
+    },
+    "professional-writing": {
+      "keywords": ["resume", "cv", "cover", "letter", "blog", "readme", "article", "docs"],
+      "phrases": ["cover letter", "blog post", "job ad", "job post"],
+      "needs": []
+    },
+    "url-to-skill": {
+      "keywords": ["docs", "documentation", "link", "website"],
+      "phrases": ["turn this page into a skill", "make a skill from"],
+      "needs": ["url"]
+    },
+    "skillforge": {
+      "keywords": ["pdf", "book", "manual", "handbook"],
+      "phrases": ["skills from a pdf", "convert this book"],
+      "needs": ["file"]
+    },
+    "gitlab-ci-debugging": {
+      "keywords": ["pipeline", "stuck", "pending", "runner", "gitlab"],
+      "phrases": ["pipeline fails", "job fails", "pipeline is stuck"],
+      "needs": []
+    },
+    "gitlab-ci-optimization": {
+      "keywords": ["slow", "faster", "cache", "minutes", "gitlab"],
+      "phrases": ["pipeline is slow", "speed up the pipeline"],
+      "needs": []
+    },
+    "powershell-commands": {
+      "keywords": ["powershell", "bash", "grep", "windows"],
+      "phrases": ["fails in powershell", "translate to powershell"],
+      "needs": []
+    },
+    "find-skills": {
+      "keywords": ["skill", "skills", "install", "catalog"],
+      "phrases": ["is there a skill", "find a skill"],
+      "needs": []
+    },
+    "skill-orchestrator": {
+      "keywords": ["chain", "workflow", "multi-step", "orchestrate"],
+      "phrases": ["end to end", "step by step across"],
+      "needs": []
+    }
+  }
+}
