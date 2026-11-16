@@ -1,6 +1,8 @@
 name: Publish MCP server
 
-# Push a tag like mcp-v0.2.0 (must match mcp-server/pyproject.toml) to publish skillhub-mcp to PyPI.
+# Push a tag like mcp-v0.2.0 (must match mcp-server/pyproject.toml) to publish the MCP server to PyPI.
+# BLOCKED: the PyPI name "skillhub-mcp" is taken by an unrelated project. Choose a free name, set it as
+# `name` in mcp-server/pyproject.toml, and only then push an mcp-v* tag.
 # One-time setup on PyPI: add a "trusted publisher" for this repo, workflow publish-mcp.yml, environment "pypi".
 on:
   push:

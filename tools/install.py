@@ -15,6 +15,7 @@ SCRIPTED MODE (CI, dotfiles, power users):
     python install.py --agent cursor --skill git-rebasing               # into ./.cursor/skills
     python install.py --agent copilot,claude-code --plugin hub-tools --global
     python install.py --zip dist --plugin git-branching                 # .zip per skill (upload UIs)
+    python install.py --installed --global                              # what is installed, and which version
 
 Standard library only (Python 3.8+). Nothing is written without confirmation (or --yes).
 Existing skills are never overwritten unless you agree (or pass --force).
@@ -23,6 +24,7 @@ Existing skills are never overwritten unless you agree (or pass --force).
 from __future__ import annotations
 
 import argparse
+import hashlib
 import io
 import json
 import os
@@ -30,6 +32,7 @@ import re
 import shutil
 import sys
 import tempfile
+import urllib.error
 import urllib.request
 import zipfile
 from pathlib import Path
@@ -39,6 +42,8 @@ DEFAULT_REPO = "NILANJAN-01/skill-hub"
 # the release tag, so an install.py downloaded from a release installs that same release.
 DEFAULT_REF = "main"
 REPO = os.environ.get("SKILLHUB_REPO") or DEFAULT_REPO
+# Written into every folder the installer copies skills to: which hub skills are there, at which version.
+MANIFEST = ".skill-hub.json"
 
 # --------------------------------------------------------------------------------------------
 # Every agent the hub supports. SOURCE OF TRUTH: build_catalog.py copies this table into
@@ -134,12 +139,45 @@ def find_local_root() -> Path | None:
     return here if (here / "skills").is_dir() and (here / ".claude-plugin").is_dir() else None
 
 
-def download_hub(ref: str) -> Path:
-    url = f"https://codeload.github.com/{REPO}/zip/{ref}"      # works for branches and tags
-    print(f"Downloading {REPO}@{ref} ...")
+def _fetch(url: str) -> bytes:
     req = urllib.request.Request(url, headers={"User-Agent": "skill-hub-installer"})
     with urllib.request.urlopen(req, timeout=60) as r:
-        data = r.read()
+        return r.read()
+
+
+def checksum_ok(data: bytes, sums: str, name: str) -> bool | None:
+    """True/False if SHA256SUMS lists `name`; None if it does not."""
+    for line in sums.splitlines():
+        parts = line.split()
+        if len(parts) == 2 and parts[1].lstrip("*") == name:
+            return hashlib.sha256(data).hexdigest() == parts[0].lower()
+    return None
+
+
+def release_zip(ref: str) -> bytes | None:
+    """The release's own archive, checked against its SHA256SUMS. None if the release has no such assets."""
+    base = f"https://github.com/{REPO}/releases/download/{ref}/"
+    name = f"skill-hub-{ref[1:]}.zip"
+    try:
+        sums = _fetch(base + "SHA256SUMS").decode("utf-8", "replace")
+        data = _fetch(base + name)
+    except (urllib.error.URLError, OSError):
+        return None
+    ok = checksum_ok(data, sums, name)
+    if ok is None:
+        return None
+    if not ok:
+        sys.exit(f"Checksum mismatch for {name}: the download does not match the release's SHA256SUMS. "
+                 "Nothing was installed.")
+    print(f"Checksum verified ({name}).")
+    return data
+
+
+def download_hub(ref: str) -> Path:
+    print(f"Downloading {REPO}@{ref} ...")
+    data = release_zip(ref) if re.fullmatch(r"v\d+(\.\d+)*", ref) else None
+    if data is None:
+        data = _fetch(f"https://codeload.github.com/{REPO}/zip/{ref}")      # works for branches and tags
     tmp = Path(tempfile.mkdtemp(prefix="skill-hub-"))
     with zipfile.ZipFile(io.BytesIO(data)) as z:
         for m in z.namelist():                 # refuse path traversal
@@ -229,12 +267,54 @@ def own_dir(agent: str, use_global: bool, project: Path) -> Path | None:
     return project / a["project"]
 
 
+def skill_files(base: Path) -> dict:
+    """{relative path: file} for everything the installer copies from a skill folder."""
+    return {p.relative_to(base).as_posix(): p for p in base.rglob("*")
+            if p.is_file() and "__pycache__" not in p.parts and p.suffix != ".pyc"}
+
+
 def same_skill(src: Path, dst: Path) -> bool:
-    """True if dst holds the same SKILL.md as the hub copy."""
+    """True if dst holds the same files as the hub copy (SKILL.md, scripts, references, assets).
+    Line endings are ignored, so a Windows clone and a downloaded copy compare equal."""
     try:
-        return (src / "SKILL.md").read_bytes() == (dst / "SKILL.md").read_bytes()
+        a, b = skill_files(src), skill_files(dst)
+        return a.keys() == b.keys() and all(
+            a[k].read_bytes().replace(b"\r\n", b"\n") == b[k].read_bytes().replace(b"\r\n", b"\n") for k in a)
     except OSError:
         return False
+
+
+def hub_version(root: Path) -> str:
+    try:
+        market = json.loads((root / ".claude-plugin" / "marketplace.json").read_text(encoding="utf-8"))
+        return str(market.get("metadata", {}).get("version", ""))
+    except (OSError, ValueError):
+        return ""
+
+
+def read_manifest(folder: Path) -> dict:
+    try:
+        data = json.loads((folder / MANIFEST).read_text(encoding="utf-8"))
+        return data if isinstance(data.get("skills"), dict) else {"skills": {}}
+    except (OSError, ValueError, AttributeError):
+        return {"skills": {}}
+
+
+def record(folder: Path, skill: str, version: str | None) -> None:
+    """Note in the folder's manifest that `skill` was installed (version=None: it was removed)."""
+    data = read_manifest(folder)
+    if version is None:
+        if skill not in data["skills"]:
+            return
+        del data["skills"][skill]
+    else:
+        data["skills"][skill] = {"version": version, "repo": REPO}
+    path = folder / MANIFEST
+    if data["skills"]:
+        data["note"] = "Written by the skill-hub installer. Lists the hub skills in this folder."
+        path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    elif path.is_file():
+        path.unlink()
 
 
 def make_plan(root: Path, names: list, agents: list, use_global: bool, project: Path,
@@ -286,6 +366,7 @@ def copy_skill(root: Path, s: str, folder: Path) -> None:
         shutil.rmtree(dst)
     folder.mkdir(parents=True, exist_ok=True)
     shutil.copytree(root / "skills" / s, dst, ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+    record(folder, s, hub_version(root))
 
 
 def fmt(p: Path) -> str:
@@ -338,6 +419,7 @@ def apply_plan(root: Path, plan: dict, update: bool, remove_redundant: bool, dry
                 print(f"  {pre}remove   redundant copy  {fmt(f / s)}")
                 if not dry:
                     shutil.rmtree(f / s)
+                    record(f, s, None)
     return n
 
 
@@ -488,7 +570,28 @@ def remove_skills(names: list, agents: list, use_global: bool, project: Path, ye
         return
     for f, s in found:
         shutil.rmtree(f / s)
+        record(f, s, None)
     print(f"\nRemoved {len(found)} skill folder(s).")
+
+
+def print_installed(root: Path, agents: list, use_global: bool, project: Path) -> None:
+    """Hub skills in the folders these agents read: installed version, and whether it matches this hub."""
+    current, known = hub_version(root), set(all_skills(root))
+    folders = list(dict.fromkeys(f for a in agents for f in reads(a, use_global, project)))
+    total = 0
+    for f in folders:
+        versions = read_manifest(f)["skills"]
+        names = sorted(s for s in known if (f / s / "SKILL.md").is_file())
+        if not names:
+            continue
+        print(f"\n{fmt(f)}")
+        for s in names:
+            v = versions.get(s, {}).get("version") or "unknown version"
+            state = "up to date" if same_skill(root / "skills" / s, f / s) else "differs from the hub"
+            print(f"  {s:<42} {v:<16} {state}")
+            total += 1
+    print(f"\n{total} hub skill(s) installed. This hub is version {current or 'unknown'}."
+          + (" Use --update to refresh the ones that differ." if total else ""))
 
 
 def make_zips(root: Path, names: list, out: Path) -> None:
@@ -551,7 +654,10 @@ def main() -> None:
     ap.add_argument("--yes", "-y", action="store_true", help="don't ask for confirmation")
     ap.add_argument("--dry-run", action="store_true", help="show what would happen, change nothing")
     ap.add_argument("--detect", action="store_true", help="only show which agents are installed")
-    ap.add_argument("--ref", default=DEFAULT_REF, help="branch or release tag to download when not run from a clone")
+    ap.add_argument("--installed", action="store_true",
+                    help="list the hub skills already installed, with their version (for --agent, default: detected)")
+    ap.add_argument("--ref", default=os.environ.get("SKILLHUB_REF") or DEFAULT_REF,
+                    help="branch or release tag to download when not run from a clone (or $SKILLHUB_REF)")
     ap.add_argument("--repo", metavar="OWNER/NAME", help="GitHub repository to download from (default: %s, or $SKILLHUB_REPO)" % REPO)
     ap.add_argument("--list", action="store_true", help="list agents, plugins and skills")
     args = ap.parse_args()
@@ -566,6 +672,18 @@ def main() -> None:
     root = find_local_root() or download_hub(args.ref)
     if args.list:
         print_list(root)
+        return
+    if args.installed:
+        if args.agent and args.agent.strip() != "detected":
+            agents = [a.strip() for a in args.agent.split(",") if a.strip()]
+            for a in agents:
+                if a not in AGENTS:
+                    ap.error(f"unknown agent {a!r}. Agents: {', '.join(AGENTS)}, detected")
+        else:
+            agents = list(detect_agents()) or list(AGENTS)
+        if args.use_global:
+            agents = [a for a in agents if AGENTS[a]["global"]]
+        print_installed(root, agents, args.use_global, args.project.expanduser().resolve())
         return
 
     plugins_arg = [x.strip() for v in args.plugin for x in v.split(",") if x.strip()]

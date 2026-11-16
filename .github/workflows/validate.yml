@@ -32,6 +32,8 @@ jobs:
               python -m unittest discover -s "$d" -p "test_*.py" -v
             fi
           done
+      - name: Installer tests (standard library only, no network)
+        run: python -m unittest discover -s tools -p "test_*.py" -v
       - name: MCP server tests (standard library only, no network)
         run: python -m unittest discover -s mcp-server/tests -v
       - name: Skill tests (image-inspector and video-inspector, with Pillow and OpenCV)

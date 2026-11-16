@@ -97,6 +97,21 @@ def categories_table(catalog: dict) -> str:
     return "\n".join(rows)
 
 
+def plugins_table_simple(catalog: dict) -> str:
+    """GUIDE.md table of every `--plugin` value, from the marketplace."""
+    def short(text: str) -> str:
+        text = " ".join(text.split()).replace("|", "\\|")
+        return text if len(text) <= 170 else text[:167].rsplit(" ", 1)[0] + "..."
+    rows = ["| Category | Skills | What's in it |", "|---|---:|---|"]
+    rows += [f"| `{p['name']}` | {len(p['skills'])} | {short(p['description'])} |" for p in catalog["plugins"]]
+    return "\n".join(rows)
+
+
+def guide_text(text: str, catalog: dict) -> str:
+    text = fill_block(text, "agents-simple", agents_table_simple(), "GUIDE.md")
+    return fill_block(text, "plugins-simple", plugins_table_simple(catalog), "GUIDE.md")
+
+
 def plugin_names_line(catalog: dict) -> str:
     return ", ".join(f"`{p['name']}`" for p in catalog["plugins"])
 
@@ -237,7 +252,7 @@ def main() -> None:
     targets = [(CATALOG, catalog_text), (SKILLS_README, readme_text), (PROMPTS_HTML, prompts_html),
                (PROMPTS_MD, prompts_md),
                (README, readme_with_agents(README.read_text(encoding="utf-8"), catalog)),
-               (GUIDE, fill_block(GUIDE.read_text(encoding="utf-8"), "agents-simple", agents_table_simple(), "GUIDE.md"))]
+               (GUIDE, guide_text(GUIDE.read_text(encoding="utf-8"), catalog))]
     if args.check:
         stale = [p for p, t in targets if not p.exists() or p.read_text(encoding="utf-8") != t]
         for p in stale:

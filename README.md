@@ -20,7 +20,7 @@ Not sure what you need? Pick by task, install it, then just ask your agent:
 | Write or debug GitLab CI pipelines | `gitlab-ci-tools` | "My pipeline is stuck. Why?" |
 | Analyse Android logs or screens | `android-automation` | "Here's logcat.txt. Why did the app crash?" |
 | Inspect images or videos | `image-tools`, `video-tools` | "What colours does this screenshot use?" |
-| Unit-test Kotlin code | `testing-tools` | "Write tests for this class and check they're real" |
+| Unit-test Kotlin or Python code | `testing-tools` | "Write tests for this class and check they're real" |
 | Learn or fix Git problems | `git-skills` (61 skills) | "Undo my last commit but keep the changes" |
 | Find or create skills | `hub-tools` | "Is there a skill for X?" |
 
@@ -95,7 +95,7 @@ Those commands read the latest `main`. For a fixed, reproducible version, use th
 curl -fsSL https://github.com/NILANJAN-01/skill-hub/releases/latest/download/install.py | python3 -
 ```
 
-Each release also lists `SHA256SUMS`, one zip per skill (for upload UIs such as Claude.ai) and `catalog.json`. Running a fork? Use `--repo owner/name` (or set `SKILLHUB_REPO`) and `--ref <branch-or-tag>`.
+Each release also lists `SHA256SUMS`, one zip per skill (for upload UIs such as Claude.ai) and `catalog.json`. When the installer downloads a release (`--ref v1.3.0` or `SKILLHUB_REF`), it checks the archive against that release's `SHA256SUMS` and stops on a mismatch. Running a fork? Use `--repo owner/name` (or set `SKILLHUB_REPO`) and `--ref <branch-or-tag>`.
 
 The installer:
 - **Reads the machine fresh on every run.** It looks for installed apps, commands on your PATH and the agents' config folders.
@@ -114,7 +114,7 @@ python install.py --agent codex --plugin git-skills --global --dry-run
 python install.py --zip dist --plugin git-branching               # one .zip per skill, for upload UIs
 ```
 
-`--update` (same as `--force`) refreshes installed skills that differ from the hub, `--remove` uninstalls the selected skills (it asks first), `--tidy` removes redundant copies, and `--each` copies into every agent's own folder instead of shared ones.
+`--installed` lists the hub skills already installed and the hub version each came from (the installer records this in a small `.skill-hub.json` in each skills folder). `--update` (same as `--force`) refreshes installed skills that differ from the hub in any file, `--remove` uninstalls the selected skills (it asks first), `--tidy` removes redundant copies, and `--each` copies into every agent's own folder instead of shared ones.
 
 ### Option 2: the `skills` CLI (Node)
 
@@ -168,7 +168,7 @@ catalog.json, skills/README.md    generated index of every skill, plugins and ag
 index.html, prompts.html          optional local browser for the catalog (python -m http.server)
 template/SKILL.md                 starting point for a new skill
 spec/agent-skills-spec.md         Agent Skills spec summary + hub conventions
-tools/install.py                  multi-agent installer (source of truth for agent folders)
+tools/install.py                  multi-agent installer (source of truth for agent folders); tests in tools/test_install.py
 tools/build_catalog.py            regenerates catalog.json, skills/README.md, examples/PROMPTS.md, prompts.html, agent tables
 tools/validate_skills.py          spec + hub + portability checks (CI)
 mcp-server/                       MCP server (stdlib only) that lets agents search and read the catalog
@@ -212,7 +212,7 @@ Skills are provided as-is, for productivity and education. Generated skills are 
 ## Credits & licenses
 
 - The hub's own code and skills are released under the [MIT License](LICENSE), unless a skill's `license` field says otherwise.
-- **Commercial use:** the 61 `git-*` skills are **non-commercial** (CC BY-NC-SA 3.0, below), and redistributing them means keeping that license and the attribution. They live in their own plugins (`git-skills` and the `git-*` bundles), so you can install the other plugins (`hub-tools`, `android-automation`, `repo-tools`, `image-tools`, `video-tools`, `testing-tools`, `gitlab-ci-tools`, `writing-tools`) without them. If you redistribute the hub commercially, remove `skills/git-*` first.
+- **Commercial use:** the 61 `git-*` skills are **non-commercial** (CC BY-NC-SA 3.0, below), and redistributing them means keeping that license and the attribution. They live in their own plugins (`git-skills` and the `git-*` bundles), so you can install every other plugin (any whose name does not start with `git-`) without them. If you redistribute the hub commercially, remove `skills/git-*` first.
 - The `git-*` skills are derived from [*Pro Git*](https://git-scm.com/book) by Scott Chacon and Ben Straub, licensed under [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/). See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 - Each skill declares its license in the `license` field of its frontmatter.
 - The hub layout follows [anthropics/skills](https://github.com/anthropics/skills). Skill paths come from each vendor's documentation, linked in the table above.

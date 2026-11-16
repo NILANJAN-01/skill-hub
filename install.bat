@@ -10,7 +10,8 @@ rem   install.bat <installer options>  any other options go straight to tools\in
 rem                                    install.bat --agent claude-code --plugin hub-tools,gradle-tools --global
 rem
 rem Needs: Python 3.8+. From a clone it uses tools\install.py; otherwise it downloads it
-rem (set SKILLHUB_REPO=owner/name to use a fork). Nothing is written without your yes (or --yes).
+rem (set SKILLHUB_REPO=owner/name to use a fork, SKILLHUB_REF=v1.3.0 for a fixed release).
+rem Nothing is written without your yes (or --yes).
 setlocal EnableExtensions
 
 set "HUB=%~dp0"
@@ -62,11 +63,13 @@ set "INSTALLER=%HUB%tools\install.py"
 if exist "%INSTALLER%" goto have_installer
 set "REPO=%SKILLHUB_REPO%"
 if not defined REPO set "REPO=NILANJAN-01/skill-hub"
+set "REF=%SKILLHUB_REF%"
+if not defined REF set "REF=main"
 set "TMPD=%TEMP%\skillhub-%RANDOM%%RANDOM%"
 mkdir "%TMPD%" >nul 2>nul
 set "INSTALLER=%TMPD%\install.py"
-echo [ .. ] No clone here; downloading tools/install.py from github.com/%REPO%
-powershell -NoProfile -Command "try { Invoke-WebRequest -UseBasicParsing -Uri 'https://raw.githubusercontent.com/%REPO%/main/tools/install.py' -OutFile '%INSTALLER%' } catch { Write-Host $_.Exception.Message; exit 1 }"
+echo [ .. ] No clone here; downloading tools/install.py from github.com/%REPO% (%REF%)
+powershell -NoProfile -Command "try { Invoke-WebRequest -UseBasicParsing -Uri 'https://raw.githubusercontent.com/%REPO%/%REF%/tools/install.py' -OutFile '%INSTALLER%' } catch { Write-Host $_.Exception.Message; exit 1 }"
 if not errorlevel 1 goto downloaded
 echo [FAIL] Could not download the installer. Check your internet, proxy or VPN,
 echo        or clone the repo and run install.bat from it.

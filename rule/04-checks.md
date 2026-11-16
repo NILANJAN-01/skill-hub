@@ -13,6 +13,7 @@ CI also runs:
 ```bash
 python -m compileall -q tools skills mcp-server
 python -m unittest discover -s mcp-server/tests -v
+python -m unittest discover -s tools -p "test_*.py" -v
 python -m unittest discover -s skills/<name>/scripts -p "test_*.py" -v
 ```
 
