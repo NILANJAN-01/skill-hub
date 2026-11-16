@@ -153,9 +153,13 @@ def tokens(text: str) -> list:
 
 
 def stem(t: str) -> str:
+    """Crude stem, so 'rebase', 'rebases' and 'rebasing' all become 'rebas'."""
     for suf in ("ing", "es", "s", "ed"):
         if t.endswith(suf) and len(t) - len(suf) >= 3:
-            return t[: -len(suf)]
+            t = t[: -len(suf)]
+            break
+    if len(t) > 3 and t.endswith("e"):
+        t = t[:-1]
     return t
 
 

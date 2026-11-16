@@ -18,6 +18,21 @@ def make_skill(root: Path, name: str, desc: str, compat: str = "") -> None:
     (d / "SKILL.md").write_text(f"---\nname: {name}\ndescription: {desc}\n{c}---\n\n# {name}\n", encoding="utf-8")
 
 
+class Stemming(unittest.TestCase):
+    def test_word_forms_share_a_stem(self):
+        self.assertEqual(len({r.stem(w) for w in ("rebase", "rebases", "rebasing", "rebased")}), 1)
+        self.assertEqual(r.stem("merge"), r.stem("merging"))
+        self.assertEqual(r.stem("commits"), "commit")
+
+    def test_rebase_reaches_the_rebasing_skill(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "skills"
+            make_skill(root, "git-rebasing", "Rebase a branch onto another. Use when handling rebasing.")
+            make_skill(root, "git-branch-management", "List, rename and delete git branches such as main.")
+            reg = r.scan([str(root)], defaults=False)
+            self.assertEqual(r.match("rebase my feature branch onto main", reg, {})[0]["skill"], "git-rebasing")
+
+
 class NestedLayout(unittest.TestCase):
     def test_scan_finds_skills_in_area_and_group_folders(self):
         with tempfile.TemporaryDirectory() as tmp:
