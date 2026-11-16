@@ -457,5 +457,10 @@
     "I keep hitting my AI usage limit. Audit this repo and tell me what to exclude.",
     "How do I reduce token usage and cost when coding with an AI IDE?",
     "My chat context is full and answers got worse. How do I restart without losing progress?"
+  ],
+  "context-engineering": [
+    "My repo has CLAUDE.md, GEMINI.md and Copilot instructions that disagree. Centralize them into one source of truth.",
+    "Set up a context engineering approach for this project so every AI agent loads the same short brief.",
+    "Check how much context my instruction files send on every request and split what is too large."
   ]
 }

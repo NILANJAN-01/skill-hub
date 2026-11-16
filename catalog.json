@@ -300,10 +300,11 @@
     },
     {
       "name": "ai-efficiency-tools",
-      "description": "AI efficiency: audit a project for token waste and save tokens and cost in any AI IDE, agent or model",
+      "description": "AI efficiency: audit a project for token waste, save tokens and cost, and centralize context across any AI IDE, agent or model",
       "category": "ai-efficiency-tools",
       "skills": [
-        "ai-token-saver"
+        "ai-token-saver",
+        "context-engineering"
       ]
     }
   ],
@@ -371,7 +372,7 @@
     {
       "name": "ai-efficiency-tools",
       "title": "AI efficiency: save tokens & cost",
-      "count": 1
+      "count": 2
     },
     {
       "name": "git-getting-started",
@@ -769,6 +770,26 @@
       "files": [
         "references/capturing-dumps.md",
         "references/output-format.md"
+      ]
+    },
+    {
+      "name": "context-engineering",
+      "title": "Context engineering: one central context for every agent",
+      "category": "ai-efficiency-tools",
+      "description": "Design what goes into an AI model's context, centrally: one source-of-truth context file, thin pointers for each tool, layered loading (always, on demand, retrieved), a token budget and session handoff notes. A bundled script checks for duplicated or drifting instruction files and creates the pointers. Use when the user mentions context engineering, context window, instruction files drifting between tools, or wants one shared project context for every AI agent.",
+      "plugins": [
+        "ai-efficiency-tools"
+      ],
+      "path": "skills/context-engineering",
+      "license": "MIT",
+      "compatibility": "Needs Python 3.8+ (standard library only) for the script. The technique applies to any model or agent. Token counts are estimates (characters / 4).",
+      "examples": [
+        "My repo has CLAUDE.md, GEMINI.md and Copilot instructions that disagree. Centralize them into one source of truth.",
+        "Set up a context engineering approach for this project so every AI agent loads the same short brief.",
+        "Check how much context my instruction files send on every request and split what is too large."
+      ],
+      "files": [
+        "references/layers.md"
       ]
     },
     {

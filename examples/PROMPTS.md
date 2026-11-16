@@ -2,7 +2,7 @@
 
 <!-- Generated from examples/prompts.json by tools/build_catalog.py - do not edit by hand. -->
 
-285 things you can say to your AI coding agent, for all 87 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
+288 things you can say to your AI coding agent, for all 88 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
 
 **Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [ADB: connect, control & debug Android devices](#adb-connect-control--debug-android-devices) · [Gradle: Android setup, diagnosis & tests](#gradle-android-setup-diagnosis--tests) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Shell: PowerShell on Windows](#shell-powershell-on-windows) · [Learning: Python tutor & interview notes](#learning-python-tutor--interview-notes) · [AI efficiency: save tokens & cost](#ai-efficiency-save-tokens--cost) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
 
@@ -289,6 +289,14 @@ Install the whole category: `--plugin ai-efficiency-tools`
 - “I keep hitting my AI usage limit. Audit this repo and tell me what to exclude.”
 - “How do I reduce token usage and cost when coding with an AI IDE?”
 - “My chat context is full and answers got worse. How do I restart without losing progress?”
+
+### Context engineering: one central context for every agent
+
+[`context-engineering`](../skills/context-engineering/SKILL.md) · install: `--skill context-engineering`
+
+- “My repo has CLAUDE.md, GEMINI.md and Copilot instructions that disagree. Centralize them into one source of truth.”
+- “Set up a context engineering approach for this project so every AI agent loads the same short brief.”
+- “Check how much context my instruction files send on every request and split what is too large.”
 
 ## Git: getting started
 
