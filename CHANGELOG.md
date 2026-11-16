@@ -4,6 +4,8 @@ Notable changes to skill-hub. Newest first. Skills are listed by name; see `git 
 
 ## Unreleased
 
+- Added: `skill-hub-mcp/`, a new MCP server kept beside `mcp-server/`. It searches (BM25), routes multi-part requests to skills, reads playbooks, detects agents, lists installed skills, and plans installs, updates and removals. With `--allow-install` it can apply a plan the user agreed to, through a one-time token; without it the server is read-only.
+
 ## 1.3.0 - 2026-11-16
 
 - Added: `context-engineering` (in `ai-efficiency-tools`): one central context file, thin pointers for each tool, layered loading, a token budget and handoff notes, with a script that finds duplicated or drifting instruction files and creates the pointers.

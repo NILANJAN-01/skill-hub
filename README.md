@@ -171,7 +171,8 @@ spec/agent-skills-spec.md         Agent Skills spec summary + hub conventions
 tools/install.py                  multi-agent installer (source of truth for agent folders); tests in tools/test_install.py
 tools/build_catalog.py            regenerates catalog.json, skills/README.md, examples/PROMPTS.md, prompts.html, agent tables
 tools/validate_skills.py          spec + hub + portability checks (CI)
-mcp-server/                       MCP server (stdlib only) that lets agents search and read the catalog
+mcp-server/                       first MCP server (stdlib only): agents search and read the catalog
+skill-hub-mcp/                    newer MCP server (stdlib only): search, route, read, and install skills after you agree
 GUIDE.md                          step-by-step guide for people using the skills
 AGENTS.md                         instructions for AI agents working on this repo
 ```

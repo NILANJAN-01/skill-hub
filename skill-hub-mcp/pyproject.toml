@@ -1,0 +1,17 @@
+[project]
+name = "skill-hub-mcp"
+version = "0.1.0"
+description = "MCP server (stdio) for the skill-hub Agent Skills catalog: search, route, read and install skills"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = []
+
+[project.scripts]
+skill-hub-mcp = "skill_hub_mcp.__main__:main"
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["skill_hub_mcp"]
