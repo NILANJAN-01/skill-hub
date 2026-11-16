@@ -93,15 +93,31 @@ def roots_to_scan(extra: list, defaults: bool = True) -> list:
     return roots
 
 
+def skill_folders(root: Path, depth: int = 3) -> list:
+    """Folders under `root` that hold a SKILL.md: directly (an agent's skills folder) or nested up to
+    `depth` levels (a hub clone: skills/<area>/<group>/<name>/)."""
+    found = []
+    try:
+        children = sorted(p for p in root.iterdir() if p.is_dir())
+    except OSError:
+        return found
+    for d in children:
+        if d.name.startswith(".") or d.name == "__pycache__":
+            continue
+        if (d / "SKILL.md").is_file():
+            found.append(d)
+        elif depth > 1:
+            found += skill_folders(d, depth - 1)
+    return found
+
+
 def scan(extra: list = (), defaults: bool = True) -> dict:
     reg = {}
     for root in roots_to_scan(list(extra), defaults):
         if not root.is_dir():
             continue
-        for d in sorted(root.iterdir()):
+        for d in skill_folders(root):
             md = d / "SKILL.md"
-            if not md.is_file():
-                continue
             try:
                 fm = parse_frontmatter(md.read_text(encoding="utf-8", errors="replace"))
             except OSError:

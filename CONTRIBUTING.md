@@ -6,7 +6,7 @@ If you use an AI agent to contribute, it follows [AGENTS.md](AGENTS.md).
 
 ## Checklist for a new skill
 
-- [ ] The folder is `skills/<name>/`, and `<name>` is kebab-case, at most 64 chars, and unique.
+- [ ] The folder is `skills/<area>/<group>/<name>/`. `<area>` is one of `testing`, `development`, `design`, `generic`, `external-tools`; `<group>` is an existing group folder or a new kebab-case one; `<name>` is kebab-case, at most 64 chars, and unique across the whole hub (skills are installed by name alone).
 - [ ] `SKILL.md` frontmatter has `name` (equal to the folder name) and `description` (≤1024 chars, says **what** the skill does and **when** to use it, and names the words users type).
 - [ ] `metadata.title` and `metadata.category` are set. The category is the focused plugin the skill belongs to.
 - [ ] `license` is set. It is required if the content derives from a book, docs or another project. Credit the source in `THIRD_PARTY_NOTICES.md`.
@@ -35,6 +35,12 @@ If you use an AI agent to contribute, it follows [AGENTS.md](AGENTS.md).
 ## Supporting a new agent
 
 Add an entry to the `AGENTS` dict in `tools/install.py`, using only the vendor's official documentation (link it in `docs`). Fill in its skill folders and its `detect` hints (commands on PATH, app install folders, config folders) so the guided installer can find it. Then run `python tools/build_catalog.py`, which updates the agent tables in `README.md` and `GUIDE.md` and `catalog.json`.
+
+## Adding a new group or area
+
+A **group** is only a folder: create `skills/<area>/<new-group>/` and put the skill in it. Nothing else needs registering. An **area** is a top-level folder of `skills/`: add it to `AREAS` in `tools/hublib.py`, create the folder (with a `README.md` if it has no skills yet), and rebuild. Keep the layout exactly three levels deep, because the installer, the `skills` CLI and the validator all look for `skills/<area>/<group>/<name>/SKILL.md`.
+
+Folders organise the source; plugins are what people install. A group does not have to match a plugin.
 
 ## Adding a new category
 

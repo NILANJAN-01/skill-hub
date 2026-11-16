@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build catalog.json and skills/README.md from every skills/*/SKILL.md and the plugin marketplace.
+"""Build catalog.json and skills/README.md from every skills/<area>/<group>/<name>/SKILL.md and the plugin marketplace.
 
 Also builds prompts.html and examples/PROMPTS.md (example prompts per skill) from examples/prompts.json,
 and the agent tables in README.md and GUIDE.md from tools/install.py.
@@ -16,8 +16,9 @@ import sys
 
 import re
 
-from hublib import (CATALOG, PROMPTS_HTML, PROMPTS_TEMPLATE, ROOT, SKILLS_README, FrontmatterError,
-                    load_examples, load_marketplace, parse_frontmatter, plugin_skill_names, skill_dirs)
+from hublib import (AREAS, CATALOG, PROMPTS_HTML, PROMPTS_TEMPLATE, ROOT, SKILLS_DIR, SKILLS_README,
+                    FrontmatterError, load_examples, load_marketplace, parse_frontmatter, plugin_skill_names,
+                    skill_dirs, skill_location)
 from install import AGENTS
 
 README = ROOT / "README.md"
@@ -41,7 +42,7 @@ def prompts_markdown(skills: list, categories: list) -> str:
                 f"Install the whole category: `--plugin {c['name']}`", ""]
         for s in sorted((s for s in skills if s["category"] == c["name"]), key=lambda s: s["title"].lower()):
             out += [f"### {s['title']}", "",
-                    f"[`{s['name']}`](../skills/{s['name']}/SKILL.md) · install: `--skill {s['name']}`", ""]
+                    f"[`{s['name']}`](../{s['path']}/SKILL.md) · install: `--skill {s['name']}`", ""]
             out += [f"- “{p}”" for p in s["examples"]] + [""]
     return "\n".join(out)
 
@@ -177,13 +178,16 @@ def build() -> tuple[str, str, str, str, dict]:
         meta = fm.get("metadata") if isinstance(fm.get("metadata"), dict) else {}
         in_plugins = sorted(membership.get(d.name, []), key=lambda n: (sizes[n], n))
         category = meta.get("category") or (in_plugins[0] if in_plugins else "uncategorized")
+        area, group = skill_location(d)
         entry = {
             "name": fm.get("name", d.name),
             "title": meta.get("title") or titleize(d.name),
             "category": category,
+            "area": area,
+            "group": group,
             "description": fm.get("description", ""),
             "plugins": in_plugins,
-            "path": f"skills/{d.name}",
+            "path": d.relative_to(ROOT).as_posix(),
             "license": fm.get("license", ""),
             "compatibility": fm.get("compatibility", ""),
         }
@@ -201,6 +205,17 @@ def build() -> tuple[str, str, str, str, dict]:
     categories = [{"name": c, "title": CATEGORY_TITLES.get(c, titleize(c)), "count": counts[c]}
                   for c in order if c in counts]
 
+    # Folder layout: every area in AREAS (even an empty one) with the groups found on disk.
+    areas = []
+    for a, title in AREAS.items():
+        groups = sorted({s["group"] for s in skills if s["area"] == a} |
+                        ({p.name for p in (SKILLS_DIR / a).iterdir() if p.is_dir() and not p.name.startswith(".")}
+                         if (SKILLS_DIR / a).is_dir() else set()))
+        areas.append({"name": a, "title": title,
+                      "groups": [{"name": g, "skills": sorted(s["name"] for s in skills
+                                                              if s["area"] == a and s["group"] == g)}
+                                 for g in groups]})
+
     catalog = {
         "name": market.get("name", "skill-hub"),
         "description": market.get("metadata", {}).get("description", ""),
@@ -209,6 +224,7 @@ def build() -> tuple[str, str, str, str, dict]:
         "plugins": [{"name": p["name"], "description": p.get("description", ""),
                      "category": p.get("category", ""), "skills": plugin_skill_names(p)} for p in plugins],
         "categories": categories,
+        "areas": areas,
         "agents": [{"id": k, **a} for k, a in AGENTS.items()],
         "skills": skills,
     }
@@ -224,11 +240,23 @@ def build() -> tuple[str, str, str, str, dict]:
              "Claude Code, Google Antigravity, Devin, GitHub Copilot, Cursor, Windsurf, Codex and Gemini CLI. Install a "
              "category with `python tools/install.py --agent <agent> --plugin <category>`; see the "
              "[main README](../README.md#install) for every option.",
-             ""]
+             "",
+             "## Folder layout", "",
+             "A skill lives in `skills/<area>/<group>/<skill>/`. The area and group only organise the source: a "
+             "skill is still installed, and named, by its own folder name. The sections after this table list the "
+             "skills by category (plugin), which is what you install.", "",
+             "| Area | Group | Skills |", "|---|---|---|"]
+    for a in areas:
+        if not a["groups"]:
+            lines.append(f"| [`{a['name']}/`]({a['name']}/) | - | none yet |")
+        for g in a["groups"]:
+            names = ", ".join(f"[`{n}`]({a['name']}/{g['name']}/{n}/SKILL.md)" for n in g["skills"]) or "none yet"
+            lines.append(f"| `{a['name']}/` | `{g['name']}/` | {names} |")
+    lines.append("")
     for c in categories:
         lines += [f"## {c['title']} (`{c['name']}`)", "", "| Skill | Description | Needs |", "|---|---|---|"]
         for s in sorted((s for s in skills if s["category"] == c["name"]), key=lambda s: s["title"].lower()):
-            lines.append(f"| [`{s['name']}`]({s['name']}/SKILL.md) | {cell(s['description'])} | {cell(s['compatibility'], 90) or '-'} |")
+            lines.append(f"| [`{s['name']}`]({s['path'][len('skills/'):]}/SKILL.md) | {cell(s['description'])} | {cell(s['compatibility'], 90) or '-'} |")
         lines.append("")
     page_data = {
         "categories": categories,

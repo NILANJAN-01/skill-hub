@@ -238,7 +238,7 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 18px; justify-content: s
   <section id="view-about" hidden>
     <div class="wrap hero">
       <h1>How the hub <span>works</span></h1>
-      <p>Every skill is a folder in <code>skills/</code> with a <code>SKILL.md</code>. Skills are grouped into plugins in
+      <p>Every skill is a folder <code>skills/&lt;area&gt;/&lt;group&gt;/&lt;name&gt;/</code> with a <code>SKILL.md</code>. Skills are grouped into plugins in
         <code>.claude-plugin/marketplace.json</code>, so the hub installer and Claude Code can install a whole category at once.
         <code>tools/build_catalog.py</code> generates <code>catalog.json</code>, which powers this site and the
         <code>find-skills</code> skill. <code>tools/validate_skills.py</code> checks every skill against the Agent Skills spec in CI.</p>
@@ -260,8 +260,8 @@ npx skills add NILANJAN-01/skill-hub --skill git-rebasing
       <h2>Where each agent reads skills</h2>
       <div class="tablewrap"><table class="agent-table" id="agent-table"></table></div>
       <h2>Contribute</h2>
-      <pre class="codebox"><code>cp -r template skills/my-skill          # write SKILL.md
-# add "./skills/my-skill" to a plugin in .claude-plugin/marketplace.json
+      <pre class="codebox"><code>cp -r template skills/generic/my-group/my-skill   # pick the area and group; write SKILL.md
+# add "./skills/generic/my-group/my-skill" to a plugin in .claude-plugin/marketplace.json
 python tools/build_catalog.py
 python tools/validate_skills.py</code></pre>
       <h2>Generate skills from a PDF (skillforge)</h2>
@@ -272,9 +272,9 @@ python tools/validate_skills.py</code></pre>
         <div class="step"><b>3 · Plan</b><span>Topics are matched to the best sections across the whole book; the plan is editable JSON.</span></div>
         <div class="step"><b>4 · Author</b><span>Procedures come from instruction → command → output sequences; concepts from TextRank, keyphrases from YAKE, safety rules from callouts.</span></div>
       </div>
-      <pre class="codebox"><code>pip install -r skills/skillforge/scripts/requirements.txt
-python skills/skillforge/scripts/skillforge.py your-book.pdf --plan-only
-python skills/skillforge/scripts/skillforge.py your-book.pdf --topics "rebase, hooks, merge conflicts"</code></pre>
+      <pre class="codebox"><code>pip install -r skills/generic/hub/skillforge/scripts/requirements.txt
+python skills/generic/hub/skillforge/scripts/skillforge.py your-book.pdf --plan-only
+python skills/generic/hub/skillforge/scripts/skillforge.py your-book.pdf --topics "rebase, hooks, merge conflicts"</code></pre>
       <p style="color:var(--muted);margin-top:18px">Every statement in a skill is quoted from the source, so skills stay faithful to the book, though some extracted bullets can be noisy. Review a skill before you rely on it.</p>
     </div>
   </section>

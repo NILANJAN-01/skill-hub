@@ -15,7 +15,7 @@ python -m compileall -q tools skills mcp-server skill-hub-mcp
 python -m unittest discover -s mcp-server/tests -v
 python -m unittest discover -s skill-hub-mcp/tests -v
 python -m unittest discover -s tools -p "test_*.py" -v
-python -m unittest discover -s skills/<name>/scripts -p "test_*.py" -v
+python -m unittest discover -s skills/<area>/<group>/<name>/scripts -p "test_*.py" -v
 ```
 
 `image-inspector` and `video-inspector` tests need `Pillow` and `opencv-python-headless`. All other tests are stdlib only.

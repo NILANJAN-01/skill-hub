@@ -15,67 +15,67 @@
       "strict": false,
       "category": "git",
       "skills": [
-        "./skills/git-advanced-merging",
-        "./skills/git-aliases",
-        "./skills/git-an-example-git-enforced-policy",
-        "./skills/git-as-a-client",
-        "./skills/git-attributes",
-        "./skills/git-basic-branching-and-merging",
-        "./skills/git-basic-snapshotting",
-        "./skills/git-branch-management",
-        "./skills/git-branches-in-a-nutshell",
-        "./skills/git-bundling",
-        "./skills/git-configuration",
-        "./skills/git-credential-storage",
-        "./skills/git-daemon",
-        "./skills/git-debugging-with-git",
-        "./skills/git-distributed-git-contributing-to-a-project",
-        "./skills/git-distributed-git-maintaining-a-project",
-        "./skills/git-environment-variables",
-        "./skills/git-first-time-git-setup",
-        "./skills/git-generating-your-ssh-public-key",
-        "./skills/git-getting-a-git-repository",
-        "./skills/git-getting-git-on-a-server",
-        "./skills/git-getting-help",
-        "./skills/git-github-contributing-to-a-project",
-        "./skills/git-github-maintaining-a-project",
-        "./skills/git-gitweb",
-        "./skills/git-hooks",
-        "./skills/git-in-powershell",
-        "./skills/git-installing-git",
-        "./skills/git-interactive-staging",
-        "./skills/git-jgit",
-        "./skills/git-libgit2",
-        "./skills/git-maintenance-and-data-recovery",
-        "./skills/git-migrating-to-git",
-        "./skills/git-objects",
-        "./skills/git-packfiles",
-        "./skills/git-plumbing-and-porcelain",
-        "./skills/git-pro",
-        "./skills/git-rebasing",
-        "./skills/git-recording-changes-to-the-repository",
-        "./skills/git-references",
-        "./skills/git-remote-branches",
-        "./skills/git-replace",
-        "./skills/git-rerere",
-        "./skills/git-reset-demystified",
-        "./skills/git-revision-selection",
-        "./skills/git-rewriting-history",
-        "./skills/git-scripting-github",
-        "./skills/git-searching",
-        "./skills/git-setting-up-the-server",
-        "./skills/git-setup-and-config",
-        "./skills/git-signing-your-work",
-        "./skills/git-smart-http",
-        "./skills/git-stashing-and-cleaning",
-        "./skills/git-submodules",
-        "./skills/git-tagging",
-        "./skills/git-the-protocols",
-        "./skills/git-the-refspec",
-        "./skills/git-transfer-protocols",
-        "./skills/git-undoing-things",
-        "./skills/git-viewing-the-commit-history",
-        "./skills/git-working-with-remotes"
+        "./skills/development/git-branching/git-advanced-merging",
+        "./skills/development/git-getting-started/git-aliases",
+        "./skills/development/git-customization/git-an-example-git-enforced-policy",
+        "./skills/development/git-integrations/git-as-a-client",
+        "./skills/development/git-customization/git-attributes",
+        "./skills/development/git-branching/git-basic-branching-and-merging",
+        "./skills/development/git-getting-started/git-basic-snapshotting",
+        "./skills/development/git-branching/git-branch-management",
+        "./skills/development/git-branching/git-branches-in-a-nutshell",
+        "./skills/development/git-power-tools/git-bundling",
+        "./skills/development/git-customization/git-configuration",
+        "./skills/development/git-collaboration/git-credential-storage",
+        "./skills/development/git-collaboration/git-daemon",
+        "./skills/development/git-power-tools/git-debugging-with-git",
+        "./skills/development/git-collaboration/git-distributed-git-contributing-to-a-project",
+        "./skills/development/git-collaboration/git-distributed-git-maintaining-a-project",
+        "./skills/development/git-customization/git-environment-variables",
+        "./skills/development/git-getting-started/git-first-time-git-setup",
+        "./skills/development/git-collaboration/git-generating-your-ssh-public-key",
+        "./skills/development/git-getting-started/git-getting-a-git-repository",
+        "./skills/development/git-collaboration/git-getting-git-on-a-server",
+        "./skills/development/git-getting-started/git-getting-help",
+        "./skills/development/git-collaboration/git-github-contributing-to-a-project",
+        "./skills/development/git-collaboration/git-github-maintaining-a-project",
+        "./skills/development/git-collaboration/git-gitweb",
+        "./skills/development/git-customization/git-hooks",
+        "./skills/development/git-integrations/git-in-powershell",
+        "./skills/development/git-getting-started/git-installing-git",
+        "./skills/development/git-power-tools/git-interactive-staging",
+        "./skills/development/git-integrations/git-jgit",
+        "./skills/development/git-integrations/git-libgit2",
+        "./skills/development/git-internals/git-maintenance-and-data-recovery",
+        "./skills/development/git-integrations/git-migrating-to-git",
+        "./skills/development/git-internals/git-objects",
+        "./skills/development/git-internals/git-packfiles",
+        "./skills/development/git-internals/git-plumbing-and-porcelain",
+        "./skills/development/git-reference/git-pro",
+        "./skills/development/git-branching/git-rebasing",
+        "./skills/development/git-getting-started/git-recording-changes-to-the-repository",
+        "./skills/development/git-internals/git-references",
+        "./skills/development/git-branching/git-remote-branches",
+        "./skills/development/git-power-tools/git-replace",
+        "./skills/development/git-branching/git-rerere",
+        "./skills/development/git-power-tools/git-reset-demystified",
+        "./skills/development/git-power-tools/git-revision-selection",
+        "./skills/development/git-power-tools/git-rewriting-history",
+        "./skills/development/git-collaboration/git-scripting-github",
+        "./skills/development/git-power-tools/git-searching",
+        "./skills/development/git-collaboration/git-setting-up-the-server",
+        "./skills/development/git-getting-started/git-setup-and-config",
+        "./skills/development/git-power-tools/git-signing-your-work",
+        "./skills/development/git-collaboration/git-smart-http",
+        "./skills/development/git-power-tools/git-stashing-and-cleaning",
+        "./skills/development/git-power-tools/git-submodules",
+        "./skills/development/git-getting-started/git-tagging",
+        "./skills/development/git-collaboration/git-the-protocols",
+        "./skills/development/git-internals/git-the-refspec",
+        "./skills/development/git-internals/git-transfer-protocols",
+        "./skills/development/git-getting-started/git-undoing-things",
+        "./skills/development/git-getting-started/git-viewing-the-commit-history",
+        "./skills/development/git-collaboration/git-working-with-remotes"
       ]
     },
     {
@@ -85,17 +85,17 @@
       "strict": false,
       "category": "git",
       "skills": [
-        "./skills/git-installing-git",
-        "./skills/git-first-time-git-setup",
-        "./skills/git-getting-help",
-        "./skills/git-setup-and-config",
-        "./skills/git-getting-a-git-repository",
-        "./skills/git-recording-changes-to-the-repository",
-        "./skills/git-viewing-the-commit-history",
-        "./skills/git-undoing-things",
-        "./skills/git-tagging",
-        "./skills/git-aliases",
-        "./skills/git-basic-snapshotting"
+        "./skills/development/git-getting-started/git-installing-git",
+        "./skills/development/git-getting-started/git-first-time-git-setup",
+        "./skills/development/git-getting-started/git-getting-help",
+        "./skills/development/git-getting-started/git-setup-and-config",
+        "./skills/development/git-getting-started/git-getting-a-git-repository",
+        "./skills/development/git-getting-started/git-recording-changes-to-the-repository",
+        "./skills/development/git-getting-started/git-viewing-the-commit-history",
+        "./skills/development/git-getting-started/git-undoing-things",
+        "./skills/development/git-getting-started/git-tagging",
+        "./skills/development/git-getting-started/git-aliases",
+        "./skills/development/git-getting-started/git-basic-snapshotting"
       ]
     },
     {
@@ -105,13 +105,13 @@
       "strict": false,
       "category": "git",
       "skills": [
-        "./skills/git-branches-in-a-nutshell",
-        "./skills/git-basic-branching-and-merging",
-        "./skills/git-branch-management",
-        "./skills/git-remote-branches",
-        "./skills/git-rebasing",
-        "./skills/git-advanced-merging",
-        "./skills/git-rerere"
+        "./skills/development/git-branching/git-branches-in-a-nutshell",
+        "./skills/development/git-branching/git-basic-branching-and-merging",
+        "./skills/development/git-branching/git-branch-management",
+        "./skills/development/git-branching/git-remote-branches",
+        "./skills/development/git-branching/git-rebasing",
+        "./skills/development/git-branching/git-advanced-merging",
+        "./skills/development/git-branching/git-rerere"
       ]
     },
     {
@@ -121,20 +121,20 @@
       "strict": false,
       "category": "git",
       "skills": [
-        "./skills/git-working-with-remotes",
-        "./skills/git-the-protocols",
-        "./skills/git-getting-git-on-a-server",
-        "./skills/git-generating-your-ssh-public-key",
-        "./skills/git-setting-up-the-server",
-        "./skills/git-daemon",
-        "./skills/git-smart-http",
-        "./skills/git-gitweb",
-        "./skills/git-distributed-git-contributing-to-a-project",
-        "./skills/git-distributed-git-maintaining-a-project",
-        "./skills/git-github-contributing-to-a-project",
-        "./skills/git-github-maintaining-a-project",
-        "./skills/git-scripting-github",
-        "./skills/git-credential-storage"
+        "./skills/development/git-collaboration/git-working-with-remotes",
+        "./skills/development/git-collaboration/git-the-protocols",
+        "./skills/development/git-collaboration/git-getting-git-on-a-server",
+        "./skills/development/git-collaboration/git-generating-your-ssh-public-key",
+        "./skills/development/git-collaboration/git-setting-up-the-server",
+        "./skills/development/git-collaboration/git-daemon",
+        "./skills/development/git-collaboration/git-smart-http",
+        "./skills/development/git-collaboration/git-gitweb",
+        "./skills/development/git-collaboration/git-distributed-git-contributing-to-a-project",
+        "./skills/development/git-collaboration/git-distributed-git-maintaining-a-project",
+        "./skills/development/git-collaboration/git-github-contributing-to-a-project",
+        "./skills/development/git-collaboration/git-github-maintaining-a-project",
+        "./skills/development/git-collaboration/git-scripting-github",
+        "./skills/development/git-collaboration/git-credential-storage"
       ]
     },
     {
@@ -144,17 +144,17 @@
       "strict": false,
       "category": "git",
       "skills": [
-        "./skills/git-revision-selection",
-        "./skills/git-interactive-staging",
-        "./skills/git-stashing-and-cleaning",
-        "./skills/git-signing-your-work",
-        "./skills/git-searching",
-        "./skills/git-rewriting-history",
-        "./skills/git-reset-demystified",
-        "./skills/git-debugging-with-git",
-        "./skills/git-submodules",
-        "./skills/git-bundling",
-        "./skills/git-replace"
+        "./skills/development/git-power-tools/git-revision-selection",
+        "./skills/development/git-power-tools/git-interactive-staging",
+        "./skills/development/git-power-tools/git-stashing-and-cleaning",
+        "./skills/development/git-power-tools/git-signing-your-work",
+        "./skills/development/git-power-tools/git-searching",
+        "./skills/development/git-power-tools/git-rewriting-history",
+        "./skills/development/git-power-tools/git-reset-demystified",
+        "./skills/development/git-power-tools/git-debugging-with-git",
+        "./skills/development/git-power-tools/git-submodules",
+        "./skills/development/git-power-tools/git-bundling",
+        "./skills/development/git-power-tools/git-replace"
       ]
     },
     {
@@ -164,11 +164,11 @@
       "strict": false,
       "category": "git",
       "skills": [
-        "./skills/git-configuration",
-        "./skills/git-attributes",
-        "./skills/git-hooks",
-        "./skills/git-an-example-git-enforced-policy",
-        "./skills/git-environment-variables"
+        "./skills/development/git-customization/git-configuration",
+        "./skills/development/git-customization/git-attributes",
+        "./skills/development/git-customization/git-hooks",
+        "./skills/development/git-customization/git-an-example-git-enforced-policy",
+        "./skills/development/git-customization/git-environment-variables"
       ]
     },
     {
@@ -178,13 +178,13 @@
       "strict": false,
       "category": "git",
       "skills": [
-        "./skills/git-plumbing-and-porcelain",
-        "./skills/git-objects",
-        "./skills/git-references",
-        "./skills/git-packfiles",
-        "./skills/git-the-refspec",
-        "./skills/git-transfer-protocols",
-        "./skills/git-maintenance-and-data-recovery"
+        "./skills/development/git-internals/git-plumbing-and-porcelain",
+        "./skills/development/git-internals/git-objects",
+        "./skills/development/git-internals/git-references",
+        "./skills/development/git-internals/git-packfiles",
+        "./skills/development/git-internals/git-the-refspec",
+        "./skills/development/git-internals/git-transfer-protocols",
+        "./skills/development/git-internals/git-maintenance-and-data-recovery"
       ]
     },
     {
@@ -194,11 +194,11 @@
       "strict": false,
       "category": "git",
       "skills": [
-        "./skills/git-as-a-client",
-        "./skills/git-migrating-to-git",
-        "./skills/git-in-powershell",
-        "./skills/git-jgit",
-        "./skills/git-libgit2"
+        "./skills/development/git-integrations/git-as-a-client",
+        "./skills/development/git-integrations/git-migrating-to-git",
+        "./skills/development/git-integrations/git-in-powershell",
+        "./skills/development/git-integrations/git-jgit",
+        "./skills/development/git-integrations/git-libgit2"
       ]
     },
     {
@@ -208,7 +208,7 @@
       "strict": false,
       "category": "git",
       "skills": [
-        "./skills/git-pro"
+        "./skills/development/git-reference/git-pro"
       ]
     },
     {
@@ -218,8 +218,8 @@
       "strict": false,
       "category": "android",
       "skills": [
-        "./skills/android-uiautomator-locators",
-        "./skills/android-logcat-analyzer"
+        "./skills/testing/aaos-testing/android-uiautomator-locators",
+        "./skills/testing/aaos-testing/android-logcat-analyzer"
       ]
     },
     {
@@ -229,10 +229,10 @@
       "strict": false,
       "category": "adb-tools",
       "skills": [
-        "./skills/adb-tool",
-        "./skills/adb-connect",
-        "./skills/adb-device-control",
-        "./skills/adb-debug"
+        "./skills/external-tools/adb/adb-tool",
+        "./skills/external-tools/adb/adb-connect",
+        "./skills/external-tools/adb/adb-device-control",
+        "./skills/external-tools/adb/adb-debug"
       ]
     },
     {
@@ -242,7 +242,7 @@
       "strict": false,
       "category": "gradle-tools",
       "skills": [
-        "./skills/gradle-android"
+        "./skills/external-tools/gradle/gradle-android"
       ]
     },
     {
@@ -252,8 +252,8 @@
       "strict": false,
       "category": "repositories",
       "skills": [
-        "./skills/repo-learnings",
-        "./skills/repo-architecture"
+        "./skills/development/repo/repo-learnings",
+        "./skills/development/repo/repo-architecture"
       ]
     },
     {
@@ -263,7 +263,7 @@
       "strict": false,
       "category": "image",
       "skills": [
-        "./skills/image-inspector"
+        "./skills/testing/tools/image-inspector"
       ]
     },
     {
@@ -273,7 +273,7 @@
       "strict": false,
       "category": "video",
       "skills": [
-        "./skills/video-inspector"
+        "./skills/testing/tools/video-inspector"
       ]
     },
     {
@@ -283,12 +283,12 @@
       "strict": false,
       "category": "hub-tools",
       "skills": [
-        "./skills/find-skills",
-        "./skills/contribute-skill",
-        "./skills/skillforge",
-        "./skills/url-to-skill",
-        "./skills/skill-orchestrator",
-        "./skills/skill-router"
+        "./skills/generic/hub/find-skills",
+        "./skills/generic/hub/contribute-skill",
+        "./skills/generic/hub/skillforge",
+        "./skills/generic/hub/url-to-skill",
+        "./skills/generic/hub/skill-orchestrator",
+        "./skills/generic/hub/skill-router"
       ]
     },
     {
@@ -298,8 +298,8 @@
       "strict": false,
       "category": "testing",
       "skills": [
-        "./skills/kotlin-unit-test",
-        "./skills/python-unit-test"
+        "./skills/testing/libs/kotlin-unit-test",
+        "./skills/testing/libs/python-unit-test"
       ]
     },
     {
@@ -309,9 +309,9 @@
       "strict": false,
       "category": "gitlab-ci-tools",
       "skills": [
-        "./skills/gitlab-ci-pipeline-authoring",
-        "./skills/gitlab-ci-debugging",
-        "./skills/gitlab-ci-optimization"
+        "./skills/development/gitlab-ci/gitlab-ci-pipeline-authoring",
+        "./skills/development/gitlab-ci/gitlab-ci-debugging",
+        "./skills/development/gitlab-ci/gitlab-ci-optimization"
       ]
     },
     {
@@ -321,7 +321,7 @@
       "strict": false,
       "category": "writing-tools",
       "skills": [
-        "./skills/professional-writing"
+        "./skills/generic/writing/professional-writing"
       ]
     },
     {
@@ -331,7 +331,7 @@
       "strict": false,
       "category": "shell-tools",
       "skills": [
-        "./skills/powershell-commands"
+        "./skills/external-tools/powershell/powershell-commands"
       ]
     },
     {
@@ -341,7 +341,7 @@
       "strict": false,
       "category": "learning-tools",
       "skills": [
-        "./skills/python-tutor"
+        "./skills/generic/learning/python-tutor"
       ]
     },
     {
@@ -351,8 +351,8 @@
       "strict": false,
       "category": "ai-efficiency-tools",
       "skills": [
-        "./skills/ai-token-saver",
-        "./skills/context-engineering"
+        "./skills/generic/ai-efficiency/ai-token-saver",
+        "./skills/generic/ai-efficiency/context-engineering"
       ]
     }
   ]

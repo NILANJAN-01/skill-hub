@@ -109,11 +109,12 @@ class Actions:
         use_global, proj, chosen = self._where(scope, project, chosen)
         known = set(mod.all_skills(root))
         read_manifest = getattr(mod, "read_manifest", lambda folder: {"skills": {}})
+        src = getattr(mod, "skill_src", lambda hub_root, name: hub_root / "skills" / name)
         folders, total = [], 0
         for folder in dict.fromkeys(f for a in chosen for f in mod.reads(a, use_global, proj)):
             versions = read_manifest(folder)["skills"]
             rows = [{"skill": s, "version": versions.get(s, {}).get("version", "unknown"),
-                     "matches_hub": mod.same_skill(root / "skills" / s, folder / s)}
+                     "matches_hub": mod.same_skill(src(root, s), folder / s)}
                     for s in sorted(known) if (folder / s / "SKILL.md").is_file()]
             if rows:
                 folders.append({"folder": str(folder), "skills": rows})

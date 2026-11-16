@@ -197,8 +197,42 @@ def load_plugins(root: Path) -> dict:
             for p in market.get("plugins", [])}
 
 
+_INDEX: dict = {}
+
+
+def skill_index(root: Path) -> dict:
+    """{skill name: its folder in the hub}. A skill is skills/<area>/<group>/<name>/ (older hubs: skills/<name>/)."""
+    key = str(root)
+    if key not in _INDEX:
+        found: dict = {}
+
+        def walk(folder: Path, left: int) -> None:
+            try:
+                children = sorted(p for p in folder.iterdir() if p.is_dir())
+            except OSError:
+                return
+            for p in children:
+                if p.name.startswith(".") or p.name == "__pycache__":
+                    continue
+                if (p / "SKILL.md").is_file():
+                    found.setdefault(p.name, p)
+                elif left > 1:
+                    walk(p, left - 1)
+
+        walk(root / "skills", 3)
+        _INDEX[key] = found
+    return _INDEX[key]
+
+
+def skill_src(root: Path, name: str) -> Path:
+    try:
+        return skill_index(root)[name]
+    except KeyError:
+        sys.exit(f"Unknown skill {name!r}. Run with --list to see skills.")
+
+
 def all_skills(root: Path) -> list:
-    return sorted(p.name for p in (root / "skills").iterdir() if (p / "SKILL.md").is_file())
+    return sorted(skill_index(root))
 
 
 def resolve(root: Path, plugins_arg: list, skills_arg: list) -> list:
@@ -329,7 +363,7 @@ def make_plan(root: Path, names: list, agents: list, use_global: bool, project: 
     for f in candidates:
         plan["served"][f] = [a for a in agents if f in rd[a]]
     for s in names:
-        src = root / "skills" / s
+        src = skill_src(root, s)
         existing = [f for f in dict.fromkeys(x for a in agents for x in rd[a]) if (f / s / "SKILL.md").is_file()]
         if each:
             targets = [own_dir(a, use_global, project) for a in agents]
@@ -365,7 +399,7 @@ def copy_skill(root: Path, s: str, folder: Path) -> None:
     if dst.exists():
         shutil.rmtree(dst)
     folder.mkdir(parents=True, exist_ok=True)
-    shutil.copytree(root / "skills" / s, dst, ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+    shutil.copytree(skill_src(root, s), dst, ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
     record(folder, s, hub_version(root))
 
 
@@ -587,7 +621,7 @@ def print_installed(root: Path, agents: list, use_global: bool, project: Path) -
         print(f"\n{fmt(f)}")
         for s in names:
             v = versions.get(s, {}).get("version") or "unknown version"
-            state = "up to date" if same_skill(root / "skills" / s, f / s) else "differs from the hub"
+            state = "up to date" if same_skill(skill_src(root, s), f / s) else "differs from the hub"
             print(f"  {s:<42} {v:<16} {state}")
             total += 1
     print(f"\n{total} hub skill(s) installed. This hub is version {current or 'unknown'}."
@@ -599,9 +633,10 @@ def make_zips(root: Path, names: list, out: Path) -> None:
     for n in names:
         zpath = out / f"{n}.zip"
         with zipfile.ZipFile(zpath, "w", zipfile.ZIP_DEFLATED) as z:
-            for f in sorted((root / "skills" / n).rglob("*")):
+            src = skill_src(root, n)
+            for f in sorted(src.rglob("*")):
                 if f.is_file() and "__pycache__" not in f.parts:
-                    z.write(f, Path(n) / f.relative_to(root / "skills" / n))
+                    z.write(f, Path(n) / f.relative_to(src))
         print(f"  zip  {zpath}")
 
 

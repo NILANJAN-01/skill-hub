@@ -10,7 +10,10 @@ sys.path.insert(0, str(HERE))
 
 import orchestrate as o  # noqa: E402
 
-HUB_SKILLS = HERE.parents[1]          # skills/ folder of this repo
+# The hub's skills/ folder when this skill sits inside a skill-hub clone (skills/<area>/<group>/<name>/);
+# otherwise the folder this skill was installed into, where its siblings are.
+HUB_ROOT = next((p for p in HERE.parents if (p / ".claude-plugin").is_dir()), None)
+HUB_SKILLS = HUB_ROOT / "skills" if HUB_ROOT else HERE.parents[1]
 
 
 def make_skill(root: Path, name: str, desc: str, compat: str = "") -> None:
@@ -67,9 +70,20 @@ class Registry(unittest.TestCase):
         self.assertTrue(res["professional-writing"]["ready"])
 
 
+class NestedLayout(unittest.TestCase):
+    def test_scan_finds_skills_in_area_and_group_folders(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "skills"
+            make_skill(root, "flat-skill", "A flat skill. Use when testing.")
+            make_skill(root / "testing" / "libs", "nested-skill", "A nested skill. Use when testing.")
+            make_skill(root / "a" / "b" / "c", "too-deep", "Too deep. Use when testing.")
+            reg = o.scan([str(root)], defaults=False)
+            self.assertEqual(sorted(reg), ["flat-skill", "nested-skill"])
+
+
 class Workflows(unittest.TestCase):
     def test_every_workflow_skill_exists_in_the_hub(self):
-        existing = {p.name for p in HUB_SKILLS.iterdir() if (p / "SKILL.md").is_file()}
+        existing = {p.name for p in o.skill_folders(HUB_SKILLS)}
         for name, w in o.load_workflows().items():
             for s in w["steps"]:
                 self.assertIn(s["skill"], existing, f"workflow {name} uses unknown skill {s['skill']}")

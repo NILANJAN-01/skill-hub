@@ -415,6 +415,225 @@
       "count": 1
     }
   ],
+  "areas": [
+    {
+      "name": "testing",
+      "title": "Testing",
+      "groups": [
+        {
+          "name": "aaos-testing",
+          "skills": [
+            "android-logcat-analyzer",
+            "android-uiautomator-locators"
+          ]
+        },
+        {
+          "name": "libs",
+          "skills": [
+            "kotlin-unit-test",
+            "python-unit-test"
+          ]
+        },
+        {
+          "name": "tools",
+          "skills": [
+            "image-inspector",
+            "video-inspector"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "development",
+      "title": "Development",
+      "groups": [
+        {
+          "name": "git-branching",
+          "skills": [
+            "git-advanced-merging",
+            "git-basic-branching-and-merging",
+            "git-branch-management",
+            "git-branches-in-a-nutshell",
+            "git-rebasing",
+            "git-remote-branches",
+            "git-rerere"
+          ]
+        },
+        {
+          "name": "git-collaboration",
+          "skills": [
+            "git-credential-storage",
+            "git-daemon",
+            "git-distributed-git-contributing-to-a-project",
+            "git-distributed-git-maintaining-a-project",
+            "git-generating-your-ssh-public-key",
+            "git-getting-git-on-a-server",
+            "git-github-contributing-to-a-project",
+            "git-github-maintaining-a-project",
+            "git-gitweb",
+            "git-scripting-github",
+            "git-setting-up-the-server",
+            "git-smart-http",
+            "git-the-protocols",
+            "git-working-with-remotes"
+          ]
+        },
+        {
+          "name": "git-customization",
+          "skills": [
+            "git-an-example-git-enforced-policy",
+            "git-attributes",
+            "git-configuration",
+            "git-environment-variables",
+            "git-hooks"
+          ]
+        },
+        {
+          "name": "git-getting-started",
+          "skills": [
+            "git-aliases",
+            "git-basic-snapshotting",
+            "git-first-time-git-setup",
+            "git-getting-a-git-repository",
+            "git-getting-help",
+            "git-installing-git",
+            "git-recording-changes-to-the-repository",
+            "git-setup-and-config",
+            "git-tagging",
+            "git-undoing-things",
+            "git-viewing-the-commit-history"
+          ]
+        },
+        {
+          "name": "git-integrations",
+          "skills": [
+            "git-as-a-client",
+            "git-in-powershell",
+            "git-jgit",
+            "git-libgit2",
+            "git-migrating-to-git"
+          ]
+        },
+        {
+          "name": "git-internals",
+          "skills": [
+            "git-maintenance-and-data-recovery",
+            "git-objects",
+            "git-packfiles",
+            "git-plumbing-and-porcelain",
+            "git-references",
+            "git-the-refspec",
+            "git-transfer-protocols"
+          ]
+        },
+        {
+          "name": "git-power-tools",
+          "skills": [
+            "git-bundling",
+            "git-debugging-with-git",
+            "git-interactive-staging",
+            "git-replace",
+            "git-reset-demystified",
+            "git-revision-selection",
+            "git-rewriting-history",
+            "git-searching",
+            "git-signing-your-work",
+            "git-stashing-and-cleaning",
+            "git-submodules"
+          ]
+        },
+        {
+          "name": "git-reference",
+          "skills": [
+            "git-pro"
+          ]
+        },
+        {
+          "name": "gitlab-ci",
+          "skills": [
+            "gitlab-ci-debugging",
+            "gitlab-ci-optimization",
+            "gitlab-ci-pipeline-authoring"
+          ]
+        },
+        {
+          "name": "repo",
+          "skills": [
+            "repo-architecture",
+            "repo-learnings"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "design",
+      "title": "Design",
+      "groups": []
+    },
+    {
+      "name": "generic",
+      "title": "Generic",
+      "groups": [
+        {
+          "name": "ai-efficiency",
+          "skills": [
+            "ai-token-saver",
+            "context-engineering"
+          ]
+        },
+        {
+          "name": "hub",
+          "skills": [
+            "contribute-skill",
+            "find-skills",
+            "skill-orchestrator",
+            "skill-router",
+            "skillforge",
+            "url-to-skill"
+          ]
+        },
+        {
+          "name": "learning",
+          "skills": [
+            "python-tutor"
+          ]
+        },
+        {
+          "name": "writing",
+          "skills": [
+            "professional-writing"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "external-tools",
+      "title": "External tools",
+      "groups": [
+        {
+          "name": "adb",
+          "skills": [
+            "adb-connect",
+            "adb-debug",
+            "adb-device-control",
+            "adb-tool"
+          ]
+        },
+        {
+          "name": "gradle",
+          "skills": [
+            "gradle-android"
+          ]
+        },
+        {
+          "name": "powershell",
+          "skills": [
+            "powershell-commands"
+          ]
+        }
+      ]
+    }
+  ],
   "agents": [
     {
       "id": "claude-code",
@@ -624,11 +843,13 @@
       "name": "adb-connect",
       "title": "adb setup, USB and wireless connection, troubleshooting",
       "category": "adb-tools",
+      "area": "external-tools",
+      "group": "adb",
       "description": "Install and set up adb (Android Platform-Tools), enable USB debugging, install USB drivers, pair and connect over Wi-Fi (wireless debugging, adb tcpip), and fix adb connection problems: no devices, unauthorized, offline, no permissions, more than one device, daemon or port 5037 errors, mDNS not working. Use when adb is missing, adb devices shows nothing or the wrong state, or the user wants to connect a phone or emulator wirelessly.",
       "plugins": [
         "adb-tools"
       ],
-      "path": "skills/adb-connect",
+      "path": "skills/external-tools/adb/adb-connect",
       "license": "Complete terms in the repository README",
       "compatibility": "Needs Python 3.8+ and the script from the adb-tool skill (install the adb-tools bundle). Needs adb on PATH or in the Android SDK platform-tools folder; the script says how to install it if missing.",
       "examples": [
@@ -647,11 +868,13 @@
       "name": "adb-debug",
       "title": "adb debugging: logcat, dumpsys, bug reports, snapshots",
       "category": "adb-tools",
+      "area": "external-tools",
+      "group": "adb",
       "description": "Debug Android apps and devices with adb: read and filter logcat (by app, tag, level, buffer, time), capture crashes and ANRs, run dumpsys for memory, graphics, battery and activities, collect a snapshot or a bug report, take heap dumps, and run instrumented tests with am instrument. Use when the user asks why an app crashed or is slow, wants logs from a device, needs a bug report, or wants memory, frame or battery data.",
       "plugins": [
         "adb-tools"
       ],
-      "path": "skills/adb-debug",
+      "path": "skills/external-tools/adb/adb-debug",
       "license": "Complete terms in the repository README",
       "compatibility": "Needs Python 3.8+ and the script from the adb-tool skill (install the adb-tools bundle), adb on PATH, and one connected device or emulator (see adb-connect). Analysing a saved log file is done by android-logcat-analyzer.",
       "examples": [
@@ -670,11 +893,13 @@
       "name": "adb-device-control",
       "title": "adb device control: apps, files, screen, settings",
       "category": "adb-tools",
+      "area": "external-tools",
+      "group": "adb",
       "description": "Control an Android device or emulator with adb: install, uninstall, start and stop apps, list packages and app info, grant permissions, clear data, send intents with am, copy files with push and pull, take screenshots, record the screen, override display size or density, and read or change settings. Use when the user wants to install an APK, push or pull a file, capture the screen, reset an app, or script device actions.",
       "plugins": [
         "adb-tools"
       ],
-      "path": "skills/adb-device-control",
+      "path": "skills/external-tools/adb/adb-device-control",
       "license": "Complete terms in the repository README",
       "compatibility": "Needs Python 3.8+ and the script from the adb-tool skill (install the adb-tools bundle), adb on PATH, and one connected device or emulator with USB or wireless debugging on (see adb-connect).",
       "examples": [
@@ -693,11 +918,13 @@
       "name": "adb-tool",
       "title": "adb: command reference, safety check and central script",
       "category": "adb-tools",
+      "area": "external-tools",
+      "group": "adb",
       "description": "Central skill for adb (Android Debug Bridge): every adb, am, pm, dpm and shell command with syntax and risk level, plus one Python script that diagnoses adb, lists devices, runs any adb command with a safety check, and looks up commands by keyword. Use when the user mentions adb, an Android device or emulator command, asks which adb command does X, or needs a safe way to run adb.",
       "plugins": [
         "adb-tools"
       ],
-      "path": "skills/adb-tool",
+      "path": "skills/external-tools/adb/adb-tool",
       "license": "Complete terms in the repository README",
       "compatibility": "Needs Python 3.8+ (standard library only). Running device commands needs adb (Android SDK Platform-Tools) and a device or emulator with USB debugging or wireless debugging enabled. The related skills adb-connect, adb-device-control and adb-debug use this skill's script, so install them together (the adb-tools bundle).",
       "examples": [
@@ -715,11 +942,13 @@
       "name": "ai-token-saver",
       "title": "AI token saver: audit a project and spend fewer tokens",
       "category": "ai-efficiency-tools",
+      "area": "generic",
+      "group": "ai-efficiency",
       "description": "Cut AI token usage and cost in any AI IDE, coding agent or chat model: audit a project for context waste (huge files, lockfiles, logs, bloated instruction files, missing ignore files) with a bundled script, then apply prompting and session habits that save tokens. Use when the user says tokens, usage limit, context window, cost, bill, rate limit, or asks to make AI use cheaper, shorter or faster.",
       "plugins": [
         "ai-efficiency-tools"
       ],
-      "path": "skills/ai-token-saver",
+      "path": "skills/generic/ai-efficiency/ai-token-saver",
       "license": "MIT",
       "compatibility": "Needs Python 3.8+ (standard library only) for the audit script. The advice applies to any model or IDE. Token counts are estimates (characters / 4).",
       "examples": [
@@ -735,11 +964,13 @@
       "name": "android-logcat-analyzer",
       "title": "Android logcat analyzer",
       "category": "android-automation",
+      "area": "testing",
+      "group": "aaos-testing",
       "description": "Analyse Android logcat output (a file, a bugreport zip, or a connected device over adb) with a ready-made Python script that reports fatal exceptions, native crashes, ANRs, service crashes, low-memory kills and other problems, with stacks and usual causes. Use when the user shares a logcat or bugreport, or asks why an Android app crashed, froze, restarted or was killed.",
       "plugins": [
         "android-automation"
       ],
-      "path": "skills/android-logcat-analyzer",
+      "path": "skills/testing/aaos-testing/android-logcat-analyzer",
       "license": "Complete terms in the repository README",
       "compatibility": "Needs Python 3.8+ (standard library only). Reading from a device needs adb (Android platform-tools) and a device or emulator with USB debugging enabled.",
       "examples": [
@@ -754,11 +985,13 @@
       "name": "android-uiautomator-locators",
       "title": "Android UIAutomator dump to locators",
       "category": "android-automation",
+      "area": "testing",
+      "group": "aaos-testing",
       "description": "Dump the current screen of a connected Android device over adb, or read an existing window_dump.xml, and generate a JSON locator file with UiSelector, By, uiautomator2, Appium and XPath locators. Also handles Android Automotive head units. Use when the user wants resource-ids, element locators or page objects for Android UI tests, or mentions uiautomator dump.",
       "plugins": [
         "android-automation"
       ],
-      "path": "skills/android-uiautomator-locators",
+      "path": "skills/testing/aaos-testing/android-uiautomator-locators",
       "license": "Complete terms in the repository README",
       "compatibility": "Needs Python 3.8+ (standard library only). Capturing from a device needs adb (Android platform-tools) and a device or emulator with USB debugging enabled.",
       "examples": [
@@ -776,11 +1009,13 @@
       "name": "context-engineering",
       "title": "Context engineering: one central context for every agent",
       "category": "ai-efficiency-tools",
+      "area": "generic",
+      "group": "ai-efficiency",
       "description": "Design what goes into an AI model's context, centrally: one source-of-truth context file, thin pointers for each tool, layered loading (always, on demand, retrieved), a token budget and session handoff notes. A bundled script checks for duplicated or drifting instruction files and creates the pointers. Use when the user mentions context engineering, context window, instruction files drifting between tools, or wants one shared project context for every AI agent.",
       "plugins": [
         "ai-efficiency-tools"
       ],
-      "path": "skills/context-engineering",
+      "path": "skills/generic/ai-efficiency/context-engineering",
       "license": "MIT",
       "compatibility": "Needs Python 3.8+ (standard library only) for the script. The technique applies to any model or agent. Token counts are estimates (characters / 4).",
       "examples": [
@@ -796,11 +1031,13 @@
       "name": "contribute-skill",
       "title": "Contribute a skill to the hub",
       "category": "hub-tools",
+      "area": "generic",
+      "group": "hub",
       "description": "Add or update a skill in the skill-hub repository so that it validates, appears in the catalog and installs into every supported agent. Use when the user wants to write, add, publish, register or rename a skill in skill-hub, create a plugin bundle, or fix errors from validate_skills.py or build_catalog.py.",
       "plugins": [
         "hub-tools"
       ],
-      "path": "skills/contribute-skill",
+      "path": "skills/generic/hub/contribute-skill",
       "license": "Complete terms in the repository README",
       "compatibility": "Works in any agent. Edits a skill-hub checkout, so it needs file-system and shell access with Python 3.8+. Mentions agent names only to explain where skills are installed.",
       "examples": [
@@ -814,11 +1051,13 @@
       "name": "find-skills",
       "title": "Find & install hub skills",
       "category": "hub-tools",
+      "area": "generic",
+      "group": "hub",
       "description": "Search the skill-hub catalog for a skill that fits the task and install it into the agent in use. Use when the user asks \"is there a skill for X\", wants to find, browse, list or install skills, or asks what skill-hub offers.",
       "plugins": [
         "hub-tools"
       ],
-      "path": "skills/find-skills",
+      "path": "skills/generic/hub/find-skills",
       "license": "Complete terms in the repository README",
       "compatibility": "Works in any agent. Installing writes into the agent's skills folder (needs file-system access and Python 3.8+, or Node for npx); reading the online catalog needs web access.",
       "examples": [
@@ -832,12 +1071,14 @@
       "name": "git-advanced-merging",
       "title": "Advanced Merging",
       "category": "git-branching",
+      "area": "development",
+      "group": "git-branching",
       "description": "Fix hard git merge conflicts: abort, redo, ours/theirs, undo a merge. Use when a merge has conflicts or went wrong.",
       "plugins": [
         "git-branching",
         "git-skills"
       ],
-      "path": "skills/git-advanced-merging",
+      "path": "skills/development/git-branching/git-advanced-merging",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -856,12 +1097,14 @@
       "name": "git-aliases",
       "title": "Git Aliases",
       "category": "git-getting-started",
+      "area": "development",
+      "group": "git-getting-started",
       "description": "Create git command shortcuts with git config alias. Use when the user wants a git alias or shorter commands.",
       "plugins": [
         "git-getting-started",
         "git-skills"
       ],
-      "path": "skills/git-aliases",
+      "path": "skills/development/git-getting-started/git-aliases",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -879,12 +1122,14 @@
       "name": "git-an-example-git-enforced-policy",
       "title": "An Example Git-Enforced Policy",
       "category": "git-customization",
+      "area": "development",
+      "group": "git-customization",
       "description": "Enforce commit-message format, file ACLs and push rules with git hook scripts. Use when handling a team commit or push policy.",
       "plugins": [
         "git-customization",
         "git-skills"
       ],
-      "path": "skills/git-an-example-git-enforced-policy",
+      "path": "skills/development/git-customization/git-an-example-git-enforced-policy",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -903,12 +1148,14 @@
       "name": "git-as-a-client",
       "title": "Git as a Client",
       "category": "git-integrations",
+      "area": "development",
+      "group": "git-integrations",
       "description": "Use git against a Subversion, Mercurial or Perforce server (git svn, git p4). Use when the team repo is not git.",
       "plugins": [
         "git-integrations",
         "git-skills"
       ],
-      "path": "skills/git-as-a-client",
+      "path": "skills/development/git-integrations/git-as-a-client",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -927,12 +1174,14 @@
       "name": "git-attributes",
       "title": "Git Attributes",
       "category": "git-customization",
+      "area": "development",
+      "group": "git-customization",
       "description": "Set per-file git behaviour in .gitattributes: binary files, diff filters, export-ignore. Use when handling .gitattributes questions.",
       "plugins": [
         "git-customization",
         "git-skills"
       ],
-      "path": "skills/git-attributes",
+      "path": "skills/development/git-customization/git-attributes",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -951,12 +1200,14 @@
       "name": "git-basic-branching-and-merging",
       "title": "Basic Branching and Merging",
       "category": "git-branching",
+      "area": "development",
+      "group": "git-branching",
       "description": "Create, switch, merge and delete a branch and resolve a basic conflict. Use when handling branch or merge tasks or CONFLICT (content).",
       "plugins": [
         "git-branching",
         "git-skills"
       ],
-      "path": "skills/git-basic-branching-and-merging",
+      "path": "skills/development/git-branching/git-basic-branching-and-merging",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -975,12 +1226,14 @@
       "name": "git-basic-snapshotting",
       "title": "Basic Snapshotting",
       "category": "git-getting-started",
+      "area": "development",
+      "group": "git-getting-started",
       "description": "Quick reference for git add, status, diff, commit, reset, rm, mv. Use when asked which git command stages, commits or removes files.",
       "plugins": [
         "git-getting-started",
         "git-skills"
       ],
-      "path": "skills/git-basic-snapshotting",
+      "path": "skills/development/git-getting-started/git-basic-snapshotting",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -998,12 +1251,14 @@
       "name": "git-branch-management",
       "title": "Branch Management",
       "category": "git-branching",
+      "area": "development",
+      "group": "git-branching",
       "description": "List, rename and delete git branches; find merged or unmerged ones; rename master to main. Use when you need to clean up branches.",
       "plugins": [
         "git-branching",
         "git-skills"
       ],
-      "path": "skills/git-branch-management",
+      "path": "skills/development/git-branching/git-branch-management",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1022,12 +1277,14 @@
       "name": "git-branches-in-a-nutshell",
       "title": "Branches in a Nutshell",
       "category": "git-branching",
+      "area": "development",
+      "group": "git-branching",
       "description": "Explain git branches, HEAD and commits as snapshots. Use when asked what a branch or HEAD is.",
       "plugins": [
         "git-branching",
         "git-skills"
       ],
-      "path": "skills/git-branches-in-a-nutshell",
+      "path": "skills/development/git-branching/git-branches-in-a-nutshell",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1045,12 +1302,14 @@
       "name": "git-bundling",
       "title": "Bundling",
       "category": "git-power-tools",
+      "area": "development",
+      "group": "git-power-tools",
       "description": "Move git history in one file with git bundle, no network. Use when you need to share a repository offline.",
       "plugins": [
         "git-power-tools",
         "git-skills"
       ],
-      "path": "skills/git-bundling",
+      "path": "skills/development/git-power-tools/git-bundling",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1069,12 +1328,14 @@
       "name": "git-configuration",
       "title": "Git Configuration",
       "category": "git-customization",
+      "area": "development",
+      "group": "git-customization",
       "description": "Change git settings: editor, pager, colours, diff/merge tools, autocrlf, whitespace. Use when handling git config or CRLF problems.",
       "plugins": [
         "git-customization",
         "git-skills"
       ],
-      "path": "skills/git-configuration",
+      "path": "skills/development/git-customization/git-configuration",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1093,12 +1354,14 @@
       "name": "git-credential-storage",
       "title": "Credential Storage",
       "category": "git-collaboration",
+      "area": "development",
+      "group": "git-collaboration",
       "description": "Stop git asking for passwords: credential helpers and Git Credential Manager. Use when git prompts on every push or pull.",
       "plugins": [
         "git-collaboration",
         "git-skills"
       ],
-      "path": "skills/git-credential-storage",
+      "path": "skills/development/git-collaboration/git-credential-storage",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1117,12 +1380,14 @@
       "name": "git-daemon",
       "title": "Git Daemon",
       "category": "git-collaboration",
+      "area": "development",
+      "group": "git-collaboration",
       "description": "Serve git repositories read-only over git:// with git daemon. Use when handling fast public read access.",
       "plugins": [
         "git-collaboration",
         "git-skills"
       ],
-      "path": "skills/git-daemon",
+      "path": "skills/development/git-collaboration/git-daemon",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1140,12 +1405,14 @@
       "name": "git-debugging-with-git",
       "title": "Debugging with Git",
       "category": "git-power-tools",
+      "area": "development",
+      "group": "git-power-tools",
       "description": "Find which commit broke something with git blame and git bisect. Use when asked who changed a line or what introduced a bug.",
       "plugins": [
         "git-power-tools",
         "git-skills"
       ],
-      "path": "skills/git-debugging-with-git",
+      "path": "skills/development/git-power-tools/git-debugging-with-git",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1163,12 +1430,14 @@
       "name": "git-distributed-git-contributing-to-a-project",
       "title": "Contributing to a Project",
       "category": "git-collaboration",
+      "area": "development",
+      "group": "git-collaboration",
       "description": "Contribute with plain git: commit guidelines, team workflows, patches by email. Use when you need to prepare commits or patches for upstream.",
       "plugins": [
         "git-collaboration",
         "git-skills"
       ],
-      "path": "skills/git-distributed-git-contributing-to-a-project",
+      "path": "skills/development/git-collaboration/git-distributed-git-contributing-to-a-project",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1187,12 +1456,14 @@
       "name": "git-distributed-git-maintaining-a-project",
       "title": "Maintaining a Project",
       "category": "git-collaboration",
+      "area": "development",
+      "group": "git-collaboration",
       "description": "Maintain a project with plain git: apply patches, review branches, cut releases. Use when integrating other people's work.",
       "plugins": [
         "git-collaboration",
         "git-skills"
       ],
-      "path": "skills/git-distributed-git-maintaining-a-project",
+      "path": "skills/development/git-collaboration/git-distributed-git-maintaining-a-project",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1211,12 +1482,14 @@
       "name": "git-environment-variables",
       "title": "Environment Variables",
       "category": "git-customization",
+      "area": "development",
+      "group": "git-customization",
       "description": "Git environment variables (GIT_DIR, GIT_EDITOR, GIT_SSH_COMMAND, GIT_TRACE). Use when handling a GIT_* variable or to trace git.",
       "plugins": [
         "git-customization",
         "git-skills"
       ],
-      "path": "skills/git-environment-variables",
+      "path": "skills/development/git-customization/git-environment-variables",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1235,12 +1508,14 @@
       "name": "git-first-time-git-setup",
       "title": "First-Time Git Setup",
       "category": "git-getting-started",
+      "area": "development",
+      "group": "git-getting-started",
       "description": "Set up git on a new machine: user.name, email, editor, default branch. Use when handling first-time setup or Please tell me who you are.",
       "plugins": [
         "git-getting-started",
         "git-skills"
       ],
-      "path": "skills/git-first-time-git-setup",
+      "path": "skills/development/git-getting-started/git-first-time-git-setup",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1258,12 +1533,14 @@
       "name": "git-generating-your-ssh-public-key",
       "title": "Generating Your SSH Public Key",
       "category": "git-collaboration",
+      "area": "development",
+      "group": "git-collaboration",
       "description": "Create an SSH key for GitHub, GitLab or a git server with ssh-keygen. Use when handling Permission denied (publickey).",
       "plugins": [
         "git-collaboration",
         "git-skills"
       ],
-      "path": "skills/git-generating-your-ssh-public-key",
+      "path": "skills/development/git-collaboration/git-generating-your-ssh-public-key",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1281,12 +1558,14 @@
       "name": "git-getting-a-git-repository",
       "title": "Getting a Git Repository",
       "category": "git-getting-started",
+      "area": "development",
+      "group": "git-getting-started",
       "description": "Start a repository with git init or git clone. Use when you need to create a repo, put a project under git, or clone one.",
       "plugins": [
         "git-getting-started",
         "git-skills"
       ],
-      "path": "skills/git-getting-a-git-repository",
+      "path": "skills/development/git-getting-started/git-getting-a-git-repository",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1304,12 +1583,14 @@
       "name": "git-getting-git-on-a-server",
       "title": "Getting Git on a Server",
       "category": "git-collaboration",
+      "area": "development",
+      "group": "git-collaboration",
       "description": "Host a git repository on your own server: bare repo over SSH. Use when you need to self-host a repository.",
       "plugins": [
         "git-collaboration",
         "git-skills"
       ],
-      "path": "skills/git-getting-git-on-a-server",
+      "path": "skills/development/git-collaboration/git-getting-git-on-a-server",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1327,12 +1608,14 @@
       "name": "git-getting-help",
       "title": "Getting Help",
       "category": "git-getting-started",
+      "area": "development",
+      "group": "git-getting-started",
       "description": "Look up git docs with git help, --help and man. Use when asked how to find a git command's options.",
       "plugins": [
         "git-getting-started",
         "git-skills"
       ],
-      "path": "skills/git-getting-help",
+      "path": "skills/development/git-getting-started/git-getting-help",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1350,12 +1633,14 @@
       "name": "git-github-contributing-to-a-project",
       "title": "Contributing to a Project",
       "category": "git-collaboration",
+      "area": "development",
+      "group": "git-collaboration",
       "description": "Contribute on GitHub: fork, branch, pull request, sync with upstream. Use when you need to open or update a pull request or sync a fork.",
       "plugins": [
         "git-collaboration",
         "git-skills"
       ],
-      "path": "skills/git-github-contributing-to-a-project",
+      "path": "skills/development/git-collaboration/git-github-contributing-to-a-project",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1373,12 +1658,14 @@
       "name": "git-github-maintaining-a-project",
       "title": "Maintaining a Project",
       "category": "git-collaboration",
+      "area": "development",
+      "group": "git-collaboration",
       "description": "Maintain a GitHub repo: collaborators, merging pull requests, notifications, README. Use when administering a GitHub project.",
       "plugins": [
         "git-collaboration",
         "git-skills"
       ],
-      "path": "skills/git-github-maintaining-a-project",
+      "path": "skills/development/git-collaboration/git-github-maintaining-a-project",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1397,12 +1684,14 @@
       "name": "git-gitweb",
       "title": "GitWeb",
       "category": "git-collaboration",
+      "area": "development",
+      "group": "git-collaboration",
       "description": "Browse a git repository in a web browser with GitWeb or git instaweb. Use when handling a simple web viewer.",
       "plugins": [
         "git-collaboration",
         "git-skills"
       ],
-      "path": "skills/git-gitweb",
+      "path": "skills/development/git-collaboration/git-gitweb",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1420,12 +1709,14 @@
       "name": "git-hooks",
       "title": "Git Hooks",
       "category": "git-customization",
+      "area": "development",
+      "group": "git-customization",
       "description": "Write git hooks (pre-commit, commit-msg, pre-push, pre-receive). Use when you need to run a script automatically on commit, push or merge.",
       "plugins": [
         "git-customization",
         "git-skills"
       ],
-      "path": "skills/git-hooks",
+      "path": "skills/development/git-customization/git-hooks",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1443,12 +1734,14 @@
       "name": "git-in-powershell",
       "title": "Git in PowerShell",
       "category": "git-integrations",
+      "area": "development",
+      "group": "git-integrations",
       "description": "Set up git in PowerShell with posh-git: prompt status and tab completion. Use when handling a git prompt on Windows PowerShell.",
       "plugins": [
         "git-integrations",
         "git-skills"
       ],
-      "path": "skills/git-in-powershell",
+      "path": "skills/development/git-integrations/git-in-powershell",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1466,12 +1759,14 @@
       "name": "git-installing-git",
       "title": "Installing Git",
       "category": "git-getting-started",
+      "area": "development",
+      "group": "git-getting-started",
       "description": "Install or upgrade git on Linux, macOS or Windows. Use when you need to install git or for git: command not found.",
       "plugins": [
         "git-getting-started",
         "git-skills"
       ],
-      "path": "skills/git-installing-git",
+      "path": "skills/development/git-getting-started/git-installing-git",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1490,12 +1785,14 @@
       "name": "git-interactive-staging",
       "title": "Interactive Staging",
       "category": "git-power-tools",
+      "area": "development",
+      "group": "git-power-tools",
       "description": "Stage part of a file with git add -p or git add -i. Use when you need to commit only some changes or split a commit.",
       "plugins": [
         "git-power-tools",
         "git-skills"
       ],
-      "path": "skills/git-interactive-staging",
+      "path": "skills/development/git-power-tools/git-interactive-staging",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1514,12 +1811,14 @@
       "name": "git-jgit",
       "title": "JGit",
       "category": "git-integrations",
+      "area": "development",
+      "group": "git-integrations",
       "description": "Use git from Java with the JGit library. Use when writing Java code that reads or changes a git repository.",
       "plugins": [
         "git-integrations",
         "git-skills"
       ],
-      "path": "skills/git-jgit",
+      "path": "skills/development/git-integrations/git-jgit",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1537,12 +1836,14 @@
       "name": "git-libgit2",
       "title": "Libgit2",
       "category": "git-integrations",
+      "area": "development",
+      "group": "git-integrations",
       "description": "Use git from C, Ruby, .NET or Python through libgit2 bindings. Use when you need to embed git operations in an application.",
       "plugins": [
         "git-integrations",
         "git-skills"
       ],
-      "path": "skills/git-libgit2",
+      "path": "skills/development/git-integrations/git-libgit2",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1561,12 +1862,14 @@
       "name": "git-maintenance-and-data-recovery",
       "title": "Maintenance and Data Recovery",
       "category": "git-internals",
+      "area": "development",
+      "group": "git-internals",
       "description": "Recover lost commits (reflog, fsck) and shrink a repository (gc, large files). Use when you are after reset --hard or for a huge .git.",
       "plugins": [
         "git-internals",
         "git-skills"
       ],
-      "path": "skills/git-maintenance-and-data-recovery",
+      "path": "skills/development/git-internals/git-maintenance-and-data-recovery",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1585,12 +1888,14 @@
       "name": "git-migrating-to-git",
       "title": "Migrating to Git",
       "category": "git-integrations",
+      "area": "development",
+      "group": "git-integrations",
       "description": "Convert a Subversion, Mercurial or Perforce repository to git. Use when you need to import another VCS history.",
       "plugins": [
         "git-integrations",
         "git-skills"
       ],
-      "path": "skills/git-migrating-to-git",
+      "path": "skills/development/git-integrations/git-migrating-to-git",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1609,12 +1914,14 @@
       "name": "git-objects",
       "title": "Git Objects",
       "category": "git-internals",
+      "area": "development",
+      "group": "git-internals",
       "description": "Git internals: blob, tree and commit objects and the .git/objects store. Use when you need to inspect how git stores data.",
       "plugins": [
         "git-internals",
         "git-skills"
       ],
-      "path": "skills/git-objects",
+      "path": "skills/development/git-internals/git-objects",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1633,12 +1940,14 @@
       "name": "git-packfiles",
       "title": "Packfiles",
       "category": "git-internals",
+      "area": "development",
+      "group": "git-internals",
       "description": "How git packs objects: loose vs packfiles, delta compression, git gc. Use when asked why .git is large or what .pack files are.",
       "plugins": [
         "git-internals",
         "git-skills"
       ],
-      "path": "skills/git-packfiles",
+      "path": "skills/development/git-internals/git-packfiles",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1657,12 +1966,14 @@
       "name": "git-plumbing-and-porcelain",
       "title": "Plumbing and Porcelain",
       "category": "git-internals",
+      "area": "development",
+      "group": "git-internals",
       "description": "What is inside .git and plumbing vs porcelain commands. Use when asked what the .git folder contains.",
       "plugins": [
         "git-internals",
         "git-skills"
       ],
-      "path": "skills/git-plumbing-and-porcelain",
+      "path": "skills/development/git-internals/git-plumbing-and-porcelain",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1680,12 +1991,14 @@
       "name": "git-pro",
       "title": "Pro Git (full reference)",
       "category": "git-reference",
+      "area": "development",
+      "group": "git-reference",
       "description": "Index of the Pro Git book, one reference per chapter. Use when a git question spans topics or no other git skill fits.",
       "plugins": [
         "git-reference",
         "git-skills"
       ],
-      "path": "skills/git-pro",
+      "path": "skills/development/git-reference/git-pro",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1716,12 +2029,14 @@
       "name": "git-rebasing",
       "title": "Rebasing",
       "category": "git-branching",
+      "area": "development",
+      "group": "git-branching",
       "description": "Rebase a branch (git rebase, --onto), rebase vs merge, fix pushed rebases. Use when handling rebasing or a linear history.",
       "plugins": [
         "git-branching",
         "git-skills"
       ],
-      "path": "skills/git-rebasing",
+      "path": "skills/development/git-branching/git-rebasing",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1739,12 +2054,14 @@
       "name": "git-recording-changes-to-the-repository",
       "title": "Recording Changes to the Repository",
       "category": "git-getting-started",
+      "area": "development",
+      "group": "git-getting-started",
       "description": "Everyday git: status, add, .gitignore, diff, commit, rm, mv. Use when you need to stage, commit, ignore or rename files.",
       "plugins": [
         "git-getting-started",
         "git-skills"
       ],
-      "path": "skills/git-recording-changes-to-the-repository",
+      "path": "skills/development/git-getting-started/git-recording-changes-to-the-repository",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1763,12 +2080,14 @@
       "name": "git-references",
       "title": "Git References",
       "category": "git-internals",
+      "area": "development",
+      "group": "git-internals",
       "description": "Git refs internals: refs/heads, HEAD, update-ref, symbolic-ref. Use when asked what a ref is or to repair .git/refs.",
       "plugins": [
         "git-internals",
         "git-skills"
       ],
-      "path": "skills/git-references",
+      "path": "skills/development/git-internals/git-references",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1786,12 +2105,14 @@
       "name": "git-remote-branches",
       "title": "Remote Branches",
       "category": "git-branching",
+      "area": "development",
+      "group": "git-branching",
       "description": "Push branches, track upstreams, fetch vs pull, delete remote branches. Use when handling origin/<branch> tasks.",
       "plugins": [
         "git-branching",
         "git-skills"
       ],
-      "path": "skills/git-remote-branches",
+      "path": "skills/development/git-branching/git-remote-branches",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1809,12 +2130,14 @@
       "name": "git-replace",
       "title": "Replace",
       "category": "git-power-tools",
+      "area": "development",
+      "group": "git-power-tools",
       "description": "Swap one git object for another with git replace to graft history. Use when you need to join or split history without rewriting it.",
       "plugins": [
         "git-power-tools",
         "git-skills"
       ],
-      "path": "skills/git-replace",
+      "path": "skills/development/git-power-tools/git-replace",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1833,12 +2156,14 @@
       "name": "git-rerere",
       "title": "Rerere",
       "category": "git-branching",
+      "area": "development",
+      "group": "git-branching",
       "description": "Reuse recorded merge conflict resolutions with git rerere. Use when resolving the same conflict repeatedly.",
       "plugins": [
         "git-branching",
         "git-skills"
       ],
-      "path": "skills/git-rerere",
+      "path": "skills/development/git-branching/git-rerere",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1857,12 +2182,14 @@
       "name": "git-reset-demystified",
       "title": "Reset Demystified",
       "category": "git-power-tools",
+      "area": "development",
+      "group": "git-power-tools",
       "description": "Explain git reset and checkout: --soft, --mixed, --hard and the three trees. Use when unsure which reset mode to use.",
       "plugins": [
         "git-power-tools",
         "git-skills"
       ],
-      "path": "skills/git-reset-demystified",
+      "path": "skills/development/git-power-tools/git-reset-demystified",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1880,12 +2207,14 @@
       "name": "git-revision-selection",
       "title": "Revision Selection",
       "category": "git-power-tools",
+      "area": "development",
+      "group": "git-power-tools",
       "description": "Pick commits and ranges: SHA, HEAD~2, HEAD^, .., ..., @{n}. Use when asked what ^, ~ or .. mean.",
       "plugins": [
         "git-power-tools",
         "git-skills"
       ],
-      "path": "skills/git-revision-selection",
+      "path": "skills/development/git-power-tools/git-revision-selection",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1904,12 +2233,14 @@
       "name": "git-rewriting-history",
       "title": "Rewriting History",
       "category": "git-power-tools",
+      "area": "development",
+      "group": "git-power-tools",
       "description": "Amend, squash, reorder or drop commits; remove a file or secret from all history. Use when you need to edit past commits.",
       "plugins": [
         "git-power-tools",
         "git-skills"
       ],
-      "path": "skills/git-rewriting-history",
+      "path": "skills/development/git-power-tools/git-rewriting-history",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1928,12 +2259,14 @@
       "name": "git-scripting-github",
       "title": "Scripting GitHub",
       "category": "git-collaboration",
+      "area": "development",
+      "group": "git-collaboration",
       "description": "Automate GitHub with webhooks, the REST API and Octokit. Use when you need to script GitHub or react to push and PR events.",
       "plugins": [
         "git-collaboration",
         "git-skills"
       ],
-      "path": "skills/git-scripting-github",
+      "path": "skills/development/git-collaboration/git-scripting-github",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1952,12 +2285,14 @@
       "name": "git-searching",
       "title": "Searching",
       "category": "git-power-tools",
+      "area": "development",
+      "group": "git-power-tools",
       "description": "Search code and history: git grep, log -S, log -G, log -L. Use when you need to find where something is or when it changed.",
       "plugins": [
         "git-power-tools",
         "git-skills"
       ],
-      "path": "skills/git-searching",
+      "path": "skills/development/git-power-tools/git-searching",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1975,12 +2310,14 @@
       "name": "git-setting-up-the-server",
       "title": "Setting Up the Server",
       "category": "git-collaboration",
+      "area": "development",
+      "group": "git-collaboration",
       "description": "Set up an SSH git server: git user, authorized_keys, bare repo, git-shell. Use when you need to self-host for several developers.",
       "plugins": [
         "git-collaboration",
         "git-skills"
       ],
-      "path": "skills/git-setting-up-the-server",
+      "path": "skills/development/git-collaboration/git-setting-up-the-server",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -1999,12 +2336,14 @@
       "name": "git-setup-and-config",
       "title": "Setup and Config",
       "category": "git-getting-started",
+      "area": "development",
+      "group": "git-getting-started",
       "description": "Quick reference for git config and git help, including core.editor for common editors. Use when you need to set the git editor.",
       "plugins": [
         "git-getting-started",
         "git-skills"
       ],
-      "path": "skills/git-setup-and-config",
+      "path": "skills/development/git-getting-started/git-setup-and-config",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -2023,12 +2362,14 @@
       "name": "git-signing-your-work",
       "title": "Signing Your Work",
       "category": "git-power-tools",
+      "area": "development",
+      "group": "git-power-tools",
       "description": "Sign and verify git commits and tags with GPG. Use when you need to sign commits or tags.",
       "plugins": [
         "git-power-tools",
         "git-skills"
       ],
-      "path": "skills/git-signing-your-work",
+      "path": "skills/development/git-power-tools/git-signing-your-work",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -2047,12 +2388,14 @@
       "name": "git-smart-http",
       "title": "Smart HTTP",
       "category": "git-collaboration",
+      "area": "development",
+      "group": "git-collaboration",
       "description": "Serve git over HTTP(S) with git-http-backend and authenticated push. Use when you need to host a repo over HTTP.",
       "plugins": [
         "git-collaboration",
         "git-skills"
       ],
-      "path": "skills/git-smart-http",
+      "path": "skills/development/git-collaboration/git-smart-http",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -2070,12 +2413,14 @@
       "name": "git-stashing-and-cleaning",
       "title": "Stashing and Cleaning",
       "category": "git-power-tools",
+      "area": "development",
+      "group": "git-power-tools",
       "description": "Shelve work with git stash and remove untracked files with git clean. Use when you need to switch branches with uncommitted changes.",
       "plugins": [
         "git-power-tools",
         "git-skills"
       ],
-      "path": "skills/git-stashing-and-cleaning",
+      "path": "skills/development/git-power-tools/git-stashing-and-cleaning",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -2094,12 +2439,14 @@
       "name": "git-submodules",
       "title": "Submodules",
       "category": "git-power-tools",
+      "area": "development",
+      "group": "git-power-tools",
       "description": "Use git submodules: add, clone --recurse-submodules, update, publish. Use when a repo contains another repo or submodule folders are empty.",
       "plugins": [
         "git-power-tools",
         "git-skills"
       ],
-      "path": "skills/git-submodules",
+      "path": "skills/development/git-power-tools/git-submodules",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -2118,12 +2465,14 @@
       "name": "git-tagging",
       "title": "Tagging",
       "category": "git-getting-started",
+      "area": "development",
+      "group": "git-getting-started",
       "description": "Create, list, push and delete git tags. Use when you need to tag a commit or mark a release version.",
       "plugins": [
         "git-getting-started",
         "git-skills"
       ],
-      "path": "skills/git-tagging",
+      "path": "skills/development/git-getting-started/git-tagging",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -2142,12 +2491,14 @@
       "name": "git-the-protocols",
       "title": "The Protocols",
       "category": "git-collaboration",
+      "area": "development",
+      "group": "git-collaboration",
       "description": "Compare local, HTTP, SSH and git:// protocols for a repository. Use when you need to choose between HTTPS and SSH URLs.",
       "plugins": [
         "git-collaboration",
         "git-skills"
       ],
-      "path": "skills/git-the-protocols",
+      "path": "skills/development/git-collaboration/git-the-protocols",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -2165,12 +2516,14 @@
       "name": "git-the-refspec",
       "title": "The Refspec",
       "category": "git-internals",
+      "area": "development",
+      "group": "git-internals",
       "description": "Git refspecs: custom fetch and push mappings (+src:dst). Use when editing remote.<name>.fetch or mapping refs.",
       "plugins": [
         "git-internals",
         "git-skills"
       ],
-      "path": "skills/git-the-refspec",
+      "path": "skills/development/git-internals/git-the-refspec",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -2189,12 +2542,14 @@
       "name": "git-transfer-protocols",
       "title": "Transfer Protocols",
       "category": "git-internals",
+      "area": "development",
+      "group": "git-internals",
       "description": "How git fetch and push work on the wire: dumb and smart HTTP, send-pack, upload-pack. Use when you need to debug protocol-level problems.",
       "plugins": [
         "git-internals",
         "git-skills"
       ],
-      "path": "skills/git-transfer-protocols",
+      "path": "skills/development/git-internals/git-transfer-protocols",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -2213,12 +2568,14 @@
       "name": "git-undoing-things",
       "title": "Undoing Things",
       "category": "git-getting-started",
+      "area": "development",
+      "group": "git-getting-started",
       "description": "Undo git mistakes: amend, unstage, discard changes (restore, reset). Use when committed too early or staged the wrong file.",
       "plugins": [
         "git-getting-started",
         "git-skills"
       ],
-      "path": "skills/git-undoing-things",
+      "path": "skills/development/git-getting-started/git-undoing-things",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -2236,12 +2593,14 @@
       "name": "git-viewing-the-commit-history",
       "title": "Viewing the Commit History",
       "category": "git-getting-started",
+      "area": "development",
+      "group": "git-getting-started",
       "description": "View and filter history with git log (--oneline, --graph, --stat, by author or date). Use when you need to see or format the commit log.",
       "plugins": [
         "git-getting-started",
         "git-skills"
       ],
-      "path": "skills/git-viewing-the-commit-history",
+      "path": "skills/development/git-getting-started/git-viewing-the-commit-history",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -2260,12 +2619,14 @@
       "name": "git-working-with-remotes",
       "title": "Working with Remotes",
       "category": "git-collaboration",
+      "area": "development",
+      "group": "git-collaboration",
       "description": "Manage git remotes: add, show, fetch, pull, push, rename, remove. Use when you need to add or change a remote URL.",
       "plugins": [
         "git-collaboration",
         "git-skills"
       ],
-      "path": "skills/git-working-with-remotes",
+      "path": "skills/development/git-collaboration/git-working-with-remotes",
       "license": "CC BY-NC-SA 3.0. Derived from \"Pro Git\" by Scott Chacon and Ben Straub. See THIRD_PARTY_NOTICES.md",
       "compatibility": "",
       "source": "Pro Git, 2nd edition",
@@ -2284,11 +2645,13 @@
       "name": "gitlab-ci-debugging",
       "title": "GitLab CI debugging",
       "category": "gitlab-ci-tools",
+      "area": "development",
+      "group": "gitlab-ci",
       "description": "Diagnose a failing, stuck, skipped or wrongly triggered GitLab CI pipeline or job from its log and .gitlab-ci.yml. Use when the user says a GitLab pipeline is stuck, pending, not running, created no jobs, or a job fails (exit code, runner, rules, artifacts, Docker).",
       "plugins": [
         "gitlab-ci-tools"
       ],
-      "path": "skills/gitlab-ci-debugging",
+      "path": "skills/development/gitlab-ci/gitlab-ci-debugging",
       "license": "Complete terms in the repository README",
       "compatibility": "",
       "examples": [
@@ -2302,11 +2665,13 @@
       "name": "gitlab-ci-optimization",
       "title": "GitLab CI optimization",
       "category": "gitlab-ci-tools",
+      "area": "development",
+      "group": "gitlab-ci",
       "description": "Make a GitLab CI pipeline faster and cheaper: needs (DAG), cache, parallel jobs, rules:changes, interruptible, smaller images, Docker layer caching. Use when the user says a GitLab pipeline is slow or wastes CI minutes.",
       "plugins": [
         "gitlab-ci-tools"
       ],
-      "path": "skills/gitlab-ci-optimization",
+      "path": "skills/development/gitlab-ci/gitlab-ci-optimization",
       "license": "Complete terms in the repository README",
       "compatibility": "",
       "examples": [
@@ -2320,11 +2685,13 @@
       "name": "gitlab-ci-pipeline-authoring",
       "title": "GitLab CI pipeline authoring",
       "category": "gitlab-ci-tools",
+      "area": "development",
+      "group": "gitlab-ci",
       "description": "Write or change a GitLab CI pipeline (.gitlab-ci.yml): stages, jobs, rules, needs, artifacts, cache, includes and merge request pipelines. Use when the user asks to create or extend a GitLab pipeline or job, or run a job only on certain branches, tags or changes.",
       "plugins": [
         "gitlab-ci-tools"
       ],
-      "path": "skills/gitlab-ci-pipeline-authoring",
+      "path": "skills/development/gitlab-ci/gitlab-ci-pipeline-authoring",
       "license": "Complete terms in the repository README",
       "compatibility": "",
       "examples": [
@@ -2338,11 +2705,13 @@
       "name": "gradle-android",
       "title": "Gradle for Android: setup, diagnosis, libraries and testing",
       "category": "gradle-tools",
+      "area": "external-tools",
+      "group": "gradle",
       "description": "Set up Gradle for Android apps and fix Gradle problems: wrapper, JDK, Android Gradle Plugin (AGP) and Kotlin compatibility, SDK path, version catalogs, adding libraries, running unit and instrumented tests, and diagnosing build failures with a bundled script. Use when a Gradle or Android build fails or will not sync, the user asks how to set up, upgrade or speed up Gradle, add a dependency, or run Android tests.",
       "plugins": [
         "gradle-tools"
       ],
-      "path": "skills/gradle-android",
+      "path": "skills/external-tools/gradle/gradle-android",
       "license": "Complete terms in the repository README",
       "compatibility": "Needs Python 3.8+ (standard library only) for the scripts. Running builds needs a JDK 17+ and the Android SDK; the project's own Gradle wrapper is used.",
       "examples": [
@@ -2365,11 +2734,13 @@
       "name": "image-inspector",
       "title": "Image inspector: pixels and description",
       "category": "image-tools",
+      "area": "testing",
+      "group": "tools",
       "description": "Inspect an image file (PNG, JPG, WebP, GIF, BMP, TIFF) with a ready-made Python script: pixel colours at coordinates, dominant colours and palette, transparency, size, EXIF, OCR text, finding an icon inside a screenshot, comparing two screenshots. Use when the user asks about an image or screenshot: its colours, size or text, where an icon is, or what changed between two.",
       "plugins": [
         "image-tools"
       ],
-      "path": "skills/image-inspector",
+      "path": "skills/testing/tools/image-inspector",
       "license": "Complete terms in the repository README",
       "compatibility": "Needs Python 3.8+. Pillow (pip install Pillow) is recommended and required for JPEG, WebP, GIF and TIFF; PNG and BMP also work with the standard library alone. OCR is optional and needs pytesseract plus the Tesseract program. Finding and comparing images needs OpenCV (pip install opencv-python-headless).",
       "examples": [
@@ -2388,11 +2759,13 @@
       "name": "kotlin-unit-test",
       "title": "Kotlin unit tests: class/method-wise testing, verification and HTML report",
       "category": "testing-tools",
+      "area": "testing",
+      "group": "libs",
       "description": "Write, run and verify unit tests for Kotlin code (apps, libraries, Android, Appium/Selenium page objects) with Gradle, Maven or kotlinc, then produce an HTML report of results, coverage and weak tests (no assertions, disabled, untested methods, mutation check). Use when the user asks to unit test Kotlin code, add or run Kotlin tests, get a test or coverage report, or check test quality.",
       "plugins": [
         "testing-tools"
       ],
-      "path": "skills/kotlin-unit-test",
+      "path": "skills/testing/libs/kotlin-unit-test",
       "license": "Complete terms in the repository README",
       "compatibility": "Needs Python 3.8+ (standard library only) to run the scripts, and a JDK with the project's build tool (Gradle wrapper, Maven, or kotlinc plus the JUnit console launcher) to run the tests. Coverage needs JaCoCo or Kover configured in the build.",
       "examples": [
@@ -2412,11 +2785,13 @@
       "name": "powershell-commands",
       "title": "PowerShell Commands for Agents",
       "category": "shell-tools",
+      "area": "external-tools",
+      "group": "powershell",
       "description": "Run shell tasks correctly in PowerShell on Windows: files, text search, processes, network, Git, builds, with a bash-to-PowerShell map. Use when the shell is PowerShell, a `&&`, `grep`, `head` or `export` command fails, or quoting, encoding or exit codes go wrong.",
       "plugins": [
         "shell-tools"
       ],
-      "path": "skills/powershell-commands",
+      "path": "skills/external-tools/powershell/powershell-commands",
       "license": "MIT",
       "compatibility": "Windows PowerShell 5.1 and PowerShell 7+ (commands marked 7+ do not work in 5.1). Most commands also work on macOS/Linux with PowerShell 7.",
       "examples": [
@@ -2439,11 +2814,13 @@
       "name": "professional-writing",
       "title": "Professional writing: blog, CV, docs",
       "category": "writing-tools",
+      "area": "generic",
+      "group": "writing",
       "description": "Write, tailor and review professional documents: blog posts, CVs/resumes (tailor to a job post, review), cover letters, technical docs and READMEs, with a checker script and templates. Use when the user wants to write a blog post or article, prepare or improve a CV, match a CV to a job ad, or draft documentation.",
       "plugins": [
         "writing-tools"
       ],
-      "path": "skills/professional-writing",
+      "path": "skills/generic/writing/professional-writing",
       "license": "Complete terms in the repository README",
       "compatibility": "Scripts need Python 3.8+ (standard library only). They read .md, .txt and .docx; export a PDF to text or .docx first.",
       "examples": [
@@ -2466,11 +2843,13 @@
       "name": "python-tutor",
       "title": "Python tutor: explain a file and make interview notes",
       "category": "learning-tools",
+      "area": "generic",
+      "group": "learning",
       "description": "Explain any .py file from beginner to advanced and make study-notes HTML for interview prep: line-by-line walkthrough, concepts found, gotchas, interview Q&A, fundamentals checklist. A bundled script analyses the file without running it. Use when the user wants to learn, understand or revise a Python file or prepare for a Python interview.",
       "plugins": [
         "learning-tools"
       ],
-      "path": "skills/python-tutor",
+      "path": "skills/generic/learning/python-tutor",
       "license": "MIT",
       "compatibility": "Needs Python 3.8+ (standard library only). The analysed file must be Python 3 source. The file is parsed, never imported or executed.",
       "examples": [
@@ -2485,11 +2864,13 @@
       "name": "python-unit-test",
       "title": "Python unit tests: write, run, diagnose and suggest fixes",
       "category": "testing-tools",
+      "area": "testing",
+      "group": "libs",
       "description": "Unit test any Python (.py) file function by function and method by method, run the tests, and get a diagnosis with a suggested fix for each failure, plus static bug findings (mutable defaults, bare except, swallowed errors) and weak-test checks. Use when the user asks to unit test, add or run tests for a .py file, find why a Python test fails, fix a failing pytest/unittest test, find untested functions, or check Python code for bugs.",
       "plugins": [
         "testing-tools"
       ],
-      "path": "skills/python-unit-test",
+      "path": "skills/testing/libs/python-unit-test",
       "license": "Complete terms in the repository README",
       "compatibility": "Needs Python 3.8+ (standard library only) to run the script. It uses pytest when installed and falls back to unittest. Line coverage needs the coverage package.",
       "examples": [
@@ -2507,11 +2888,13 @@
       "name": "repo-architecture",
       "title": "Repo walkthrough and architecture diagram",
       "category": "repo-tools",
+      "area": "development",
+      "group": "repo",
       "description": "Walk through a repository and produce an architecture diagram as ARCHITECTURE.md (with Mermaid) and a self-contained architecture.html: components, dependencies, entry points, flows, reading order. A bundled script drafts it from the code. Use when the user asks for an architecture diagram, a system overview, a repo walkthrough or onboarding map of a codebase.",
       "plugins": [
         "repo-tools"
       ],
-      "path": "skills/repo-architecture",
+      "path": "skills/development/repo/repo-architecture",
       "license": "MIT",
       "compatibility": "Needs Python 3.8+ (standard library only). git is optional; with git the file list follows .gitignore and a repository can be cloned from a URL.",
       "examples": [
@@ -2526,11 +2909,13 @@
       "name": "repo-learnings",
       "title": "Repository deep read to LEARNINGS.md",
       "category": "repo-tools",
+      "area": "development",
+      "group": "repo",
       "description": "Read a whole git repository, every folder and file, line by line, and write a LEARNINGS.md: purpose, build and run steps, folder map, architecture, key files, conventions, gotchas and file-by-file notes. A bundled Python script plans the read and checks that no file was missed. Use when the user wants to study, understand, document or onboard onto a codebase or repo, local or by git URL.",
       "plugins": [
         "repo-tools"
       ],
-      "path": "skills/repo-learnings",
+      "path": "skills/development/repo/repo-learnings",
       "license": "Complete terms in the repository README",
       "compatibility": "Needs Python 3.8+ (standard library only). git is optional. With git, the file list follows .gitignore and a repository can be cloned from a URL.",
       "examples": [
@@ -2545,11 +2930,13 @@
       "name": "skill-orchestrator",
       "title": "Skill orchestrator",
       "category": "hub-tools",
+      "area": "generic",
+      "group": "hub",
       "description": "Combine several installed skills to finish a multi-step task: find which skills are installed, pick the right ones, check they can run (adb, Python packages), run them in order and pass each result to the next. Use when a task needs more than one skill, or the user asks which skills to use, to chain skills, or to plan and track a multi-skill job.",
       "plugins": [
         "hub-tools"
       ],
-      "path": "skills/skill-orchestrator",
+      "path": "skills/generic/hub/skill-orchestrator",
       "license": "Complete terms in the repository README",
       "compatibility": "Needs Python 3.8+ (standard library only). It reads skill folders and writes only inside a run folder you choose.",
       "examples": [
@@ -2564,11 +2951,13 @@
       "name": "skill-router",
       "title": "Skill router",
       "category": "hub-tools",
+      "area": "generic",
+      "group": "hub",
       "description": "Route a request to the right installed skills: split it into parts, grade basic or advanced, check the needed file, link or tools are given. Use when starting any non-trivial, vague or multi-part task, or when the user asks which skill fits.",
       "plugins": [
         "hub-tools"
       ],
-      "path": "skills/skill-router",
+      "path": "skills/generic/hub/skill-router",
       "license": "Complete terms in the repository README",
       "compatibility": "Needs Python 3.8+ (standard library only). It reads skill folders and never writes, installs or runs anything.",
       "examples": [
@@ -2583,11 +2972,13 @@
       "name": "skillforge",
       "title": "Skillforge: PDF to skills",
       "category": "hub-tools",
+      "area": "generic",
+      "group": "hub",
       "description": "Turn a technical PDF (book, manual, handbook, spec) into a library of Agent Skills with the bundled offline generator (no LLM or API key). Use when the user wants to create skills from a PDF, convert a book or documentation into SKILL.md playbooks, or regenerate skills that were built from a document.",
       "plugins": [
         "hub-tools"
       ],
-      "path": "skills/skillforge",
+      "path": "skills/generic/hub/skillforge",
       "license": "Complete terms in the repository README",
       "compatibility": "",
       "examples": [
@@ -2601,11 +2992,13 @@
       "name": "url-to-skill",
       "title": "URL to skill: build a skill from a web page",
       "category": "hub-tools",
+      "area": "generic",
+      "group": "hub",
       "description": "Turn a web page or documentation site (an http/https link) into a reusable Agent Skill with a bundled Python script that fetches the page and writes SKILL.md, references and a refreshable source record. Use when the user gives a URL and wants to make a skill from it, turn online docs, a guide or an API reference into a skill, or refresh a skill built from a web page.",
       "plugins": [
         "hub-tools"
       ],
-      "path": "skills/url-to-skill",
+      "path": "skills/generic/hub/url-to-skill",
       "license": "Complete terms in the repository README",
       "compatibility": "Needs Python 3.8+ (standard library only) and internet access to the site. Pages that only render with JavaScript cannot be read.",
       "examples": [
@@ -2620,11 +3013,13 @@
       "name": "video-inspector",
       "title": "Video inspector: frames, pixels and description",
       "category": "video-tools",
+      "area": "testing",
+      "group": "tools",
       "description": "Analyse a video file (MP4, MOV, MKV, WebM, AVI) with a ready-made Python script: metadata, frame extraction, scene changes, black or frozen sections, motion, brightness, and the colour of a pixel or area over time. Use when the user wants to analyse or describe a video or screen recording, extract frames, check for black screens, freezes or flicker, or track an LED or indicator colour.",
       "plugins": [
         "video-tools"
       ],
-      "path": "skills/video-inspector",
+      "path": "skills/testing/tools/video-inspector",
       "license": "Complete terms in the repository README",
       "compatibility": "Needs Python 3.8+ and OpenCV (pip install opencv-python-headless, which includes numpy and FFmpeg decoding). Metadata of MP4/MOV files (--info) works with the standard library alone.",
       "examples": [

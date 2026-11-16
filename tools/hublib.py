@@ -16,6 +16,17 @@ PROMPTS_TEMPLATE = ROOT / "tools" / "prompts_template.html"
 PROMPTS_HTML = ROOT / "prompts.html"
 MIN_EXAMPLES = 2
 
+# Top-level folders of skills/, in display order. SOURCE OF TRUTH for areas: a skill lives in
+# skills/<area>/<group>/<name>/. Add an area here (and its folder) before putting skills in it.
+AREAS = {
+    "testing": "Testing",
+    "development": "Development",
+    "design": "Design",
+    "generic": "Generic",
+    "external-tools": "External tools",
+}
+SKILL_DEPTH = 3          # skills/<area>/<group>/<name>
+
 
 def load_examples() -> dict[str, list[str]]:
     """Example prompts per skill name, from examples/prompts.json ({} if the file is missing)."""
@@ -88,8 +99,33 @@ def load_marketplace() -> dict:
     return json.loads(MARKETPLACE.read_text(encoding="utf-8"))
 
 
+def find_skill_dirs(base: Path, depth: int = SKILL_DEPTH) -> list[Path]:
+    """Every folder under `base` that holds a SKILL.md, at most `depth` levels down.
+    The search does not go inside a skill folder."""
+    found: list[Path] = []
+
+    def walk(folder: Path, left: int) -> None:
+        for p in sorted(folder.iterdir()):
+            if not p.is_dir() or p.name.startswith(".") or p.name == "__pycache__":
+                continue
+            if (p / "SKILL.md").is_file():
+                found.append(p)
+            elif left > 1:
+                walk(p, left - 1)
+
+    walk(base, depth)
+    return found
+
+
 def skill_dirs() -> list[Path]:
-    return sorted(p for p in SKILLS_DIR.iterdir() if p.is_dir() and not p.name.startswith("."))
+    """Every skill folder in the hub, sorted by skill name."""
+    return sorted(find_skill_dirs(SKILLS_DIR), key=lambda p: p.name)
+
+
+def skill_location(d: Path) -> tuple[str, str]:
+    """(area, group) of a skill folder, from its path; ("", "") if it is not at skills/<area>/<group>/<name>."""
+    parts = d.relative_to(SKILLS_DIR).parts
+    return (parts[0], parts[1]) if len(parts) == SKILL_DEPTH else ("", "")
 
 
 def plugin_skill_names(plugin: dict) -> list[str]:

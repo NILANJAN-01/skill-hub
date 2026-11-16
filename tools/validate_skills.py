@@ -14,7 +14,7 @@ import re
 import sys
 from pathlib import Path
 
-from hublib import (EXAMPLES, MARKETPLACE, MIN_EXAMPLES, ROOT, FrontmatterError, load_examples,
+from hublib import (AREAS, EXAMPLES, MARKETPLACE, MIN_EXAMPLES, ROOT, SKILLS_DIR, FrontmatterError, load_examples,
                     load_marketplace, parse_frontmatter, plugin_skill_names, skill_dirs)
 
 NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
@@ -106,6 +106,44 @@ def check_skill(d: Path, plugin_names: set[str], listed: set[str]) -> tuple[list
     return errors, warns
 
 
+def layout_errors() -> list[tuple[str, str]]:
+    """Problems with the folder layout skills/<area>/<group>/<name>/SKILL.md, as (where, message)."""
+    out = []
+    names: dict[str, str] = {}
+
+    def folders(d: Path) -> list[Path]:
+        return sorted(p for p in d.iterdir() if p.is_dir() and not p.name.startswith(".") and p.name != "__pycache__")
+
+    for area in folders(SKILLS_DIR):
+        where = area.relative_to(ROOT).as_posix()
+        if area.name not in AREAS:
+            out.append((where, f"not a known area; skills live in skills/<area>/<group>/<name>/ and the areas are "
+                               f"{', '.join(AREAS)} (AREAS in tools/hublib.py)"))
+            continue
+        if (area / "SKILL.md").is_file():
+            out.append((where, "an area folder cannot be a skill; move SKILL.md into <group>/<name>/"))
+        for group in folders(area):
+            gwhere = group.relative_to(ROOT).as_posix()
+            if not NAME_RE.match(group.name):
+                out.append((gwhere, "group folder names must be lowercase letters, digits and single hyphens"))
+            if (group / "SKILL.md").is_file():
+                out.append((gwhere, "a group folder cannot be a skill; move SKILL.md into <name>/"))
+                continue
+            for skill in folders(group):
+                swhere = skill.relative_to(ROOT).as_posix()
+                if not (skill / "SKILL.md").is_file():
+                    out.append((swhere, "missing SKILL.md"))
+                elif skill.name in names:
+                    out.append((swhere, f"duplicate skill name; also at {names[skill.name]}"))
+                else:
+                    names[skill.name] = swhere
+    for area in AREAS:
+        if not (SKILLS_DIR / area).is_dir():
+            out.append((f"skills/{area}", "area folder is missing (every area in AREAS needs a folder, with a "
+                                          "README.md if it has no skills yet)"))
+    return out
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--strict", action="store_true", help="treat warnings as errors")
@@ -145,6 +183,8 @@ def main() -> None:
                 report("ERROR", mk, f"plugin {pn!r}: marketplace lists missing skill {s}")
         listed.update(plugin_skill_names(p))
 
+    for where, msg in layout_errors():
+        report("ERROR", where, msg)
     dirs = skill_dirs()
     ex_where = EXAMPLES.relative_to(ROOT).as_posix()
     try:

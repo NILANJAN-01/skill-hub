@@ -62,7 +62,7 @@ Navigation, headers, footers, cookie banners, scripts and heading anchors are re
    - Delete leftover clutter in the references (menus, "edit this page" lines).
 5. **Store it for reuse.** Ask the user where to keep it:
    - **For the user's own agents:** copy the folder into the agent's skills folder, user-level or project-level. The folder for each agent is listed in skill-hub's GUIDE.md. Or generate it there directly with `--out <skills folder>`. Ask before writing into a home folder.
-   - **To share it in skill-hub:** move it to `skills/<name>/`, add it to a plugin in `.claude-plugin/marketplace.json`, add example prompts, and rebuild and validate (see the contribute-skill skill). Only share content the user may redistribute: check the site's licence, and record the source in the skill's `license` field.
+   - **To share it in skill-hub:** move it to `skills/<area>/<group>/<name>/`, add it to a plugin in `.claude-plugin/marketplace.json`, add example prompts, and rebuild and validate (see the contribute-skill skill). Only share content the user may redistribute: check the site's licence, and record the source in the skill's `license` field.
 6. **Reload.** The agent picks up a new skill after a restart or in a new session.
 
 ## Keeping a skill current

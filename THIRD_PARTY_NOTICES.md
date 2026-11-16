@@ -2,7 +2,7 @@
 
 ## Pro Git (2nd edition)
 
-The skills under `skills/git-*` (including `references/` files) are adapted, by automated extraction, from:
+The skills under `skills/development/git-*/` (every `git-*` skill) (including `references/` files) are adapted, by automated extraction, from:
 
 > *Pro Git*, 2nd edition, by Scott Chacon and Ben Straub. Published by Apress. https://git-scm.com/book
 

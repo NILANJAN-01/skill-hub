@@ -18,6 +18,17 @@ def make_skill(root: Path, name: str, desc: str, compat: str = "") -> None:
     (d / "SKILL.md").write_text(f"---\nname: {name}\ndescription: {desc}\n{c}---\n\n# {name}\n", encoding="utf-8")
 
 
+class NestedLayout(unittest.TestCase):
+    def test_scan_finds_skills_in_area_and_group_folders(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "skills"
+            make_skill(root, "flat-skill", "A flat skill. Use when testing.")
+            make_skill(root / "testing" / "libs", "nested-skill", "A nested skill. Use when testing.")
+            make_skill(root / "a" / "b" / "c", "too-deep", "Too deep. Use when testing.")
+            reg = r.scan([str(root)], defaults=False)
+            self.assertEqual(sorted(reg), ["flat-skill", "nested-skill"])
+
+
 def registry(tmp: str) -> dict:
     root = Path(tmp) / "skills"
     make_skill(root, "android-logcat-analyzer", "Analyse Android logcat output, crashes, ANRs and bugreports")

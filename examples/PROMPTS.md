@@ -12,7 +12,7 @@ Install the whole category: `--plugin hub-tools`
 
 ### Contribute a skill to the hub
 
-[`contribute-skill`](../skills/contribute-skill/SKILL.md) · install: `--skill contribute-skill`
+[`contribute-skill`](../skills/generic/hub/contribute-skill/SKILL.md) · install: `--skill contribute-skill`
 
 - “Add a new skill called docker-compose-basics to skill-hub.”
 - “validate_skills.py says my skill is 'not listed in any plugin'. How do I fix it?”
@@ -20,7 +20,7 @@ Install the whole category: `--plugin hub-tools`
 
 ### Find & install hub skills
 
-[`find-skills`](../skills/find-skills/SKILL.md) · install: `--skill find-skills`
+[`find-skills`](../skills/generic/hub/find-skills/SKILL.md) · install: `--skill find-skills`
 
 - “Is there a skill in skill-hub for git submodules? Which plugin has it?”
 - “What skills does skill-hub offer for working with Git remotes?”
@@ -28,7 +28,7 @@ Install the whole category: `--plugin hub-tools`
 
 ### Skill orchestrator
 
-[`skill-orchestrator`](../skills/skill-orchestrator/SKILL.md) · install: `--skill skill-orchestrator`
+[`skill-orchestrator`](../skills/generic/hub/skill-orchestrator/SKILL.md) · install: `--skill skill-orchestrator`
 
 - “Which of my installed skills should I use to analyse this logcat and write a bug report?”
 - “Chain the right skills to read this repo and then write a blog post about it.”
@@ -37,7 +37,7 @@ Install the whole category: `--plugin hub-tools`
 
 ### Skill router
 
-[`skill-router`](../skills/skill-router/SKILL.md) · install: `--skill skill-router`
+[`skill-router`](../skills/generic/hub/skill-router/SKILL.md) · install: `--skill skill-router`
 
 - “Which of my skills fits this request: my app keeps crashing after the last update?”
 - “Break this down and pick the right skills: analyse the logcat, then write up a bug report for the team.”
@@ -46,7 +46,7 @@ Install the whole category: `--plugin hub-tools`
 
 ### Skillforge: PDF to skills
 
-[`skillforge`](../skills/skillforge/SKILL.md) · install: `--skill skillforge`
+[`skillforge`](../skills/generic/hub/skillforge/SKILL.md) · install: `--skill skillforge`
 
 - “Turn this Kubernetes handbook PDF into Agent Skills.”
 - “Generate skills only for 'backup, restore, replication' from postgres-manual.pdf.”
@@ -54,7 +54,7 @@ Install the whole category: `--plugin hub-tools`
 
 ### URL to skill: build a skill from a web page
 
-[`url-to-skill`](../skills/url-to-skill/SKILL.md) · install: `--skill url-to-skill`
+[`url-to-skill`](../skills/generic/hub/url-to-skill/SKILL.md) · install: `--skill url-to-skill`
 
 - “Create a skill from https://docs.python.org/3/library/json.html and save it for later.”
 - “Turn the docs under https://docs.example.com/cli/ into one skill called example-cli.”
@@ -67,7 +67,7 @@ Install the whole category: `--plugin android-automation`
 
 ### Android logcat analyzer
 
-[`android-logcat-analyzer`](../skills/android-logcat-analyzer/SKILL.md) · install: `--skill android-logcat-analyzer`
+[`android-logcat-analyzer`](../skills/testing/aaos-testing/android-logcat-analyzer/SKILL.md) · install: `--skill android-logcat-analyzer`
 
 - “Here's logcat.txt from the failed test run. Why did the app crash?”
 - “The app froze and then closed on my phone. It's still plugged in, can you check the device log?”
@@ -76,7 +76,7 @@ Install the whole category: `--plugin android-automation`
 
 ### Android UIAutomator dump to locators
 
-[`android-uiautomator-locators`](../skills/android-uiautomator-locators/SKILL.md) · install: `--skill android-uiautomator-locators`
+[`android-uiautomator-locators`](../skills/testing/aaos-testing/android-uiautomator-locators/SKILL.md) · install: `--skill android-uiautomator-locators`
 
 - “Here's window_dump.xml from our head unit. Generate a JSON with keyword names and resource ids for our tests.”
 - “Convert all the window_dump.xml files in dumps/ into locator JSON files in tests/locators.”
@@ -89,7 +89,7 @@ Install the whole category: `--plugin adb-tools`
 
 ### adb debugging: logcat, dumpsys, bug reports, snapshots
 
-[`adb-debug`](../skills/adb-debug/SKILL.md) · install: `--skill adb-debug`
+[`adb-debug`](../skills/external-tools/adb/adb-debug/SKILL.md) · install: `--skill adb-debug`
 
 - “Show me the logcat errors from com.example.app and save them to a file.”
 - “My app crashed on the device. Capture the crash log and tell me what happened.”
@@ -98,7 +98,7 @@ Install the whole category: `--plugin adb-tools`
 
 ### adb device control: apps, files, screen, settings
 
-[`adb-device-control`](../skills/adb-device-control/SKILL.md) · install: `--skill adb-device-control`
+[`adb-device-control`](../skills/external-tools/adb/adb-device-control/SKILL.md) · install: `--skill adb-device-control`
 
 - “Install app-debug.apk on my connected phone and start it.”
 - “Take a screenshot and a 20 second screen recording of the device.”
@@ -107,7 +107,7 @@ Install the whole category: `--plugin adb-tools`
 
 ### adb setup, USB and wireless connection, troubleshooting
 
-[`adb-connect`](../skills/adb-connect/SKILL.md) · install: `--skill adb-connect`
+[`adb-connect`](../skills/external-tools/adb/adb-connect/SKILL.md) · install: `--skill adb-connect`
 
 - “adb devices shows my phone as unauthorized. How do I fix it?”
 - “Pair my Android 14 phone with adb over Wi-Fi.”
@@ -116,7 +116,7 @@ Install the whole category: `--plugin adb-tools`
 
 ### adb: command reference, safety check and central script
 
-[`adb-tool`](../skills/adb-tool/SKILL.md) · install: `--skill adb-tool`
+[`adb-tool`](../skills/external-tools/adb/adb-tool/SKILL.md) · install: `--skill adb-tool`
 
 - “Which adb command copies a file from my phone to the computer, and is it safe to run?”
 - “List every adb command that can delete data or reboot the device.”
@@ -129,7 +129,7 @@ Install the whole category: `--plugin gradle-tools`
 
 ### Gradle for Android: setup, diagnosis, libraries and testing
 
-[`gradle-android`](../skills/gradle-android/SKILL.md) · install: `--skill gradle-android`
+[`gradle-android`](../skills/external-tools/gradle/gradle-android/SKILL.md) · install: `--skill gradle-android`
 
 - “My Android build fails with 'Unsupported class file major version 65'. Find out why and fix it.”
 - “Check my Gradle setup: JDK, wrapper, AGP and Kotlin versions, and SDK path.”
@@ -143,7 +143,7 @@ Install the whole category: `--plugin repo-tools`
 
 ### Repo walkthrough and architecture diagram
 
-[`repo-architecture`](../skills/repo-architecture/SKILL.md) · install: `--skill repo-architecture`
+[`repo-architecture`](../skills/development/repo/repo-architecture/SKILL.md) · install: `--skill repo-architecture`
 
 - “Make an architecture diagram of this repo as ARCHITECTURE.md and an HTML page.”
 - “Give me a walkthrough of this codebase: what the main parts are, how they depend on each other and what to read first.”
@@ -152,7 +152,7 @@ Install the whole category: `--plugin repo-tools`
 
 ### Repository deep read to LEARNINGS.md
 
-[`repo-learnings`](../skills/repo-learnings/SKILL.md) · install: `--skill repo-learnings`
+[`repo-learnings`](../skills/development/repo/repo-learnings/SKILL.md) · install: `--skill repo-learnings`
 
 - “Read this whole repo, every folder and file, and write a learnings .md so I understand how it works.”
 - “I just joined this project. Go through the codebase deeply and create an onboarding document.”
@@ -165,7 +165,7 @@ Install the whole category: `--plugin gitlab-ci-tools`
 
 ### GitLab CI debugging
 
-[`gitlab-ci-debugging`](../skills/gitlab-ci-debugging/SKILL.md) · install: `--skill gitlab-ci-debugging`
+[`gitlab-ci-debugging`](../skills/development/gitlab-ci/gitlab-ci-debugging/SKILL.md) · install: `--skill gitlab-ci-debugging`
 
 - “My GitLab job says it's stuck because the project doesn't have any runners online. Why?”
 - “Here's the job log. Why did it fail with exit code 137?”
@@ -173,7 +173,7 @@ Install the whole category: `--plugin gitlab-ci-tools`
 
 ### GitLab CI optimization
 
-[`gitlab-ci-optimization`](../skills/gitlab-ci-optimization/SKILL.md) · install: `--skill gitlab-ci-optimization`
+[`gitlab-ci-optimization`](../skills/development/gitlab-ci/gitlab-ci-optimization/SKILL.md) · install: `--skill gitlab-ci-optimization`
 
 - “Our GitLab pipeline takes 40 minutes. How can we speed it up?”
 - “The cache doesn't seem to help in our pipeline. Can you tune it?”
@@ -181,7 +181,7 @@ Install the whole category: `--plugin gitlab-ci-tools`
 
 ### GitLab CI pipeline authoring
 
-[`gitlab-ci-pipeline-authoring`](../skills/gitlab-ci-pipeline-authoring/SKILL.md) · install: `--skill gitlab-ci-pipeline-authoring`
+[`gitlab-ci-pipeline-authoring`](../skills/development/gitlab-ci/gitlab-ci-pipeline-authoring/SKILL.md) · install: `--skill gitlab-ci-pipeline-authoring`
 
 - “Create a .gitlab-ci.yml that builds, tests and deploys my Node app.”
 - “Add a job that only runs on merge requests when files in src/ change.”
@@ -193,7 +193,7 @@ Install the whole category: `--plugin writing-tools`
 
 ### Professional writing: blog, CV, docs
 
-[`professional-writing`](../skills/professional-writing/SKILL.md) · install: `--skill professional-writing`
+[`professional-writing`](../skills/generic/writing/professional-writing/SKILL.md) · install: `--skill professional-writing`
 
 - “Help me write a blog post comparing test tools for Android: Espresso, UI Automator and Appium.”
 - “Here's my CV and a job post. Tailor my CV to this role without making anything up.”
@@ -206,7 +206,7 @@ Install the whole category: `--plugin image-tools`
 
 ### Image inspector: pixels and description
 
-[`image-inspector`](../skills/image-inspector/SKILL.md) · install: `--skill image-inspector`
+[`image-inspector`](../skills/testing/tools/image-inspector/SKILL.md) · install: `--skill image-inspector`
 
 - “Describe this screenshot.png for me: size, main colours and what's on it.”
 - “What is the exact hex colour of the pixel at 120,48 in banner.jpg?”
@@ -221,7 +221,7 @@ Install the whole category: `--plugin video-tools`
 
 ### Video inspector: frames, pixels and description
 
-[`video-inspector`](../skills/video-inspector/SKILL.md) · install: `--skill video-inspector`
+[`video-inspector`](../skills/testing/tools/video-inspector/SKILL.md) · install: `--skill video-inspector`
 
 - “Analyse recording.mp4 and describe what happens in it, with a timeline.”
 - “Split demo.mp4 into frames, one every 2 seconds, and save them as PNG.”
@@ -235,7 +235,7 @@ Install the whole category: `--plugin testing-tools`
 
 ### Kotlin unit tests: class/method-wise testing, verification and HTML report
 
-[`kotlin-unit-test`](../skills/kotlin-unit-test/SKILL.md) · install: `--skill kotlin-unit-test`
+[`kotlin-unit-test`](../skills/testing/libs/kotlin-unit-test/SKILL.md) · install: `--skill kotlin-unit-test`
 
 - “Write unit tests for every method of OrderService.kt and run them.”
 - “Run the Kotlin tests for class PriceCalculator and give me an HTML report.”
@@ -245,7 +245,7 @@ Install the whole category: `--plugin testing-tools`
 
 ### Python unit tests: write, run, diagnose and suggest fixes
 
-[`python-unit-test`](../skills/python-unit-test/SKILL.md) · install: `--skill python-unit-test`
+[`python-unit-test`](../skills/testing/libs/python-unit-test/SKILL.md) · install: `--skill python-unit-test`
 
 - “Write unit tests for every function in utils.py and run them.”
 - “Unit test parser.py and suggest a fix for whatever fails.”
@@ -258,7 +258,7 @@ Install the whole category: `--plugin shell-tools`
 
 ### PowerShell Commands for Agents
 
-[`powershell-commands`](../skills/powershell-commands/SKILL.md) · install: `--skill powershell-commands`
+[`powershell-commands`](../skills/external-tools/powershell/powershell-commands/SKILL.md) · install: `--skill powershell-commands`
 
 - “This `git add . && git commit` fails in PowerShell with a token '&&' error. How do I run it?”
 - “Translate this bash one-liner to PowerShell: grep -rn TODO src | wc -l”
@@ -271,7 +271,7 @@ Install the whole category: `--plugin learning-tools`
 
 ### Python tutor: explain a file and make interview notes
 
-[`python-tutor`](../skills/python-tutor/SKILL.md) · install: `--skill python-tutor`
+[`python-tutor`](../skills/generic/learning/python-tutor/SKILL.md) · install: `--skill python-tutor`
 
 - “Explain this Python file to me like I'm a beginner, then go deeper, and make me an HTML study page.”
 - “I have a Python interview next week. Use utils.py to prepare notes and questions for me.”
@@ -284,7 +284,7 @@ Install the whole category: `--plugin ai-efficiency-tools`
 
 ### AI token saver: audit a project and spend fewer tokens
 
-[`ai-token-saver`](../skills/ai-token-saver/SKILL.md) · install: `--skill ai-token-saver`
+[`ai-token-saver`](../skills/generic/ai-efficiency/ai-token-saver/SKILL.md) · install: `--skill ai-token-saver`
 
 - “I keep hitting my AI usage limit. Audit this repo and tell me what to exclude.”
 - “How do I reduce token usage and cost when coding with an AI IDE?”
@@ -292,7 +292,7 @@ Install the whole category: `--plugin ai-efficiency-tools`
 
 ### Context engineering: one central context for every agent
 
-[`context-engineering`](../skills/context-engineering/SKILL.md) · install: `--skill context-engineering`
+[`context-engineering`](../skills/generic/ai-efficiency/context-engineering/SKILL.md) · install: `--skill context-engineering`
 
 - “My repo has CLAUDE.md, GEMINI.md and Copilot instructions that disagree. Centralize them into one source of truth.”
 - “Set up a context engineering approach for this project so every AI agent loads the same short brief.”
@@ -304,7 +304,7 @@ Install the whole category: `--plugin git-getting-started`
 
 ### Basic Snapshotting
 
-[`git-basic-snapshotting`](../skills/git-basic-snapshotting/SKILL.md) · install: `--skill git-basic-snapshotting`
+[`git-basic-snapshotting`](../skills/development/git-getting-started/git-basic-snapshotting/SKILL.md) · install: `--skill git-basic-snapshotting`
 
 - “Explain the basic add, status, diff and commit workflow in Git.”
 - “How do I remove a file from Git but keep it on disk?”
@@ -312,7 +312,7 @@ Install the whole category: `--plugin git-getting-started`
 
 ### First-Time Git Setup
 
-[`git-first-time-git-setup`](../skills/git-first-time-git-setup/SKILL.md) · install: `--skill git-first-time-git-setup`
+[`git-first-time-git-setup`](../skills/development/git-getting-started/git-first-time-git-setup/SKILL.md) · install: `--skill git-first-time-git-setup`
 
 - “I just installed Git. What should I configure first?”
 - “Set my Git name and email globally.”
@@ -320,7 +320,7 @@ Install the whole category: `--plugin git-getting-started`
 
 ### Getting a Git Repository
 
-[`git-getting-a-git-repository`](../skills/git-getting-a-git-repository/SKILL.md) · install: `--skill git-getting-a-git-repository`
+[`git-getting-a-git-repository`](../skills/development/git-getting-started/git-getting-a-git-repository/SKILL.md) · install: `--skill git-getting-a-git-repository`
 
 - “Turn this existing folder into a Git repository.”
 - “Clone https://github.com/libgit2/libgit2 into a folder named mylibgit.”
@@ -328,7 +328,7 @@ Install the whole category: `--plugin git-getting-started`
 
 ### Getting Help
 
-[`git-getting-help`](../skills/git-getting-help/SKILL.md) · install: `--skill git-getting-help`
+[`git-getting-help`](../skills/development/git-getting-started/git-getting-help/SKILL.md) · install: `--skill git-getting-help`
 
 - “How do I see the manual page for git commit?”
 - “Show me a quick summary of the options for git add.”
@@ -336,7 +336,7 @@ Install the whole category: `--plugin git-getting-started`
 
 ### Git Aliases
 
-[`git-aliases`](../skills/git-aliases/SKILL.md) · install: `--skill git-aliases`
+[`git-aliases`](../skills/development/git-getting-started/git-aliases/SKILL.md) · install: `--skill git-aliases`
 
 - “Create a git alias so 'git st' runs git status.”
 - “Make a 'git last' command that shows the last commit.”
@@ -344,7 +344,7 @@ Install the whole category: `--plugin git-getting-started`
 
 ### Installing Git
 
-[`git-installing-git`](../skills/git-installing-git/SKILL.md) · install: `--skill git-installing-git`
+[`git-installing-git`](../skills/development/git-getting-started/git-installing-git/SKILL.md) · install: `--skill git-installing-git`
 
 - “How do I install Git on Ubuntu?”
 - “Install the latest Git on my Mac.”
@@ -352,7 +352,7 @@ Install the whole category: `--plugin git-getting-started`
 
 ### Recording Changes to the Repository
 
-[`git-recording-changes-to-the-repository`](../skills/git-recording-changes-to-the-repository/SKILL.md) · install: `--skill git-recording-changes-to-the-repository`
+[`git-recording-changes-to-the-repository`](../skills/development/git-getting-started/git-recording-changes-to-the-repository/SKILL.md) · install: `--skill git-recording-changes-to-the-repository`
 
 - “How do I stage only some files and commit them?”
 - “Make Git ignore all .log files and the build/ folder.”
@@ -360,7 +360,7 @@ Install the whole category: `--plugin git-getting-started`
 
 ### Setup and Config
 
-[`git-setup-and-config`](../skills/git-setup-and-config/SKILL.md) · install: `--skill git-setup-and-config`
+[`git-setup-and-config`](../skills/development/git-getting-started/git-setup-and-config/SKILL.md) · install: `--skill git-setup-and-config`
 
 - “Show me all my Git config settings and where each one comes from.”
 - “What's the difference between --system, --global and --local config in Git?”
@@ -368,7 +368,7 @@ Install the whole category: `--plugin git-getting-started`
 
 ### Tagging
 
-[`git-tagging`](../skills/git-tagging/SKILL.md) · install: `--skill git-tagging`
+[`git-tagging`](../skills/development/git-getting-started/git-tagging/SKILL.md) · install: `--skill git-tagging`
 
 - “Create an annotated tag v1.2.0 with a message and push it.”
 - “List all tags that start with v2.”
@@ -376,7 +376,7 @@ Install the whole category: `--plugin git-getting-started`
 
 ### Undoing Things
 
-[`git-undoing-things`](../skills/git-undoing-things/SKILL.md) · install: `--skill git-undoing-things`
+[`git-undoing-things`](../skills/development/git-getting-started/git-undoing-things/SKILL.md) · install: `--skill git-undoing-things`
 
 - “I forgot to add a file to my last commit. How do I fix it?”
 - “Unstage a file I accidentally added.”
@@ -384,7 +384,7 @@ Install the whole category: `--plugin git-getting-started`
 
 ### Viewing the Commit History
 
-[`git-viewing-the-commit-history`](../skills/git-viewing-the-commit-history/SKILL.md) · install: `--skill git-viewing-the-commit-history`
+[`git-viewing-the-commit-history`](../skills/development/git-getting-started/git-viewing-the-commit-history/SKILL.md) · install: `--skill git-viewing-the-commit-history`
 
 - “Show the last 5 commits with the diffs.”
 - “Find the commits that added or removed the string 'getUserToken'.”
@@ -396,7 +396,7 @@ Install the whole category: `--plugin git-branching`
 
 ### Advanced Merging
 
-[`git-advanced-merging`](../skills/git-advanced-merging/SKILL.md) · install: `--skill git-advanced-merging`
+[`git-advanced-merging`](../skills/development/git-branching/git-advanced-merging/SKILL.md) · install: `--skill git-advanced-merging`
 
 - “Abort this merge, it went wrong.”
 - “During a merge conflict, take their version of every conflicting file.”
@@ -404,7 +404,7 @@ Install the whole category: `--plugin git-branching`
 
 ### Basic Branching and Merging
 
-[`git-basic-branching-and-merging`](../skills/git-basic-branching-and-merging/SKILL.md) · install: `--skill git-basic-branching-and-merging`
+[`git-basic-branching-and-merging`](../skills/development/git-branching/git-basic-branching-and-merging/SKILL.md) · install: `--skill git-basic-branching-and-merging`
 
 - “Create a hotfix branch, fix the bug, and merge it back into main.”
 - “I got 'CONFLICT (content): Merge conflict in index.html'. What do I do?”
@@ -412,7 +412,7 @@ Install the whole category: `--plugin git-branching`
 
 ### Branch Management
 
-[`git-branch-management`](../skills/git-branch-management/SKILL.md) · install: `--skill git-branch-management`
+[`git-branch-management`](../skills/development/git-branching/git-branch-management/SKILL.md) · install: `--skill git-branch-management`
 
 - “List the branches already merged into main so I can delete them.”
 - “Rename my local branch from 'feat' to 'feature/login'.”
@@ -420,7 +420,7 @@ Install the whole category: `--plugin git-branching`
 
 ### Branches in a Nutshell
 
-[`git-branches-in-a-nutshell`](../skills/git-branches-in-a-nutshell/SKILL.md) · install: `--skill git-branches-in-a-nutshell`
+[`git-branches-in-a-nutshell`](../skills/development/git-branching/git-branches-in-a-nutshell/SKILL.md) · install: `--skill git-branches-in-a-nutshell`
 
 - “Explain how Git branches and HEAD actually work.”
 - “Create a branch called testing and switch to it.”
@@ -428,7 +428,7 @@ Install the whole category: `--plugin git-branching`
 
 ### Rebasing
 
-[`git-rebasing`](../skills/git-rebasing/SKILL.md) · install: `--skill git-rebasing`
+[`git-rebasing`](../skills/development/git-branching/git-rebasing/SKILL.md) · install: `--skill git-rebasing`
 
 - “Rebase my feature branch onto the latest main without a merge commit.”
 - “Move a branch that was based on 'server' so it sits directly on main using --onto.”
@@ -436,7 +436,7 @@ Install the whole category: `--plugin git-branching`
 
 ### Remote Branches
 
-[`git-remote-branches`](../skills/git-remote-branches/SKILL.md) · install: `--skill git-remote-branches`
+[`git-remote-branches`](../skills/development/git-branching/git-remote-branches/SKILL.md) · install: `--skill git-remote-branches`
 
 - “Make my local branch track origin/develop.”
 - “Delete the branch 'old-feature' on the remote.”
@@ -444,7 +444,7 @@ Install the whole category: `--plugin git-branching`
 
 ### Rerere
 
-[`git-rerere`](../skills/git-rerere/SKILL.md) · install: `--skill git-rerere`
+[`git-rerere`](../skills/development/git-branching/git-rerere/SKILL.md) · install: `--skill git-rerere`
 
 - “Make Git remember how I resolved conflicts so it reapplies the fix next time.”
 - “Turn on rerere and show me what it has recorded.”
@@ -456,7 +456,7 @@ Install the whole category: `--plugin git-collaboration`
 
 ### Contributing to a Project
 
-[`git-distributed-git-contributing-to-a-project`](../skills/git-distributed-git-contributing-to-a-project/SKILL.md) · install: `--skill git-distributed-git-contributing-to-a-project`
+[`git-distributed-git-contributing-to-a-project`](../skills/development/git-collaboration/git-distributed-git-contributing-to-a-project/SKILL.md) · install: `--skill git-distributed-git-contributing-to-a-project`
 
 - “What makes a good commit message?”
 - “How do I contribute to a project by sending patches by email?”
@@ -464,7 +464,7 @@ Install the whole category: `--plugin git-collaboration`
 
 ### Contributing to a Project
 
-[`git-github-contributing-to-a-project`](../skills/git-github-contributing-to-a-project/SKILL.md) · install: `--skill git-github-contributing-to-a-project`
+[`git-github-contributing-to-a-project`](../skills/development/git-collaboration/git-github-contributing-to-a-project/SKILL.md) · install: `--skill git-github-contributing-to-a-project`
 
 - “Fork a GitHub project, make a change, and open a pull request.”
 - “Update my pull request after the maintainer asked for changes.”
@@ -472,7 +472,7 @@ Install the whole category: `--plugin git-collaboration`
 
 ### Credential Storage
 
-[`git-credential-storage`](../skills/git-credential-storage/SKILL.md) · install: `--skill git-credential-storage`
+[`git-credential-storage`](../skills/development/git-collaboration/git-credential-storage/SKILL.md) · install: `--skill git-credential-storage`
 
 - “Stop Git asking for my password on every push.”
 - “Cache my Git credentials for 1 hour.”
@@ -480,7 +480,7 @@ Install the whole category: `--plugin git-collaboration`
 
 ### Generating Your SSH Public Key
 
-[`git-generating-your-ssh-public-key`](../skills/git-generating-your-ssh-public-key/SKILL.md) · install: `--skill git-generating-your-ssh-public-key`
+[`git-generating-your-ssh-public-key`](../skills/development/git-collaboration/git-generating-your-ssh-public-key/SKILL.md) · install: `--skill git-generating-your-ssh-public-key`
 
 - “Generate an SSH key to use with Git.”
 - “Do I already have an SSH key? Where is it stored?”
@@ -488,7 +488,7 @@ Install the whole category: `--plugin git-collaboration`
 
 ### Getting Git on a Server
 
-[`git-getting-git-on-a-server`](../skills/git-getting-git-on-a-server/SKILL.md) · install: `--skill git-getting-git-on-a-server`
+[`git-getting-git-on-a-server`](../skills/development/git-collaboration/git-getting-git-on-a-server/SKILL.md) · install: `--skill git-getting-git-on-a-server`
 
 - “Create a bare repository to put on my server.”
 - “Set up a shared Git repo on a Linux server that my team can push to.”
@@ -496,7 +496,7 @@ Install the whole category: `--plugin git-collaboration`
 
 ### Git Daemon
 
-[`git-daemon`](../skills/git-daemon/SKILL.md) · install: `--skill git-daemon`
+[`git-daemon`](../skills/development/git-collaboration/git-daemon/SKILL.md) · install: `--skill git-daemon`
 
 - “Serve my repositories read-only with git daemon.”
 - “Run git daemon as a systemd service.”
@@ -504,7 +504,7 @@ Install the whole category: `--plugin git-collaboration`
 
 ### GitWeb
 
-[`git-gitweb`](../skills/git-gitweb/SKILL.md) · install: `--skill git-gitweb`
+[`git-gitweb`](../skills/development/git-collaboration/git-gitweb/SKILL.md) · install: `--skill git-gitweb`
 
 - “Set up GitWeb to browse my repositories in a web browser.”
 - “Run a quick GitWeb instance with git instaweb.”
@@ -512,7 +512,7 @@ Install the whole category: `--plugin git-collaboration`
 
 ### Maintaining a Project
 
-[`git-distributed-git-maintaining-a-project`](../skills/git-distributed-git-maintaining-a-project/SKILL.md) · install: `--skill git-distributed-git-maintaining-a-project`
+[`git-distributed-git-maintaining-a-project`](../skills/development/git-collaboration/git-distributed-git-maintaining-a-project/SKILL.md) · install: `--skill git-distributed-git-maintaining-a-project`
 
 - “Apply a patch someone emailed me with git am.”
 - “Review the changes a contributor's branch introduces before I merge it.”
@@ -520,7 +520,7 @@ Install the whole category: `--plugin git-collaboration`
 
 ### Maintaining a Project
 
-[`git-github-maintaining-a-project`](../skills/git-github-maintaining-a-project/SKILL.md) · install: `--skill git-github-maintaining-a-project`
+[`git-github-maintaining-a-project`](../skills/development/git-collaboration/git-github-maintaining-a-project/SKILL.md) · install: `--skill git-github-maintaining-a-project`
 
 - “Check out a GitHub pull request locally to test it.”
 - “Add collaborators to my GitHub repository.”
@@ -528,7 +528,7 @@ Install the whole category: `--plugin git-collaboration`
 
 ### Scripting GitHub
 
-[`git-scripting-github`](../skills/git-scripting-github/SKILL.md) · install: `--skill git-scripting-github`
+[`git-scripting-github`](../skills/development/git-collaboration/git-scripting-github/SKILL.md) · install: `--skill git-scripting-github`
 
 - “Use the GitHub API to comment on an issue.”
 - “Set the commit status on GitHub from a script.”
@@ -536,7 +536,7 @@ Install the whole category: `--plugin git-collaboration`
 
 ### Setting Up the Server
 
-[`git-setting-up-the-server`](../skills/git-setting-up-the-server/SKILL.md) · install: `--skill git-setting-up-the-server`
+[`git-setting-up-the-server`](../skills/development/git-collaboration/git-setting-up-the-server/SKILL.md) · install: `--skill git-setting-up-the-server`
 
 - “Set up a git user on my server that accepts SSH keys from my team.”
 - “Restrict the git user so it can only run Git commands (git-shell).”
@@ -544,7 +544,7 @@ Install the whole category: `--plugin git-collaboration`
 
 ### Smart HTTP
 
-[`git-smart-http`](../skills/git-smart-http/SKILL.md) · install: `--skill git-smart-http`
+[`git-smart-http`](../skills/development/git-collaboration/git-smart-http/SKILL.md) · install: `--skill git-smart-http`
 
 - “Set up Smart HTTP for Git with Apache.”
 - “Configure git-http-backend so pushes over HTTP require a password.”
@@ -552,7 +552,7 @@ Install the whole category: `--plugin git-collaboration`
 
 ### The Protocols
 
-[`git-the-protocols`](../skills/git-the-protocols/SKILL.md) · install: `--skill git-the-protocols`
+[`git-the-protocols`](../skills/development/git-collaboration/git-the-protocols/SKILL.md) · install: `--skill git-the-protocols`
 
 - “Should I use SSH or HTTPS to host my Git repository?”
 - “Explain the local, HTTP, SSH and git:// protocols and their pros and cons.”
@@ -560,7 +560,7 @@ Install the whole category: `--plugin git-collaboration`
 
 ### Working with Remotes
 
-[`git-working-with-remotes`](../skills/git-working-with-remotes/SKILL.md) · install: `--skill git-working-with-remotes`
+[`git-working-with-remotes`](../skills/development/git-collaboration/git-working-with-remotes/SKILL.md) · install: `--skill git-working-with-remotes`
 
 - “List the remotes of this repository with their URLs.”
 - “Add a second remote called upstream and fetch from it.”
@@ -572,7 +572,7 @@ Install the whole category: `--plugin git-power-tools`
 
 ### Bundling
 
-[`git-bundling`](../skills/git-bundling/SKILL.md) · install: `--skill git-bundling`
+[`git-bundling`](../skills/development/git-power-tools/git-bundling/SKILL.md) · install: `--skill git-bundling`
 
 - “Send my repository to someone without network access.”
 - “Create a git bundle with only the last 10 commits.”
@@ -580,7 +580,7 @@ Install the whole category: `--plugin git-power-tools`
 
 ### Debugging with Git
 
-[`git-debugging-with-git`](../skills/git-debugging-with-git/SKILL.md) · install: `--skill git-debugging-with-git`
+[`git-debugging-with-git`](../skills/development/git-power-tools/git-debugging-with-git/SKILL.md) · install: `--skill git-debugging-with-git`
 
 - “Use git bisect to find which commit introduced a bug.”
 - “Who last changed lines 10 to 20 of app.py?”
@@ -588,7 +588,7 @@ Install the whole category: `--plugin git-power-tools`
 
 ### Interactive Staging
 
-[`git-interactive-staging`](../skills/git-interactive-staging/SKILL.md) · install: `--skill git-interactive-staging`
+[`git-interactive-staging`](../skills/development/git-power-tools/git-interactive-staging/SKILL.md) · install: `--skill git-interactive-staging`
 
 - “Stage only some of the changes in a file.”
 - “Use git add -p to split my changes into two commits.”
@@ -596,7 +596,7 @@ Install the whole category: `--plugin git-power-tools`
 
 ### Replace
 
-[`git-replace`](../skills/git-replace/SKILL.md) · install: `--skill git-replace`
+[`git-replace`](../skills/development/git-power-tools/git-replace/SKILL.md) · install: `--skill git-replace`
 
 - “Make Git treat one commit as if it were another with git replace.”
 - “Graft old project history onto a shortened repository.”
@@ -604,7 +604,7 @@ Install the whole category: `--plugin git-power-tools`
 
 ### Reset Demystified
 
-[`git-reset-demystified`](../skills/git-reset-demystified/SKILL.md) · install: `--skill git-reset-demystified`
+[`git-reset-demystified`](../skills/development/git-power-tools/git-reset-demystified/SKILL.md) · install: `--skill git-reset-demystified`
 
 - “Explain the difference between git reset --soft, --mixed and --hard.”
 - “Undo my last commit but keep the changes staged.”
@@ -612,7 +612,7 @@ Install the whole category: `--plugin git-power-tools`
 
 ### Revision Selection
 
-[`git-revision-selection`](../skills/git-revision-selection/SKILL.md) · install: `--skill git-revision-selection`
+[`git-revision-selection`](../skills/development/git-power-tools/git-revision-selection/SKILL.md) · install: `--skill git-revision-selection`
 
 - “What does HEAD~3 versus HEAD^2 mean?”
 - “Show the commits on my branch that are not on main.”
@@ -620,7 +620,7 @@ Install the whole category: `--plugin git-power-tools`
 
 ### Rewriting History
 
-[`git-rewriting-history`](../skills/git-rewriting-history/SKILL.md) · install: `--skill git-rewriting-history`
+[`git-rewriting-history`](../skills/development/git-power-tools/git-rewriting-history/SKILL.md) · install: `--skill git-rewriting-history`
 
 - “Change the message of a commit three commits back.”
 - “Squash my last 4 commits into one.”
@@ -628,7 +628,7 @@ Install the whole category: `--plugin git-power-tools`
 
 ### Searching
 
-[`git-searching`](../skills/git-searching/SKILL.md) · install: `--skill git-searching`
+[`git-searching`](../skills/development/git-power-tools/git-searching/SKILL.md) · install: `--skill git-searching`
 
 - “Search the whole repository for 'TODO' with line numbers.”
 - “Find when the function parseConfig was introduced.”
@@ -636,7 +636,7 @@ Install the whole category: `--plugin git-power-tools`
 
 ### Signing Your Work
 
-[`git-signing-your-work`](../skills/git-signing-your-work/SKILL.md) · install: `--skill git-signing-your-work`
+[`git-signing-your-work`](../skills/development/git-power-tools/git-signing-your-work/SKILL.md) · install: `--skill git-signing-your-work`
 
 - “Sign my commits with GPG.”
 - “Create a signed tag and verify it.”
@@ -644,7 +644,7 @@ Install the whole category: `--plugin git-power-tools`
 
 ### Stashing and Cleaning
 
-[`git-stashing-and-cleaning`](../skills/git-stashing-and-cleaning/SKILL.md) · install: `--skill git-stashing-and-cleaning`
+[`git-stashing-and-cleaning`](../skills/development/git-power-tools/git-stashing-and-cleaning/SKILL.md) · install: `--skill git-stashing-and-cleaning`
 
 - “I have half-done changes and need to switch branches urgently.”
 - “Stash my changes including untracked files, then restore them later.”
@@ -652,7 +652,7 @@ Install the whole category: `--plugin git-power-tools`
 
 ### Submodules
 
-[`git-submodules`](../skills/git-submodules/SKILL.md) · install: `--skill git-submodules`
+[`git-submodules`](../skills/development/git-power-tools/git-submodules/SKILL.md) · install: `--skill git-submodules`
 
 - “Add a library as a git submodule.”
 - “Clone a repository together with all its submodules.”
@@ -664,7 +664,7 @@ Install the whole category: `--plugin git-customization`
 
 ### An Example Git-Enforced Policy
 
-[`git-an-example-git-enforced-policy`](../skills/git-an-example-git-enforced-policy/SKILL.md) · install: `--skill git-an-example-git-enforced-policy`
+[`git-an-example-git-enforced-policy`](../skills/development/git-customization/git-an-example-git-enforced-policy/SKILL.md) · install: `--skill git-an-example-git-enforced-policy`
 
 - “Enforce a commit message format on the server with an update hook.”
 - “Restrict which users can push to which directories.”
@@ -672,7 +672,7 @@ Install the whole category: `--plugin git-customization`
 
 ### Environment Variables
 
-[`git-environment-variables`](../skills/git-environment-variables/SKILL.md) · install: `--skill git-environment-variables`
+[`git-environment-variables`](../skills/development/git-customization/git-environment-variables/SKILL.md) · install: `--skill git-environment-variables`
 
 - “Which environment variable sets the committer date in Git?”
 - “Debug a slow git fetch with GIT_TRACE.”
@@ -680,7 +680,7 @@ Install the whole category: `--plugin git-customization`
 
 ### Git Attributes
 
-[`git-attributes`](../skills/git-attributes/SKILL.md) · install: `--skill git-attributes`
+[`git-attributes`](../skills/development/git-customization/git-attributes/SKILL.md) · install: `--skill git-attributes`
 
 - “Tell Git to treat *.pdf files as binary.”
 - “Diff Word documents in Git in a readable way.”
@@ -688,7 +688,7 @@ Install the whole category: `--plugin git-customization`
 
 ### Git Configuration
 
-[`git-configuration`](../skills/git-configuration/SKILL.md) · install: `--skill git-configuration`
+[`git-configuration`](../skills/development/git-customization/git-configuration/SKILL.md) · install: `--skill git-configuration`
 
 - “Make Git colorize output and use a custom pager.”
 - “Configure core.autocrlf correctly for a team on Windows and Linux.”
@@ -696,7 +696,7 @@ Install the whole category: `--plugin git-customization`
 
 ### Git Hooks
 
-[`git-hooks`](../skills/git-hooks/SKILL.md) · install: `--skill git-hooks`
+[`git-hooks`](../skills/development/git-customization/git-hooks/SKILL.md) · install: `--skill git-hooks`
 
 - “Block commits whose message doesn't start with a ticket ID like ABC-123.”
 - “Run my test suite before every commit with a pre-commit hook.”
@@ -708,7 +708,7 @@ Install the whole category: `--plugin git-internals`
 
 ### Git Objects
 
-[`git-objects`](../skills/git-objects/SKILL.md) · install: `--skill git-objects`
+[`git-objects`](../skills/development/git-internals/git-objects/SKILL.md) · install: `--skill git-objects`
 
 - “Explain blobs, trees and commits in Git internals.”
 - “Create a Git object by hand with hash-object and read it back with cat-file.”
@@ -716,7 +716,7 @@ Install the whole category: `--plugin git-internals`
 
 ### Git References
 
-[`git-references`](../skills/git-references/SKILL.md) · install: `--skill git-references`
+[`git-references`](../skills/development/git-internals/git-references/SKILL.md) · install: `--skill git-references`
 
 - “How are branches stored inside .git?”
 - “Update a branch ref directly with git update-ref.”
@@ -724,7 +724,7 @@ Install the whole category: `--plugin git-internals`
 
 ### Maintenance and Data Recovery
 
-[`git-maintenance-and-data-recovery`](../skills/git-maintenance-and-data-recovery/SKILL.md) · install: `--skill git-maintenance-and-data-recovery`
+[`git-maintenance-and-data-recovery`](../skills/development/git-internals/git-maintenance-and-data-recovery/SKILL.md) · install: `--skill git-maintenance-and-data-recovery`
 
 - “I deleted a branch by accident. How do I get it back?”
 - “Find and remove a huge file that is bloating my repository.”
@@ -732,7 +732,7 @@ Install the whole category: `--plugin git-internals`
 
 ### Packfiles
 
-[`git-packfiles`](../skills/git-packfiles/SKILL.md) · install: `--skill git-packfiles`
+[`git-packfiles`](../skills/development/git-internals/git-packfiles/SKILL.md) · install: `--skill git-packfiles`
 
 - “Why is my .git folder so big? Explain packfiles.”
 - “Inspect the contents of a packfile with git verify-pack.”
@@ -740,7 +740,7 @@ Install the whole category: `--plugin git-internals`
 
 ### Plumbing and Porcelain
 
-[`git-plumbing-and-porcelain`](../skills/git-plumbing-and-porcelain/SKILL.md) · install: `--skill git-plumbing-and-porcelain`
+[`git-plumbing-and-porcelain`](../skills/development/git-internals/git-plumbing-and-porcelain/SKILL.md) · install: `--skill git-plumbing-and-porcelain`
 
 - “What's the difference between plumbing and porcelain commands in Git?”
 - “What's inside the .git directory?”
@@ -748,7 +748,7 @@ Install the whole category: `--plugin git-internals`
 
 ### The Refspec
 
-[`git-the-refspec`](../skills/git-the-refspec/SKILL.md) · install: `--skill git-the-refspec`
+[`git-the-refspec`](../skills/development/git-internals/git-the-refspec/SKILL.md) · install: `--skill git-the-refspec`
 
 - “Explain the refspec +refs/heads/*:refs/remotes/origin/*.”
 - “Fetch only the main branch from a remote by default.”
@@ -756,7 +756,7 @@ Install the whole category: `--plugin git-internals`
 
 ### Transfer Protocols
 
-[`git-transfer-protocols`](../skills/git-transfer-protocols/SKILL.md) · install: `--skill git-transfer-protocols`
+[`git-transfer-protocols`](../skills/development/git-internals/git-transfer-protocols/SKILL.md) · install: `--skill git-transfer-protocols`
 
 - “How does git fetch talk to the server over HTTP?”
 - “Explain the dumb versus smart Git transfer protocols.”
@@ -768,7 +768,7 @@ Install the whole category: `--plugin git-integrations`
 
 ### Git as a Client
 
-[`git-as-a-client`](../skills/git-as-a-client/SKILL.md) · install: `--skill git-as-a-client`
+[`git-as-a-client`](../skills/development/git-integrations/git-as-a-client/SKILL.md) · install: `--skill git-as-a-client`
 
 - “Use Git with a Subversion repository via git svn.”
 - “Push my Git commits back to SVN with git svn dcommit.”
@@ -776,7 +776,7 @@ Install the whole category: `--plugin git-integrations`
 
 ### Git in PowerShell
 
-[`git-in-powershell`](../skills/git-in-powershell/SKILL.md) · install: `--skill git-in-powershell`
+[`git-in-powershell`](../skills/development/git-integrations/git-in-powershell/SKILL.md) · install: `--skill git-in-powershell`
 
 - “Set up posh-git so PowerShell shows Git status in my prompt.”
 - “Install posh-git on Windows.”
@@ -784,7 +784,7 @@ Install the whole category: `--plugin git-integrations`
 
 ### JGit
 
-[`git-jgit`](../skills/git-jgit/SKILL.md) · install: `--skill git-jgit`
+[`git-jgit`](../skills/development/git-integrations/git-jgit/SKILL.md) · install: `--skill git-jgit`
 
 - “Use JGit to open a repository and read the latest commit in Java.”
 - “Clone a repository from Java code.”
@@ -792,7 +792,7 @@ Install the whole category: `--plugin git-integrations`
 
 ### Libgit2
 
-[`git-libgit2`](../skills/git-libgit2/SKILL.md) · install: `--skill git-libgit2`
+[`git-libgit2`](../skills/development/git-integrations/git-libgit2/SKILL.md) · install: `--skill git-libgit2`
 
 - “Use libgit2 to read a commit in C.”
 - “What language bindings exist for libgit2?”
@@ -800,7 +800,7 @@ Install the whole category: `--plugin git-integrations`
 
 ### Migrating to Git
 
-[`git-migrating-to-git`](../skills/git-migrating-to-git/SKILL.md) · install: `--skill git-migrating-to-git`
+[`git-migrating-to-git`](../skills/development/git-integrations/git-migrating-to-git/SKILL.md) · install: `--skill git-migrating-to-git`
 
 - “Migrate our SVN repository to Git, keeping history and authors.”
 - “Convert a Mercurial repo to Git.”
@@ -812,7 +812,7 @@ Install the whole category: `--plugin git-reference`
 
 ### Pro Git (full reference)
 
-[`git-pro`](../skills/git-pro/SKILL.md) · install: `--skill git-pro`
+[`git-pro`](../skills/development/git-reference/git-pro/SKILL.md) · install: `--skill git-pro`
 
 - “Explain how Git stores data compared to other version control systems.”
 - “Give me an overview of Git's distributed workflows.”

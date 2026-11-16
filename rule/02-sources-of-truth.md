@@ -2,7 +2,8 @@
 
 | What | Where |
 |---|---|
-| The skill itself | `skills/<name>/SKILL.md` (+ `references/`, `scripts/`, `assets/`) |
+| The skill itself | `skills/<area>/<group>/<name>/SKILL.md` (+ `references/`, `scripts/`, `assets/`) |
+| A skill's area and group | Its folder path. Areas are `AREAS` in `tools/hublib.py`; a group is any subfolder of an area. Always exactly three levels: area, group, skill |
 | Plugin / category membership | `.claude-plugin/marketplace.json` (family bundles must also list their member skills) |
 | Example prompts | `examples/prompts.json` (at least 2 per skill) |
 | Folders each agent reads | `AGENTS` dict in `tools/install.py`. Change only from the vendor's official docs and update its `docs` link |

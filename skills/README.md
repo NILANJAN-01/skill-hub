@@ -4,195 +4,223 @@
 
 88 skills in 21 categories. Every skill is a standard Agent Skill and works in Claude Code, Google Antigravity, Devin, GitHub Copilot, Cursor, Windsurf, Codex and Gemini CLI. Install a category with `python tools/install.py --agent <agent> --plugin <category>`; see the [main README](../README.md#install) for every option.
 
+## Folder layout
+
+A skill lives in `skills/<area>/<group>/<skill>/`. The area and group only organise the source: a skill is still installed, and named, by its own folder name. The sections after this table list the skills by category (plugin), which is what you install.
+
+| Area | Group | Skills |
+|---|---|---|
+| `testing/` | `aaos-testing/` | [`android-logcat-analyzer`](testing/aaos-testing/android-logcat-analyzer/SKILL.md), [`android-uiautomator-locators`](testing/aaos-testing/android-uiautomator-locators/SKILL.md) |
+| `testing/` | `libs/` | [`kotlin-unit-test`](testing/libs/kotlin-unit-test/SKILL.md), [`python-unit-test`](testing/libs/python-unit-test/SKILL.md) |
+| `testing/` | `tools/` | [`image-inspector`](testing/tools/image-inspector/SKILL.md), [`video-inspector`](testing/tools/video-inspector/SKILL.md) |
+| `development/` | `git-branching/` | [`git-advanced-merging`](development/git-branching/git-advanced-merging/SKILL.md), [`git-basic-branching-and-merging`](development/git-branching/git-basic-branching-and-merging/SKILL.md), [`git-branch-management`](development/git-branching/git-branch-management/SKILL.md), [`git-branches-in-a-nutshell`](development/git-branching/git-branches-in-a-nutshell/SKILL.md), [`git-rebasing`](development/git-branching/git-rebasing/SKILL.md), [`git-remote-branches`](development/git-branching/git-remote-branches/SKILL.md), [`git-rerere`](development/git-branching/git-rerere/SKILL.md) |
+| `development/` | `git-collaboration/` | [`git-credential-storage`](development/git-collaboration/git-credential-storage/SKILL.md), [`git-daemon`](development/git-collaboration/git-daemon/SKILL.md), [`git-distributed-git-contributing-to-a-project`](development/git-collaboration/git-distributed-git-contributing-to-a-project/SKILL.md), [`git-distributed-git-maintaining-a-project`](development/git-collaboration/git-distributed-git-maintaining-a-project/SKILL.md), [`git-generating-your-ssh-public-key`](development/git-collaboration/git-generating-your-ssh-public-key/SKILL.md), [`git-getting-git-on-a-server`](development/git-collaboration/git-getting-git-on-a-server/SKILL.md), [`git-github-contributing-to-a-project`](development/git-collaboration/git-github-contributing-to-a-project/SKILL.md), [`git-github-maintaining-a-project`](development/git-collaboration/git-github-maintaining-a-project/SKILL.md), [`git-gitweb`](development/git-collaboration/git-gitweb/SKILL.md), [`git-scripting-github`](development/git-collaboration/git-scripting-github/SKILL.md), [`git-setting-up-the-server`](development/git-collaboration/git-setting-up-the-server/SKILL.md), [`git-smart-http`](development/git-collaboration/git-smart-http/SKILL.md), [`git-the-protocols`](development/git-collaboration/git-the-protocols/SKILL.md), [`git-working-with-remotes`](development/git-collaboration/git-working-with-remotes/SKILL.md) |
+| `development/` | `git-customization/` | [`git-an-example-git-enforced-policy`](development/git-customization/git-an-example-git-enforced-policy/SKILL.md), [`git-attributes`](development/git-customization/git-attributes/SKILL.md), [`git-configuration`](development/git-customization/git-configuration/SKILL.md), [`git-environment-variables`](development/git-customization/git-environment-variables/SKILL.md), [`git-hooks`](development/git-customization/git-hooks/SKILL.md) |
+| `development/` | `git-getting-started/` | [`git-aliases`](development/git-getting-started/git-aliases/SKILL.md), [`git-basic-snapshotting`](development/git-getting-started/git-basic-snapshotting/SKILL.md), [`git-first-time-git-setup`](development/git-getting-started/git-first-time-git-setup/SKILL.md), [`git-getting-a-git-repository`](development/git-getting-started/git-getting-a-git-repository/SKILL.md), [`git-getting-help`](development/git-getting-started/git-getting-help/SKILL.md), [`git-installing-git`](development/git-getting-started/git-installing-git/SKILL.md), [`git-recording-changes-to-the-repository`](development/git-getting-started/git-recording-changes-to-the-repository/SKILL.md), [`git-setup-and-config`](development/git-getting-started/git-setup-and-config/SKILL.md), [`git-tagging`](development/git-getting-started/git-tagging/SKILL.md), [`git-undoing-things`](development/git-getting-started/git-undoing-things/SKILL.md), [`git-viewing-the-commit-history`](development/git-getting-started/git-viewing-the-commit-history/SKILL.md) |
+| `development/` | `git-integrations/` | [`git-as-a-client`](development/git-integrations/git-as-a-client/SKILL.md), [`git-in-powershell`](development/git-integrations/git-in-powershell/SKILL.md), [`git-jgit`](development/git-integrations/git-jgit/SKILL.md), [`git-libgit2`](development/git-integrations/git-libgit2/SKILL.md), [`git-migrating-to-git`](development/git-integrations/git-migrating-to-git/SKILL.md) |
+| `development/` | `git-internals/` | [`git-maintenance-and-data-recovery`](development/git-internals/git-maintenance-and-data-recovery/SKILL.md), [`git-objects`](development/git-internals/git-objects/SKILL.md), [`git-packfiles`](development/git-internals/git-packfiles/SKILL.md), [`git-plumbing-and-porcelain`](development/git-internals/git-plumbing-and-porcelain/SKILL.md), [`git-references`](development/git-internals/git-references/SKILL.md), [`git-the-refspec`](development/git-internals/git-the-refspec/SKILL.md), [`git-transfer-protocols`](development/git-internals/git-transfer-protocols/SKILL.md) |
+| `development/` | `git-power-tools/` | [`git-bundling`](development/git-power-tools/git-bundling/SKILL.md), [`git-debugging-with-git`](development/git-power-tools/git-debugging-with-git/SKILL.md), [`git-interactive-staging`](development/git-power-tools/git-interactive-staging/SKILL.md), [`git-replace`](development/git-power-tools/git-replace/SKILL.md), [`git-reset-demystified`](development/git-power-tools/git-reset-demystified/SKILL.md), [`git-revision-selection`](development/git-power-tools/git-revision-selection/SKILL.md), [`git-rewriting-history`](development/git-power-tools/git-rewriting-history/SKILL.md), [`git-searching`](development/git-power-tools/git-searching/SKILL.md), [`git-signing-your-work`](development/git-power-tools/git-signing-your-work/SKILL.md), [`git-stashing-and-cleaning`](development/git-power-tools/git-stashing-and-cleaning/SKILL.md), [`git-submodules`](development/git-power-tools/git-submodules/SKILL.md) |
+| `development/` | `git-reference/` | [`git-pro`](development/git-reference/git-pro/SKILL.md) |
+| `development/` | `gitlab-ci/` | [`gitlab-ci-debugging`](development/gitlab-ci/gitlab-ci-debugging/SKILL.md), [`gitlab-ci-optimization`](development/gitlab-ci/gitlab-ci-optimization/SKILL.md), [`gitlab-ci-pipeline-authoring`](development/gitlab-ci/gitlab-ci-pipeline-authoring/SKILL.md) |
+| `development/` | `repo/` | [`repo-architecture`](development/repo/repo-architecture/SKILL.md), [`repo-learnings`](development/repo/repo-learnings/SKILL.md) |
+| [`design/`](design/) | - | none yet |
+| `generic/` | `ai-efficiency/` | [`ai-token-saver`](generic/ai-efficiency/ai-token-saver/SKILL.md), [`context-engineering`](generic/ai-efficiency/context-engineering/SKILL.md) |
+| `generic/` | `hub/` | [`contribute-skill`](generic/hub/contribute-skill/SKILL.md), [`find-skills`](generic/hub/find-skills/SKILL.md), [`skill-orchestrator`](generic/hub/skill-orchestrator/SKILL.md), [`skill-router`](generic/hub/skill-router/SKILL.md), [`skillforge`](generic/hub/skillforge/SKILL.md), [`url-to-skill`](generic/hub/url-to-skill/SKILL.md) |
+| `generic/` | `learning/` | [`python-tutor`](generic/learning/python-tutor/SKILL.md) |
+| `generic/` | `writing/` | [`professional-writing`](generic/writing/professional-writing/SKILL.md) |
+| `external-tools/` | `adb/` | [`adb-connect`](external-tools/adb/adb-connect/SKILL.md), [`adb-debug`](external-tools/adb/adb-debug/SKILL.md), [`adb-device-control`](external-tools/adb/adb-device-control/SKILL.md), [`adb-tool`](external-tools/adb/adb-tool/SKILL.md) |
+| `external-tools/` | `gradle/` | [`gradle-android`](external-tools/gradle/gradle-android/SKILL.md) |
+| `external-tools/` | `powershell/` | [`powershell-commands`](external-tools/powershell/powershell-commands/SKILL.md) |
+
 ## Hub tools (`hub-tools`)
 
 | Skill | Description | Needs |
 |---|---|---|
-| [`contribute-skill`](contribute-skill/SKILL.md) | Add or update a skill in the skill-hub repository so that it validates, appears in the catalog and installs into every supported agent. Use when the user... | Works in any agent. Edits a skill-hub checkout, so it needs file-system and shell... |
-| [`find-skills`](find-skills/SKILL.md) | Search the skill-hub catalog for a skill that fits the task and install it into the agent in use. Use when the user asks "is there a skill for X", wants to... | Works in any agent. Installing writes into the agent's skills folder (needs... |
-| [`skill-orchestrator`](skill-orchestrator/SKILL.md) | Combine several installed skills to finish a multi-step task: find which skills are installed, pick the right ones, check they can run (adb, Python... | Needs Python 3.8+ (standard library only). It reads skill folders and writes only... |
-| [`skill-router`](skill-router/SKILL.md) | Route a request to the right installed skills: split it into parts, grade basic or advanced, check the needed file, link or tools are given. Use when... | Needs Python 3.8+ (standard library only). It reads skill folders and never writes,... |
-| [`skillforge`](skillforge/SKILL.md) | Turn a technical PDF (book, manual, handbook, spec) into a library of Agent Skills with the bundled offline generator (no LLM or API key). Use when the user... | - |
-| [`url-to-skill`](url-to-skill/SKILL.md) | Turn a web page or documentation site (an http/https link) into a reusable Agent Skill with a bundled Python script that fetches the page and writes... | Needs Python 3.8+ (standard library only) and internet access to the site. Pages that... |
+| [`contribute-skill`](generic/hub/contribute-skill/SKILL.md) | Add or update a skill in the skill-hub repository so that it validates, appears in the catalog and installs into every supported agent. Use when the user... | Works in any agent. Edits a skill-hub checkout, so it needs file-system and shell... |
+| [`find-skills`](generic/hub/find-skills/SKILL.md) | Search the skill-hub catalog for a skill that fits the task and install it into the agent in use. Use when the user asks "is there a skill for X", wants to... | Works in any agent. Installing writes into the agent's skills folder (needs... |
+| [`skill-orchestrator`](generic/hub/skill-orchestrator/SKILL.md) | Combine several installed skills to finish a multi-step task: find which skills are installed, pick the right ones, check they can run (adb, Python... | Needs Python 3.8+ (standard library only). It reads skill folders and writes only... |
+| [`skill-router`](generic/hub/skill-router/SKILL.md) | Route a request to the right installed skills: split it into parts, grade basic or advanced, check the needed file, link or tools are given. Use when... | Needs Python 3.8+ (standard library only). It reads skill folders and never writes,... |
+| [`skillforge`](generic/hub/skillforge/SKILL.md) | Turn a technical PDF (book, manual, handbook, spec) into a library of Agent Skills with the bundled offline generator (no LLM or API key). Use when the user... | - |
+| [`url-to-skill`](generic/hub/url-to-skill/SKILL.md) | Turn a web page or documentation site (an http/https link) into a reusable Agent Skill with a bundled Python script that fetches the page and writes... | Needs Python 3.8+ (standard library only) and internet access to the site. Pages that... |
 
 ## Android: UI tests & logcat (`android-automation`)
 
 | Skill | Description | Needs |
 |---|---|---|
-| [`android-logcat-analyzer`](android-logcat-analyzer/SKILL.md) | Analyse Android logcat output (a file, a bugreport zip, or a connected device over adb) with a ready-made Python script that reports fatal exceptions,... | Needs Python 3.8+ (standard library only). Reading from a device needs adb (Android... |
-| [`android-uiautomator-locators`](android-uiautomator-locators/SKILL.md) | Dump the current screen of a connected Android device over adb, or read an existing window_dump.xml, and generate a JSON locator file with UiSelector, By,... | Needs Python 3.8+ (standard library only). Capturing from a device needs adb (Android... |
+| [`android-logcat-analyzer`](testing/aaos-testing/android-logcat-analyzer/SKILL.md) | Analyse Android logcat output (a file, a bugreport zip, or a connected device over adb) with a ready-made Python script that reports fatal exceptions,... | Needs Python 3.8+ (standard library only). Reading from a device needs adb (Android... |
+| [`android-uiautomator-locators`](testing/aaos-testing/android-uiautomator-locators/SKILL.md) | Dump the current screen of a connected Android device over adb, or read an existing window_dump.xml, and generate a JSON locator file with UiSelector, By,... | Needs Python 3.8+ (standard library only). Capturing from a device needs adb (Android... |
 
 ## ADB: connect, control & debug Android devices (`adb-tools`)
 
 | Skill | Description | Needs |
 |---|---|---|
-| [`adb-debug`](adb-debug/SKILL.md) | Debug Android apps and devices with adb: read and filter logcat (by app, tag, level, buffer, time), capture crashes and ANRs, run dumpsys for memory,... | Needs Python 3.8+ and the script from the adb-tool skill (install the adb-tools... |
-| [`adb-device-control`](adb-device-control/SKILL.md) | Control an Android device or emulator with adb: install, uninstall, start and stop apps, list packages and app info, grant permissions, clear data, send... | Needs Python 3.8+ and the script from the adb-tool skill (install the adb-tools... |
-| [`adb-connect`](adb-connect/SKILL.md) | Install and set up adb (Android Platform-Tools), enable USB debugging, install USB drivers, pair and connect over Wi-Fi (wireless debugging, adb tcpip), and... | Needs Python 3.8+ and the script from the adb-tool skill (install the adb-tools... |
-| [`adb-tool`](adb-tool/SKILL.md) | Central skill for adb (Android Debug Bridge): every adb, am, pm, dpm and shell command with syntax and risk level, plus one Python script that diagnoses... | Needs Python 3.8+ (standard library only). Running device commands needs adb (Android... |
+| [`adb-debug`](external-tools/adb/adb-debug/SKILL.md) | Debug Android apps and devices with adb: read and filter logcat (by app, tag, level, buffer, time), capture crashes and ANRs, run dumpsys for memory,... | Needs Python 3.8+ and the script from the adb-tool skill (install the adb-tools... |
+| [`adb-device-control`](external-tools/adb/adb-device-control/SKILL.md) | Control an Android device or emulator with adb: install, uninstall, start and stop apps, list packages and app info, grant permissions, clear data, send... | Needs Python 3.8+ and the script from the adb-tool skill (install the adb-tools... |
+| [`adb-connect`](external-tools/adb/adb-connect/SKILL.md) | Install and set up adb (Android Platform-Tools), enable USB debugging, install USB drivers, pair and connect over Wi-Fi (wireless debugging, adb tcpip), and... | Needs Python 3.8+ and the script from the adb-tool skill (install the adb-tools... |
+| [`adb-tool`](external-tools/adb/adb-tool/SKILL.md) | Central skill for adb (Android Debug Bridge): every adb, am, pm, dpm and shell command with syntax and risk level, plus one Python script that diagnoses... | Needs Python 3.8+ (standard library only). Running device commands needs adb (Android... |
 
 ## Gradle: Android setup, diagnosis & tests (`gradle-tools`)
 
 | Skill | Description | Needs |
 |---|---|---|
-| [`gradle-android`](gradle-android/SKILL.md) | Set up Gradle for Android apps and fix Gradle problems: wrapper, JDK, Android Gradle Plugin (AGP) and Kotlin compatibility, SDK path, version catalogs,... | Needs Python 3.8+ (standard library only) for the scripts. Running builds needs a JDK... |
+| [`gradle-android`](external-tools/gradle/gradle-android/SKILL.md) | Set up Gradle for Android apps and fix Gradle problems: wrapper, JDK, Android Gradle Plugin (AGP) and Kotlin compatibility, SDK path, version catalogs,... | Needs Python 3.8+ (standard library only) for the scripts. Running builds needs a JDK... |
 
 ## Repositories: read & document (`repo-tools`)
 
 | Skill | Description | Needs |
 |---|---|---|
-| [`repo-architecture`](repo-architecture/SKILL.md) | Walk through a repository and produce an architecture diagram as ARCHITECTURE.md (with Mermaid) and a self-contained architecture.html: components,... | Needs Python 3.8+ (standard library only). git is optional; with git the file list... |
-| [`repo-learnings`](repo-learnings/SKILL.md) | Read a whole git repository, every folder and file, line by line, and write a LEARNINGS.md: purpose, build and run steps, folder map, architecture, key... | Needs Python 3.8+ (standard library only). git is optional. With git, the file list... |
+| [`repo-architecture`](development/repo/repo-architecture/SKILL.md) | Walk through a repository and produce an architecture diagram as ARCHITECTURE.md (with Mermaid) and a self-contained architecture.html: components,... | Needs Python 3.8+ (standard library only). git is optional; with git the file list... |
+| [`repo-learnings`](development/repo/repo-learnings/SKILL.md) | Read a whole git repository, every folder and file, line by line, and write a LEARNINGS.md: purpose, build and run steps, folder map, architecture, key... | Needs Python 3.8+ (standard library only). git is optional. With git, the file list... |
 
 ## GitLab: CI/CD pipelines (`gitlab-ci-tools`)
 
 | Skill | Description | Needs |
 |---|---|---|
-| [`gitlab-ci-debugging`](gitlab-ci-debugging/SKILL.md) | Diagnose a failing, stuck, skipped or wrongly triggered GitLab CI pipeline or job from its log and .gitlab-ci.yml. Use when the user says a GitLab pipeline... | - |
-| [`gitlab-ci-optimization`](gitlab-ci-optimization/SKILL.md) | Make a GitLab CI pipeline faster and cheaper: needs (DAG), cache, parallel jobs, rules:changes, interruptible, smaller images, Docker layer caching. Use... | - |
-| [`gitlab-ci-pipeline-authoring`](gitlab-ci-pipeline-authoring/SKILL.md) | Write or change a GitLab CI pipeline (.gitlab-ci.yml): stages, jobs, rules, needs, artifacts, cache, includes and merge request pipelines. Use when the user... | - |
+| [`gitlab-ci-debugging`](development/gitlab-ci/gitlab-ci-debugging/SKILL.md) | Diagnose a failing, stuck, skipped or wrongly triggered GitLab CI pipeline or job from its log and .gitlab-ci.yml. Use when the user says a GitLab pipeline... | - |
+| [`gitlab-ci-optimization`](development/gitlab-ci/gitlab-ci-optimization/SKILL.md) | Make a GitLab CI pipeline faster and cheaper: needs (DAG), cache, parallel jobs, rules:changes, interruptible, smaller images, Docker layer caching. Use... | - |
+| [`gitlab-ci-pipeline-authoring`](development/gitlab-ci/gitlab-ci-pipeline-authoring/SKILL.md) | Write or change a GitLab CI pipeline (.gitlab-ci.yml): stages, jobs, rules, needs, artifacts, cache, includes and merge request pipelines. Use when the user... | - |
 
 ## Writing: blog, CV & docs (`writing-tools`)
 
 | Skill | Description | Needs |
 |---|---|---|
-| [`professional-writing`](professional-writing/SKILL.md) | Write, tailor and review professional documents: blog posts, CVs/resumes (tailor to a job post, review), cover letters, technical docs and READMEs, with a... | Scripts need Python 3.8+ (standard library only). They read .md, .txt and .docx;... |
+| [`professional-writing`](generic/writing/professional-writing/SKILL.md) | Write, tailor and review professional documents: blog posts, CVs/resumes (tailor to a job post, review), cover letters, technical docs and READMEs, with a... | Scripts need Python 3.8+ (standard library only). They read .md, .txt and .docx;... |
 
 ## Images: pixels & description (`image-tools`)
 
 | Skill | Description | Needs |
 |---|---|---|
-| [`image-inspector`](image-inspector/SKILL.md) | Inspect an image file (PNG, JPG, WebP, GIF, BMP, TIFF) with a ready-made Python script: pixel colours at coordinates, dominant colours and palette,... | Needs Python 3.8+. Pillow (pip install Pillow) is recommended and required for JPEG,... |
+| [`image-inspector`](testing/tools/image-inspector/SKILL.md) | Inspect an image file (PNG, JPG, WebP, GIF, BMP, TIFF) with a ready-made Python script: pixel colours at coordinates, dominant colours and palette,... | Needs Python 3.8+. Pillow (pip install Pillow) is recommended and required for JPEG,... |
 
 ## Video: frames, pixels & description (`video-tools`)
 
 | Skill | Description | Needs |
 |---|---|---|
-| [`video-inspector`](video-inspector/SKILL.md) | Analyse a video file (MP4, MOV, MKV, WebM, AVI) with a ready-made Python script: metadata, frame extraction, scene changes, black or frozen sections,... | Needs Python 3.8+ and OpenCV (pip install opencv-python-headless, which includes numpy... |
+| [`video-inspector`](testing/tools/video-inspector/SKILL.md) | Analyse a video file (MP4, MOV, MKV, WebM, AVI) with a ready-made Python script: metadata, frame extraction, scene changes, black or frozen sections,... | Needs Python 3.8+ and OpenCV (pip install opencv-python-headless, which includes numpy... |
 
 ## Testing: unit tests & reports (`testing-tools`)
 
 | Skill | Description | Needs |
 |---|---|---|
-| [`kotlin-unit-test`](kotlin-unit-test/SKILL.md) | Write, run and verify unit tests for Kotlin code (apps, libraries, Android, Appium/Selenium page objects) with Gradle, Maven or kotlinc, then produce an... | Needs Python 3.8+ (standard library only) to run the scripts, and a JDK with the... |
-| [`python-unit-test`](python-unit-test/SKILL.md) | Unit test any Python (.py) file function by function and method by method, run the tests, and get a diagnosis with a suggested fix for each failure, plus... | Needs Python 3.8+ (standard library only) to run the script. It uses pytest when... |
+| [`kotlin-unit-test`](testing/libs/kotlin-unit-test/SKILL.md) | Write, run and verify unit tests for Kotlin code (apps, libraries, Android, Appium/Selenium page objects) with Gradle, Maven or kotlinc, then produce an... | Needs Python 3.8+ (standard library only) to run the scripts, and a JDK with the... |
+| [`python-unit-test`](testing/libs/python-unit-test/SKILL.md) | Unit test any Python (.py) file function by function and method by method, run the tests, and get a diagnosis with a suggested fix for each failure, plus... | Needs Python 3.8+ (standard library only) to run the script. It uses pytest when... |
 
 ## Shell: PowerShell on Windows (`shell-tools`)
 
 | Skill | Description | Needs |
 |---|---|---|
-| [`powershell-commands`](powershell-commands/SKILL.md) | Run shell tasks correctly in PowerShell on Windows: files, text search, processes, network, Git, builds, with a bash-to-PowerShell map. Use when the shell... | Windows PowerShell 5.1 and PowerShell 7+ (commands marked 7+ do not work in 5.1). Most... |
+| [`powershell-commands`](external-tools/powershell/powershell-commands/SKILL.md) | Run shell tasks correctly in PowerShell on Windows: files, text search, processes, network, Git, builds, with a bash-to-PowerShell map. Use when the shell... | Windows PowerShell 5.1 and PowerShell 7+ (commands marked 7+ do not work in 5.1). Most... |
 
 ## Learning: Python tutor & interview notes (`learning-tools`)
 
 | Skill | Description | Needs |
 |---|---|---|
-| [`python-tutor`](python-tutor/SKILL.md) | Explain any .py file from beginner to advanced and make study-notes HTML for interview prep: line-by-line walkthrough, concepts found, gotchas, interview... | Needs Python 3.8+ (standard library only). The analysed file must be Python 3 source.... |
+| [`python-tutor`](generic/learning/python-tutor/SKILL.md) | Explain any .py file from beginner to advanced and make study-notes HTML for interview prep: line-by-line walkthrough, concepts found, gotchas, interview... | Needs Python 3.8+ (standard library only). The analysed file must be Python 3 source.... |
 
 ## AI efficiency: save tokens & cost (`ai-efficiency-tools`)
 
 | Skill | Description | Needs |
 |---|---|---|
-| [`ai-token-saver`](ai-token-saver/SKILL.md) | Cut AI token usage and cost in any AI IDE, coding agent or chat model: audit a project for context waste (huge files, lockfiles, logs, bloated instruction... | Needs Python 3.8+ (standard library only) for the audit script. The advice applies to... |
-| [`context-engineering`](context-engineering/SKILL.md) | Design what goes into an AI model's context, centrally: one source-of-truth context file, thin pointers for each tool, layered loading (always, on demand,... | Needs Python 3.8+ (standard library only) for the script. The technique applies to any... |
+| [`ai-token-saver`](generic/ai-efficiency/ai-token-saver/SKILL.md) | Cut AI token usage and cost in any AI IDE, coding agent or chat model: audit a project for context waste (huge files, lockfiles, logs, bloated instruction... | Needs Python 3.8+ (standard library only) for the audit script. The advice applies to... |
+| [`context-engineering`](generic/ai-efficiency/context-engineering/SKILL.md) | Design what goes into an AI model's context, centrally: one source-of-truth context file, thin pointers for each tool, layered loading (always, on demand,... | Needs Python 3.8+ (standard library only) for the script. The technique applies to any... |
 
 ## Git: getting started (`git-getting-started`)
 
 | Skill | Description | Needs |
 |---|---|---|
-| [`git-basic-snapshotting`](git-basic-snapshotting/SKILL.md) | Quick reference for git add, status, diff, commit, reset, rm, mv. Use when asked which git command stages, commits or removes files. | - |
-| [`git-first-time-git-setup`](git-first-time-git-setup/SKILL.md) | Set up git on a new machine: user.name, email, editor, default branch. Use when handling first-time setup or Please tell me who you are. | - |
-| [`git-getting-a-git-repository`](git-getting-a-git-repository/SKILL.md) | Start a repository with git init or git clone. Use when you need to create a repo, put a project under git, or clone one. | - |
-| [`git-getting-help`](git-getting-help/SKILL.md) | Look up git docs with git help, --help and man. Use when asked how to find a git command's options. | - |
-| [`git-aliases`](git-aliases/SKILL.md) | Create git command shortcuts with git config alias. Use when the user wants a git alias or shorter commands. | - |
-| [`git-installing-git`](git-installing-git/SKILL.md) | Install or upgrade git on Linux, macOS or Windows. Use when you need to install git or for git: command not found. | - |
-| [`git-recording-changes-to-the-repository`](git-recording-changes-to-the-repository/SKILL.md) | Everyday git: status, add, .gitignore, diff, commit, rm, mv. Use when you need to stage, commit, ignore or rename files. | - |
-| [`git-setup-and-config`](git-setup-and-config/SKILL.md) | Quick reference for git config and git help, including core.editor for common editors. Use when you need to set the git editor. | - |
-| [`git-tagging`](git-tagging/SKILL.md) | Create, list, push and delete git tags. Use when you need to tag a commit or mark a release version. | - |
-| [`git-undoing-things`](git-undoing-things/SKILL.md) | Undo git mistakes: amend, unstage, discard changes (restore, reset). Use when committed too early or staged the wrong file. | - |
-| [`git-viewing-the-commit-history`](git-viewing-the-commit-history/SKILL.md) | View and filter history with git log (--oneline, --graph, --stat, by author or date). Use when you need to see or format the commit log. | - |
+| [`git-basic-snapshotting`](development/git-getting-started/git-basic-snapshotting/SKILL.md) | Quick reference for git add, status, diff, commit, reset, rm, mv. Use when asked which git command stages, commits or removes files. | - |
+| [`git-first-time-git-setup`](development/git-getting-started/git-first-time-git-setup/SKILL.md) | Set up git on a new machine: user.name, email, editor, default branch. Use when handling first-time setup or Please tell me who you are. | - |
+| [`git-getting-a-git-repository`](development/git-getting-started/git-getting-a-git-repository/SKILL.md) | Start a repository with git init or git clone. Use when you need to create a repo, put a project under git, or clone one. | - |
+| [`git-getting-help`](development/git-getting-started/git-getting-help/SKILL.md) | Look up git docs with git help, --help and man. Use when asked how to find a git command's options. | - |
+| [`git-aliases`](development/git-getting-started/git-aliases/SKILL.md) | Create git command shortcuts with git config alias. Use when the user wants a git alias or shorter commands. | - |
+| [`git-installing-git`](development/git-getting-started/git-installing-git/SKILL.md) | Install or upgrade git on Linux, macOS or Windows. Use when you need to install git or for git: command not found. | - |
+| [`git-recording-changes-to-the-repository`](development/git-getting-started/git-recording-changes-to-the-repository/SKILL.md) | Everyday git: status, add, .gitignore, diff, commit, rm, mv. Use when you need to stage, commit, ignore or rename files. | - |
+| [`git-setup-and-config`](development/git-getting-started/git-setup-and-config/SKILL.md) | Quick reference for git config and git help, including core.editor for common editors. Use when you need to set the git editor. | - |
+| [`git-tagging`](development/git-getting-started/git-tagging/SKILL.md) | Create, list, push and delete git tags. Use when you need to tag a commit or mark a release version. | - |
+| [`git-undoing-things`](development/git-getting-started/git-undoing-things/SKILL.md) | Undo git mistakes: amend, unstage, discard changes (restore, reset). Use when committed too early or staged the wrong file. | - |
+| [`git-viewing-the-commit-history`](development/git-getting-started/git-viewing-the-commit-history/SKILL.md) | View and filter history with git log (--oneline, --graph, --stat, by author or date). Use when you need to see or format the commit log. | - |
 
 ## Git: branching & merging (`git-branching`)
 
 | Skill | Description | Needs |
 |---|---|---|
-| [`git-advanced-merging`](git-advanced-merging/SKILL.md) | Fix hard git merge conflicts: abort, redo, ours/theirs, undo a merge. Use when a merge has conflicts or went wrong. | - |
-| [`git-basic-branching-and-merging`](git-basic-branching-and-merging/SKILL.md) | Create, switch, merge and delete a branch and resolve a basic conflict. Use when handling branch or merge tasks or CONFLICT (content). | - |
-| [`git-branch-management`](git-branch-management/SKILL.md) | List, rename and delete git branches; find merged or unmerged ones; rename master to main. Use when you need to clean up branches. | - |
-| [`git-branches-in-a-nutshell`](git-branches-in-a-nutshell/SKILL.md) | Explain git branches, HEAD and commits as snapshots. Use when asked what a branch or HEAD is. | - |
-| [`git-rebasing`](git-rebasing/SKILL.md) | Rebase a branch (git rebase, --onto), rebase vs merge, fix pushed rebases. Use when handling rebasing or a linear history. | - |
-| [`git-remote-branches`](git-remote-branches/SKILL.md) | Push branches, track upstreams, fetch vs pull, delete remote branches. Use when handling origin/<branch> tasks. | - |
-| [`git-rerere`](git-rerere/SKILL.md) | Reuse recorded merge conflict resolutions with git rerere. Use when resolving the same conflict repeatedly. | - |
+| [`git-advanced-merging`](development/git-branching/git-advanced-merging/SKILL.md) | Fix hard git merge conflicts: abort, redo, ours/theirs, undo a merge. Use when a merge has conflicts or went wrong. | - |
+| [`git-basic-branching-and-merging`](development/git-branching/git-basic-branching-and-merging/SKILL.md) | Create, switch, merge and delete a branch and resolve a basic conflict. Use when handling branch or merge tasks or CONFLICT (content). | - |
+| [`git-branch-management`](development/git-branching/git-branch-management/SKILL.md) | List, rename and delete git branches; find merged or unmerged ones; rename master to main. Use when you need to clean up branches. | - |
+| [`git-branches-in-a-nutshell`](development/git-branching/git-branches-in-a-nutshell/SKILL.md) | Explain git branches, HEAD and commits as snapshots. Use when asked what a branch or HEAD is. | - |
+| [`git-rebasing`](development/git-branching/git-rebasing/SKILL.md) | Rebase a branch (git rebase, --onto), rebase vs merge, fix pushed rebases. Use when handling rebasing or a linear history. | - |
+| [`git-remote-branches`](development/git-branching/git-remote-branches/SKILL.md) | Push branches, track upstreams, fetch vs pull, delete remote branches. Use when handling origin/<branch> tasks. | - |
+| [`git-rerere`](development/git-branching/git-rerere/SKILL.md) | Reuse recorded merge conflict resolutions with git rerere. Use when resolving the same conflict repeatedly. | - |
 
 ## Git: remotes & collaboration (`git-collaboration`)
 
 | Skill | Description | Needs |
 |---|---|---|
-| [`git-distributed-git-contributing-to-a-project`](git-distributed-git-contributing-to-a-project/SKILL.md) | Contribute with plain git: commit guidelines, team workflows, patches by email. Use when you need to prepare commits or patches for upstream. | - |
-| [`git-github-contributing-to-a-project`](git-github-contributing-to-a-project/SKILL.md) | Contribute on GitHub: fork, branch, pull request, sync with upstream. Use when you need to open or update a pull request or sync a fork. | - |
-| [`git-credential-storage`](git-credential-storage/SKILL.md) | Stop git asking for passwords: credential helpers and Git Credential Manager. Use when git prompts on every push or pull. | - |
-| [`git-generating-your-ssh-public-key`](git-generating-your-ssh-public-key/SKILL.md) | Create an SSH key for GitHub, GitLab or a git server with ssh-keygen. Use when handling Permission denied (publickey). | - |
-| [`git-getting-git-on-a-server`](git-getting-git-on-a-server/SKILL.md) | Host a git repository on your own server: bare repo over SSH. Use when you need to self-host a repository. | - |
-| [`git-daemon`](git-daemon/SKILL.md) | Serve git repositories read-only over git:// with git daemon. Use when handling fast public read access. | - |
-| [`git-gitweb`](git-gitweb/SKILL.md) | Browse a git repository in a web browser with GitWeb or git instaweb. Use when handling a simple web viewer. | - |
-| [`git-distributed-git-maintaining-a-project`](git-distributed-git-maintaining-a-project/SKILL.md) | Maintain a project with plain git: apply patches, review branches, cut releases. Use when integrating other people's work. | - |
-| [`git-github-maintaining-a-project`](git-github-maintaining-a-project/SKILL.md) | Maintain a GitHub repo: collaborators, merging pull requests, notifications, README. Use when administering a GitHub project. | - |
-| [`git-scripting-github`](git-scripting-github/SKILL.md) | Automate GitHub with webhooks, the REST API and Octokit. Use when you need to script GitHub or react to push and PR events. | - |
-| [`git-setting-up-the-server`](git-setting-up-the-server/SKILL.md) | Set up an SSH git server: git user, authorized_keys, bare repo, git-shell. Use when you need to self-host for several developers. | - |
-| [`git-smart-http`](git-smart-http/SKILL.md) | Serve git over HTTP(S) with git-http-backend and authenticated push. Use when you need to host a repo over HTTP. | - |
-| [`git-the-protocols`](git-the-protocols/SKILL.md) | Compare local, HTTP, SSH and git:// protocols for a repository. Use when you need to choose between HTTPS and SSH URLs. | - |
-| [`git-working-with-remotes`](git-working-with-remotes/SKILL.md) | Manage git remotes: add, show, fetch, pull, push, rename, remove. Use when you need to add or change a remote URL. | - |
+| [`git-distributed-git-contributing-to-a-project`](development/git-collaboration/git-distributed-git-contributing-to-a-project/SKILL.md) | Contribute with plain git: commit guidelines, team workflows, patches by email. Use when you need to prepare commits or patches for upstream. | - |
+| [`git-github-contributing-to-a-project`](development/git-collaboration/git-github-contributing-to-a-project/SKILL.md) | Contribute on GitHub: fork, branch, pull request, sync with upstream. Use when you need to open or update a pull request or sync a fork. | - |
+| [`git-credential-storage`](development/git-collaboration/git-credential-storage/SKILL.md) | Stop git asking for passwords: credential helpers and Git Credential Manager. Use when git prompts on every push or pull. | - |
+| [`git-generating-your-ssh-public-key`](development/git-collaboration/git-generating-your-ssh-public-key/SKILL.md) | Create an SSH key for GitHub, GitLab or a git server with ssh-keygen. Use when handling Permission denied (publickey). | - |
+| [`git-getting-git-on-a-server`](development/git-collaboration/git-getting-git-on-a-server/SKILL.md) | Host a git repository on your own server: bare repo over SSH. Use when you need to self-host a repository. | - |
+| [`git-daemon`](development/git-collaboration/git-daemon/SKILL.md) | Serve git repositories read-only over git:// with git daemon. Use when handling fast public read access. | - |
+| [`git-gitweb`](development/git-collaboration/git-gitweb/SKILL.md) | Browse a git repository in a web browser with GitWeb or git instaweb. Use when handling a simple web viewer. | - |
+| [`git-distributed-git-maintaining-a-project`](development/git-collaboration/git-distributed-git-maintaining-a-project/SKILL.md) | Maintain a project with plain git: apply patches, review branches, cut releases. Use when integrating other people's work. | - |
+| [`git-github-maintaining-a-project`](development/git-collaboration/git-github-maintaining-a-project/SKILL.md) | Maintain a GitHub repo: collaborators, merging pull requests, notifications, README. Use when administering a GitHub project. | - |
+| [`git-scripting-github`](development/git-collaboration/git-scripting-github/SKILL.md) | Automate GitHub with webhooks, the REST API and Octokit. Use when you need to script GitHub or react to push and PR events. | - |
+| [`git-setting-up-the-server`](development/git-collaboration/git-setting-up-the-server/SKILL.md) | Set up an SSH git server: git user, authorized_keys, bare repo, git-shell. Use when you need to self-host for several developers. | - |
+| [`git-smart-http`](development/git-collaboration/git-smart-http/SKILL.md) | Serve git over HTTP(S) with git-http-backend and authenticated push. Use when you need to host a repo over HTTP. | - |
+| [`git-the-protocols`](development/git-collaboration/git-the-protocols/SKILL.md) | Compare local, HTTP, SSH and git:// protocols for a repository. Use when you need to choose between HTTPS and SSH URLs. | - |
+| [`git-working-with-remotes`](development/git-collaboration/git-working-with-remotes/SKILL.md) | Manage git remotes: add, show, fetch, pull, push, rename, remove. Use when you need to add or change a remote URL. | - |
 
 ## Git: power tools (`git-power-tools`)
 
 | Skill | Description | Needs |
 |---|---|---|
-| [`git-bundling`](git-bundling/SKILL.md) | Move git history in one file with git bundle, no network. Use when you need to share a repository offline. | - |
-| [`git-debugging-with-git`](git-debugging-with-git/SKILL.md) | Find which commit broke something with git blame and git bisect. Use when asked who changed a line or what introduced a bug. | - |
-| [`git-interactive-staging`](git-interactive-staging/SKILL.md) | Stage part of a file with git add -p or git add -i. Use when you need to commit only some changes or split a commit. | - |
-| [`git-replace`](git-replace/SKILL.md) | Swap one git object for another with git replace to graft history. Use when you need to join or split history without rewriting it. | - |
-| [`git-reset-demystified`](git-reset-demystified/SKILL.md) | Explain git reset and checkout: --soft, --mixed, --hard and the three trees. Use when unsure which reset mode to use. | - |
-| [`git-revision-selection`](git-revision-selection/SKILL.md) | Pick commits and ranges: SHA, HEAD~2, HEAD^, .., ..., @{n}. Use when asked what ^, ~ or .. mean. | - |
-| [`git-rewriting-history`](git-rewriting-history/SKILL.md) | Amend, squash, reorder or drop commits; remove a file or secret from all history. Use when you need to edit past commits. | - |
-| [`git-searching`](git-searching/SKILL.md) | Search code and history: git grep, log -S, log -G, log -L. Use when you need to find where something is or when it changed. | - |
-| [`git-signing-your-work`](git-signing-your-work/SKILL.md) | Sign and verify git commits and tags with GPG. Use when you need to sign commits or tags. | - |
-| [`git-stashing-and-cleaning`](git-stashing-and-cleaning/SKILL.md) | Shelve work with git stash and remove untracked files with git clean. Use when you need to switch branches with uncommitted changes. | - |
-| [`git-submodules`](git-submodules/SKILL.md) | Use git submodules: add, clone --recurse-submodules, update, publish. Use when a repo contains another repo or submodule folders are empty. | - |
+| [`git-bundling`](development/git-power-tools/git-bundling/SKILL.md) | Move git history in one file with git bundle, no network. Use when you need to share a repository offline. | - |
+| [`git-debugging-with-git`](development/git-power-tools/git-debugging-with-git/SKILL.md) | Find which commit broke something with git blame and git bisect. Use when asked who changed a line or what introduced a bug. | - |
+| [`git-interactive-staging`](development/git-power-tools/git-interactive-staging/SKILL.md) | Stage part of a file with git add -p or git add -i. Use when you need to commit only some changes or split a commit. | - |
+| [`git-replace`](development/git-power-tools/git-replace/SKILL.md) | Swap one git object for another with git replace to graft history. Use when you need to join or split history without rewriting it. | - |
+| [`git-reset-demystified`](development/git-power-tools/git-reset-demystified/SKILL.md) | Explain git reset and checkout: --soft, --mixed, --hard and the three trees. Use when unsure which reset mode to use. | - |
+| [`git-revision-selection`](development/git-power-tools/git-revision-selection/SKILL.md) | Pick commits and ranges: SHA, HEAD~2, HEAD^, .., ..., @{n}. Use when asked what ^, ~ or .. mean. | - |
+| [`git-rewriting-history`](development/git-power-tools/git-rewriting-history/SKILL.md) | Amend, squash, reorder or drop commits; remove a file or secret from all history. Use when you need to edit past commits. | - |
+| [`git-searching`](development/git-power-tools/git-searching/SKILL.md) | Search code and history: git grep, log -S, log -G, log -L. Use when you need to find where something is or when it changed. | - |
+| [`git-signing-your-work`](development/git-power-tools/git-signing-your-work/SKILL.md) | Sign and verify git commits and tags with GPG. Use when you need to sign commits or tags. | - |
+| [`git-stashing-and-cleaning`](development/git-power-tools/git-stashing-and-cleaning/SKILL.md) | Shelve work with git stash and remove untracked files with git clean. Use when you need to switch branches with uncommitted changes. | - |
+| [`git-submodules`](development/git-power-tools/git-submodules/SKILL.md) | Use git submodules: add, clone --recurse-submodules, update, publish. Use when a repo contains another repo or submodule folders are empty. | - |
 
 ## Git: customization & hooks (`git-customization`)
 
 | Skill | Description | Needs |
 |---|---|---|
-| [`git-an-example-git-enforced-policy`](git-an-example-git-enforced-policy/SKILL.md) | Enforce commit-message format, file ACLs and push rules with git hook scripts. Use when handling a team commit or push policy. | - |
-| [`git-environment-variables`](git-environment-variables/SKILL.md) | Git environment variables (GIT_DIR, GIT_EDITOR, GIT_SSH_COMMAND, GIT_TRACE). Use when handling a GIT_* variable or to trace git. | - |
-| [`git-attributes`](git-attributes/SKILL.md) | Set per-file git behaviour in .gitattributes: binary files, diff filters, export-ignore. Use when handling .gitattributes questions. | - |
-| [`git-configuration`](git-configuration/SKILL.md) | Change git settings: editor, pager, colours, diff/merge tools, autocrlf, whitespace. Use when handling git config or CRLF problems. | - |
-| [`git-hooks`](git-hooks/SKILL.md) | Write git hooks (pre-commit, commit-msg, pre-push, pre-receive). Use when you need to run a script automatically on commit, push or merge. | - |
+| [`git-an-example-git-enforced-policy`](development/git-customization/git-an-example-git-enforced-policy/SKILL.md) | Enforce commit-message format, file ACLs and push rules with git hook scripts. Use when handling a team commit or push policy. | - |
+| [`git-environment-variables`](development/git-customization/git-environment-variables/SKILL.md) | Git environment variables (GIT_DIR, GIT_EDITOR, GIT_SSH_COMMAND, GIT_TRACE). Use when handling a GIT_* variable or to trace git. | - |
+| [`git-attributes`](development/git-customization/git-attributes/SKILL.md) | Set per-file git behaviour in .gitattributes: binary files, diff filters, export-ignore. Use when handling .gitattributes questions. | - |
+| [`git-configuration`](development/git-customization/git-configuration/SKILL.md) | Change git settings: editor, pager, colours, diff/merge tools, autocrlf, whitespace. Use when handling git config or CRLF problems. | - |
+| [`git-hooks`](development/git-customization/git-hooks/SKILL.md) | Write git hooks (pre-commit, commit-msg, pre-push, pre-receive). Use when you need to run a script automatically on commit, push or merge. | - |
 
 ## Git: internals (`git-internals`)
 
 | Skill | Description | Needs |
 |---|---|---|
-| [`git-objects`](git-objects/SKILL.md) | Git internals: blob, tree and commit objects and the .git/objects store. Use when you need to inspect how git stores data. | - |
-| [`git-references`](git-references/SKILL.md) | Git refs internals: refs/heads, HEAD, update-ref, symbolic-ref. Use when asked what a ref is or to repair .git/refs. | - |
-| [`git-maintenance-and-data-recovery`](git-maintenance-and-data-recovery/SKILL.md) | Recover lost commits (reflog, fsck) and shrink a repository (gc, large files). Use when you are after reset --hard or for a huge .git. | - |
-| [`git-packfiles`](git-packfiles/SKILL.md) | How git packs objects: loose vs packfiles, delta compression, git gc. Use when asked why .git is large or what .pack files are. | - |
-| [`git-plumbing-and-porcelain`](git-plumbing-and-porcelain/SKILL.md) | What is inside .git and plumbing vs porcelain commands. Use when asked what the .git folder contains. | - |
-| [`git-the-refspec`](git-the-refspec/SKILL.md) | Git refspecs: custom fetch and push mappings (+src:dst). Use when editing remote.<name>.fetch or mapping refs. | - |
-| [`git-transfer-protocols`](git-transfer-protocols/SKILL.md) | How git fetch and push work on the wire: dumb and smart HTTP, send-pack, upload-pack. Use when you need to debug protocol-level problems. | - |
+| [`git-objects`](development/git-internals/git-objects/SKILL.md) | Git internals: blob, tree and commit objects and the .git/objects store. Use when you need to inspect how git stores data. | - |
+| [`git-references`](development/git-internals/git-references/SKILL.md) | Git refs internals: refs/heads, HEAD, update-ref, symbolic-ref. Use when asked what a ref is or to repair .git/refs. | - |
+| [`git-maintenance-and-data-recovery`](development/git-internals/git-maintenance-and-data-recovery/SKILL.md) | Recover lost commits (reflog, fsck) and shrink a repository (gc, large files). Use when you are after reset --hard or for a huge .git. | - |
+| [`git-packfiles`](development/git-internals/git-packfiles/SKILL.md) | How git packs objects: loose vs packfiles, delta compression, git gc. Use when asked why .git is large or what .pack files are. | - |
+| [`git-plumbing-and-porcelain`](development/git-internals/git-plumbing-and-porcelain/SKILL.md) | What is inside .git and plumbing vs porcelain commands. Use when asked what the .git folder contains. | - |
+| [`git-the-refspec`](development/git-internals/git-the-refspec/SKILL.md) | Git refspecs: custom fetch and push mappings (+src:dst). Use when editing remote.<name>.fetch or mapping refs. | - |
+| [`git-transfer-protocols`](development/git-internals/git-transfer-protocols/SKILL.md) | How git fetch and push work on the wire: dumb and smart HTTP, send-pack, upload-pack. Use when you need to debug protocol-level problems. | - |
 
 ## Git: other systems & APIs (`git-integrations`)
 
 | Skill | Description | Needs |
 |---|---|---|
-| [`git-as-a-client`](git-as-a-client/SKILL.md) | Use git against a Subversion, Mercurial or Perforce server (git svn, git p4). Use when the team repo is not git. | - |
-| [`git-in-powershell`](git-in-powershell/SKILL.md) | Set up git in PowerShell with posh-git: prompt status and tab completion. Use when handling a git prompt on Windows PowerShell. | - |
-| [`git-jgit`](git-jgit/SKILL.md) | Use git from Java with the JGit library. Use when writing Java code that reads or changes a git repository. | - |
-| [`git-libgit2`](git-libgit2/SKILL.md) | Use git from C, Ruby, .NET or Python through libgit2 bindings. Use when you need to embed git operations in an application. | - |
-| [`git-migrating-to-git`](git-migrating-to-git/SKILL.md) | Convert a Subversion, Mercurial or Perforce repository to git. Use when you need to import another VCS history. | - |
+| [`git-as-a-client`](development/git-integrations/git-as-a-client/SKILL.md) | Use git against a Subversion, Mercurial or Perforce server (git svn, git p4). Use when the team repo is not git. | - |
+| [`git-in-powershell`](development/git-integrations/git-in-powershell/SKILL.md) | Set up git in PowerShell with posh-git: prompt status and tab completion. Use when handling a git prompt on Windows PowerShell. | - |
+| [`git-jgit`](development/git-integrations/git-jgit/SKILL.md) | Use git from Java with the JGit library. Use when writing Java code that reads or changes a git repository. | - |
+| [`git-libgit2`](development/git-integrations/git-libgit2/SKILL.md) | Use git from C, Ruby, .NET or Python through libgit2 bindings. Use when you need to embed git operations in an application. | - |
+| [`git-migrating-to-git`](development/git-integrations/git-migrating-to-git/SKILL.md) | Convert a Subversion, Mercurial or Perforce repository to git. Use when you need to import another VCS history. | - |
 
 ## Git: full reference (`git-reference`)
 
 | Skill | Description | Needs |
 |---|---|---|
-| [`git-pro`](git-pro/SKILL.md) | Index of the Pro Git book, one reference per chapter. Use when a git question spans topics or no other git skill fits. | - |
+| [`git-pro`](development/git-reference/git-pro/SKILL.md) | Index of the Pro Git book, one reference per chapter. Use when a git question spans topics or no other git skill fits. | - |

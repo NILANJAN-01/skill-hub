@@ -4,7 +4,7 @@ These instructions are for AI coding agents (Claude Code, Antigravity, Devin, Co
 
 ## What this repo is
 
-A hub of **agent-neutral** Agent Skills (`skills/<name>/SKILL.md`, open format from agentskills.io), distributed to many AI coding agents. One source folder per skill is installed into each agent's own skills folder by `tools/install.py`, `npx skills`, or the Claude Code plugin marketplace.
+A hub of **agent-neutral** Agent Skills (`skills/<area>/<group>/<name>/SKILL.md`, open format from agentskills.io), distributed to many AI coding agents. One source folder per skill is installed into each agent's own skills folder by `tools/install.py`, `npx skills`, or the Claude Code plugin marketplace.
 
 ## Rules
 

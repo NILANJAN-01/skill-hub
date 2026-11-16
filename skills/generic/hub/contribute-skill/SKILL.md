@@ -10,7 +10,7 @@ metadata:
 
 # Contribute a skill to skill-hub
 
-Every skill in the hub lives in `skills/<name>/` and is registered in a plugin (category) in `.claude-plugin/marketplace.json`. Claude Code reads that file natively, and `tools/install.py` uses it to install categories into other agents. Two scripts keep the hub consistent:
+Every skill in the hub lives in `skills/<area>/<group>/<name>/` (areas: `testing`, `development`, `design`, `generic`, `external-tools`; a group is a subfolder of an area, and you may create a new one) and is registered in a plugin (category) in `.claude-plugin/marketplace.json`. Claude Code reads that file natively, and `tools/install.py` uses it to install categories into other agents. Two scripts keep the hub consistent:
 
 - `tools/validate_skills.py` checks every skill against the Agent Skills spec and the hub rules.
 - `tools/build_catalog.py` regenerates `catalog.json`, `skills/README.md`, `examples/PROMPTS.md`, `prompts.html`, and the agent tables in `README.md` and `GUIDE.md`. The `find-skills` skill and the installer read these.
@@ -20,9 +20,9 @@ Every skill in the hub lives in `skills/<name>/` and is registered in a plugin (
 1. **Pick a name**: lowercase letters, digits and hyphens, at most 64 characters, unique in `skills/`. Use a family prefix for a family of skills (e.g. `git-`, `docker-`).
 2. **Create the folder** from the template:
    ```bash
-   cp -r template skills/<name>
+   cp -r template skills/<area>/<group>/<name>
    ```
-3. **Write the frontmatter** in `skills/<name>/SKILL.md`:
+3. **Write the frontmatter** in `skills/<area>/<group>/<name>/SKILL.md`:
    ```yaml
    ---
    name: <name>                  # must equal the folder name
@@ -38,7 +38,7 @@ Every skill in the hub lives in `skills/<name>/` and is registered in a plugin (
    The `description` is the only thing an agent sees before it loads the skill. Make it specific (what plus when), at most 1024 characters, written in the third person, and include the words users actually type.
 4. **Write the body.** Keep it actionable: when to use, when not to use, numbered procedures with exact commands, safety rules for destructive steps, and troubleshooting. Keep `SKILL.md` under about 500 lines. Move long material into `references/*.md`, and put helper code in `scripts/`. Link both with relative paths so that the agent loads them only when needed.
    **Keep it agent-neutral.** The same folder is installed into many different agents. Describe *what* to do ("run", "read", "ask the user") and don't name one agent's tools, slash commands or config files. Scripts must be cross-platform (Python standard library preferred). If a skill really needs a specific agent or environment, say so in the `compatibility` frontmatter field. Otherwise the validator warns about agent-specific wording.
-5. **Register it** in `.claude-plugin/marketplace.json`. Add `"./skills/<name>"` to the `skills` array of the matching focused plugin, and to a bundle plugin (e.g. `git-skills`) if one exists for its family. To add a new plugin:
+5. **Register it** in `.claude-plugin/marketplace.json`. Add `"./skills/<area>/<group>/<name>"` to the `skills` array of the matching focused plugin, and to a bundle plugin (e.g. `git-skills`) if one exists for its family. To add a new plugin:
    ```json
    {
      "name": "<plugin-name>",
@@ -46,7 +46,7 @@ Every skill in the hub lives in `skills/<name>/` and is registered in a plugin (
      "source": "./",
      "strict": false,
      "category": "<category>",
-     "skills": ["./skills/<name>"]
+     "skills": ["./skills/<area>/<group>/<name>"]
    }
    ```
    Add the plugin's display title to `CATEGORY_TITLES` in `tools/build_catalog.py`.

@@ -136,7 +136,7 @@ Plugins: <!-- plugin-names:start -->`git-skills`, `git-getting-started`, `git-br
 
 ### Option 4: copy a folder or upload a zip
 
-Copy `skills/<name>/` into a folder from the table below. For web apps with an upload UI, such as Claude.ai (**Settings → Capabilities → Skills**) or the Devin web app, upload the zip that `install.py --zip` produces.
+Copy a skill's folder (`skills/<area>/<group>/<name>/`; [skills/README.md](skills/README.md) links every one) into a folder from the table below, keeping only the last part, `<name>/`. For web apps with an upload UI, such as Claude.ai (**Settings → Capabilities → Skills**) or the Devin web app, upload the zip that `install.py --zip` produces.
 
 ### Where each agent reads skills
 
@@ -160,7 +160,8 @@ Commit project folders to share skills with your team. Install only the categori
 ## Repository layout
 
 ```
-skills/<name>/SKILL.md            one folder per skill, agent-neutral (+ optional references/, scripts/, assets/)
+skills/<area>/<group>/<name>/     one folder per skill, agent-neutral: SKILL.md (+ optional references/, scripts/, assets/)
+                                  areas: testing, development, design, generic, external-tools (AREAS in tools/hublib.py)
 .claude-plugin/marketplace.json   groups skills into plugins/categories (used by Claude Code and install.py)
 examples/prompts.json             example prompts for every skill (source)
 examples/PROMPTS.md               generated, readable list of every example prompt
@@ -179,8 +180,8 @@ AGENTS.md                         instructions for AI agents working on this rep
 
 ## Add a skill to the hub
 
-1. `cp -r template skills/<your-skill>` and fill in `SKILL.md`. Give it a specific `description` that says what the skill does and when to use it. Keep the body **agent-neutral**: no instructions that only one IDE understands.
-2. Add `"./skills/<your-skill>"` to a plugin in `.claude-plugin/marketplace.json`, and add at least 2 example prompts for it to `examples/prompts.json`.
+1. Pick the area and group the skill belongs to (see [the layout](skills/README.md#folder-layout); a new group is just a new folder), then `cp -r template skills/<area>/<group>/<your-skill>` and fill in `SKILL.md`. Give it a specific `description` that says what the skill does and when to use it. Keep the body **agent-neutral**: no instructions that only one IDE understands.
+2. Add `"./skills/<area>/<group>/<your-skill>"` to a plugin in `.claude-plugin/marketplace.json`, and add at least 2 example prompts for it to `examples/prompts.json`.
 3. Run the tools:
    ```bash
    python tools/build_catalog.py      # regenerate generated files
@@ -188,16 +189,16 @@ AGENTS.md                         instructions for AI agents working on this rep
    ```
 4. Open one pull request per skill, titled `Add <skill> skill` or `Update <skill> skill: <what changed>`. CI runs the same checks.
 
-[CONTRIBUTING.md](CONTRIBUTING.md) has the full rules. Any agent working in this repo follows [AGENTS.md](AGENTS.md), and the [`contribute-skill`](skills/contribute-skill/SKILL.md) skill walks an agent through the whole process.
+[CONTRIBUTING.md](CONTRIBUTING.md) has the full rules. Any agent working in this repo follows [AGENTS.md](AGENTS.md), and the [`contribute-skill`](skills/generic/hub/contribute-skill/SKILL.md) skill walks an agent through the whole process.
 
 ### Generate skills from a PDF
 
-[`skills/skillforge`](skills/skillforge/SKILL.md) bundles `skillforge.py`, an offline generator that uses open-source NLP and needs no API key or LLM. It turns a technical PDF into focused playbooks, and it produced the Git skills here:
+[`skillforge`](skills/generic/hub/skillforge/SKILL.md) bundles `skillforge.py`, an offline generator that uses open-source NLP and needs no API key or LLM. It turns a technical PDF into focused playbooks, and it produced the Git skills here:
 
 ```bash
-pip install -r skills/skillforge/scripts/requirements.txt
-python skills/skillforge/scripts/skillforge.py book.pdf --plan-only     # review the plan
-python skills/skillforge/scripts/skillforge.py book.pdf --topics "rebase, hooks, bisect"
+pip install -r skills/generic/hub/skillforge/scripts/requirements.txt
+python skills/generic/hub/skillforge/scripts/skillforge.py book.pdf --plan-only     # review the plan
+python skills/generic/hub/skillforge/scripts/skillforge.py book.pdf --topics "rebase, hooks, bisect"
 ```
 
 ## Browse the catalog locally (optional)
@@ -213,7 +214,7 @@ Skills are provided as-is, for productivity and education. Generated skills are 
 ## Credits & licenses
 
 - The hub's own code and skills are released under the [MIT License](LICENSE), unless a skill's `license` field says otherwise.
-- **Commercial use:** the 61 `git-*` skills are **non-commercial** (CC BY-NC-SA 3.0, below), and redistributing them means keeping that license and the attribution. They live in their own plugins (`git-skills` and the `git-*` bundles), so you can install every other plugin (any whose name does not start with `git-`) without them. If you redistribute the hub commercially, remove `skills/git-*` first.
+- **Commercial use:** the 61 `git-*` skills are **non-commercial** (CC BY-NC-SA 3.0, below), and redistributing them means keeping that license and the attribution. They live in their own plugins (`git-skills` and the `git-*` bundles), so you can install every other plugin (any whose name does not start with `git-`) without them. If you redistribute the hub commercially, remove `skills/development/git-*` first.
 - The `git-*` skills are derived from [*Pro Git*](https://git-scm.com/book) by Scott Chacon and Ben Straub, licensed under [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/). See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 - Each skill declares its license in the `license` field of its frontmatter.
 - The hub layout follows [anthropics/skills](https://github.com/anthropics/skills). Skill paths come from each vendor's documentation, linked in the table above.

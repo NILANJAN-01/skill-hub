@@ -29,7 +29,7 @@ The machine-readable index is `catalog.json` at the repository root:
   "skills": [{
     "name": "git-rebasing", "title": "Rebasing", "category": "git-branching",
     "description": "...", "plugins": ["git-branching", "git-skills"], "examples": ["..."],
-    "path": "skills/git-rebasing", "license": "..."
+    "path": "skills/development/git-branching/git-rebasing", "license": "..."
   }]
 }
 ```
@@ -52,7 +52,7 @@ The machine-readable index is `catalog.json` at the repository root:
      ```
      Inside a skill-hub clone, run `python tools/install.py ...` instead. If the user is at a terminal themselves, they can run the installer with **no options** for a guided install that asks question by question.
    - **`skills` CLI** (needs Node): `npx skills add NILANJAN-01/skill-hub --skill <skill-name> -a <agent>`
-   - **Manual:** copy `skills/<skill-name>/` into the agent's `project` folder (shared with the team via git) or its `global` folder (for this user only).
+   - **Manual:** copy the skill's folder (the `path` in the catalog, `skills/<area>/<group>/<skill-name>/`) into the agent's `project` folder (shared with the team via git) or its `global` folder (for this user only).
    - **Upload UIs** (web apps without a skills folder): build a zip with `install.py --zip dist --skill <skill-name>` and upload it.
 6. **Use it.** Most agents pick up new skills on the next session or reload. If the task is still in progress, read the installed skill's `SKILL.md` now and follow it.
 

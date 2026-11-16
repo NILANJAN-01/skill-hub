@@ -16,7 +16,8 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import url_to_skill as u2s  # noqa: E402
 
-HUB_TOOLS = HERE.parents[2] / "tools"                    # present when the skill is inside the skill-hub repo
+# The hub's tools/ folder, present when the skill is inside a skill-hub clone (skills/<area>/<group>/<name>/).
+HUB_TOOLS = next((p / "tools" for p in HERE.parents if (p / ".claude-plugin").is_dir()), HERE / "no-hub")
 
 GUIDE = """<!doctype html><html lang="en"><head><meta charset="utf-8">
 <title>Widget CLI Guide | Acme Docs</title><meta name="description" content="How to install and use the Widget CLI. It builds and deploys widgets.">

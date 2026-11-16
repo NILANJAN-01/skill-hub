@@ -16,7 +16,7 @@ The golden rules, sources of truth and per-task steps live in the `rule/` folder
 
 ## Using skills
 
-At the start of every non-trivial task, use the `skill-router` skill first (`python skills/skill-router/scripts/route.py "<the user's request>"`), so vague or multi-part requests still reach the right skills. Skip it only when the user names a skill or the task is a trivial one-liner.
+At the start of every non-trivial task, use the `skill-router` skill first (`python skills/generic/hub/skill-router/scripts/route.py "<the user's request>"`), so vague or multi-part requests still reach the right skills. Skip it only when the user names a skill or the task is a trivial one-liner.
 
 ## Commands
 
@@ -34,10 +34,10 @@ python -m compileall -q tools skills mcp-server
 # MCP server tests
 python -m unittest discover -s mcp-server/tests -v
 
-# Tests for one skill's bundled scripts (each skill with tests has skills/<name>/scripts/test_*.py)
-python -m unittest discover -s skills/<name>/scripts -p "test_*.py" -v
+# Tests for one skill's bundled scripts (each skill with tests has skills/<area>/<group>/<name>/scripts/test_*.py)
+python -m unittest discover -s skills/<area>/<group>/<name>/scripts -p "test_*.py" -v
 # single test file / case
-python -m unittest skills/<name>/scripts/test_foo.py
+python -m unittest skills/<area>/<group>/<name>/scripts/test_foo.py
 python -m unittest discover -s mcp-server/tests -k <substring>
 
 # Installer (never run without a sandboxed HOME/USERPROFILE when testing writes)
@@ -52,7 +52,7 @@ Releases: the version is `metadata.version` in `.claude-plugin/marketplace.json`
 
 ## Architecture
 
-- **Skills** (`skills/<name>/`): `SKILL.md` with YAML frontmatter plus optional `references/`, `scripts/` (cross-platform Python, often with their own `test_*.py` and `fixtures/`), `assets/`. `template/` is the starting point; `spec/agent-skills-spec.md` is the format spec. Families: ~61 `git-*` skills (derived from Pro Git, see `THIRD_PARTY_NOTICES.md`), `gitlab-ci-*`, Android/image/video inspectors, unit-test skills, and meta skills (`skillforge`, `url-to-skill`, `contribute-skill`, `find-skills`, `skill-orchestrator`).
+- **Skills** (`skills/<area>/<group>/<name>/`): the five areas are `testing`, `development`, `design`, `generic` and `external-tools` (`AREAS` in `tools/hublib.py`); groups are plain subfolders. The layout is exactly three levels deep, and the area and group come from the path. A skill is installed by its `<name>` alone, so names are unique across the hub and skills in the same group stay siblings after install. Each skill has `SKILL.md` with YAML frontmatter plus optional `references/`, `scripts/` (cross-platform Python, often with their own `test_*.py` and `fixtures/`), `assets/`. `template/` is the starting point; `spec/agent-skills-spec.md` is the format spec. Families: ~61 `git-*` skills (derived from Pro Git, see `THIRD_PARTY_NOTICES.md`), `gitlab-ci-*`, Android/image/video inspectors, unit-test skills, and meta skills (`skillforge`, `url-to-skill`, `contribute-skill`, `find-skills`, `skill-orchestrator`).
 - **Registry**: `.claude-plugin/marketplace.json` groups skills into plugins; plugin == category. It is the only place that defines category membership, and family bundle plugins (e.g. all `git-*`) must also list their member skills.
 - **Generator pipeline**: `tools/build_catalog.py` reads skills + `marketplace.json` + `examples/prompts.json` (via `tools/hublib.py`, which holds shared paths and frontmatter parsing) and writes `catalog.json`, `skills/README.md`, `examples/PROMPTS.md`, `prompts.html` (from `tools/prompts_template.html`), and marked blocks in `README.md` / `GUIDE.md`. `tools/validate_skills.py` enforces frontmatter, description length, agent-neutrality, example-prompt minimums and marketplace consistency.
 - **Distribution**: `tools/install.py` copies a skill folder into each agent's skills directory, driven by its `AGENTS` dict (the per-agent folder and detection table, which also feeds the generated README/GUIDE tables). Other channels are `npx skills` and the Claude Code plugin marketplace.
