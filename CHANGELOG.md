@@ -4,12 +4,13 @@ Notable changes to skill-hub. Newest first. Skills are listed by name; see `git 
 
 ## Unreleased
 
+## 1.3.0 - 2026-11-16
+
 - Changed: skills moved from `skills/<name>/` to `skills/<area>/<group>/<name>/`, with five areas (`testing`, `development`, `design`, `generic`, `external-tools`) and group subfolders. Skill names, plugin names and install commands are unchanged. `catalog.json` gains `area` and `group` per skill and an `areas` list, and each skill's `path` is its new folder. The installer, validator, catalog builder, both MCP servers, `skill-router` and `skill-orchestrator` find skills at the new depth; the installer still reads older flat releases. The validator rejects skills outside the layout and duplicate names.
 
 - Added: `skill-hub-mcp/`, a new MCP server kept beside `mcp-server/`. It searches (BM25), routes multi-part requests to skills, reads playbooks, detects agents, lists installed skills, and plans installs, updates and removals. With `--allow-install` it can apply a plan the user agreed to, through a one-time token; without it the server is read-only.
-
-## 1.3.0 - 2026-11-16
-
+- `skill-router`: word forms now share a stem, so "rebase" finds `git-rebasing`; routing hints added for `git-rebasing`, `git-rewriting-history`, `git-undoing-things` and `git-stashing-and-cleaning`.
+- `template/`: added `references/details.md`, so the link in the template's `SKILL.md` resolves.
 - Added: `context-engineering` (in `ai-efficiency-tools`): one central context file, thin pointers for each tool, layered loading, a token budget and handoff notes, with a script that finds duplicated or drifting instruction files and creates the pointers.
 - Added: `ai-token-saver` (new `ai-efficiency-tools` category): audits a project for context waste and lists habits that cut token use and cost.
 - Added: `adb-tool`, `adb-connect`, `adb-device-control`, `adb-debug` (new `adb-tools` category).
