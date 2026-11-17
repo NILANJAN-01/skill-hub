@@ -1,0 +1,85 @@
+{
+  "config": {"version": "1.56.0"},
+  "suites": [
+    {
+      "title": "checkout.spec.ts",
+      "file": "checkout.spec.ts",
+      "specs": [
+        {
+          "title": "customer can pay",
+          "ok": false,
+          "file": "checkout.spec.ts",
+          "line": 5,
+          "tests": [
+            {
+              "projectName": "chromium",
+              "status": "unexpected",
+              "results": [
+                {"retry": 0, "status": "failed", "duration": 31000,
+                 "errors": [{"message": "\u001b[31mError: locator.click: Timeout 30000ms exceeded.\u001b[39m\nCall log:\n  - waiting for getByRole('button', { name: 'Pay' })"}],
+                 "attachments": []},
+                {"retry": 1, "status": "failed", "duration": 30500,
+                 "errors": [{"message": "Error: locator.click: Timeout 30000ms exceeded."}],
+                 "attachments": [{"name": "trace", "path": "test-results/checkout-pay-chromium-retry1/trace.zip"}]}
+              ]
+            },
+            {
+              "projectName": "firefox",
+              "status": "expected",
+              "results": [{"retry": 0, "status": "passed", "duration": 4200}]
+            }
+          ]
+        }
+      ],
+      "suites": [
+        {
+          "title": "cart",
+          "specs": [
+            {
+              "title": "shows total",
+              "ok": true,
+              "file": "checkout.spec.ts",
+              "line": 20,
+              "tests": [
+                {
+                  "projectName": "chromium",
+                  "status": "flaky",
+                  "results": [
+                    {"retry": 0, "status": "failed", "duration": 2000,
+                     "errors": [{"message": "Error: strict mode violation: getByText('Total') resolved to 2 elements"}]},
+                    {"retry": 1, "status": "passed", "duration": 1500}
+                  ]
+                }
+              ]
+            },
+            {
+              "title": "applies coupon",
+              "ok": false,
+              "file": "checkout.spec.ts",
+              "line": 30,
+              "tests": [
+                {
+                  "projectName": "webkit",
+                  "status": "unexpected",
+                  "results": [
+                    {"retry": 0, "status": "failed", "duration": 900,
+                     "error": {"message": "Error: expect(received).toHaveText(expected)\nExpected: \"$9\"\nReceived: \"$10\""}}
+                  ]
+                }
+              ]
+            },
+            {
+              "title": "skipped one",
+              "ok": true,
+              "file": "checkout.spec.ts",
+              "line": 40,
+              "tests": [{"projectName": "chromium", "status": "skipped", "results": [{"retry": 0, "status": "skipped", "duration": 0}]}]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {"expected": 2, "unexpected": 2, "flaky": 1, "skipped": 1}
+}

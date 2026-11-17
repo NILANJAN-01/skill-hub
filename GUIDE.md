@@ -216,6 +216,8 @@ Categories for `--plugin`:
 | `learning-tools` | 1 | Learning: explain any Python file from beginner to advanced and generate study-notes HTML for interview preparation (concepts, gotchas, Q&A, fundamentals checklist) |
 | `ai-efficiency-tools` | 2 | AI efficiency: audit a project for token waste, save tokens and cost, and centralize context across any AI IDE, agent or model |
 | `ai-agent-tools` | 4 | AI agents: build and probe MCP servers, design tool/function definitions models use well, run LLM evals with regression checks, and build and evaluate RAG pipelines,... |
+| `playwright-tools` | 5 | Playwright (up to 1.65): write resilient end-to-end tests that fit your team's conventions (with a suite audit script), debug failing and flaky tests from JSON or... |
+| `robotframework-tools` | 4 | Robot Framework (up to 7.5): write and modernise suites with VAR, typed and secret variables, GROUP, test metadata and Markdown tests (with an audit script), build... |
 <!-- plugins-simple:end -->
 
 `--all` installs every skill. `--skill a,b` installs specific skills by name.

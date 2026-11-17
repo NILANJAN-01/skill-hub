@@ -1,0 +1,9 @@
+{
+  "name": "old-e2e",
+  "devDependencies": {
+    "@playwright/test": "^1.48.2"
+  },
+  "scripts": {
+    "e2e": "playwright test -gv @slow"
+  }
+}

@@ -482,5 +482,50 @@
     "Build a RAG pipeline so users can chat with our Markdown docs.",
     "Our RAG bot answers without using the docs. Find out if retrieval is the problem.",
     "Chunk the docs folder and measure recall@5 for these labelled questions."
+  ],
+  "playwright-test-authoring": [
+    "Write Playwright tests for our login and checkout flow using our data-qa attributes.",
+    "Audit our Playwright suite for flaky patterns and fix the worst ones.",
+    "Set up Playwright in this repo with login reuse, staging and production base URLs, and an @smoke tag."
+  ],
+  "playwright-debugging": [
+    "Our Playwright tests pass locally but fail in CI. Here is results.json, find out why.",
+    "Which Playwright tests are flaky in this report and what is causing them?",
+    "This test times out on the Pay button; read the trace and fix it."
+  ],
+  "playwright-ci": [
+    "Add Playwright to GitHub Actions with 4 shards and one merged HTML report.",
+    "Generate a GitLab CI job for our Playwright suite using the right Docker image.",
+    "Our Playwright run takes 40 minutes in Jenkins; split it into parallel shards."
+  ],
+  "playwright-mcp-browser": [
+    "Open our staging site, sign in as the test user and check that checkout works.",
+    "Reproduce this bug report in the browser and tell me what errors show in the console.",
+    "Click through the new settings page and turn what you did into a Playwright test."
+  ],
+  "playwright-upgrade": [
+    "Upgrade our Playwright from 1.48 to the latest version and tell me what will break.",
+    "We bumped Playwright and CI now fails with Node and Docker errors; fix the upgrade.",
+    "Which removed Playwright APIs does this repo still use?"
+  ],
+  "robotframework-test-authoring": [
+    "Write Robot Framework tests for our login and checkout using the Browser library.",
+    "Modernise these old .robot files to Robot Framework 7 syntax (VAR, IF, RETURN).",
+    "Move the passwords in our robot variables to secret variables from the environment."
+  ],
+  "robotframework-libraries": [
+    "Write a Python keyword library for our Orders API to use in Robot Framework.",
+    "Review our custom Robot Framework library: types, docs and logging.",
+    "Generate Markdown documentation for this Robot library with Libdoc."
+  ],
+  "robotframework-results": [
+    "Our Robot Framework run failed in CI; here is output.xml, tell me why.",
+    "Which Robot tests are flaky? Compare output.xml with the rerun output.",
+    "Why did our Robot suite get so slow? Find the slowest keywords."
+  ],
+  "robotframework-ci": [
+    "Add Robot Framework tests to GitHub Actions with a rerun of failed tests.",
+    "Run our Robot suite in parallel with pabot in GitLab CI and publish JUnit results.",
+    "Create a Jenkinsfile for our Robot Framework tests with the Browser library."
   ]
 }

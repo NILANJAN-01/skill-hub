@@ -317,6 +317,29 @@
         "llm-evals",
         "rag-pipeline"
       ]
+    },
+    {
+      "name": "playwright-tools",
+      "description": "Playwright (up to 1.65): write resilient end-to-end tests that fit your team's conventions (with a suite audit script), debug failing and flaky tests from JSON or JUnit reports and traces, generate CI pipelines with sharding and merged reports for GitHub, GitLab, Azure and Jenkins, let the agent drive a browser through the Playwright MCP server, and plan upgrades across breaking changes",
+      "category": "playwright-tools",
+      "skills": [
+        "playwright-test-authoring",
+        "playwright-debugging",
+        "playwright-ci",
+        "playwright-mcp-browser",
+        "playwright-upgrade"
+      ]
+    },
+    {
+      "name": "robotframework-tools",
+      "description": "Robot Framework (up to 7.5): write and modernise suites with VAR, typed and secret variables, GROUP, test metadata and Markdown tests (with an audit script), build Python keyword libraries with typed arguments and Markdown Libdoc, analyse output.xml/output.json for failures and flaky tests, and generate CI pipelines with rerun-and-merge, pabot and JUnit results",
+      "category": "robotframework-tools",
+      "skills": [
+        "robotframework-test-authoring",
+        "robotframework-libraries",
+        "robotframework-results",
+        "robotframework-ci"
+      ]
     }
   ],
   "categories": [
@@ -391,6 +414,16 @@
       "count": 4
     },
     {
+      "name": "playwright-tools",
+      "title": "Playwright: E2E tests, debugging, CI & browser agent",
+      "count": 5
+    },
+    {
+      "name": "robotframework-tools",
+      "title": "Robot Framework: suites, libraries, results & CI",
+      "count": 4
+    },
+    {
       "name": "git-getting-started",
       "title": "Git: getting started",
       "count": 11
@@ -448,6 +481,25 @@
           "skills": [
             "kotlin-unit-test",
             "python-unit-test"
+          ]
+        },
+        {
+          "name": "playwright",
+          "skills": [
+            "playwright-ci",
+            "playwright-debugging",
+            "playwright-mcp-browser",
+            "playwright-test-authoring",
+            "playwright-upgrade"
+          ]
+        },
+        {
+          "name": "robot-framework",
+          "skills": [
+            "robotframework-ci",
+            "robotframework-libraries",
+            "robotframework-results",
+            "robotframework-test-authoring"
           ]
         },
         {
@@ -2935,6 +2987,114 @@
       ]
     },
     {
+      "name": "playwright-ci",
+      "title": "Playwright in CI: pipelines, sharding and reports",
+      "category": "playwright-tools",
+      "area": "testing",
+      "group": "playwright",
+      "description": "Run Playwright tests in CI: GitHub Actions, GitLab CI, Azure Pipelines or Jenkins, with sharding, merged HTML reports, JUnit results, traces as artifacts, the matching Docker image and secrets. A script generates the pipeline file from the project. Use when the user wants Playwright in CI, faster runs with shards, or CI reports and artifacts.",
+      "plugins": [
+        "playwright-tools"
+      ],
+      "path": "skills/testing/playwright/playwright-ci",
+      "license": "MIT",
+      "compatibility": "The generator needs Python 3.8+ (standard library only). Pipelines run Node.js with @playwright/test, or Python with pytest-playwright.",
+      "examples": [
+        "Add Playwright to GitHub Actions with 4 shards and one merged HTML report.",
+        "Generate a GitLab CI job for our Playwright suite using the right Docker image.",
+        "Our Playwright run takes 40 minutes in Jenkins; split it into parallel shards."
+      ],
+      "files": [
+        "references/ci-notes.md"
+      ]
+    },
+    {
+      "name": "playwright-debugging",
+      "title": "Playwright debugging: failing and flaky tests",
+      "category": "playwright-tools",
+      "area": "testing",
+      "group": "playwright",
+      "description": "Find why Playwright tests fail or flake: read the report and traces, sort failures by cause (timeout, strict mode, assertion, navigation, closed page, screenshot diff), list flaky and slow tests, and fix the root cause. A script summarises Playwright JSON or JUnit reports. Use when Playwright tests fail, time out, or pass locally but fail in CI.",
+      "plugins": [
+        "playwright-tools"
+      ],
+      "path": "skills/testing/playwright/playwright-debugging",
+      "license": "MIT",
+      "compatibility": "The report script needs Python 3.8+ (standard library only). Traces open with the Playwright CLI (Node.js) or trace.playwright.dev.",
+      "examples": [
+        "Our Playwright tests pass locally but fail in CI. Here is results.json, find out why.",
+        "Which Playwright tests are flaky in this report and what is causing them?",
+        "This test times out on the Pay button; read the trace and fix it."
+      ],
+      "files": [
+        "references/flakiness.md"
+      ]
+    },
+    {
+      "name": "playwright-mcp-browser",
+      "title": "Playwright MCP: let the agent use a browser, then keep it as a test",
+      "category": "playwright-tools",
+      "area": "testing",
+      "group": "playwright",
+      "description": "Drive a real browser through the Playwright MCP server: explore a web app, reproduce a bug report, check a deployment, fill forms, read console and network, then turn what worked into a Playwright test. Also covers Playwright's planner, generator and healer test agents. Use when the user asks the agent to open, click through, check or test a website in a browser.",
+      "plugins": [
+        "playwright-tools"
+      ],
+      "path": "skills/testing/playwright/playwright-mcp-browser",
+      "license": "MIT",
+      "compatibility": "Needs the Playwright MCP server (@playwright/mcp, Node.js) registered with the agent. Writing tests from the session needs @playwright/test or pytest-playwright.",
+      "examples": [
+        "Open our staging site, sign in as the test user and check that checkout works.",
+        "Reproduce this bug report in the browser and tell me what errors show in the console.",
+        "Click through the new settings page and turn what you did into a Playwright test."
+      ],
+      "files": [
+        "references/mcp-options.md"
+      ]
+    },
+    {
+      "name": "playwright-test-authoring",
+      "title": "Playwright test authoring: resilient E2E tests that fit your team",
+      "category": "playwright-tools",
+      "area": "testing",
+      "group": "playwright",
+      "description": "Write and review Playwright end-to-end tests (TypeScript/JavaScript or Python) that fit the team's conventions: resilient locators, web-first assertions, fixtures, page objects, login reuse, API, visual and accessibility checks. A script audits a suite and its config for flaky patterns. Use when the user wants Playwright tests written, reviewed or set up.",
+      "plugins": [
+        "playwright-tools"
+      ],
+      "path": "skills/testing/playwright/playwright-test-authoring",
+      "license": "MIT",
+      "compatibility": "The audit script needs Python 3.8+ (standard library only). Running tests needs Node.js with @playwright/test, or Python with pytest-playwright.",
+      "examples": [
+        "Write Playwright tests for our login and checkout flow using our data-qa attributes.",
+        "Audit our Playwright suite for flaky patterns and fix the worst ones.",
+        "Set up Playwright in this repo with login reuse, staging and production base URLs, and an @smoke tag."
+      ],
+      "files": [
+        "references/patterns.md"
+      ]
+    },
+    {
+      "name": "playwright-upgrade",
+      "title": "Playwright upgrade: breaking changes, affected code, steps",
+      "category": "playwright-tools",
+      "area": "testing",
+      "group": "playwright",
+      "description": "Upgrade Playwright safely to a newer version (up to 1.65): list the breaking changes and removed APIs between the current and target versions, find every affected place in tests, config, CI files and Docker image tags, then update packages, browsers, Node.js and baselines. A script builds the plan. Use when the user wants to upgrade Playwright or a newer version broke the tests.",
+      "plugins": [
+        "playwright-tools"
+      ],
+      "path": "skills/testing/playwright/playwright-upgrade",
+      "license": "MIT",
+      "compatibility": "The planning script needs Python 3.8+ (standard library only). Its release data covers Playwright 1.50 to 1.65; check the release notes for later versions.",
+      "examples": [
+        "Upgrade our Playwright from 1.48 to the latest version and tell me what will break.",
+        "We bumped Playwright and CI now fails with Node and Docker errors; fix the upgrade.",
+        "Which removed Playwright APIs does this repo still use?"
+      ],
+      "files": []
+    },
+    {
       "name": "powershell-commands",
       "title": "PowerShell Commands for Agents",
       "category": "shell-tools",
@@ -3101,6 +3261,91 @@
         "Study the src and docs folders line by line and give me a LEARNINGS.md."
       ],
       "files": []
+    },
+    {
+      "name": "robotframework-ci",
+      "title": "Robot Framework in CI: run, rerun, parallelise, report",
+      "category": "robotframework-tools",
+      "area": "testing",
+      "group": "robot-framework",
+      "description": "Run Robot Framework in CI and from the command line: GitHub Actions, GitLab CI, Azure Pipelines or Jenkins, tag selection, typed and secret variables, rerun of failed tests with rebot merge, parallel runs with pabot, JUnit results, JSON output and Robocop checks. A script generates the pipeline. Use when the user wants Robot tests in CI, faster runs, or reliable reports.",
+      "plugins": [
+        "robotframework-tools"
+      ],
+      "path": "skills/testing/robot-framework/robotframework-ci",
+      "license": "MIT",
+      "compatibility": "The generator needs Python 3.8+ (standard library only). Pipelines run Robot Framework 7.x on Python 3.8+; the Browser library also needs Node.js (or its Docker image).",
+      "examples": [
+        "Add Robot Framework tests to GitHub Actions with a rerun of failed tests.",
+        "Run our Robot suite in parallel with pabot in GitLab CI and publish JUnit results.",
+        "Create a Jenkinsfile for our Robot Framework tests with the Browser library."
+      ],
+      "files": []
+    },
+    {
+      "name": "robotframework-libraries",
+      "title": "Robot Framework libraries: Python keywords done right",
+      "category": "robotframework-tools",
+      "area": "testing",
+      "group": "robot-framework",
+      "description": "Write Python keyword libraries for Robot Framework with the current API: @library and @keyword, type hints and argument conversion (Literal, enums, TypedDict, custom converters, Secret, Python 3.12 type aliases), embedded arguments, async keywords, logging, listeners, and Libdoc docs in Markdown. A script reviews a library. Use when creating or reviewing custom Robot Framework libraries.",
+      "plugins": [
+        "robotframework-tools"
+      ],
+      "path": "skills/testing/robot-framework/robotframework-libraries",
+      "license": "MIT",
+      "compatibility": "The review script needs Python 3.8+ (standard library only). Libraries target Robot Framework 7.x; Secret needs 7.4+, Markdown Libdoc and type aliases 7.5+.",
+      "examples": [
+        "Write a Python keyword library for our Orders API to use in Robot Framework.",
+        "Review our custom Robot Framework library: types, docs and logging.",
+        "Generate Markdown documentation for this Robot library with Libdoc."
+      ],
+      "files": [
+        "references/library-api.md"
+      ]
+    },
+    {
+      "name": "robotframework-results",
+      "title": "Robot Framework results: failures, flaky tests and slow keywords",
+      "category": "robotframework-tools",
+      "area": "testing",
+      "group": "robot-framework",
+      "description": "Find why Robot Framework tests or tasks failed: read output.xml or output.json, log.html and the console, sort failures by cause (assertion, missing keyword, variable, timeout, setup, UI element, connection, import), show the failing keyword chain, spot flaky tests with --rerunfailed and compare runs. A script summarises results. Use when a Robot run failed, is flaky or got slow.",
+      "plugins": [
+        "robotframework-tools"
+      ],
+      "path": "skills/testing/robot-framework/robotframework-results",
+      "license": "MIT",
+      "compatibility": "The script needs Python 3.8+ (standard library only) and reads output.xml from RF 4-7 (RF 7 ISO timestamps and RF 6 start/end times) and output.json from RF 7.2+.",
+      "examples": [
+        "Our Robot Framework run failed in CI; here is output.xml, tell me why.",
+        "Which Robot tests are flaky? Compare output.xml with the rerun output.",
+        "Why did our Robot suite get so slow? Find the slowest keywords."
+      ],
+      "files": []
+    },
+    {
+      "name": "robotframework-test-authoring",
+      "title": "Robot Framework authoring: modern 7.x syntax and an audit",
+      "category": "robotframework-tools",
+      "area": "testing",
+      "group": "robot-framework",
+      "description": "Write, review and modernise Robot Framework tests and tasks with the current 7.x syntax: VAR, typed variables, GROUP, secret variables, IF/TRY/WHILE, RETURN, keyword setup, test metadata and Markdown test files, plus Browser, SeleniumLibrary and RequestsLibrary. A script audits suites for outdated or deprecated syntax. Use when the user writes, reviews or upgrades .robot files.",
+      "plugins": [
+        "robotframework-tools"
+      ],
+      "path": "skills/testing/robot-framework/robotframework-test-authoring",
+      "license": "MIT",
+      "compatibility": "The audit script needs Python 3.8+ (standard library only). Tests need Robot Framework 7.x (latest 7.5.x, Python 3.8+); some features need newer versions (noted inline).",
+      "examples": [
+        "Write Robot Framework tests for our login and checkout using the Browser library.",
+        "Modernise these old .robot files to Robot Framework 7 syntax (VAR, IF, RETURN).",
+        "Move the passwords in our robot variables to secret variables from the environment."
+      ],
+      "files": [
+        "references/syntax.md",
+        "scripts/fixtures/project/tests/login.robot.md"
+      ]
     },
     {
       "name": "skill-orchestrator",

@@ -367,6 +367,33 @@
         "./skills/development/ai-agents/llm-evals",
         "./skills/development/ai-agents/rag-pipeline"
       ]
+    },
+    {
+      "name": "playwright-tools",
+      "description": "Playwright (up to 1.65): write resilient end-to-end tests that fit your team's conventions (with a suite audit script), debug failing and flaky tests from JSON or JUnit reports and traces, generate CI pipelines with sharding and merged reports for GitHub, GitLab, Azure and Jenkins, let the agent drive a browser through the Playwright MCP server, and plan upgrades across breaking changes",
+      "source": "./",
+      "strict": false,
+      "category": "playwright-tools",
+      "skills": [
+        "./skills/testing/playwright/playwright-test-authoring",
+        "./skills/testing/playwright/playwright-debugging",
+        "./skills/testing/playwright/playwright-ci",
+        "./skills/testing/playwright/playwright-mcp-browser",
+        "./skills/testing/playwright/playwright-upgrade"
+      ]
+    },
+    {
+      "name": "robotframework-tools",
+      "description": "Robot Framework (up to 7.5): write and modernise suites with VAR, typed and secret variables, GROUP, test metadata and Markdown tests (with an audit script), build Python keyword libraries with typed arguments and Markdown Libdoc, analyse output.xml/output.json for failures and flaky tests, and generate CI pipelines with rerun-and-merge, pabot and JUnit results",
+      "source": "./",
+      "strict": false,
+      "category": "robotframework-tools",
+      "skills": [
+        "./skills/testing/robot-framework/robotframework-test-authoring",
+        "./skills/testing/robot-framework/robotframework-libraries",
+        "./skills/testing/robot-framework/robotframework-results",
+        "./skills/testing/robot-framework/robotframework-ci"
+      ]
     }
   ]
 }

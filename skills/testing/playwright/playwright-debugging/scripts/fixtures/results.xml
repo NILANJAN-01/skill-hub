@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="pytest tests">
+  <testsuite name="pytest" tests="3" failures="1" skipped="1">
+    <testcase classname="tests.test_login" name="test_login[chromium]" time="2.5"/>
+    <testcase classname="tests.test_login" name="test_logout[chromium]" time="12.0">
+      <failure message="playwright._impl._errors.Error: Page.goto: net::ERR_CONNECTION_REFUSED at https://staging.example.com/">trace saved
+[[ATTACHMENT|test-results/test-logout-chromium/trace.zip]]</failure>
+    </testcase>
+    <testcase classname="tests.test_login" name="test_sso[chromium]" time="0">
+      <skipped message="SSO not available"/>
+    </testcase>
+  </testsuite>
+</testsuites>

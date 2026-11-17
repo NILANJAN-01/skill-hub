@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.5.1 (Python 3.15.2 on win32)" generated="2026-11-17T21:47:57.835099" rpa="false" schemaversion="5">
+<suite id="s1" name="Suite" source="fixtures/suite">
+<suite id="s1-s1" name="Checkout" source="fixtures/suite/checkout.robot">
+<test id="s1-s1-t1" name="Price Should Match" line="37">
+<kw name="Check Total">
+<kw name="Log" owner="BuiltIn" type="SETUP">
+<msg time="2026-11-17T21:47:57.873911" level="INFO">checking</msg>
+<arg>checking</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-11-17T21:47:57.873642" elapsed="0.000332"/>
+</kw>
+<kw name="Should Be Equal" owner="BuiltIn">
+<msg time="2026-11-17T21:47:57.874456" level="FAIL">Total differs: 12 != 10</msg>
+<arg>${actual}</arg>
+<arg>${expected}</arg>
+<arg>Total differs</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="FAIL" start="2026-11-17T21:47:57.874130" elapsed="0.013246">Total differs: 12 != 10</status>
+</kw>
+<arg>10</arg>
+<arg>12</arg>
+<status status="FAIL" start="2026-11-17T21:47:57.873125" elapsed="0.014417">Total differs: 12 != 10</status>
+</kw>
+<tag>checkout</tag>
+<tag>regression</tag>
+<status status="FAIL" start="2026-11-17T21:47:57.872491" elapsed="0.015194">Total differs: 12 != 10</status>
+</test>
+<test id="s1-s1-t2" name="Missing Keyword" line="41">
+<kw name="This Keyword Does Not Exist">
+<msg time="2026-11-17T21:47:57.888557" level="FAIL">No keyword with name 'This Keyword Does Not Exist' found.</msg>
+<status status="FAIL" start="2026-11-17T21:47:57.888525" elapsed="0.000065">No keyword with name 'This Keyword Does Not Exist' found.</status>
+</kw>
+<tag>checkout</tag>
+<status status="FAIL" start="2026-11-17T21:47:57.887876" elapsed="0.000811">No keyword with name 'This Keyword Does Not Exist' found.</status>
+</test>
+<test id="s1-s1-t3" name="Slow Step" line="44">
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-11-17T21:47:58.108845" level="FAIL">Test timeout 200 milliseconds exceeded.</msg>
+<arg>1s</arg>
+<doc>Pauses execution for the given time.</doc>
+<status status="FAIL" start="2026-11-17T21:47:57.889027" elapsed="0.219909">Test timeout 200 milliseconds exceeded.</status>
+</kw>
+<tag>checkout</tag>
+<timeout value="200 milliseconds"/>
+<status status="FAIL" start="2026-11-17T21:47:57.888855" elapsed="0.220294">Test timeout 200 milliseconds exceeded.</status>
+</test>
+<test id="s1-s1-t4" name="Flaky Payment" line="51">
+<kw name="Should Be True" owner="BuiltIn">
+<arg>${FLAKY_PASS}</arg>
+<arg>Payment gateway did not answer</arg>
+<doc>Fails if the given condition is not true.</doc>
+<status status="PASS" start="2026-11-17T21:47:58.109658" elapsed="0.000330"/>
+</kw>
+<tag>checkout</tag>
+<status status="PASS" start="2026-11-17T21:47:58.109378" elapsed="0.000679"/>
+</test>
+<doc>Fixture suite used to produce real output files for the tests.</doc>
+<status status="FAIL" start="2026-11-17T21:47:57.871038" elapsed="0.239269"/>
+</suite>
+<status status="FAIL" start="2026-11-17T21:47:57.837832" elapsed="0.272678"/>
+</suite>
+<statistics>
+<total>
+<stat pass="1" fail="3" skip="0">All Tests</stat>
+</total>
+<tag>
+<stat pass="1" fail="3" skip="0">checkout</stat>
+<stat pass="0" fail="1" skip="0">regression</stat>
+</tag>
+<suite>
+<stat name="Suite" id="s1" pass="1" fail="3" skip="0">Suite</stat>
+<stat name="Checkout" id="s1-s1" pass="1" fail="3" skip="0">Suite.Checkout</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

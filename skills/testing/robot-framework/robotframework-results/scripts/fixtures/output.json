@@ -1,0 +1,545 @@
+{
+"generator":"Robot 7.5.1 (Python 3.15.2 on win32)",
+"generated":"2026-11-17T21:47:57.140449",
+"rpa":false,
+"suite":{
+"id":"s1",
+"suites":[{
+"id":"s1-s1",
+"tests":[{
+"id":"s1-s1-t1",
+"body":[{
+"type":"VAR",
+"body":[{
+"type":"MESSAGE",
+"message":"${total} = 0",
+"level":"INFO",
+"timestamp":"2026-11-17T21:47:57.175210"
+}],
+"name":"${total: int}",
+"value":["0"],
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.175109",
+"elapsed_time":0.000144
+},{
+"type":"GROUP",
+"body":[{
+"type":"FOR",
+"body":[{
+"type":"ITERATION",
+"body":[{
+"body":[{
+"type":"MESSAGE",
+"message":"${total} = 1",
+"level":"INFO",
+"timestamp":"2026-11-17T21:47:57.176264"
+}],
+"name":"Evaluate",
+"owner":"BuiltIn",
+"args":["${total} + ${n}"],
+"assign":["${total}"],
+"doc":"Evaluates the given expression in Python and returns the result.",
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.175903",
+"elapsed_time":0.000394
+}],
+"assign":{"${i}":"1","${n}":"1"},
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.175551",
+"elapsed_time":0.000906
+},{
+"type":"ITERATION",
+"body":[{
+"body":[{
+"type":"MESSAGE",
+"message":"${total} = 3",
+"level":"INFO",
+"timestamp":"2026-11-17T21:47:57.176912"
+}],
+"name":"Evaluate",
+"owner":"BuiltIn",
+"args":["${total} + ${n}"],
+"assign":["${total}"],
+"doc":"Evaluates the given expression in Python and returns the result.",
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.176644",
+"elapsed_time":0.000294
+}],
+"assign":{"${i}":"2","${n}":"2"},
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.176547",
+"elapsed_time":0.000431
+},{
+"type":"ITERATION",
+"body":[{
+"body":[{
+"type":"MESSAGE",
+"message":"${total} = 6",
+"level":"INFO",
+"timestamp":"2026-11-17T21:47:57.177365"
+}],
+"name":"Evaluate",
+"owner":"BuiltIn",
+"args":["${total} + ${n}"],
+"assign":["${total}"],
+"doc":"Evaluates the given expression in Python and returns the result.",
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.177129",
+"elapsed_time":0.000262
+}],
+"assign":{"${i}":"3","${n}":"3"},
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.177054",
+"elapsed_time":0.000374
+}],
+"flavor":"IN ENUMERATE",
+"start":"1",
+"assign":["${i}","${n}"],
+"values":["@{NUMS}"],
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.175389",
+"elapsed_time":0.002073
+}],
+"name":"Sum numbers",
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.175340",
+"elapsed_time":0.002164
+},{
+"name":"Should Be Equal",
+"owner":"BuiltIn",
+"args":["${total}","${6}"],
+"doc":"Fails if the given objects are unequal.",
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.177602",
+"elapsed_time":0.000215
+},{
+"type":"VAR",
+"body":[{
+"type":"MESSAGE",
+"message":"${count} = 3",
+"level":"INFO",
+"timestamp":"2026-11-17T21:47:57.177957"
+}],
+"name":"${count: int}",
+"value":["${RETRIES}"],
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.177865",
+"elapsed_time":0.000122
+},{
+"type":"WHILE",
+"body":[{
+"type":"ITERATION",
+"body":[{
+"body":[{
+"type":"MESSAGE",
+"message":"${count} = 2",
+"level":"INFO",
+"timestamp":"2026-11-17T21:47:57.178498"
+}],
+"name":"Evaluate",
+"owner":"BuiltIn",
+"args":["${count} - 1"],
+"assign":["${count}"],
+"doc":"Evaluates the given expression in Python and returns the result.",
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.178278",
+"elapsed_time":0.000246
+},{
+"type":"IF/ELSE ROOT",
+"body":[{
+"type":"IF",
+"body":[{
+"type":"BREAK",
+"status":"NOT RUN",
+"start_time":"2026-11-17T21:47:57.178678",
+"elapsed_time":0.000016
+}],
+"condition":"${count} == 1",
+"status":"NOT RUN",
+"start_time":"2026-11-17T21:47:57.178601",
+"elapsed_time":0.000114
+}],
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.178581",
+"elapsed_time":0.000153
+}],
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.178034",
+"elapsed_time":0.000721
+},{
+"type":"ITERATION",
+"body":[{
+"body":[{
+"type":"MESSAGE",
+"message":"${count} = 1",
+"level":"INFO",
+"timestamp":"2026-11-17T21:47:57.179130"
+}],
+"name":"Evaluate",
+"owner":"BuiltIn",
+"args":["${count} - 1"],
+"assign":["${count}"],
+"doc":"Evaluates the given expression in Python and returns the result.",
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.178931",
+"elapsed_time":0.000229
+},{
+"type":"IF/ELSE ROOT",
+"body":[{
+"type":"IF",
+"body":[{
+"type":"BREAK",
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.179288",
+"elapsed_time":0.000031
+}],
+"condition":"${count} == 1",
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.179223",
+"elapsed_time":0.000120
+}],
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.179208",
+"elapsed_time":0.000156
+}],
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.178771",
+"elapsed_time":0.000614
+}],
+"condition":"${count} > 0",
+"limit":"10",
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.178032",
+"elapsed_time":0.001369
+},{
+"type":"TRY/EXCEPT ROOT",
+"body":[{
+"type":"TRY",
+"body":[{
+"body":[{
+"type":"MESSAGE",
+"message":"expected problem",
+"level":"FAIL",
+"timestamp":"2026-11-17T21:47:57.179759"
+}],
+"name":"Fail",
+"owner":"BuiltIn",
+"args":["expected problem"],
+"doc":"Fails the test or task with the given message and optionally alters its tags.",
+"status":"FAIL",
+"message":"expected problem",
+"start_time":"2026-11-17T21:47:57.179554",
+"elapsed_time":0.014502
+}],
+"status":"FAIL",
+"message":"expected problem",
+"start_time":"2026-11-17T21:47:57.179488",
+"elapsed_time":0.014679
+},{
+"type":"EXCEPT",
+"body":[{
+"body":[{
+"type":"MESSAGE",
+"message":"handled",
+"level":"INFO",
+"timestamp":"2026-11-17T21:47:57.194737"
+}],
+"name":"Log",
+"owner":"BuiltIn",
+"args":["handled"],
+"doc":"Logs the given message with the given level.",
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.194481",
+"elapsed_time":0.000328
+}],
+"patterns":["expected*"],
+"pattern_type":"GLOB",
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.194342",
+"elapsed_time":0.000506
+}],
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.179443",
+"elapsed_time":0.015440
+},{
+"type":"FOR",
+"body":[{
+"type":"ITERATION",
+"body":[{
+"body":[{
+"type":"MESSAGE",
+"message":"1 3",
+"level":"INFO",
+"timestamp":"2026-11-17T21:47:57.195430"
+}],
+"name":"Log",
+"owner":"BuiltIn",
+"args":["${a} ${b}"],
+"doc":"Logs the given message with the given level.",
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.195259",
+"elapsed_time":0.000206
+}],
+"assign":{"${a}":"1","${b}":"3"},
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.195159",
+"elapsed_time":0.000340
+},{
+"type":"ITERATION",
+"body":[{
+"body":[{
+"type":"MESSAGE",
+"message":"2 4",
+"level":"INFO",
+"timestamp":"2026-11-17T21:47:57.195814"
+}],
+"name":"Log",
+"owner":"BuiltIn",
+"args":["${a} ${b}"],
+"doc":"Logs the given message with the given level.",
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.195652",
+"elapsed_time":0.000195
+}],
+"assign":{"${a}":"2","${b}":"4"},
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.195566",
+"elapsed_time":0.000311
+}],
+"flavor":"IN ZIP",
+"mode":"STRICT",
+"assign":["${a}","${b}"],
+"values":["${{[1, 2]}}","${{[3, 4]}}"],
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.194930",
+"elapsed_time":0.000966
+},{
+"body":[{
+"body":[{
+"type":"MESSAGE",
+"message":"<secret>",
+"level":"INFO",
+"timestamp":"2026-11-17T21:47:57.196483"
+}],
+"name":"Log",
+"owner":"BuiltIn",
+"args":["${token}"],
+"doc":"Logs the given message with the given level.",
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.196330",
+"elapsed_time":0.000190
+}],
+"name":"Use Secret",
+"args":["${TOKEN}"],
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.196036",
+"elapsed_time":0.000535
+}],
+"name":"Modern Syntax Works",
+"tags":["checkout","smoke"],
+"metadata":{"Issue":"QA-7"},
+"lineno":12,
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.174891",
+"elapsed_time":0.021761
+},{
+"id":"s1-s1-t2",
+"body":[{
+"setup":{
+"body":[{
+"type":"MESSAGE",
+"message":"checking",
+"level":"INFO",
+"timestamp":"2026-11-17T21:47:57.197517"
+}],
+"name":"Log",
+"owner":"BuiltIn",
+"args":["checking"],
+"doc":"Logs the given message with the given level.",
+"status":"PASS",
+"start_time":"2026-11-17T21:47:57.197355",
+"elapsed_time":0.000199
+},
+"body":[{
+"body":[{
+"type":"MESSAGE",
+"message":"Total differs: 12 != 10",
+"level":"FAIL",
+"timestamp":"2026-11-17T21:47:57.197942"
+}],
+"name":"Should Be Equal",
+"owner":"BuiltIn",
+"args":["${actual}","${expected}","Total differs"],
+"doc":"Fails if the given objects are unequal.",
+"status":"FAIL",
+"message":"Total differs: 12 != 10",
+"start_time":"2026-11-17T21:47:57.197691",
+"elapsed_time":0.000325
+}],
+"name":"Check Total",
+"args":["10","12"],
+"status":"FAIL",
+"message":"Total differs: 12 != 10",
+"start_time":"2026-11-17T21:47:57.197054",
+"elapsed_time":0.001051
+}],
+"name":"Price Should Match",
+"tags":["checkout","regression"],
+"lineno":37,
+"status":"FAIL",
+"message":"Total differs: 12 != 10",
+"start_time":"2026-11-17T21:47:57.196827",
+"elapsed_time":0.001378
+},{
+"id":"s1-s1-t3",
+"body":[{
+"body":[{
+"type":"MESSAGE",
+"message":"No keyword with name 'This Keyword Does Not Exist' found.",
+"level":"FAIL",
+"timestamp":"2026-11-17T21:47:57.198890"
+}],
+"name":"This Keyword Does Not Exist",
+"status":"FAIL",
+"message":"No keyword with name 'This Keyword Does Not Exist' found.",
+"start_time":"2026-11-17T21:47:57.198864",
+"elapsed_time":0.000062
+}],
+"name":"Missing Keyword",
+"tags":["checkout"],
+"lineno":41,
+"status":"FAIL",
+"message":"No keyword with name 'This Keyword Does Not Exist' found.",
+"start_time":"2026-11-17T21:47:57.198298",
+"elapsed_time":0.000723
+},{
+"id":"s1-s1-t4",
+"body":[{
+"body":[{
+"type":"MESSAGE",
+"message":"Test timeout 200 milliseconds exceeded.",
+"level":"FAIL",
+"timestamp":"2026-11-17T21:47:57.409212"
+}],
+"name":"Sleep",
+"owner":"BuiltIn",
+"args":["1s"],
+"doc":"Pauses execution for the given time.",
+"status":"FAIL",
+"message":"Test timeout 200 milliseconds exceeded.",
+"start_time":"2026-11-17T21:47:57.199320",
+"elapsed_time":0.209990
+}],
+"name":"Slow Step",
+"tags":["checkout"],
+"lineno":44,
+"timeout":"200 milliseconds",
+"status":"FAIL",
+"message":"Test timeout 200 milliseconds exceeded.",
+"start_time":"2026-11-17T21:47:57.199161",
+"elapsed_time":0.210393
+},{
+"id":"s1-s1-t5",
+"body":[{
+"body":[{
+"type":"MESSAGE",
+"message":"Feature flag is off",
+"level":"SKIP",
+"timestamp":"2026-11-17T21:47:57.410313"
+}],
+"name":"Skip",
+"owner":"BuiltIn",
+"args":["Feature flag is off"],
+"doc":"Stops the current test or task and sets its status to SKIP.",
+"status":"SKIP",
+"message":"Feature flag is off",
+"start_time":"2026-11-17T21:47:57.410068",
+"elapsed_time":0.000306
+}],
+"name":"Skipped On Purpose",
+"tags":["checkout"],
+"lineno":48,
+"status":"SKIP",
+"message":"Feature flag is off",
+"start_time":"2026-11-17T21:47:57.409759",
+"elapsed_time":0.000701
+},{
+"id":"s1-s1-t6",
+"body":[{
+"body":[{
+"type":"MESSAGE",
+"message":"Payment gateway did not answer",
+"level":"FAIL",
+"timestamp":"2026-11-17T21:47:57.410902"
+}],
+"name":"Should Be True",
+"owner":"BuiltIn",
+"args":["${FLAKY_PASS}","Payment gateway did not answer"],
+"doc":"Fails if the given condition is not true.",
+"status":"FAIL",
+"message":"Payment gateway did not answer",
+"start_time":"2026-11-17T21:47:57.410693",
+"elapsed_time":0.000255
+}],
+"name":"Flaky Payment",
+"tags":["checkout"],
+"lineno":51,
+"status":"FAIL",
+"message":"Payment gateway did not answer",
+"start_time":"2026-11-17T21:47:57.410535",
+"elapsed_time":0.000505
+}],
+"name":"Checkout",
+"doc":"Fixture suite used to produce real output files for the tests.",
+"source":"fixtures/suite/checkout.robot",
+"status":"FAIL",
+"start_time":"2026-11-17T21:47:57.173722",
+"elapsed_time":0.237524
+}],
+"name":"Suite",
+"source":"fixtures/suite",
+"status":"FAIL",
+"start_time":"2026-11-17T21:47:57.141831",
+"elapsed_time":0.269616
+},
+"statistics":{
+"total":{
+"label":"All Tests",
+"pass":1,
+"fail":4,
+"skip":1
+},
+"suites":[{
+"label":"Suite",
+"name":"Suite",
+"id":"s1",
+"pass":1,
+"fail":4,
+"skip":1
+},{
+"label":"Suite.Checkout",
+"name":"Checkout",
+"id":"s1-s1",
+"pass":1,
+"fail":4,
+"skip":1
+}],
+"tags":[{
+"label":"checkout",
+"pass":1,
+"fail":4,
+"skip":1
+},{
+"label":"regression",
+"pass":0,
+"fail":1,
+"skip":0
+},{
+"label":"smoke",
+"pass":1,
+"fail":0,
+"skip":0
+}]
+},
+"errors":[]
+}

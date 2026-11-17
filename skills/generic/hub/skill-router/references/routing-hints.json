@@ -326,6 +326,176 @@
         "uncommitted changes",
         "switch branches without committing"
       ]
+    },
+    "playwright-test-authoring": {
+      "keywords": [
+        "e2e",
+        "end-to-end",
+        "locator",
+        "locators",
+        "spec",
+        "codegen",
+        "fixture",
+        "fixtures"
+      ],
+      "phrases": [
+        "write playwright",
+        "playwright tests for",
+        "page object",
+        "end to end test"
+      ]
+    },
+    "playwright-debugging": {
+      "keywords": [
+        "flaky",
+        "flake",
+        "flakiness",
+        "timeout",
+        "timeouts",
+        "trace",
+        "failing",
+        "fails",
+        "fail",
+        "debug"
+      ],
+      "phrases": [
+        "pass locally",
+        "passes locally",
+        "fail in ci",
+        "fails in ci",
+        "strict mode violation",
+        "timed out",
+        "show-trace"
+      ]
+    },
+    "playwright-ci": {
+      "keywords": [
+        "pipeline",
+        "shard",
+        "shards",
+        "sharding",
+        "jenkins",
+        "azure",
+        "workflow"
+      ],
+      "phrases": [
+        "github actions",
+        "gitlab ci",
+        "azure pipelines",
+        "merged report",
+        "merge reports"
+      ]
+    },
+    "playwright-mcp-browser": {
+      "keywords": [
+        "browser",
+        "site",
+        "website",
+        "staging",
+        "click",
+        "navigate",
+        "explore",
+        "reproduce"
+      ],
+      "phrases": [
+        "in the browser",
+        "in a browser",
+        "open the site",
+        "click through",
+        "playwright mcp"
+      ]
+    },
+    "playwright-upgrade": {
+      "keywords": [
+        "upgrade",
+        "upgrading",
+        "migrate",
+        "migration",
+        "bump",
+        "deprecated",
+        "removed",
+        "breaking"
+      ],
+      "phrases": [
+        "latest version",
+        "new version",
+        "newer version",
+        "breaking changes",
+        "release notes"
+      ]
+    },
+    "robotframework-test-authoring": {
+      "keywords": [
+        "robot",
+        "robotframework",
+        "rf",
+        "suite",
+        "modernise",
+        "modernize",
+        "resource"
+      ],
+      "phrases": [
+        "robot framework",
+        ".robot",
+        "robot tests",
+        "robot suite",
+        "secret variables"
+      ]
+    },
+    "robotframework-libraries": {
+      "keywords": [
+        "api",
+        "decorator",
+        "libdoc",
+        "library",
+        "listener",
+        "python",
+        "sdk"
+      ],
+      "phrases": [
+        "custom library",
+        "keyword library",
+        "keyword library for",
+        "python keyword library",
+        "python library",
+        "robot library",
+        "wrap an api"
+      ]
+    },
+    "robotframework-results": {
+      "keywords": [
+        "output.xml",
+        "output.json",
+        "rebot",
+        "flaky",
+        "failed",
+        "slow",
+        "rerun",
+        "log.html"
+      ],
+      "phrases": [
+        "robot run failed",
+        "robot tests failed",
+        "robot framework failed",
+        "why did"
+      ]
+    },
+    "robotframework-ci": {
+      "keywords": [
+        "pabot",
+        "pipeline",
+        "jenkins",
+        "jenkinsfile",
+        "parallel",
+        "junit",
+        "xunit"
+      ],
+      "phrases": [
+        "github actions",
+        "gitlab ci",
+        "azure pipelines",
+        "rerun failed"
+      ]
     }
   }
 }

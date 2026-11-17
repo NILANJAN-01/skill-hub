@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.5.1 (Python 3.15.2 on win32)" generated="2026-11-17T21:47:56.456656" rpa="false" schemaversion="5">
+<suite id="s1" name="Suite" source="fixtures/suite">
+<suite id="s1-s1" name="Checkout" source="fixtures/suite/checkout.robot">
+<test id="s1-s1-t1" name="Modern Syntax Works" line="12">
+<variable name="${total: int}">
+<msg time="2026-11-17T21:47:56.487172" level="INFO">${total} = 0</msg>
+<var>0</var>
+<status status="PASS" start="2026-11-17T21:47:56.487077" elapsed="0.000154"/>
+</variable>
+<group name="Sum numbers">
+<for flavor="IN ENUMERATE" start="1">
+<iter>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-11-17T21:47:56.488186" level="INFO">${total} = 1</msg>
+<var>${total}</var>
+<arg>${total} + ${n}</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-11-17T21:47:56.487825" elapsed="0.000398"/>
+</kw>
+<var name="${i}">1</var>
+<var name="${n}">1</var>
+<status status="PASS" start="2026-11-17T21:47:56.487485" elapsed="0.000774"/>
+</iter>
+<iter>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-11-17T21:47:56.488694" level="INFO">${total} = 3</msg>
+<var>${total}</var>
+<arg>${total} + ${n}</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-11-17T21:47:56.488437" elapsed="0.000276"/>
+</kw>
+<var name="${i}">2</var>
+<var name="${n}">2</var>
+<status status="PASS" start="2026-11-17T21:47:56.488344" elapsed="0.000397"/>
+</iter>
+<iter>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-11-17T21:47:56.489068" level="INFO">${total} = 6</msg>
+<var>${total}</var>
+<arg>${total} + ${n}</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-11-17T21:47:56.488872" elapsed="0.000221"/>
+</kw>
+<var name="${i}">3</var>
+<var name="${n}">3</var>
+<status status="PASS" start="2026-11-17T21:47:56.488806" elapsed="0.000311"/>
+</iter>
+<var>${i}</var>
+<var>${n}</var>
+<value>@{NUMS}</value>
+<status status="PASS" start="2026-11-17T21:47:56.487346" elapsed="0.001794"/>
+</for>
+<status status="PASS" start="2026-11-17T21:47:56.487300" elapsed="0.001869"/>
+</group>
+<kw name="Should Be Equal" owner="BuiltIn">
+<arg>${total}</arg>
+<arg>${6}</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="PASS" start="2026-11-17T21:47:56.489272" elapsed="0.000210"/>
+</kw>
+<variable name="${count: int}">
+<msg time="2026-11-17T21:47:56.489592" level="INFO">${count} = 3</msg>
+<var>${RETRIES}</var>
+<status status="PASS" start="2026-11-17T21:47:56.489519" elapsed="0.000090"/>
+</variable>
+<while condition="${count} &gt; 0" limit="10">
+<iter>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-11-17T21:47:56.490067" level="INFO">${count} = 2</msg>
+<var>${count}</var>
+<arg>${count} - 1</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-11-17T21:47:56.489862" elapsed="0.000222"/>
+</kw>
+<if>
+<branch type="IF" condition="${count} == 1">
+<break>
+<status status="NOT RUN" start="2026-11-17T21:47:56.490226" elapsed="0.000014"/>
+</break>
+<status status="NOT RUN" start="2026-11-17T21:47:56.490142" elapsed="0.000116"/>
+</branch>
+<status status="PASS" start="2026-11-17T21:47:56.490127" elapsed="0.000146"/>
+</if>
+<status status="PASS" start="2026-11-17T21:47:56.489648" elapsed="0.000640"/>
+</iter>
+<iter>
+<kw name="Evaluate" owner="BuiltIn">
+<msg time="2026-11-17T21:47:56.490637" level="INFO">${count} = 1</msg>
+<var>${count}</var>
+<arg>${count} - 1</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="PASS" start="2026-11-17T21:47:56.490450" elapsed="0.000204"/>
+</kw>
+<if>
+<branch type="IF" condition="${count} == 1">
+<break>
+<status status="PASS" start="2026-11-17T21:47:56.490768" elapsed="0.000026"/>
+</break>
+<status status="PASS" start="2026-11-17T21:47:56.490700" elapsed="0.000116"/>
+</branch>
+<status status="PASS" start="2026-11-17T21:47:56.490688" elapsed="0.000145"/>
+</if>
+<status status="PASS" start="2026-11-17T21:47:56.490302" elapsed="0.000550"/>
+</iter>
+<status status="PASS" start="2026-11-17T21:47:56.489646" elapsed="0.001221"/>
+</while>
+<try>
+<branch type="TRY">
+<kw name="Fail" owner="BuiltIn">
+<msg time="2026-11-17T21:47:56.491180" level="FAIL">expected problem</msg>
+<arg>expected problem</arg>
+<doc>Fails the test or task with the given message and optionally alters its tags.</doc>
+<status status="FAIL" start="2026-11-17T21:47:56.490987" elapsed="0.011857">expected problem</status>
+</kw>
+<status status="FAIL" start="2026-11-17T21:47:56.490925" elapsed="0.012003">expected problem</status>
+</branch>
+<branch type="EXCEPT" pattern_type="GLOB">
+<pattern>expected*</pattern>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-11-17T21:47:56.503418" level="INFO">handled</msg>
+<arg>handled</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-11-17T21:47:56.503214" elapsed="0.000240"/>
+</kw>
+<status status="PASS" start="2026-11-17T21:47:56.503077" elapsed="0.000401"/>
+</branch>
+<status status="PASS" start="2026-11-17T21:47:56.490897" elapsed="0.012606"/>
+</try>
+<for flavor="IN ZIP" mode="STRICT">
+<iter>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-11-17T21:47:56.504260" level="INFO">1 3</msg>
+<arg>${a} ${b}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-11-17T21:47:56.503827" elapsed="0.000464"/>
+</kw>
+<var name="${a}">1</var>
+<var name="${b}">3</var>
+<status status="PASS" start="2026-11-17T21:47:56.503740" elapsed="0.000574"/>
+</iter>
+<iter>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-11-17T21:47:56.504608" level="INFO">2 4</msg>
+<arg>${a} ${b}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-11-17T21:47:56.504462" elapsed="0.000173"/>
+</kw>
+<var name="${a}">2</var>
+<var name="${b}">4</var>
+<status status="PASS" start="2026-11-17T21:47:56.504378" elapsed="0.000278"/>
+</iter>
+<var>${a}</var>
+<var>${b}</var>
+<value>${{[1, 2]}}</value>
+<value>${{[3, 4]}}</value>
+<status status="PASS" start="2026-11-17T21:47:56.503543" elapsed="0.001133"/>
+</for>
+<kw name="Use Secret">
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-11-17T21:47:56.505210" level="INFO">&lt;secret&gt;</msg>
+<arg>${token}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-11-17T21:47:56.505063" elapsed="0.000176"/>
+</kw>
+<arg>${TOKEN}</arg>
+<status status="PASS" start="2026-11-17T21:47:56.504800" elapsed="0.000485"/>
+</kw>
+<meta name="Issue">QA-7</meta>
+<tag>checkout</tag>
+<tag>smoke</tag>
+<status status="PASS" start="2026-11-17T21:47:56.486862" elapsed="0.018494"/>
+</test>
+<test id="s1-s1-t2" name="Price Should Match" line="37">
+<kw name="Check Total">
+<kw name="Log" owner="BuiltIn" type="SETUP">
+<msg time="2026-11-17T21:47:56.506029" level="INFO">checking</msg>
+<arg>checking</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-11-17T21:47:56.505899" elapsed="0.000158"/>
+</kw>
+<kw name="Should Be Equal" owner="BuiltIn">
+<msg time="2026-11-17T21:47:56.506368" level="FAIL">Total differs: 12 != 10</msg>
+<arg>${actual}</arg>
+<arg>${expected}</arg>
+<arg>Total differs</arg>
+<doc>Fails if the given objects are unequal.</doc>
+<status status="FAIL" start="2026-11-17T21:47:56.506142" elapsed="0.000283">Total differs: 12 != 10</status>
+</kw>
+<arg>10</arg>
+<arg>12</arg>
+<status status="FAIL" start="2026-11-17T21:47:56.505688" elapsed="0.000812">Total differs: 12 != 10</status>
+</kw>
+<tag>checkout</tag>
+<tag>regression</tag>
+<status status="FAIL" start="2026-11-17T21:47:56.505484" elapsed="0.001100">Total differs: 12 != 10</status>
+</test>
+<test id="s1-s1-t3" name="Missing Keyword" line="41">
+<kw name="This Keyword Does Not Exist">
+<msg time="2026-11-17T21:47:56.507247" level="FAIL">No keyword with name 'This Keyword Does Not Exist' found.</msg>
+<status status="FAIL" start="2026-11-17T21:47:56.507224" elapsed="0.000056">No keyword with name 'This Keyword Does Not Exist' found.</status>
+</kw>
+<tag>checkout</tag>
+<status status="FAIL" start="2026-11-17T21:47:56.506707" elapsed="0.000649">No keyword with name 'This Keyword Does Not Exist' found.</status>
+</test>
+<test id="s1-s1-t4" name="Slow Step" line="44">
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-11-17T21:47:56.716000" level="FAIL">Test timeout 200 milliseconds exceeded.</msg>
+<arg>1s</arg>
+<doc>Pauses execution for the given time.</doc>
+<status status="FAIL" start="2026-11-17T21:47:56.507638" elapsed="0.208456">Test timeout 200 milliseconds exceeded.</status>
+</kw>
+<tag>checkout</tag>
+<timeout value="200 milliseconds"/>
+<status status="FAIL" start="2026-11-17T21:47:56.507492" elapsed="0.208809">Test timeout 200 milliseconds exceeded.</status>
+</test>
+<test id="s1-s1-t5" name="Skipped On Purpose" line="48">
+<kw name="Skip" owner="BuiltIn">
+<msg time="2026-11-17T21:47:56.717245" level="SKIP">Feature flag is off</msg>
+<arg>Feature flag is off</arg>
+<doc>Stops the current test or task and sets its status to SKIP.</doc>
+<status status="SKIP" start="2026-11-17T21:47:56.716867" elapsed="0.000442">Feature flag is off</status>
+</kw>
+<tag>checkout</tag>
+<status status="SKIP" start="2026-11-17T21:47:56.716526" elapsed="0.000872">Feature flag is off</status>
+</test>
+<test id="s1-s1-t6" name="Flaky Payment" line="51">
+<kw name="Should Be True" owner="BuiltIn">
+<msg time="2026-11-17T21:47:56.717931" level="FAIL">Payment gateway did not answer</msg>
+<arg>${FLAKY_PASS}</arg>
+<arg>Payment gateway did not answer</arg>
+<doc>Fails if the given condition is not true.</doc>
+<status status="FAIL" start="2026-11-17T21:47:56.717698" elapsed="0.000284">Payment gateway did not answer</status>
+</kw>
+<tag>checkout</tag>
+<status status="FAIL" start="2026-11-17T21:47:56.717504" elapsed="0.000568">Payment gateway did not answer</status>
+</test>
+<doc>Fixture suite used to produce real output files for the tests.</doc>
+<status status="FAIL" start="2026-11-17T21:47:56.485687" elapsed="0.232649"/>
+</suite>
+<status status="FAIL" start="2026-11-17T21:47:56.457954" elapsed="0.260607"/>
+</suite>
+<statistics>
+<total>
+<stat pass="1" fail="4" skip="1">All Tests</stat>
+</total>
+<tag>
+<stat pass="1" fail="4" skip="1">checkout</stat>
+<stat pass="0" fail="1" skip="0">regression</stat>
+<stat pass="1" fail="0" skip="0">smoke</stat>
+</tag>
+<suite>
+<stat name="Suite" id="s1" pass="1" fail="4" skip="1">Suite</stat>
+<stat name="Checkout" id="s1-s1" pass="1" fail="4" skip="1">Suite.Checkout</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

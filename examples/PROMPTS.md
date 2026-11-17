@@ -2,9 +2,9 @@
 
 <!-- Generated from examples/prompts.json by tools/build_catalog.py - do not edit by hand. -->
 
-300 things you can say to your AI coding agent, for all 92 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
+327 things you can say to your AI coding agent, for all 101 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
 
-**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [ADB: connect, control & debug Android devices](#adb-connect-control--debug-android-devices) · [Gradle: Android setup, diagnosis & tests](#gradle-android-setup-diagnosis--tests) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Shell: PowerShell on Windows](#shell-powershell-on-windows) · [Learning: Python tutor & interview notes](#learning-python-tutor--interview-notes) · [AI efficiency: save tokens & cost](#ai-efficiency-save-tokens--cost) · [AI agents: MCP, tools, evals & RAG](#ai-agents-mcp-tools-evals--rag) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
+**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [ADB: connect, control & debug Android devices](#adb-connect-control--debug-android-devices) · [Gradle: Android setup, diagnosis & tests](#gradle-android-setup-diagnosis--tests) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Shell: PowerShell on Windows](#shell-powershell-on-windows) · [Learning: Python tutor & interview notes](#learning-python-tutor--interview-notes) · [AI efficiency: save tokens & cost](#ai-efficiency-save-tokens--cost) · [AI agents: MCP, tools, evals & RAG](#ai-agents-mcp-tools-evals--rag) · [Playwright: E2E tests, debugging, CI & browser agent](#playwright-e2e-tests-debugging-ci--browser-agent) · [Robot Framework: suites, libraries, results & CI](#robot-framework-suites-libraries-results--ci) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
 
 ## Hub tools
 
@@ -333,6 +333,86 @@ Install the whole category: `--plugin ai-agent-tools`
 - “Build a RAG pipeline so users can chat with our Markdown docs.”
 - “Our RAG bot answers without using the docs. Find out if retrieval is the problem.”
 - “Chunk the docs folder and measure recall@5 for these labelled questions.”
+
+## Playwright: E2E tests, debugging, CI & browser agent
+
+Install the whole category: `--plugin playwright-tools`
+
+### Playwright debugging: failing and flaky tests
+
+[`playwright-debugging`](../skills/testing/playwright/playwright-debugging/SKILL.md) · install: `--skill playwright-debugging`
+
+- “Our Playwright tests pass locally but fail in CI. Here is results.json, find out why.”
+- “Which Playwright tests are flaky in this report and what is causing them?”
+- “This test times out on the Pay button; read the trace and fix it.”
+
+### Playwright in CI: pipelines, sharding and reports
+
+[`playwright-ci`](../skills/testing/playwright/playwright-ci/SKILL.md) · install: `--skill playwright-ci`
+
+- “Add Playwright to GitHub Actions with 4 shards and one merged HTML report.”
+- “Generate a GitLab CI job for our Playwright suite using the right Docker image.”
+- “Our Playwright run takes 40 minutes in Jenkins; split it into parallel shards.”
+
+### Playwright MCP: let the agent use a browser, then keep it as a test
+
+[`playwright-mcp-browser`](../skills/testing/playwright/playwright-mcp-browser/SKILL.md) · install: `--skill playwright-mcp-browser`
+
+- “Open our staging site, sign in as the test user and check that checkout works.”
+- “Reproduce this bug report in the browser and tell me what errors show in the console.”
+- “Click through the new settings page and turn what you did into a Playwright test.”
+
+### Playwright test authoring: resilient E2E tests that fit your team
+
+[`playwright-test-authoring`](../skills/testing/playwright/playwright-test-authoring/SKILL.md) · install: `--skill playwright-test-authoring`
+
+- “Write Playwright tests for our login and checkout flow using our data-qa attributes.”
+- “Audit our Playwright suite for flaky patterns and fix the worst ones.”
+- “Set up Playwright in this repo with login reuse, staging and production base URLs, and an @smoke tag.”
+
+### Playwright upgrade: breaking changes, affected code, steps
+
+[`playwright-upgrade`](../skills/testing/playwright/playwright-upgrade/SKILL.md) · install: `--skill playwright-upgrade`
+
+- “Upgrade our Playwright from 1.48 to the latest version and tell me what will break.”
+- “We bumped Playwright and CI now fails with Node and Docker errors; fix the upgrade.”
+- “Which removed Playwright APIs does this repo still use?”
+
+## Robot Framework: suites, libraries, results & CI
+
+Install the whole category: `--plugin robotframework-tools`
+
+### Robot Framework authoring: modern 7.x syntax and an audit
+
+[`robotframework-test-authoring`](../skills/testing/robot-framework/robotframework-test-authoring/SKILL.md) · install: `--skill robotframework-test-authoring`
+
+- “Write Robot Framework tests for our login and checkout using the Browser library.”
+- “Modernise these old .robot files to Robot Framework 7 syntax (VAR, IF, RETURN).”
+- “Move the passwords in our robot variables to secret variables from the environment.”
+
+### Robot Framework in CI: run, rerun, parallelise, report
+
+[`robotframework-ci`](../skills/testing/robot-framework/robotframework-ci/SKILL.md) · install: `--skill robotframework-ci`
+
+- “Add Robot Framework tests to GitHub Actions with a rerun of failed tests.”
+- “Run our Robot suite in parallel with pabot in GitLab CI and publish JUnit results.”
+- “Create a Jenkinsfile for our Robot Framework tests with the Browser library.”
+
+### Robot Framework libraries: Python keywords done right
+
+[`robotframework-libraries`](../skills/testing/robot-framework/robotframework-libraries/SKILL.md) · install: `--skill robotframework-libraries`
+
+- “Write a Python keyword library for our Orders API to use in Robot Framework.”
+- “Review our custom Robot Framework library: types, docs and logging.”
+- “Generate Markdown documentation for this Robot library with Libdoc.”
+
+### Robot Framework results: failures, flaky tests and slow keywords
+
+[`robotframework-results`](../skills/testing/robot-framework/robotframework-results/SKILL.md) · install: `--skill robotframework-results`
+
+- “Our Robot Framework run failed in CI; here is output.xml, tell me why.”
+- “Which Robot tests are flaky? Compare output.xml with the rerun output.”
+- “Why did our Robot suite get so slow? Find the slowest keywords.”
 
 ## Git: getting started
 

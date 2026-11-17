@@ -1,0 +1,16 @@
+name: e2e
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    container: mcr.microsoft.com/playwright:v1.48.2-noble
+    strategy:
+      matrix:
+        shard: [1, 2]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npx playwright test --shard=${{ matrix.shard }}/2 --grep @smoke
