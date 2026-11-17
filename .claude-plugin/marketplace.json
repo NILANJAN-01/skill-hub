@@ -345,6 +345,16 @@
       ]
     },
     {
+      "name": "youtube-tools",
+      "description": "YouTube: extract a study or tech video's audio, analyse it (speech, pauses, pace) and turn the speech into text, then make text notes and a visual HTML overview (summary, timeline, topic map, key terms, review questions); captions only as fallback; a title guardrail refuses non-study videos; includes an MCP server",
+      "source": "./",
+      "strict": false,
+      "category": "youtube-tools",
+      "skills": [
+        "./skills/generic/youtube/yt-lecture-overview"
+      ]
+    },
+    {
       "name": "ai-efficiency-tools",
       "description": "AI efficiency: audit a project for token waste, save tokens and cost, and centralize context across any AI IDE, agent or model",
       "source": "./",

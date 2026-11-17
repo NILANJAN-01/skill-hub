@@ -299,6 +299,14 @@
       ]
     },
     {
+      "name": "youtube-tools",
+      "description": "YouTube: extract a study or tech video's audio, analyse it (speech, pauses, pace) and turn the speech into text, then make text notes and a visual HTML overview (summary, timeline, topic map, key terms, review questions); captions only as fallback; a title guardrail refuses non-study videos; includes an MCP server",
+      "category": "youtube-tools",
+      "skills": [
+        "yt-lecture-overview"
+      ]
+    },
+    {
       "name": "ai-efficiency-tools",
       "description": "AI efficiency: audit a project for token waste, save tokens and cost, and centralize context across any AI IDE, agent or model",
       "category": "ai-efficiency-tools",
@@ -401,6 +409,11 @@
     {
       "name": "learning-tools",
       "title": "Learning: Python tutor & interview notes",
+      "count": 1
+    },
+    {
+      "name": "youtube-tools",
+      "title": "YouTube: lecture overviews (study & tech only)",
       "count": 1
     },
     {
@@ -679,6 +692,12 @@
           "name": "writing",
           "skills": [
             "professional-writing"
+          ]
+        },
+        {
+          "name": "youtube",
+          "skills": [
+            "yt-lecture-overview"
           ]
         }
       ]
@@ -3452,6 +3471,32 @@
       ],
       "files": [
         "references/output-format.md"
+      ]
+    },
+    {
+      "name": "yt-lecture-overview",
+      "title": "YouTube lecture overview: link to audio, text and HTML (study and tech only)",
+      "category": "youtube-tools",
+      "area": "generic",
+      "group": "youtube",
+      "description": "Turn a YouTube link of a study or tech video (lecture, tutorial, course, talk) into text and a visual HTML overview: extract the audio, analyse it (speech, pauses, pace), turn the speech into text, then write notes, timeline, topic map, key terms and review questions. Captions only as a fallback. A guardrail checks the real title and refuses non-study videos. Use when the user shares a YouTube lecture link and wants an overview, notes, summary or transcript.",
+      "plugins": [
+        "youtube-tools"
+      ],
+      "path": "skills/generic/youtube/yt-lecture-overview",
+      "license": "MIT",
+      "compatibility": "Python 3.8+ (standard library) for links, guardrail, captions, notes and HTML; needs internet access to youtube.com. The audio stage needs, in some Python (--audio-python): yt-dlp, av and numpy, plus one speech-to-text engine: faster-whisper, openai-whisper or vosk. Node.js helps yt-dlp. Includes an optional stdio MCP server (scripts/yt_lecture_mcp.py).",
+      "examples": [
+        "Give me an overview of this lecture as an HTML page: https://www.youtube.com/watch?v=aircAruvnKk",
+        "Make study notes and a transcript from this YouTube tutorial link, with a timeline and review questions.",
+        "Extract the audio from this lecture, turn the speech into text and make me an overview with the audio analysis.",
+        "Only process 10:00 to 25:00 of this 2-hour course video and summarise what that part covers.",
+        "Check whether my machine is ready to turn YouTube lecture audio into text, and tell me what to install."
+      ],
+      "files": [
+        "references/audio-setup.md",
+        "references/mcp-server.md",
+        "references/troubleshooting.md"
       ]
     }
   ]

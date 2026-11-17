@@ -156,6 +156,7 @@ CATEGORY_TITLES = {
     "testing-tools": "Testing: unit tests & reports",
     "shell-tools": "Shell: PowerShell on Windows",
     "learning-tools": "Learning: Python tutor & interview notes",
+    "youtube-tools": "YouTube: lecture overviews (study & tech only)",
     "ai-efficiency-tools": "AI efficiency: save tokens & cost",
     "ai-agent-tools": "AI agents: MCP, tools, evals & RAG",
     "playwright-tools": "Playwright: E2E tests, debugging, CI & browser agent",

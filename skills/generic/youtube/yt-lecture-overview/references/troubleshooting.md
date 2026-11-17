@@ -1,0 +1,32 @@
+# Troubleshooting and edge cases
+
+| Situation | What happens / what to do |
+|---|---|
+| Link has `&t=90s`, `?si=…`, `&list=…`, `feature=share` | Ignored. The video id is taken from the link and the canonical `watch?v=` URL is used |
+| Playlist link without `v=` | Rejected. Ask for the link of one video from the playlist |
+| Shorts | Accepted, but most Shorts titles do not pass the guardrail |
+| Live stream still running | The recording is not complete yet. Try again after the stream ends |
+| Private, removed, members-only, age- or region-restricted video | Exit 5 from the watch page status. YouTube does not give the audio or captions without a login, so ask the user for a transcript file (`--transcript`) |
+| Output says "the text comes from captions" | The audio stage failed (see `warnings`). Run `yt_lecture.py doctor`, install what it lists (or use `--audio-python`), and fetch again. Use `--source audio-only` to make this an error instead |
+| `doctor` says an engine "cannot load" | Its native library will not run on this Python or machine. Use another engine (`--engine vosk`) or a separate audio Python; see [audio-setup.md](audio-setup.md). Do not try to get around a security policy |
+| yt-dlp warns about a JavaScript runtime, or misses formats | Install Node.js (the script passes `--js-runtimes node`), and keep yt-dlp updated: `pip install -U yt-dlp` |
+| Speech-to-text is slow | Use `--clip 10:00-25:00`, a smaller model (`--model tiny`), `--engine vosk`, or `--source captions` when the video has good captions |
+| Speech-to-text text has no punctuation (Vosk) | Expected. Write the notes in clean sentences; faster-whisper gives punctuated text |
+| Audio analysis looks wrong (music counted as speech, quiet speaker shown as pauses) | The analysis is a loudness estimate. Say so if you use it |
+| Lecture is in another language | `--lang hi` (or `es`, `fr`, …, or `auto` with whisper) sets the spoken language for speech-to-text and the caption track for the fallback. Vosk needs a model for that language. Write the notes in the language the user asked for |
+| Speech-to-text or captions mishear technical words | Expected. Fix them in `notes.json` from context, and do not repeat the mistakes |
+| Very long lecture (2h+) | Read `transcript.txt` in parts. Sections follow the chapters, or ~10-minute parts. Keep one summary for the whole video |
+| `could not reach YouTube` | Check the network or proxy. `urllib` uses the `HTTPS_PROXY` environment variable |
+| YouTube changes its player API and the caption fallback comes back empty | The caption fallback tries `yt-dlp` subtitles next; keep yt-dlp updated |
+| A title that should pass is blocked (or the reverse) | The title decides by design. The term lists and weights are at the top of `scripts/yt_guardrail.py`, so add terms there and run the tests. Do not get around the check for one video |
+| `render` says the folder was not cleared | The folder's `info.json` has no allowed guardrail verdict. Run `fetch` again on the link |
+
+## How the title score works
+
+- Strong study terms (lecture, tutorial, course, crash course, for beginners, NPTEL, CS50, exam names): +3 each
+- Medium (explained, fundamentals, basics, theory, exam, revision, deep dive, lab): +2 each
+- Weak (learn, how to, what is, chapter, part, problem, proof, notes): +1 each
+- Subject terms (programming languages, CS, maths, sciences, engineering, economics, history, languages…): +2 each
+- Entertainment terms (official video, lyrics, trailer, prank, reaction, gameplay, vlog, drama…): −4 each
+- YouTube category Education or Science & Technology, and tags with study terms: +1 each. These count only if the title already has a study or subject term
+- **Pass: a score of 3 or more, and at least one study (strong or medium) or subject term in the title**
