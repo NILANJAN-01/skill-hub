@@ -937,6 +937,7 @@ def doctor(root: Path, agents: list, project: Path) -> int:
         print(f"MCP server self-check: {result}")
         problems += result.startswith("FAILED")
     entry = server_entry()
+    stale_total, mcp_bad = set(), 0
     for use_global, label in ((True, "user-level"), (False, f"project {fmt(project)}")):
         print(f"\n{label}:")
         for a in agents:
@@ -949,12 +950,19 @@ def doctor(root: Path, agents: list, project: Path) -> int:
                 mcp = "no known MCP config"
             else:
                 st = mcp_status(path, mcp_info(a), entry)
-                mcp = {"same": "set up", "missing": "not set up", "differs": "set up, but differs (run --setup)"}.get(st, st)
-                problems += st == "differs" or st.startswith("unreadable")
-            skills = f"{len(names)} skill(s)" + (f", {len(stale)} differ from the hub" if stale else "")
-            problems += bool(stale)
-            print(f"  {AGENTS[a]['name']:<28} skills: {skills:<34} MCP: {mcp}")
-    print("\nAll good." if not problems else f"\n{problems} thing(s) to fix. Run with --setup (or --update) to fix them.")
+                mcp = {"same": "set up", "missing": "not set up", "differs": "set up, but out of date"}.get(st, st)
+                mcp_bad += st == "differs" or st.startswith("unreadable")
+            skills = f"{len(names)}" + (f" ({len(stale)} differ from the hub)" if stale else "")
+            stale_total |= stale
+            print(f"  {AGENTS[a]['name']:<26} skills: {skills:<29} MCP: {mcp}")
+    if stale_total:
+        print(f"\nSkills that differ from the hub (an older hub version, or edited locally): "
+              f"{', '.join(sorted(stale_total))}.\n"
+              "  Fix: python install.py --setup --update   (replaces them with the hub version; asks first)")
+    if mcp_bad:
+        print("\nAn MCP entry is out of date or unreadable.\n  Fix: python install.py --setup")
+    problems += len(stale_total) + mcp_bad
+    print("\nAll good." if not problems else f"\n{problems} thing(s) to fix (see above).")
     return problems
 
 
