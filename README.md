@@ -12,6 +12,8 @@ A skill is a folder with a `SKILL.md` file in the open [Agent Skills](https://ag
 
 ## Start here
 
+> **📘 [User guide](user-guide.html): everything in one place.** Quick start, how to use skills, the full skill catalog with scripts and example prompts, the installer reference, supported agents, MCP servers, contributing and what's new. It is generated from this repository by `tools/build_catalog.py`, so it always matches it. Open `user-guide.html` in a browser from a clone (or download it); it is a single file.
+
 Not sure what you need? Pick by task, install it, then just ask your agent:
 
 | I want to... | Install | Try saying |
@@ -23,6 +25,9 @@ Not sure what you need? Pick by task, install it, then just ask your agent:
 | Unit-test Kotlin or Python code | `testing-tools` | "Write tests for this class and check they're real" |
 | Learn or fix Git problems | `git-skills` (61 skills) | "Undo my last commit but keep the changes" |
 | Find or create skills | `hub-tools` | "Is there a skill for X?" |
+| Write, debug or run Playwright tests in CI | `playwright-tools` | "Our Playwright tests are flaky in CI, here is results.json" |
+| Write, modernise or run Robot Framework suites | `robotframework-tools` | "Modernise these .robot files to Robot Framework 7" |
+| Build MCP servers, agent tools, evals or RAG | `ai-agent-tools` | "Build an MCP server that exposes our notes search" |
 
 Install one with `python tools/install.py --plugin <name>` (see [Install](#install)).
 

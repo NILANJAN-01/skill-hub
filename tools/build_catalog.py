@@ -2,7 +2,9 @@
 """Build catalog.json and skills/README.md from every skills/<area>/<group>/<name>/SKILL.md and the plugin marketplace.
 
 Also builds prompts.html and examples/PROMPTS.md (example prompts per skill) from examples/prompts.json,
-and the agent tables in README.md and GUIDE.md from tools/install.py.
+the agent tables in README.md and GUIDE.md from tools/install.py, and user-guide.html (the master user
+guide) from all of these plus the installer's options, MCP presets, the skill-hub MCP server's tools,
+bundled scripts, the rules and CHANGELOG.md.
 
     python tools/build_catalog.py           # (re)write the files
     python tools/build_catalog.py --check   # exit 1 if they are out of date (used by CI)
@@ -11,14 +13,16 @@ and the agent tables in README.md and GUIDE.md from tools/install.py.
 from __future__ import annotations
 
 import argparse
+import ast
 import json
 import sys
 
 import re
 
+import install
 from hublib import (AREAS, CATALOG, PROMPTS_HTML, PROMPTS_TEMPLATE, ROOT, SKILLS_DIR, SKILLS_README,
-                    FrontmatterError, load_examples, load_marketplace, parse_frontmatter, plugin_skill_names,
-                    skill_dirs, skill_location)
+                    USER_GUIDE_HTML, USER_GUIDE_TEMPLATE, FrontmatterError, load_examples, load_marketplace,
+                    parse_frontmatter, plugin_skill_names, skill_dirs, skill_location)
 from install import AGENTS
 
 README = ROOT / "README.md"
@@ -171,6 +175,174 @@ def titleize(name: str) -> str:
     return name.replace("-", " ").capitalize()
 
 
+# ============================================================================ user guide
+def script_info(path) -> dict:
+    """First docstring line and the 'Usage:' block of a Python script, without running it."""
+    try:
+        doc = ast.get_docstring(ast.parse(path.read_text(encoding="utf-8-sig"))) or ""
+    except (SyntaxError, UnicodeDecodeError):
+        doc = ""
+    lines = doc.splitlines()
+    summary = lines[0].strip() if lines else ""
+    usage, inside = [], False
+    for line in lines[1:]:
+        if line.strip().lower().startswith("usage"):
+            inside = True
+            rest = line.split(":", 1)[1].strip() if ":" in line else ""
+            if rest:
+                usage.append(rest)
+            continue
+        if inside:
+            if not line.strip():
+                if usage:
+                    break
+                continue
+            usage.append(line.strip())
+    return {"summary": summary, "usage": usage}
+
+
+def skill_scripts(skill_path: str) -> list:
+    folder = ROOT / skill_path / "scripts"
+    if not folder.is_dir():
+        return []
+    out = []
+    for p in sorted(folder.glob("*.py")):
+        if p.name.startswith(("test_", "_")):
+            continue
+        out.append({"file": p.name, "path": p.relative_to(ROOT).as_posix(), **script_info(p)})
+    return out
+
+
+def installer_reference() -> list:
+    """Option groups straight from install.build_parser()."""
+    groups = []
+    for g in install.build_parser()._action_groups:
+        opts = [{"flags": ", ".join(a.option_strings), "metavar": a.metavar if isinstance(a.metavar, str) else "",
+                 "takes_value": a.nargs != 0, "help": a.help or ""}
+                for a in g._group_actions if a.option_strings and "--help" not in a.option_strings]
+        if opts and g.title not in ("options", "optional arguments", "positional arguments"):
+            groups.append({"title": g.title,"description": g.description or "", "options": opts})
+    return groups
+
+
+def mcp_server_reference() -> dict | None:
+    """Tools, prompts and resources of skill-hub-mcp, read from the server object (it is not started)."""
+    sys.path.insert(0, str(ROOT / "skill-hub-mcp"))
+    try:
+        from skill_hub_mcp import hub, server as srv
+        built = srv.build_server(hub.make_source(str(ROOT), False, "main"), allow_write=True)
+    except Exception as exc:                               # the guide still builds without this section
+        print(f"WARN user guide: could not read the skill-hub MCP server's tools ({exc})", file=sys.stderr)
+        return None
+    finally:
+        sys.path.pop(0)
+    tools = []
+    for t in built.tools.values():
+        params = [{"name": k, "type": v.get("type", ""), "description": v.get("description", ""),
+                   "enum": v.get("enum", []), "required": k in t.required} for k, v in t.params.items()]
+        tools.append({"name": t.name, "title": t.title, "description": t.description, "params": params,
+                      "writes": t.writes})
+    prompts = [{"name": k, "title": v[0].get("title", ""), "description": v[0].get("description", "")}
+               for k, v in sorted(built.prompts.items())]
+    return {"name": built.name, "version": built.version, "tools": tools, "prompts": prompts,
+            "resources": ["skillhub://catalog", "skillhub://skill/{name}"]}
+
+
+def mcp_presets() -> list:
+    return [{"name": k, "command": " ".join([p["command"]] + p["args"]), "description": p["description"],
+             "env": p.get("env", []), "needs_args": p.get("needs_args", ""), "docs": p["docs"]}
+            for k, p in install.MCP_PRESETS.items()]
+
+
+def agents_reference() -> list:
+    out = []
+    for k, a in AGENTS.items():
+        m = a.get("mcp") or {}
+        user_mcp = m.get("global")
+        if isinstance(user_mcp, dict):
+            user_mcp = f"{user_mcp['posix']} (Windows: {user_mcp['nt']})"
+        out.append({"id": k, "name": a["name"], "docs": a["docs"], "project": a["project"], "user": a["global"] or "",
+                    "also_reads": a["also_reads"], "note": a.get("note", ""),
+                    "mcp_project": m.get("project", ""), "mcp_user": user_mcp or "", "mcp_format": m.get("format", ""),
+                    "mcp_docs": m.get("docs", "")})
+    return out
+
+
+def rules_reference() -> dict:
+    rules, checks, tasks = [], [], []
+    for p in sorted((ROOT / "rule").glob("[0-9]*.md")):
+        text = p.read_text(encoding="utf-8")
+        title = next((l.lstrip("# ").strip() for l in text.splitlines() if l.startswith("#")), p.stem)
+        body = [l.strip() for l in text.splitlines()[1:] if l.strip() and not l.startswith(("#", "|", "```"))]
+        rules.append({"title": title, "path": p.relative_to(ROOT).as_posix(), "summary": body[0] if body else ""})
+        if "checks" in p.stem:
+            checks = [l.strip() for l in text.splitlines() if l.strip().startswith("python ")]
+        if "common-tasks" in p.stem:
+            for line in text.splitlines():
+                cells = [c.strip() for c in line.strip().strip("|").split("|")]
+                if line.startswith("|") and len(cells) == 2 and not set(cells[0]) <= set("-: ") and cells[0] != "Task":
+                    tasks.append({"task": cells[0], "steps": cells[1]})
+    return {"rules": rules, "checks": checks, "tasks": tasks}
+
+
+def changelog_reference(limit: int = 4) -> list:
+    path = ROOT / "CHANGELOG.md"
+    if not path.is_file():
+        return []
+    sections, current = [], None
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if line.startswith("## "):
+            current = {"title": line[3:].strip(), "items": []}
+            sections.append(current)
+        elif current is not None and line.startswith("- "):
+            current["items"].append(line[2:].strip())
+        elif current is not None and line.startswith("  ") and current["items"]:
+            current["items"][-1] += " " + line.strip()
+    return [s for s in sections if s["items"]][:limit]
+
+
+def tools_reference() -> list:
+    out = []
+    for name in ("install.py", "build_catalog.py", "validate_skills.py"):
+        p = ROOT / "tools" / name
+        if p.is_file():
+            out.append({"file": name, "path": p.relative_to(ROOT).as_posix(), **script_info(p)})
+    return out
+
+
+def user_guide_html(catalog: dict) -> str:
+    skills = catalog["skills"]
+    guide_skills = [{"name": s["name"], "title": s["title"], "category": s["category"], "plugins": s["plugins"],
+                     "description": s["description"], "needs": s["compatibility"], "path": s["path"],
+                     "examples": s["examples"], "scripts": skill_scripts(s["path"])} for s in skills]
+    server = mcp_server_reference()
+    data = {
+        "hub": {"name": catalog["name"], "version": catalog["version"], "description": catalog["description"],
+                "repository": catalog["repository"]},
+        "stats": {"skills": len(skills), "plugins": len(catalog["plugins"]), "categories": len(catalog["categories"]),
+                  "agents": len([a for a in AGENTS if a != "universal"]),
+                  "scripts": sum(len(s["scripts"]) for s in guide_skills),
+                  "prompts": sum(len(s["examples"]) for s in skills),
+                  "mcp_tools": len(server["tools"]) if server else 0, "mcp_presets": len(install.MCP_PRESETS)},
+        "categories": catalog["categories"],
+        "plugins": [{"name": p["name"], "description": p["description"], "count": len(p["skills"])}
+                    for p in catalog["plugins"]],
+        "skills": guide_skills,
+        "agents": agents_reference(),
+        "installer": installer_reference(),
+        "mcp_server": server,
+        "mcp_presets": mcp_presets(),
+        "tools": tools_reference(),
+        "maintainers": rules_reference(),
+        "changelog": changelog_reference(),
+    }
+    data_js = json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+    template = USER_GUIDE_TEMPLATE.read_text(encoding="utf-8")
+    if "/*__DATA__*/null" not in template:
+        sys.exit("tools/user_guide_template.html lost its /*__DATA__*/null placeholder")
+    return template.replace("/*__DATA__*/null", data_js)
+
+
 def build() -> tuple[str, str, str, str, dict]:
     market = load_marketplace()
     examples = load_examples()
@@ -295,7 +467,8 @@ def main() -> None:
     targets = [(CATALOG, catalog_text), (SKILLS_README, readme_text), (PROMPTS_HTML, prompts_html),
                (PROMPTS_MD, prompts_md),
                (README, readme_with_agents(README.read_text(encoding="utf-8"), catalog)),
-               (GUIDE, guide_text(GUIDE.read_text(encoding="utf-8"), catalog))]
+               (GUIDE, guide_text(GUIDE.read_text(encoding="utf-8"), catalog)),
+               (USER_GUIDE_HTML, user_guide_html(catalog))]
     if args.check:
         stale = [p for p, t in targets if not p.exists() or p.read_text(encoding="utf-8") != t]
         for p in stale:

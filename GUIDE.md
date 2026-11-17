@@ -1,5 +1,7 @@
 # Using skill-hub: step-by-step guide
 
+> Looking for everything in one place (every skill, script, installer option, agent and MCP tool)? Open the generated **[user guide](user-guide.html)** in a browser.
+
 This guide takes you from nothing to working skills in your AI coding agents in about 5 minutes. The installer detects which agents you have and asks before changing anything. It works for **Claude Code, Google Antigravity, Devin, GitHub Copilot (VS Code), Cursor, Windsurf, OpenAI Codex and Gemini CLI**.
 
 > **What's a skill?** A skill is a folder with a `SKILL.md` playbook. Once it's installed, your agent reads the skill's short description. When your request matches it, the agent loads the full playbook and follows it. You don't call skills by name; you just ask for what you want.

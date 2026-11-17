@@ -14,6 +14,8 @@ SKILLS_README = SKILLS_DIR / "README.md"
 EXAMPLES = ROOT / "examples" / "prompts.json"
 PROMPTS_TEMPLATE = ROOT / "tools" / "prompts_template.html"
 PROMPTS_HTML = ROOT / "prompts.html"
+USER_GUIDE_TEMPLATE = ROOT / "tools" / "user_guide_template.html"
+USER_GUIDE_HTML = ROOT / "user-guide.html"
 MIN_EXAMPLES = 2
 
 # Top-level folders of skills/, in display order. SOURCE OF TRUTH for areas: a skill lives in

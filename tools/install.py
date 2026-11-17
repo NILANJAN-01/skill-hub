@@ -1342,57 +1342,75 @@ def choose_agents(ap, spec: str) -> list:
     return agents
 
 
-def main() -> None:
-    global REPO
+def build_parser() -> argparse.ArgumentParser:
+    """The installer's command line. Option groups also drive the reference in user-guide.html."""
     ap = argparse.ArgumentParser(description="Install skill-hub skills into AI coding agents. "
                                              "Run with no options for the guided mode.",
                                  formatter_class=argparse.RawDescriptionHelpFormatter,
                                  epilog="Agents: " + ", ".join(AGENTS) + ", detected")
-    ap.add_argument("--agent", help="comma-separated agent ids, or 'detected' for every installed agent")
-    ap.add_argument("--plugin", action="append", default=[], help="install every skill of a plugin/category")
-    ap.add_argument("--skill", action="append", default=[], help="install one skill (repeatable)")
-    ap.add_argument("--all", action="store_true", help="install every skill in the hub")
-    ap.add_argument("--setup", action="store_true",
-                    help="set up everything in one go: every skill plus the MCP server, for every detected agent, "
-                         "user-level (narrow it with --agent, --plugin, --skill or --project)")
-    ap.add_argument("--doctor", action="store_true", help="check what is set up: skills, MCP config, server self-check")
-    ap.add_argument("--uninstall", action="store_true",
-                    help="remove everything skill-hub set up: skills, MCP entries and the hub copy")
-    ap.add_argument("--mcp", action="store_true",
-                    help="also register the skill-hub MCP server with the chosen agents (alone: only the server)")
-    ap.add_argument("--mcp-allow-install", action="store_true",
-                    help="let the MCP server install skills (after you approve each plan in the agent)")
-    ap.add_argument("--add-mcp", metavar="NAME",
-                    help="add any MCP server to the chosen agents (default: every detected agent, user-level): "
-                         "a preset (see --list-mcp) or your own with --mcp-command")
-    ap.add_argument("--remove-mcp", metavar="NAME", help="remove an MCP server from the chosen agents")
-    ap.add_argument("--list-mcp", action="store_true", help="list the MCP servers each agent has, and the presets")
-    ap.add_argument("--mcp-command", metavar='"CMD ARGS"', help='command that starts the server, e.g. "npx -y my-server"')
-    ap.add_argument("--mcp-arg", action="append", default=[], metavar="ARG",
-                    help="extra argument for the server (repeatable), e.g. a folder for the filesystem preset")
-    ap.add_argument("--mcp-env", action="append", default=[], metavar="NAME[=VALUE]",
-                    help="environment variable for the server (repeatable); NAME alone copies it from your environment")
-    ap.add_argument("--mcp-test", action="store_true",
-                    help="with --add-mcp: start the server and check it answers before writing anything")
-    ap.add_argument("--global", dest="use_global", action="store_true", help="install for the user, not the project")
-    ap.add_argument("--project", type=Path, default=None, help="project root (default: current directory)")
-    ap.add_argument("--dest", type=Path, help="install into this exact folder instead of an agent's folder")
-    ap.add_argument("--zip", type=Path, metavar="DIR", help="write one .zip per skill into DIR (for upload UIs)")
-    ap.add_argument("--each", action="store_true",
-                    help="copy into every agent's own folder instead of the fewest shared folders")
-    ap.add_argument("--force", action="store_true", help="replace installed skills that differ from the hub")
-    ap.add_argument("--update", action="store_true", help="same as --force: refresh installed skills from the hub")
-    ap.add_argument("--remove", action="store_true", help="uninstall the selected skills from the selected agents")
-    ap.add_argument("--tidy", action="store_true", help="remove redundant identical copies the plan finds")
-    ap.add_argument("--yes", "-y", action="store_true", help="don't ask for confirmation")
-    ap.add_argument("--dry-run", action="store_true", help="show what would happen, change nothing")
-    ap.add_argument("--detect", action="store_true", help="only show which agents are installed")
-    ap.add_argument("--installed", action="store_true",
-                    help="list the hub skills already installed, with their version (for --agent, default: detected)")
-    ap.add_argument("--ref", default=os.environ.get("SKILLHUB_REF") or DEFAULT_REF,
-                    help="branch or release tag to download when not run from a clone (or $SKILLHUB_REF)")
-    ap.add_argument("--repo", metavar="OWNER/NAME", help="GitHub repository to download from (default: %s, or $SKILLHUB_REPO)" % REPO)
-    ap.add_argument("--list", action="store_true", help="list agents, plugins and skills")
+    g = ap.add_argument_group("One command","Set up, check or remove everything at once")
+    g.add_argument("--setup", action="store_true",
+                   help="set up everything in one go: every skill plus the MCP server, for every detected agent, "
+                        "user-level (narrow it with --agent, --plugin, --skill or --project)")
+    g.add_argument("--doctor", action="store_true", help="check what is set up: skills, MCP config, server self-check")
+    g.add_argument("--uninstall", action="store_true",
+                   help="remove everything skill-hub set up: skills, MCP entries and the hub copy")
+
+    g = ap.add_argument_group("Choose agents and skills","What to install, for which agents, and where")
+    g.add_argument("--agent", help="comma-separated agent ids, or 'detected' for every installed agent")
+    g.add_argument("--plugin", action="append", default=[], help="install every skill of a plugin/category")
+    g.add_argument("--skill", action="append", default=[], help="install one skill (repeatable)")
+    g.add_argument("--all", action="store_true", help="install every skill in the hub")
+    g.add_argument("--global", dest="use_global", action="store_true", help="install for the user, not the project")
+    g.add_argument("--project", type=Path, default=None, help="project root (default: current directory)")
+    g.add_argument("--dest", type=Path, help="install into this exact folder instead of an agent's folder")
+    g.add_argument("--zip", type=Path, metavar="DIR", help="write one .zip per skill into DIR (for upload UIs)")
+    g.add_argument("--each", action="store_true",
+                   help="copy into every agent's own folder instead of the fewest shared folders")
+
+    g = ap.add_argument_group("Update and remove","Keep installed skills in step with the hub")
+    g.add_argument("--installed", action="store_true",
+                   help="list the hub skills already installed, with their version (for --agent, default: detected)")
+    g.add_argument("--force", action="store_true", help="replace installed skills that differ from the hub")
+    g.add_argument("--update", action="store_true", help="same as --force: refresh installed skills from the hub")
+    g.add_argument("--remove", action="store_true", help="uninstall the selected skills from the selected agents")
+    g.add_argument("--tidy", action="store_true", help="remove redundant identical copies the plan finds")
+
+    g = ap.add_argument_group("MCP servers","The skill-hub MCP server and any other MCP server, in every agent")
+    g.add_argument("--mcp", action="store_true",
+                   help="also register the skill-hub MCP server with the chosen agents (alone: only the server)")
+    g.add_argument("--mcp-allow-install", action="store_true",
+                   help="let the MCP server install skills (after you approve each plan in the agent)")
+    g.add_argument("--add-mcp", metavar="NAME",
+                   help="add any MCP server to the chosen agents (default: every detected agent, user-level): "
+                        "a preset (see --list-mcp) or your own with --mcp-command")
+    g.add_argument("--remove-mcp", metavar="NAME", help="remove an MCP server from the chosen agents")
+    g.add_argument("--list-mcp", action="store_true", help="list the MCP servers each agent has, and the presets")
+    g.add_argument("--mcp-command", metavar='"CMD ARGS"', help='command that starts the server, e.g. "npx -y my-server"')
+    g.add_argument("--mcp-arg", action="append", default=[], metavar="ARG",
+                   help="extra argument for the server (repeatable), e.g. a folder for the filesystem preset")
+    g.add_argument("--mcp-env", action="append", default=[], metavar="NAME[=VALUE]",
+                   help="environment variable for the server (repeatable); NAME alone copies it from your environment")
+    g.add_argument("--mcp-test", action="store_true",
+                   help="with --add-mcp: start the server and check it answers before writing anything")
+
+    g = ap.add_argument_group("Information and safety","Look before you change anything")
+    g.add_argument("--detect", action="store_true", help="only show which agents are installed")
+    g.add_argument("--list", action="store_true", help="list agents, plugins and skills")
+    g.add_argument("--dry-run", action="store_true", help="show what would happen, change nothing")
+    g.add_argument("--yes", "-y", action="store_true", help="don't ask for confirmation")
+
+    g = ap.add_argument_group("Source","Where the skills come from when not run from a clone")
+    g.add_argument("--ref", default=os.environ.get("SKILLHUB_REF") or DEFAULT_REF,
+                   help="branch or release tag to download when not run from a clone (or $SKILLHUB_REF)")
+    g.add_argument("--repo", metavar="OWNER/NAME",
+                   help="GitHub repository to download from (default: %s, or $SKILLHUB_REPO)" % DEFAULT_REPO)
+    return ap
+
+
+def main() -> None:
+    global REPO
+    ap = build_parser()
     args = ap.parse_args()
     if args.repo:
         if not re.fullmatch(r"[\w.-]+/[\w.-]+", args.repo):
