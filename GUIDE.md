@@ -217,7 +217,7 @@ Categories for `--plugin`:
 | `shell-tools` | 1 | Shell: run files, text, process, network, Git and build tasks correctly in PowerShell on Windows, with a bash-to-PowerShell map and troubleshooting |
 | `learning-tools` | 1 | Learning: explain any Python file from beginner to advanced and generate study-notes HTML for interview preparation (concepts, gotchas, Q&A, fundamentals checklist) |
 | `youtube-tools` | 1 | YouTube: extract a study or tech video's audio, analyse it (speech, pauses, pace) and turn the speech into text, then make text notes and a easy-to-read HTML overview... |
-| `ai-efficiency-tools` | 2 | AI efficiency: audit a project for token waste, save tokens and cost, and centralize context across any AI IDE, agent or model |
+| `ai-efficiency-tools` | 3 | AI efficiency: audit a project for token waste, save tokens and cost, measure how many tokens each skill saves (central ledger and report), and centralize context... |
 | `ai-agent-tools` | 4 | AI agents: build and probe MCP servers, design tool/function definitions models use well, run LLM evals with regression checks, and build and evaluate RAG pipelines,... |
 | `playwright-tools` | 5 | Playwright (up to 1.65): write resilient end-to-end tests that fit your team's conventions (with a suite audit script), debug failing and flaky tests from JSON or... |
 | `robotframework-tools` | 4 | Robot Framework (up to 7.5): write and modernise suites with VAR, typed and secret variables, GROUP, test metadata and Markdown tests (with an audit script), build... |

@@ -2,7 +2,7 @@
 
 <!-- Generated from examples/prompts.json by tools/build_catalog.py - do not edit by hand. -->
 
-332 things you can say to your AI coding agent, for all 102 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
+336 things you can say to your AI coding agent, for all 103 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
 
 **Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [ADB: connect, control & debug Android devices](#adb-connect-control--debug-android-devices) · [Gradle: Android setup, diagnosis & tests](#gradle-android-setup-diagnosis--tests) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Shell: PowerShell on Windows](#shell-powershell-on-windows) · [Learning: Python tutor & interview notes](#learning-python-tutor--interview-notes) · [YouTube: lecture overviews (study & tech only)](#youtube-lecture-overviews-study--tech-only) · [AI efficiency: save tokens & cost](#ai-efficiency-save-tokens--cost) · [AI agents: MCP, tools, evals & RAG](#ai-agents-mcp-tools-evals--rag) · [Playwright: E2E tests, debugging, CI & browser agent](#playwright-e2e-tests-debugging-ci--browser-agent) · [Robot Framework: suites, libraries, results & CI](#robot-framework-suites-libraries-results--ci) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
 
@@ -311,6 +311,15 @@ Install the whole category: `--plugin ai-efficiency-tools`
 - “My repo has CLAUDE.md, GEMINI.md and Copilot instructions that disagree. Centralize them into one source of truth.”
 - “Set up a context engineering approach for this project so every AI agent loads the same short brief.”
 - “Check how much context my instruction files send on every request and split what is too large.”
+
+### Skill token meter: how many tokens each skill saves
+
+[`skill-token-meter`](../skills/generic/ai-efficiency/skill-token-meter/SKILL.md) · install: `--skill skill-token-meter`
+
+- “How many tokens did the yt-lecture-overview skill save on that last task?”
+- “Track how many tokens every skill saves me in this session and show a report at the end.”
+- “Which of my installed skills cost the most tokens every session?”
+- “Compare these two session logs, one with the skill and one without, and record the savings.”
 
 ## AI agents: MCP, tools, evals & RAG
 

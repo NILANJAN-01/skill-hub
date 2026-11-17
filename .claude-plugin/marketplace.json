@@ -356,13 +356,14 @@
     },
     {
       "name": "ai-efficiency-tools",
-      "description": "AI efficiency: audit a project for token waste, save tokens and cost, and centralize context across any AI IDE, agent or model",
+      "description": "AI efficiency: audit a project for token waste, save tokens and cost, measure how many tokens each skill saves (central ledger and report), and centralize context across any AI IDE, agent or model",
       "source": "./",
       "strict": false,
       "category": "ai-efficiency-tools",
       "skills": [
         "./skills/generic/ai-efficiency/ai-token-saver",
-        "./skills/generic/ai-efficiency/context-engineering"
+        "./skills/generic/ai-efficiency/context-engineering",
+        "./skills/generic/ai-efficiency/skill-token-meter"
       ]
     },
     {

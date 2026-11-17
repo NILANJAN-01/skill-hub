@@ -308,11 +308,12 @@
     },
     {
       "name": "ai-efficiency-tools",
-      "description": "AI efficiency: audit a project for token waste, save tokens and cost, and centralize context across any AI IDE, agent or model",
+      "description": "AI efficiency: audit a project for token waste, save tokens and cost, measure how many tokens each skill saves (central ledger and report), and centralize context across any AI IDE, agent or model",
       "category": "ai-efficiency-tools",
       "skills": [
         "ai-token-saver",
-        "context-engineering"
+        "context-engineering",
+        "skill-token-meter"
       ]
     },
     {
@@ -419,7 +420,7 @@
     {
       "name": "ai-efficiency-tools",
       "title": "AI efficiency: save tokens & cost",
-      "count": 2
+      "count": 3
     },
     {
       "name": "ai-agent-tools",
@@ -668,7 +669,8 @@
           "name": "ai-efficiency",
           "skills": [
             "ai-token-saver",
-            "context-engineering"
+            "context-engineering",
+            "skill-token-meter"
           ]
         },
         {
@@ -3407,6 +3409,29 @@
         "I'm not sure which skill to use for this. Route it for me."
       ],
       "files": []
+    },
+    {
+      "name": "skill-token-meter",
+      "title": "Skill token meter: how many tokens each skill saves",
+      "category": "ai-efficiency-tools",
+      "area": "generic",
+      "group": "ai-efficiency",
+      "description": "Measure how many tokens a skill costs and saves, for any skill and any agent: scan every skill's token cost, estimate tokens with vs without a skill for a real task, measure exact savings from two runs or session logs, and keep one central ledger with a per-skill report. Use when the user asks how many tokens a skill saves, wants to track savings across skills, or asks which skills are worth installing.",
+      "plugins": [
+        "ai-efficiency-tools"
+      ],
+      "path": "skills/generic/ai-efficiency/skill-token-meter",
+      "license": "MIT",
+      "compatibility": "Python 3.8+ (standard library only). Works with any agent. Token counts from files are estimates (chars/4 prose, chars/3.3 code, about +-20%); exact numbers come from usage the agent or its session logs report.",
+      "examples": [
+        "How many tokens did the yt-lecture-overview skill save on that last task?",
+        "Track how many tokens every skill saves me in this session and show a report at the end.",
+        "Which of my installed skills cost the most tokens every session?",
+        "Compare these two session logs, one with the skill and one without, and record the savings."
+      ],
+      "files": [
+        "references/method.md"
+      ]
     },
     {
       "name": "skillforge",

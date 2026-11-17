@@ -460,6 +460,12 @@
     "Only process 10:00 to 25:00 of this 2-hour course video and summarise what that part covers.",
     "Check whether my machine is ready to turn YouTube lecture audio into text, and tell me what to install."
   ],
+  "skill-token-meter": [
+    "How many tokens did the yt-lecture-overview skill save on that last task?",
+    "Track how many tokens every skill saves me in this session and show a report at the end.",
+    "Which of my installed skills cost the most tokens every session?",
+    "Compare these two session logs, one with the skill and one without, and record the savings."
+  ],
   "ai-token-saver": [
     "I keep hitting my AI usage limit. Audit this repo and tell me what to exclude.",
     "How do I reduce token usage and cost when coding with an AI IDE?",

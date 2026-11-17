@@ -1,0 +1,1500 @@
+2026-11-18T10:00:00Z ERROR request served in 0ms
+2026-11-18T10:00:01Z INFO cache miss for key user:1
+2026-11-18T10:00:02Z INFO retrying upload chunk 2
+2026-11-18T10:00:03Z INFO db timeout after 30s
+2026-11-18T10:00:04Z INFO db timeout after 30s
+2026-11-18T10:00:05Z INFO db timeout after 30s
+2026-11-18T10:00:06Z INFO request served in 6ms
+2026-11-18T10:00:07Z INFO db timeout after 30s
+2026-11-18T10:00:08Z INFO cache miss for key user:8
+2026-11-18T10:00:09Z ERROR db timeout after 30s
+2026-11-18T10:00:10Z INFO db timeout after 30s
+2026-11-18T10:00:11Z INFO retrying upload chunk 11
+2026-11-18T10:00:12Z INFO retrying upload chunk 0
+2026-11-18T10:00:13Z INFO db timeout after 30s
+2026-11-18T10:00:14Z INFO cache miss for key user:14
+2026-11-18T10:00:15Z INFO db timeout after 30s
+2026-11-18T10:00:16Z INFO retrying upload chunk 4
+2026-11-18T10:00:17Z INFO db timeout after 30s
+2026-11-18T10:00:18Z ERROR db timeout after 30s
+2026-11-18T10:00:19Z INFO cache miss for key user:19
+2026-11-18T10:00:20Z INFO db timeout after 30s
+2026-11-18T10:00:21Z INFO retrying upload chunk 9
+2026-11-18T10:00:22Z INFO db timeout after 30s
+2026-11-18T10:00:23Z INFO cache miss for key user:23
+2026-11-18T10:00:24Z INFO db timeout after 30s
+2026-11-18T10:00:25Z INFO cache miss for key user:25
+2026-11-18T10:00:26Z INFO request served in 26ms
+2026-11-18T10:00:27Z ERROR retrying upload chunk 3
+2026-11-18T10:00:28Z INFO cache miss for key user:28
+2026-11-18T10:00:29Z INFO db timeout after 30s
+2026-11-18T10:00:30Z INFO request served in 30ms
+2026-11-18T10:00:31Z INFO cache miss for key user:31
+2026-11-18T10:00:32Z INFO db timeout after 30s
+2026-11-18T10:00:33Z INFO cache miss for key user:33
+2026-11-18T10:00:34Z INFO request served in 34ms
+2026-11-18T10:00:35Z INFO db timeout after 30s
+2026-11-18T10:00:36Z ERROR db timeout after 30s
+2026-11-18T10:00:37Z INFO db timeout after 30s
+2026-11-18T10:00:38Z INFO cache miss for key user:38
+2026-11-18T10:00:39Z INFO retrying upload chunk 3
+2026-11-18T10:00:40Z INFO retrying upload chunk 4
+2026-11-18T10:00:41Z INFO request served in 41ms
+2026-11-18T10:00:42Z INFO retrying upload chunk 6
+2026-11-18T10:00:43Z INFO retrying upload chunk 7
+2026-11-18T10:00:44Z INFO request served in 44ms
+2026-11-18T10:00:45Z ERROR request served in 45ms
+2026-11-18T10:00:46Z INFO cache miss for key user:6
+2026-11-18T10:00:47Z INFO cache miss for key user:7
+2026-11-18T10:00:48Z INFO cache miss for key user:8
+2026-11-18T10:00:49Z INFO db timeout after 30s
+2026-11-18T10:00:50Z INFO request served in 50ms
+2026-11-18T10:00:51Z INFO retrying upload chunk 3
+2026-11-18T10:00:52Z INFO request served in 52ms
+2026-11-18T10:00:53Z INFO retrying upload chunk 5
+2026-11-18T10:00:54Z ERROR request served in 54ms
+2026-11-18T10:00:55Z INFO db timeout after 30s
+2026-11-18T10:00:56Z INFO db timeout after 30s
+2026-11-18T10:00:57Z INFO retrying upload chunk 9
+2026-11-18T10:00:58Z INFO cache miss for key user:18
+2026-11-18T10:00:59Z INFO request served in 59ms
+2026-11-18T10:01:00Z INFO cache miss for key user:20
+2026-11-18T10:01:01Z INFO retrying upload chunk 1
+2026-11-18T10:01:02Z INFO retrying upload chunk 2
+2026-11-18T10:01:03Z ERROR db timeout after 30s
+2026-11-18T10:01:04Z INFO db timeout after 30s
+2026-11-18T10:01:05Z INFO request served in 65ms
+2026-11-18T10:01:06Z INFO request served in 66ms
+2026-11-18T10:01:07Z INFO request served in 67ms
+2026-11-18T10:01:08Z INFO retrying upload chunk 8
+2026-11-18T10:01:09Z INFO retrying upload chunk 9
+2026-11-18T10:01:10Z INFO db timeout after 30s
+2026-11-18T10:01:11Z INFO db timeout after 30s
+2026-11-18T10:01:12Z ERROR request served in 72ms
+2026-11-18T10:01:13Z INFO retrying upload chunk 1
+2026-11-18T10:01:14Z INFO db timeout after 30s
+2026-11-18T10:01:15Z INFO db timeout after 30s
+2026-11-18T10:01:16Z INFO request served in 76ms
+2026-11-18T10:01:17Z INFO retrying upload chunk 5
+2026-11-18T10:01:18Z INFO request served in 78ms
+2026-11-18T10:01:19Z INFO retrying upload chunk 7
+2026-11-18T10:01:20Z INFO request served in 80ms
+2026-11-18T10:01:21Z ERROR db timeout after 30s
+2026-11-18T10:01:22Z INFO retrying upload chunk 10
+2026-11-18T10:01:23Z INFO request served in 83ms
+2026-11-18T10:01:24Z INFO cache miss for key user:4
+2026-11-18T10:01:25Z INFO db timeout after 30s
+2026-11-18T10:01:26Z INFO retrying upload chunk 2
+2026-11-18T10:01:27Z INFO db timeout after 30s
+2026-11-18T10:01:28Z INFO cache miss for key user:8
+2026-11-18T10:01:29Z INFO request served in 89ms
+2026-11-18T10:01:30Z ERROR cache miss for key user:10
+2026-11-18T10:01:31Z INFO cache miss for key user:11
+2026-11-18T10:01:32Z INFO retrying upload chunk 8
+2026-11-18T10:01:33Z INFO retrying upload chunk 9
+2026-11-18T10:01:34Z INFO retrying upload chunk 10
+2026-11-18T10:01:35Z INFO db timeout after 30s
+2026-11-18T10:01:36Z INFO cache miss for key user:16
+2026-11-18T10:01:37Z INFO retrying upload chunk 1
+2026-11-18T10:01:38Z INFO retrying upload chunk 2
+2026-11-18T10:01:39Z ERROR request served in 99ms
+2026-11-18T10:01:40Z INFO cache miss for key user:20
+2026-11-18T10:01:41Z INFO retrying upload chunk 5
+2026-11-18T10:01:42Z INFO request served in 102ms
+2026-11-18T10:01:43Z INFO retrying upload chunk 7
+2026-11-18T10:01:44Z INFO request served in 104ms
+2026-11-18T10:01:45Z INFO retrying upload chunk 9
+2026-11-18T10:01:46Z INFO cache miss for key user:26
+2026-11-18T10:01:47Z INFO cache miss for key user:27
+2026-11-18T10:01:48Z ERROR db timeout after 30s
+2026-11-18T10:01:49Z INFO cache miss for key user:29
+2026-11-18T10:01:50Z INFO cache miss for key user:30
+2026-11-18T10:01:51Z INFO cache miss for key user:31
+2026-11-18T10:01:52Z INFO cache miss for key user:32
+2026-11-18T10:01:53Z INFO db timeout after 30s
+2026-11-18T10:01:54Z INFO retrying upload chunk 6
+2026-11-18T10:01:55Z INFO cache miss for key user:35
+2026-11-18T10:01:56Z INFO request served in 116ms
+2026-11-18T10:01:57Z ERROR request served in 117ms
+2026-11-18T10:01:58Z INFO db timeout after 30s
+2026-11-18T10:01:59Z INFO cache miss for key user:39
+2026-11-18T10:02:00Z INFO retrying upload chunk 0
+2026-11-18T10:02:01Z INFO request served in 121ms
+2026-11-18T10:02:02Z INFO request served in 122ms
+2026-11-18T10:02:03Z INFO cache miss for key user:3
+2026-11-18T10:02:04Z INFO db timeout after 30s
+2026-11-18T10:02:05Z INFO retrying upload chunk 5
+2026-11-18T10:02:06Z ERROR retrying upload chunk 6
+2026-11-18T10:02:07Z INFO retrying upload chunk 7
+2026-11-18T10:02:08Z INFO retrying upload chunk 8
+2026-11-18T10:02:09Z INFO retrying upload chunk 9
+2026-11-18T10:02:10Z INFO db timeout after 30s
+2026-11-18T10:02:11Z INFO retrying upload chunk 11
+2026-11-18T10:02:12Z INFO retrying upload chunk 0
+2026-11-18T10:02:13Z INFO db timeout after 30s
+2026-11-18T10:02:14Z INFO cache miss for key user:14
+2026-11-18T10:02:15Z ERROR db timeout after 30s
+2026-11-18T10:02:16Z INFO cache miss for key user:16
+2026-11-18T10:02:17Z INFO retrying upload chunk 5
+2026-11-18T10:02:18Z INFO cache miss for key user:18
+2026-11-18T10:02:19Z INFO db timeout after 30s
+2026-11-18T10:02:20Z INFO request served in 140ms
+2026-11-18T10:02:21Z INFO db timeout after 30s
+2026-11-18T10:02:22Z INFO db timeout after 30s
+2026-11-18T10:02:23Z INFO db timeout after 30s
+2026-11-18T10:02:24Z ERROR cache miss for key user:24
+2026-11-18T10:02:25Z INFO db timeout after 30s
+2026-11-18T10:02:26Z INFO request served in 146ms
+2026-11-18T10:02:27Z INFO db timeout after 30s
+2026-11-18T10:02:28Z INFO db timeout after 30s
+2026-11-18T10:02:29Z INFO cache miss for key user:29
+2026-11-18T10:02:30Z INFO retrying upload chunk 6
+2026-11-18T10:02:31Z INFO cache miss for key user:31
+2026-11-18T10:02:32Z INFO request served in 152ms
+2026-11-18T10:02:33Z ERROR request served in 153ms
+2026-11-18T10:02:34Z INFO request served in 154ms
+2026-11-18T10:02:35Z INFO retrying upload chunk 11
+2026-11-18T10:02:36Z INFO db timeout after 30s
+2026-11-18T10:02:37Z INFO db timeout after 30s
+2026-11-18T10:02:38Z INFO retrying upload chunk 2
+2026-11-18T10:02:39Z INFO retrying upload chunk 3
+2026-11-18T10:02:40Z INFO retrying upload chunk 4
+2026-11-18T10:02:41Z INFO retrying upload chunk 5
+2026-11-18T10:02:42Z ERROR request served in 162ms
+2026-11-18T10:02:43Z INFO db timeout after 30s
+2026-11-18T10:02:44Z INFO cache miss for key user:4
+2026-11-18T10:02:45Z INFO db timeout after 30s
+2026-11-18T10:02:46Z INFO request served in 166ms
+2026-11-18T10:02:47Z INFO request served in 167ms
+2026-11-18T10:02:48Z INFO retrying upload chunk 0
+2026-11-18T10:02:49Z INFO cache miss for key user:9
+2026-11-18T10:02:50Z INFO db timeout after 30s
+2026-11-18T10:02:51Z ERROR cache miss for key user:11
+2026-11-18T10:02:52Z INFO request served in 172ms
+2026-11-18T10:02:53Z INFO cache miss for key user:13
+2026-11-18T10:02:54Z INFO db timeout after 30s
+2026-11-18T10:02:55Z INFO request served in 175ms
+2026-11-18T10:02:56Z INFO db timeout after 30s
+2026-11-18T10:02:57Z INFO request served in 177ms
+2026-11-18T10:02:58Z INFO request served in 178ms
+2026-11-18T10:02:59Z INFO cache miss for key user:19
+2026-11-18T10:03:00Z ERROR request served in 180ms
+2026-11-18T10:03:01Z INFO cache miss for key user:21
+2026-11-18T10:03:02Z INFO request served in 182ms
+2026-11-18T10:03:03Z INFO cache miss for key user:23
+2026-11-18T10:03:04Z INFO cache miss for key user:24
+2026-11-18T10:03:05Z INFO cache miss for key user:25
+2026-11-18T10:03:06Z INFO retrying upload chunk 6
+2026-11-18T10:03:07Z INFO cache miss for key user:27
+2026-11-18T10:03:08Z INFO cache miss for key user:28
+2026-11-18T10:03:09Z ERROR retrying upload chunk 9
+2026-11-18T10:03:10Z INFO request served in 190ms
+2026-11-18T10:03:11Z INFO db timeout after 30s
+2026-11-18T10:03:12Z INFO db timeout after 30s
+2026-11-18T10:03:13Z INFO request served in 193ms
+2026-11-18T10:03:14Z INFO retrying upload chunk 2
+2026-11-18T10:03:15Z INFO request served in 195ms
+2026-11-18T10:03:16Z INFO cache miss for key user:36
+2026-11-18T10:03:17Z INFO request served in 197ms
+2026-11-18T10:03:18Z ERROR retrying upload chunk 6
+2026-11-18T10:03:19Z INFO request served in 199ms
+2026-11-18T10:03:20Z INFO request served in 200ms
+2026-11-18T10:03:21Z INFO db timeout after 30s
+2026-11-18T10:03:22Z INFO cache miss for key user:2
+2026-11-18T10:03:23Z INFO db timeout after 30s
+2026-11-18T10:03:24Z INFO cache miss for key user:4
+2026-11-18T10:03:25Z INFO retrying upload chunk 1
+2026-11-18T10:03:26Z INFO cache miss for key user:6
+2026-11-18T10:03:27Z ERROR request served in 207ms
+2026-11-18T10:03:28Z INFO cache miss for key user:8
+2026-11-18T10:03:29Z INFO retrying upload chunk 5
+2026-11-18T10:03:30Z INFO db timeout after 30s
+2026-11-18T10:03:31Z INFO retrying upload chunk 7
+2026-11-18T10:03:32Z INFO request served in 212ms
+2026-11-18T10:03:33Z INFO db timeout after 30s
+2026-11-18T10:03:34Z INFO db timeout after 30s
+2026-11-18T10:03:35Z INFO retrying upload chunk 11
+2026-11-18T10:03:36Z ERROR cache miss for key user:16
+2026-11-18T10:03:37Z INFO retrying upload chunk 1
+2026-11-18T10:03:38Z INFO cache miss for key user:18
+2026-11-18T10:03:39Z INFO retrying upload chunk 3
+2026-11-18T10:03:40Z INFO request served in 220ms
+2026-11-18T10:03:41Z INFO db timeout after 30s
+2026-11-18T10:03:42Z INFO retrying upload chunk 6
+2026-11-18T10:03:43Z INFO retrying upload chunk 7
+2026-11-18T10:03:44Z INFO retrying upload chunk 8
+2026-11-18T10:03:45Z ERROR db timeout after 30s
+2026-11-18T10:03:46Z INFO cache miss for key user:26
+2026-11-18T10:03:47Z INFO cache miss for key user:27
+2026-11-18T10:03:48Z INFO cache miss for key user:28
+2026-11-18T10:03:49Z INFO db timeout after 30s
+2026-11-18T10:03:50Z INFO cache miss for key user:30
+2026-11-18T10:03:51Z INFO retrying upload chunk 3
+2026-11-18T10:03:52Z INFO cache miss for key user:32
+2026-11-18T10:03:53Z INFO retrying upload chunk 5
+2026-11-18T10:03:54Z ERROR request served in 234ms
+2026-11-18T10:03:55Z INFO cache miss for key user:35
+2026-11-18T10:03:56Z INFO cache miss for key user:36
+2026-11-18T10:03:57Z INFO db timeout after 30s
+2026-11-18T10:03:58Z INFO db timeout after 30s
+2026-11-18T10:03:59Z INFO db timeout after 30s
+2026-11-18T10:04:00Z INFO cache miss for key user:0
+2026-11-18T10:04:01Z INFO retrying upload chunk 1
+2026-11-18T10:04:02Z INFO cache miss for key user:2
+2026-11-18T10:04:03Z ERROR cache miss for key user:3
+2026-11-18T10:04:04Z INFO db timeout after 30s
+2026-11-18T10:04:05Z INFO request served in 245ms
+2026-11-18T10:04:06Z INFO cache miss for key user:6
+2026-11-18T10:04:07Z INFO request served in 247ms
+2026-11-18T10:04:08Z INFO cache miss for key user:8
+2026-11-18T10:04:09Z INFO request served in 249ms
+2026-11-18T10:04:10Z INFO request served in 250ms
+2026-11-18T10:04:11Z INFO retrying upload chunk 11
+2026-11-18T10:04:12Z ERROR cache miss for key user:12
+2026-11-18T10:04:13Z INFO db timeout after 30s
+2026-11-18T10:04:14Z INFO request served in 254ms
+2026-11-18T10:04:15Z INFO retrying upload chunk 3
+2026-11-18T10:04:16Z INFO retrying upload chunk 4
+2026-11-18T10:04:17Z INFO cache miss for key user:17
+2026-11-18T10:04:18Z INFO cache miss for key user:18
+2026-11-18T10:04:19Z INFO db timeout after 30s
+2026-11-18T10:04:20Z INFO retrying upload chunk 8
+2026-11-18T10:04:21Z ERROR cache miss for key user:21
+2026-11-18T10:04:22Z INFO db timeout after 30s
+2026-11-18T10:04:23Z INFO cache miss for key user:23
+2026-11-18T10:04:24Z INFO cache miss for key user:24
+2026-11-18T10:04:25Z INFO cache miss for key user:25
+2026-11-18T10:04:26Z INFO retrying upload chunk 2
+2026-11-18T10:04:27Z INFO db timeout after 30s
+2026-11-18T10:04:28Z INFO db timeout after 30s
+2026-11-18T10:04:29Z INFO request served in 269ms
+2026-11-18T10:04:30Z ERROR retrying upload chunk 6
+2026-11-18T10:04:31Z INFO db timeout after 30s
+2026-11-18T10:04:32Z INFO db timeout after 30s
+2026-11-18T10:04:33Z INFO cache miss for key user:33
+2026-11-18T10:04:34Z INFO cache miss for key user:34
+2026-11-18T10:04:35Z INFO request served in 275ms
+2026-11-18T10:04:36Z INFO db timeout after 30s
+2026-11-18T10:04:37Z INFO db timeout after 30s
+2026-11-18T10:04:38Z INFO retrying upload chunk 2
+2026-11-18T10:04:39Z ERROR db timeout after 30s
+2026-11-18T10:04:40Z INFO db timeout after 30s
+2026-11-18T10:04:41Z INFO retrying upload chunk 5
+2026-11-18T10:04:42Z INFO request served in 282ms
+2026-11-18T10:04:43Z INFO cache miss for key user:3
+2026-11-18T10:04:44Z INFO request served in 284ms
+2026-11-18T10:04:45Z INFO retrying upload chunk 9
+2026-11-18T10:04:46Z INFO retrying upload chunk 10
+2026-11-18T10:04:47Z INFO cache miss for key user:7
+2026-11-18T10:04:48Z ERROR request served in 288ms
+2026-11-18T10:04:49Z INFO cache miss for key user:9
+2026-11-18T10:04:50Z INFO retrying upload chunk 2
+2026-11-18T10:04:51Z INFO cache miss for key user:11
+2026-11-18T10:04:52Z INFO retrying upload chunk 4
+2026-11-18T10:04:53Z INFO db timeout after 30s
+2026-11-18T10:04:54Z INFO retrying upload chunk 6
+2026-11-18T10:04:55Z INFO retrying upload chunk 7
+2026-11-18T10:04:56Z INFO request served in 296ms
+2026-11-18T10:04:57Z ERROR db timeout after 30s
+2026-11-18T10:04:58Z INFO cache miss for key user:18
+2026-11-18T10:04:59Z INFO retrying upload chunk 11
+2026-11-18T10:05:00Z INFO db timeout after 30s
+2026-11-18T10:05:01Z INFO cache miss for key user:21
+2026-11-18T10:05:02Z INFO request served in 2ms
+2026-11-18T10:05:03Z INFO db timeout after 30s
+2026-11-18T10:05:04Z INFO cache miss for key user:24
+2026-11-18T10:05:05Z INFO request served in 5ms
+2026-11-18T10:05:06Z ERROR cache miss for key user:26
+2026-11-18T10:05:07Z INFO request served in 7ms
+2026-11-18T10:05:08Z INFO cache miss for key user:28
+2026-11-18T10:05:09Z INFO retrying upload chunk 9
+2026-11-18T10:05:10Z INFO cache miss for key user:30
+2026-11-18T10:05:11Z INFO db timeout after 30s
+2026-11-18T10:05:12Z INFO retrying upload chunk 0
+2026-11-18T10:05:13Z INFO retrying upload chunk 1
+2026-11-18T10:05:14Z INFO cache miss for key user:34
+2026-11-18T10:05:15Z ERROR cache miss for key user:35
+2026-11-18T10:05:16Z INFO cache miss for key user:36
+2026-11-18T10:05:17Z INFO retrying upload chunk 5
+2026-11-18T10:05:18Z INFO retrying upload chunk 6
+2026-11-18T10:05:19Z INFO request served in 19ms
+2026-11-18T10:05:20Z INFO retrying upload chunk 8
+2026-11-18T10:05:21Z INFO cache miss for key user:1
+2026-11-18T10:05:22Z INFO request served in 22ms
+2026-11-18T10:05:23Z INFO request served in 23ms
+2026-11-18T10:05:24Z ERROR db timeout after 30s
+2026-11-18T10:05:25Z INFO request served in 25ms
+2026-11-18T10:05:26Z INFO db timeout after 30s
+2026-11-18T10:05:27Z INFO request served in 27ms
+2026-11-18T10:05:28Z INFO retrying upload chunk 4
+2026-11-18T10:05:29Z INFO retrying upload chunk 5
+2026-11-18T10:05:30Z INFO db timeout after 30s
+2026-11-18T10:05:31Z INFO retrying upload chunk 7
+2026-11-18T10:05:32Z INFO request served in 32ms
+2026-11-18T10:05:33Z ERROR request served in 33ms
+2026-11-18T10:05:34Z INFO db timeout after 30s
+2026-11-18T10:05:35Z INFO db timeout after 30s
+2026-11-18T10:05:36Z INFO cache miss for key user:16
+2026-11-18T10:05:37Z INFO db timeout after 30s
+2026-11-18T10:05:38Z INFO db timeout after 30s
+2026-11-18T10:05:39Z INFO request served in 39ms
+2026-11-18T10:05:40Z INFO request served in 40ms
+2026-11-18T10:05:41Z INFO db timeout after 30s
+2026-11-18T10:05:42Z ERROR cache miss for key user:22
+2026-11-18T10:05:43Z INFO request served in 43ms
+2026-11-18T10:05:44Z INFO cache miss for key user:24
+2026-11-18T10:05:45Z INFO retrying upload chunk 9
+2026-11-18T10:05:46Z INFO request served in 46ms
+2026-11-18T10:05:47Z INFO retrying upload chunk 11
+2026-11-18T10:05:48Z INFO cache miss for key user:28
+2026-11-18T10:05:49Z INFO retrying upload chunk 1
+2026-11-18T10:05:50Z INFO request served in 50ms
+2026-11-18T10:05:51Z ERROR db timeout after 30s
+2026-11-18T10:05:52Z INFO request served in 52ms
+2026-11-18T10:05:53Z INFO db timeout after 30s
+2026-11-18T10:05:54Z INFO cache miss for key user:34
+2026-11-18T10:05:55Z INFO retrying upload chunk 7
+2026-11-18T10:05:56Z INFO db timeout after 30s
+2026-11-18T10:05:57Z INFO request served in 57ms
+2026-11-18T10:05:58Z INFO db timeout after 30s
+2026-11-18T10:05:59Z INFO db timeout after 30s
+2026-11-18T10:06:00Z ERROR request served in 60ms
+2026-11-18T10:06:01Z INFO db timeout after 30s
+2026-11-18T10:06:02Z INFO cache miss for key user:2
+2026-11-18T10:06:03Z INFO db timeout after 30s
+2026-11-18T10:06:04Z INFO request served in 64ms
+2026-11-18T10:06:05Z INFO db timeout after 30s
+2026-11-18T10:06:06Z INFO retrying upload chunk 6
+2026-11-18T10:06:07Z INFO db timeout after 30s
+2026-11-18T10:06:08Z INFO request served in 68ms
+2026-11-18T10:06:09Z ERROR retrying upload chunk 9
+2026-11-18T10:06:10Z INFO request served in 70ms
+2026-11-18T10:06:11Z INFO cache miss for key user:11
+2026-11-18T10:06:12Z INFO db timeout after 30s
+2026-11-18T10:06:13Z INFO cache miss for key user:13
+2026-11-18T10:06:14Z INFO db timeout after 30s
+2026-11-18T10:06:15Z INFO cache miss for key user:15
+2026-11-18T10:06:16Z INFO request served in 76ms
+2026-11-18T10:06:17Z INFO db timeout after 30s
+2026-11-18T10:06:18Z ERROR cache miss for key user:18
+2026-11-18T10:06:19Z INFO cache miss for key user:19
+2026-11-18T10:06:20Z INFO request served in 80ms
+2026-11-18T10:06:21Z INFO request served in 81ms
+2026-11-18T10:06:22Z INFO cache miss for key user:22
+2026-11-18T10:06:23Z INFO request served in 83ms
+2026-11-18T10:06:24Z INFO retrying upload chunk 0
+2026-11-18T10:06:25Z INFO cache miss for key user:25
+2026-11-18T10:06:26Z INFO request served in 86ms
+2026-11-18T10:06:27Z ERROR request served in 87ms
+2026-11-18T10:06:28Z INFO db timeout after 30s
+2026-11-18T10:06:29Z INFO request served in 89ms
+2026-11-18T10:06:30Z INFO db timeout after 30s
+2026-11-18T10:06:31Z INFO db timeout after 30s
+2026-11-18T10:06:32Z INFO db timeout after 30s
+2026-11-18T10:06:33Z INFO cache miss for key user:33
+2026-11-18T10:06:34Z INFO retrying upload chunk 10
+2026-11-18T10:06:35Z INFO cache miss for key user:35
+2026-11-18T10:06:36Z ERROR retrying upload chunk 0
+2026-11-18T10:06:37Z INFO db timeout after 30s
+2026-11-18T10:06:38Z INFO retrying upload chunk 2
+2026-11-18T10:06:39Z INFO retrying upload chunk 3
+2026-11-18T10:06:40Z INFO retrying upload chunk 4
+2026-11-18T10:06:41Z INFO request served in 101ms
+2026-11-18T10:06:42Z INFO cache miss for key user:2
+2026-11-18T10:06:43Z INFO cache miss for key user:3
+2026-11-18T10:06:44Z INFO request served in 104ms
+2026-11-18T10:06:45Z ERROR cache miss for key user:5
+2026-11-18T10:06:46Z INFO cache miss for key user:6
+2026-11-18T10:06:47Z INFO retrying upload chunk 11
+2026-11-18T10:06:48Z INFO request served in 108ms
+2026-11-18T10:06:49Z INFO db timeout after 30s
+2026-11-18T10:06:50Z INFO cache miss for key user:10
+2026-11-18T10:06:51Z INFO db timeout after 30s
+2026-11-18T10:06:52Z INFO db timeout after 30s
+2026-11-18T10:06:53Z INFO request served in 113ms
+2026-11-18T10:06:54Z ERROR retrying upload chunk 6
+2026-11-18T10:06:55Z INFO cache miss for key user:15
+2026-11-18T10:06:56Z INFO db timeout after 30s
+2026-11-18T10:06:57Z INFO db timeout after 30s
+2026-11-18T10:06:58Z INFO retrying upload chunk 10
+2026-11-18T10:06:59Z INFO request served in 119ms
+2026-11-18T10:07:00Z INFO cache miss for key user:20
+2026-11-18T10:07:01Z INFO request served in 121ms
+2026-11-18T10:07:02Z INFO db timeout after 30s
+2026-11-18T10:07:03Z ERROR retrying upload chunk 3
+2026-11-18T10:07:04Z INFO cache miss for key user:24
+2026-11-18T10:07:05Z INFO cache miss for key user:25
+2026-11-18T10:07:06Z INFO request served in 126ms
+2026-11-18T10:07:07Z INFO retrying upload chunk 7
+2026-11-18T10:07:08Z INFO db timeout after 30s
+2026-11-18T10:07:09Z INFO request served in 129ms
+2026-11-18T10:07:10Z INFO request served in 130ms
+2026-11-18T10:07:11Z INFO request served in 131ms
+2026-11-18T10:07:12Z ERROR request served in 132ms
+2026-11-18T10:07:13Z INFO cache miss for key user:33
+2026-11-18T10:07:14Z INFO db timeout after 30s
+2026-11-18T10:07:15Z INFO request served in 135ms
+2026-11-18T10:07:16Z INFO cache miss for key user:36
+2026-11-18T10:07:17Z INFO request served in 137ms
+2026-11-18T10:07:18Z INFO cache miss for key user:38
+2026-11-18T10:07:19Z INFO db timeout after 30s
+2026-11-18T10:07:20Z INFO request served in 140ms
+2026-11-18T10:07:21Z ERROR retrying upload chunk 9
+2026-11-18T10:07:22Z INFO db timeout after 30s
+2026-11-18T10:07:23Z INFO retrying upload chunk 11
+2026-11-18T10:07:24Z INFO request served in 144ms
+2026-11-18T10:07:25Z INFO cache miss for key user:5
+2026-11-18T10:07:26Z INFO cache miss for key user:6
+2026-11-18T10:07:27Z INFO db timeout after 30s
+2026-11-18T10:07:28Z INFO db timeout after 30s
+2026-11-18T10:07:29Z INFO request served in 149ms
+2026-11-18T10:07:30Z ERROR db timeout after 30s
+2026-11-18T10:07:31Z INFO cache miss for key user:11
+2026-11-18T10:07:32Z INFO retrying upload chunk 8
+2026-11-18T10:07:33Z INFO db timeout after 30s
+2026-11-18T10:07:34Z INFO retrying upload chunk 10
+2026-11-18T10:07:35Z INFO db timeout after 30s
+2026-11-18T10:07:36Z INFO request served in 156ms
+2026-11-18T10:07:37Z INFO request served in 157ms
+2026-11-18T10:07:38Z INFO cache miss for key user:18
+2026-11-18T10:07:39Z ERROR db timeout after 30s
+2026-11-18T10:07:40Z INFO cache miss for key user:20
+2026-11-18T10:07:41Z INFO retrying upload chunk 5
+2026-11-18T10:07:42Z INFO request served in 162ms
+2026-11-18T10:07:43Z INFO retrying upload chunk 7
+2026-11-18T10:07:44Z INFO cache miss for key user:24
+2026-11-18T10:07:45Z INFO request served in 165ms
+2026-11-18T10:07:46Z INFO cache miss for key user:26
+2026-11-18T10:07:47Z INFO db timeout after 30s
+2026-11-18T10:07:48Z ERROR retrying upload chunk 0
+2026-11-18T10:07:49Z INFO cache miss for key user:29
+2026-11-18T10:07:50Z INFO db timeout after 30s
+2026-11-18T10:07:51Z INFO cache miss for key user:31
+2026-11-18T10:07:52Z INFO db timeout after 30s
+2026-11-18T10:07:53Z INFO db timeout after 30s
+2026-11-18T10:07:54Z INFO db timeout after 30s
+2026-11-18T10:07:55Z INFO cache miss for key user:35
+2026-11-18T10:07:56Z INFO request served in 176ms
+2026-11-18T10:07:57Z ERROR db timeout after 30s
+2026-11-18T10:07:58Z INFO retrying upload chunk 10
+2026-11-18T10:07:59Z INFO retrying upload chunk 11
+2026-11-18T10:08:00Z INFO db timeout after 30s
+2026-11-18T10:08:01Z INFO db timeout after 30s
+2026-11-18T10:08:02Z INFO cache miss for key user:2
+2026-11-18T10:08:03Z INFO retrying upload chunk 3
+2026-11-18T10:08:04Z INFO request served in 184ms
+2026-11-18T10:08:05Z INFO db timeout after 30s
+2026-11-18T10:08:06Z ERROR retrying upload chunk 6
+2026-11-18T10:08:07Z INFO db timeout after 30s
+2026-11-18T10:08:08Z INFO db timeout after 30s
+2026-11-18T10:08:09Z INFO db timeout after 30s
+2026-11-18T10:08:10Z INFO retrying upload chunk 10
+2026-11-18T10:08:11Z INFO request served in 191ms
+2026-11-18T10:08:12Z INFO db timeout after 30s
+2026-11-18T10:08:13Z INFO request served in 193ms
+2026-11-18T10:08:14Z INFO cache miss for key user:14
+2026-11-18T10:08:15Z ERROR cache miss for key user:15
+2026-11-18T10:08:16Z INFO cache miss for key user:16
+2026-11-18T10:08:17Z INFO retrying upload chunk 5
+2026-11-18T10:08:18Z INFO retrying upload chunk 6
+2026-11-18T10:08:19Z INFO retrying upload chunk 7
+2026-11-18T10:08:20Z INFO db timeout after 30s
+2026-11-18T10:08:21Z INFO retrying upload chunk 9
+2026-11-18T10:08:22Z INFO request served in 202ms
+2026-11-18T10:08:23Z INFO db timeout after 30s
+2026-11-18T10:08:24Z ERROR cache miss for key user:24
+2026-11-18T10:08:25Z INFO db timeout after 30s
+2026-11-18T10:08:26Z INFO cache miss for key user:26
+2026-11-18T10:08:27Z INFO request served in 207ms
+2026-11-18T10:08:28Z INFO request served in 208ms
+2026-11-18T10:08:29Z INFO request served in 209ms
+2026-11-18T10:08:30Z INFO cache miss for key user:30
+2026-11-18T10:08:31Z INFO db timeout after 30s
+2026-11-18T10:08:32Z INFO retrying upload chunk 8
+2026-11-18T10:08:33Z ERROR db timeout after 30s
+2026-11-18T10:08:34Z INFO retrying upload chunk 10
+2026-11-18T10:08:35Z INFO request served in 215ms
+2026-11-18T10:08:36Z INFO db timeout after 30s
+2026-11-18T10:08:37Z INFO cache miss for key user:37
+2026-11-18T10:08:38Z INFO retrying upload chunk 2
+2026-11-18T10:08:39Z INFO request served in 219ms
+2026-11-18T10:08:40Z INFO request served in 220ms
+2026-11-18T10:08:41Z INFO retrying upload chunk 5
+2026-11-18T10:08:42Z ERROR retrying upload chunk 6
+2026-11-18T10:08:43Z INFO retrying upload chunk 7
+2026-11-18T10:08:44Z INFO db timeout after 30s
+2026-11-18T10:08:45Z INFO cache miss for key user:5
+2026-11-18T10:08:46Z INFO request served in 226ms
+2026-11-18T10:08:47Z INFO db timeout after 30s
+2026-11-18T10:08:48Z INFO retrying upload chunk 0
+2026-11-18T10:08:49Z INFO db timeout after 30s
+2026-11-18T10:08:50Z INFO request served in 230ms
+2026-11-18T10:08:51Z ERROR retrying upload chunk 3
+2026-11-18T10:08:52Z INFO db timeout after 30s
+2026-11-18T10:08:53Z INFO retrying upload chunk 5
+2026-11-18T10:08:54Z INFO request served in 234ms
+2026-11-18T10:08:55Z INFO retrying upload chunk 7
+2026-11-18T10:08:56Z INFO cache miss for key user:16
+2026-11-18T10:08:57Z INFO cache miss for key user:17
+2026-11-18T10:08:58Z INFO db timeout after 30s
+2026-11-18T10:08:59Z INFO db timeout after 30s
+2026-11-18T10:09:00Z ERROR cache miss for key user:20
+2026-11-18T10:09:01Z INFO request served in 241ms
+2026-11-18T10:09:02Z INFO request served in 242ms
+2026-11-18T10:09:03Z INFO cache miss for key user:23
+2026-11-18T10:09:04Z INFO request served in 244ms
+2026-11-18T10:09:05Z INFO db timeout after 30s
+2026-11-18T10:09:06Z INFO request served in 246ms
+2026-11-18T10:09:07Z INFO cache miss for key user:27
+2026-11-18T10:09:08Z INFO retrying upload chunk 8
+2026-11-18T10:09:09Z ERROR retrying upload chunk 9
+2026-11-18T10:09:10Z INFO retrying upload chunk 10
+2026-11-18T10:09:11Z INFO db timeout after 30s
+2026-11-18T10:09:12Z INFO cache miss for key user:32
+2026-11-18T10:09:13Z INFO db timeout after 30s
+2026-11-18T10:09:14Z INFO retrying upload chunk 2
+2026-11-18T10:09:15Z INFO retrying upload chunk 3
+2026-11-18T10:09:16Z INFO retrying upload chunk 4
+2026-11-18T10:09:17Z INFO request served in 257ms
+2026-11-18T10:09:18Z ERROR cache miss for key user:38
+2026-11-18T10:09:19Z INFO retrying upload chunk 7
+2026-11-18T10:09:20Z INFO request served in 260ms
+2026-11-18T10:09:21Z INFO retrying upload chunk 9
+2026-11-18T10:09:22Z INFO request served in 262ms
+2026-11-18T10:09:23Z INFO db timeout after 30s
+2026-11-18T10:09:24Z INFO request served in 264ms
+2026-11-18T10:09:25Z INFO db timeout after 30s
+2026-11-18T10:09:26Z INFO request served in 266ms
+2026-11-18T10:09:27Z ERROR request served in 267ms
+2026-11-18T10:09:28Z INFO retrying upload chunk 4
+2026-11-18T10:09:29Z INFO db timeout after 30s
+2026-11-18T10:09:30Z INFO cache miss for key user:10
+2026-11-18T10:09:31Z INFO db timeout after 30s
+2026-11-18T10:09:32Z INFO request served in 272ms
+2026-11-18T10:09:33Z INFO request served in 273ms
+2026-11-18T10:09:34Z INFO request served in 274ms
+2026-11-18T10:09:35Z INFO db timeout after 30s
+2026-11-18T10:09:36Z ERROR retrying upload chunk 0
+2026-11-18T10:09:37Z INFO retrying upload chunk 1
+2026-11-18T10:09:38Z INFO db timeout after 30s
+2026-11-18T10:09:39Z INFO request served in 279ms
+2026-11-18T10:09:40Z INFO retrying upload chunk 4
+2026-11-18T10:09:41Z INFO request served in 281ms
+2026-11-18T10:09:42Z INFO db timeout after 30s
+2026-11-18T10:09:43Z INFO request served in 283ms
+2026-11-18T10:09:44Z INFO db timeout after 30s
+2026-11-18T10:09:45Z ERROR db timeout after 30s
+2026-11-18T10:09:46Z INFO request served in 286ms
+2026-11-18T10:09:47Z INFO cache miss for key user:27
+2026-11-18T10:09:48Z INFO cache miss for key user:28
+2026-11-18T10:09:49Z INFO request served in 289ms
+2026-11-18T10:09:50Z INFO retrying upload chunk 2
+2026-11-18T10:09:51Z INFO request served in 291ms
+2026-11-18T10:09:52Z INFO cache miss for key user:32
+2026-11-18T10:09:53Z INFO request served in 293ms
+2026-11-18T10:09:54Z ERROR retrying upload chunk 6
+2026-11-18T10:09:55Z INFO db timeout after 30s
+2026-11-18T10:09:56Z INFO retrying upload chunk 8
+2026-11-18T10:09:57Z INFO cache miss for key user:37
+2026-11-18T10:09:58Z INFO db timeout after 30s
+2026-11-18T10:09:59Z INFO db timeout after 30s
+2026-11-18T10:10:00Z INFO retrying upload chunk 0
+2026-11-18T10:10:01Z INFO retrying upload chunk 1
+2026-11-18T10:10:02Z INFO cache miss for key user:2
+2026-11-18T10:10:03Z ERROR request served in 3ms
+2026-11-18T10:10:04Z INFO retrying upload chunk 4
+2026-11-18T10:10:05Z INFO db timeout after 30s
+2026-11-18T10:10:06Z INFO cache miss for key user:6
+2026-11-18T10:10:07Z INFO cache miss for key user:7
+2026-11-18T10:10:08Z INFO retrying upload chunk 8
+2026-11-18T10:10:09Z INFO retrying upload chunk 9
+2026-11-18T10:10:10Z INFO request served in 10ms
+2026-11-18T10:10:11Z INFO request served in 11ms
+2026-11-18T10:10:12Z ERROR request served in 12ms
+2026-11-18T10:10:13Z INFO request served in 13ms
+2026-11-18T10:10:14Z INFO request served in 14ms
+2026-11-18T10:10:15Z INFO retrying upload chunk 3
+2026-11-18T10:10:16Z INFO cache miss for key user:16
+2026-11-18T10:10:17Z INFO request served in 17ms
+2026-11-18T10:10:18Z INFO retrying upload chunk 6
+2026-11-18T10:10:19Z INFO retrying upload chunk 7
+2026-11-18T10:10:20Z INFO db timeout after 30s
+2026-11-18T10:10:21Z ERROR cache miss for key user:21
+2026-11-18T10:10:22Z INFO cache miss for key user:22
+2026-11-18T10:10:23Z INFO db timeout after 30s
+2026-11-18T10:10:24Z INFO cache miss for key user:24
+2026-11-18T10:10:25Z INFO retrying upload chunk 1
+2026-11-18T10:10:26Z INFO cache miss for key user:26
+2026-11-18T10:10:27Z INFO retrying upload chunk 3
+2026-11-18T10:10:28Z INFO request served in 28ms
+2026-11-18T10:10:29Z INFO retrying upload chunk 5
+2026-11-18T10:10:30Z ERROR retrying upload chunk 6
+2026-11-18T10:10:31Z INFO cache miss for key user:31
+2026-11-18T10:10:32Z INFO cache miss for key user:32
+2026-11-18T10:10:33Z INFO cache miss for key user:33
+2026-11-18T10:10:34Z INFO db timeout after 30s
+2026-11-18T10:10:35Z INFO cache miss for key user:35
+2026-11-18T10:10:36Z INFO request served in 36ms
+2026-11-18T10:10:37Z INFO db timeout after 30s
+2026-11-18T10:10:38Z INFO request served in 38ms
+2026-11-18T10:10:39Z ERROR cache miss for key user:39
+2026-11-18T10:10:40Z INFO request served in 40ms
+2026-11-18T10:10:41Z INFO request served in 41ms
+2026-11-18T10:10:42Z INFO cache miss for key user:2
+2026-11-18T10:10:43Z INFO db timeout after 30s
+2026-11-18T10:10:44Z INFO retrying upload chunk 8
+2026-11-18T10:10:45Z INFO retrying upload chunk 9
+2026-11-18T10:10:46Z INFO retrying upload chunk 10
+2026-11-18T10:10:47Z INFO cache miss for key user:7
+2026-11-18T10:10:48Z ERROR retrying upload chunk 0
+2026-11-18T10:10:49Z INFO request served in 49ms
+2026-11-18T10:10:50Z INFO request served in 50ms
+2026-11-18T10:10:51Z INFO db timeout after 30s
+2026-11-18T10:10:52Z INFO retrying upload chunk 4
+2026-11-18T10:10:53Z INFO request served in 53ms
+2026-11-18T10:10:54Z INFO request served in 54ms
+2026-11-18T10:10:55Z INFO cache miss for key user:15
+2026-11-18T10:10:56Z INFO cache miss for key user:16
+2026-11-18T10:10:57Z ERROR db timeout after 30s
+2026-11-18T10:10:58Z INFO request served in 58ms
+2026-11-18T10:10:59Z INFO cache miss for key user:19
+2026-11-18T10:11:00Z INFO retrying upload chunk 0
+2026-11-18T10:11:01Z INFO retrying upload chunk 1
+2026-11-18T10:11:02Z INFO retrying upload chunk 2
+2026-11-18T10:11:03Z INFO retrying upload chunk 3
+2026-11-18T10:11:04Z INFO request served in 64ms
+2026-11-18T10:11:05Z INFO db timeout after 30s
+2026-11-18T10:11:06Z ERROR cache miss for key user:26
+2026-11-18T10:11:07Z INFO db timeout after 30s
+2026-11-18T10:11:08Z INFO retrying upload chunk 8
+2026-11-18T10:11:09Z INFO retrying upload chunk 9
+2026-11-18T10:11:10Z INFO retrying upload chunk 10
+2026-11-18T10:11:11Z INFO db timeout after 30s
+2026-11-18T10:11:12Z INFO db timeout after 30s
+2026-11-18T10:11:13Z INFO retrying upload chunk 1
+2026-11-18T10:11:14Z INFO retrying upload chunk 2
+2026-11-18T10:11:15Z ERROR retrying upload chunk 3
+2026-11-18T10:11:16Z INFO cache miss for key user:36
+2026-11-18T10:11:17Z INFO db timeout after 30s
+2026-11-18T10:11:18Z INFO cache miss for key user:38
+2026-11-18T10:11:19Z INFO cache miss for key user:39
+2026-11-18T10:11:20Z INFO cache miss for key user:0
+2026-11-18T10:11:21Z INFO db timeout after 30s
+2026-11-18T10:11:22Z INFO retrying upload chunk 10
+2026-11-18T10:11:23Z INFO db timeout after 30s
+2026-11-18T10:11:24Z ERROR db timeout after 30s
+2026-11-18T10:11:25Z INFO db timeout after 30s
+2026-11-18T10:11:26Z INFO cache miss for key user:6
+2026-11-18T10:11:27Z INFO cache miss for key user:7
+2026-11-18T10:11:28Z INFO db timeout after 30s
+2026-11-18T10:11:29Z INFO request served in 89ms
+2026-11-18T10:11:30Z INFO cache miss for key user:10
+2026-11-18T10:11:31Z INFO request served in 91ms
+2026-11-18T10:11:32Z INFO retrying upload chunk 8
+2026-11-18T10:11:33Z ERROR db timeout after 30s
+2026-11-18T10:11:34Z INFO db timeout after 30s
+2026-11-18T10:11:35Z INFO db timeout after 30s
+2026-11-18T10:11:36Z INFO request served in 96ms
+2026-11-18T10:11:37Z INFO cache miss for key user:17
+2026-11-18T10:11:38Z INFO retrying upload chunk 2
+2026-11-18T10:11:39Z INFO request served in 99ms
+2026-11-18T10:11:40Z INFO cache miss for key user:20
+2026-11-18T10:11:41Z INFO db timeout after 30s
+2026-11-18T10:11:42Z ERROR db timeout after 30s
+2026-11-18T10:11:43Z INFO request served in 103ms
+2026-11-18T10:11:44Z INFO retrying upload chunk 8
+2026-11-18T10:11:45Z INFO request served in 105ms
+2026-11-18T10:11:46Z INFO request served in 106ms
+2026-11-18T10:11:47Z INFO cache miss for key user:27
+2026-11-18T10:11:48Z INFO retrying upload chunk 0
+2026-11-18T10:11:49Z INFO cache miss for key user:29
+2026-11-18T10:11:50Z INFO cache miss for key user:30
+2026-11-18T10:11:51Z ERROR db timeout after 30s
+2026-11-18T10:11:52Z INFO retrying upload chunk 4
+2026-11-18T10:11:53Z INFO request served in 113ms
+2026-11-18T10:11:54Z INFO db timeout after 30s
+2026-11-18T10:11:55Z INFO db timeout after 30s
+2026-11-18T10:11:56Z INFO cache miss for key user:36
+2026-11-18T10:11:57Z INFO retrying upload chunk 9
+2026-11-18T10:11:58Z INFO retrying upload chunk 10
+2026-11-18T10:11:59Z INFO db timeout after 30s
+2026-11-18T10:12:00Z ERROR request served in 120ms
+2026-11-18T10:12:01Z INFO cache miss for key user:1
+2026-11-18T10:12:02Z INFO retrying upload chunk 2
+2026-11-18T10:12:03Z INFO request served in 123ms
+2026-11-18T10:12:04Z INFO cache miss for key user:4
+2026-11-18T10:12:05Z INFO retrying upload chunk 5
+2026-11-18T10:12:06Z INFO db timeout after 30s
+2026-11-18T10:12:07Z INFO request served in 127ms
+2026-11-18T10:12:08Z INFO retrying upload chunk 8
+2026-11-18T10:12:09Z ERROR request served in 129ms
+2026-11-18T10:12:10Z INFO retrying upload chunk 10
+2026-11-18T10:12:11Z INFO cache miss for key user:11
+2026-11-18T10:12:12Z INFO db timeout after 30s
+2026-11-18T10:12:13Z INFO request served in 133ms
+2026-11-18T10:12:14Z INFO db timeout after 30s
+2026-11-18T10:12:15Z INFO cache miss for key user:15
+2026-11-18T10:12:16Z INFO retrying upload chunk 4
+2026-11-18T10:12:17Z INFO cache miss for key user:17
+2026-11-18T10:12:18Z ERROR request served in 138ms
+2026-11-18T10:12:19Z INFO cache miss for key user:19
+2026-11-18T10:12:20Z INFO cache miss for key user:20
+2026-11-18T10:12:21Z INFO retrying upload chunk 9
+2026-11-18T10:12:22Z INFO cache miss for key user:22
+2026-11-18T10:12:23Z INFO request served in 143ms
+2026-11-18T10:12:24Z INFO request served in 144ms
+2026-11-18T10:12:25Z INFO db timeout after 30s
+2026-11-18T10:12:26Z INFO retrying upload chunk 2
+2026-11-18T10:12:27Z ERROR cache miss for key user:27
+2026-11-18T10:12:28Z INFO cache miss for key user:28
+2026-11-18T10:12:29Z INFO retrying upload chunk 5
+2026-11-18T10:12:30Z INFO retrying upload chunk 6
+2026-11-18T10:12:31Z INFO db timeout after 30s
+2026-11-18T10:12:32Z INFO cache miss for key user:32
+2026-11-18T10:12:33Z INFO retrying upload chunk 9
+2026-11-18T10:12:34Z INFO db timeout after 30s
+2026-11-18T10:12:35Z INFO cache miss for key user:35
+2026-11-18T10:12:36Z ERROR db timeout after 30s
+2026-11-18T10:12:37Z INFO cache miss for key user:37
+2026-11-18T10:12:38Z INFO retrying upload chunk 2
+2026-11-18T10:12:39Z INFO db timeout after 30s
+2026-11-18T10:12:40Z INFO db timeout after 30s
+2026-11-18T10:12:41Z INFO cache miss for key user:1
+2026-11-18T10:12:42Z INFO retrying upload chunk 6
+2026-11-18T10:12:43Z INFO retrying upload chunk 7
+2026-11-18T10:12:44Z INFO request served in 164ms
+2026-11-18T10:12:45Z ERROR db timeout after 30s
+2026-11-18T10:12:46Z INFO db timeout after 30s
+2026-11-18T10:12:47Z INFO cache miss for key user:7
+2026-11-18T10:12:48Z INFO request served in 168ms
+2026-11-18T10:12:49Z INFO cache miss for key user:9
+2026-11-18T10:12:50Z INFO cache miss for key user:10
+2026-11-18T10:12:51Z INFO retrying upload chunk 3
+2026-11-18T10:12:52Z INFO db timeout after 30s
+2026-11-18T10:12:53Z INFO request served in 173ms
+2026-11-18T10:12:54Z ERROR retrying upload chunk 6
+2026-11-18T10:12:55Z INFO request served in 175ms
+2026-11-18T10:12:56Z INFO request served in 176ms
+2026-11-18T10:12:57Z INFO retrying upload chunk 9
+2026-11-18T10:12:58Z INFO cache miss for key user:18
+2026-11-18T10:12:59Z INFO db timeout after 30s
+2026-11-18T10:13:00Z INFO db timeout after 30s
+2026-11-18T10:13:01Z INFO db timeout after 30s
+2026-11-18T10:13:02Z INFO request served in 182ms
+2026-11-18T10:13:03Z ERROR db timeout after 30s
+2026-11-18T10:13:04Z INFO request served in 184ms
+2026-11-18T10:13:05Z INFO retrying upload chunk 5
+2026-11-18T10:13:06Z INFO db timeout after 30s
+2026-11-18T10:13:07Z INFO cache miss for key user:27
+2026-11-18T10:13:08Z INFO retrying upload chunk 8
+2026-11-18T10:13:09Z INFO request served in 189ms
+2026-11-18T10:13:10Z INFO request served in 190ms
+2026-11-18T10:13:11Z INFO retrying upload chunk 11
+2026-11-18T10:13:12Z ERROR db timeout after 30s
+2026-11-18T10:13:13Z INFO db timeout after 30s
+2026-11-18T10:13:14Z INFO retrying upload chunk 2
+2026-11-18T10:13:15Z INFO cache miss for key user:35
+2026-11-18T10:13:16Z INFO request served in 196ms
+2026-11-18T10:13:17Z INFO retrying upload chunk 5
+2026-11-18T10:13:18Z INFO cache miss for key user:38
+2026-11-18T10:13:19Z INFO request served in 199ms
+2026-11-18T10:13:20Z INFO request served in 200ms
+2026-11-18T10:13:21Z ERROR retrying upload chunk 9
+2026-11-18T10:13:22Z INFO db timeout after 30s
+2026-11-18T10:13:23Z INFO retrying upload chunk 11
+2026-11-18T10:13:24Z INFO cache miss for key user:4
+2026-11-18T10:13:25Z INFO retrying upload chunk 1
+2026-11-18T10:13:26Z INFO db timeout after 30s
+2026-11-18T10:13:27Z INFO retrying upload chunk 3
+2026-11-18T10:13:28Z INFO db timeout after 30s
+2026-11-18T10:13:29Z INFO retrying upload chunk 5
+2026-11-18T10:13:30Z ERROR db timeout after 30s
+2026-11-18T10:13:31Z INFO db timeout after 30s
+2026-11-18T10:13:32Z INFO request served in 212ms
+2026-11-18T10:13:33Z INFO cache miss for key user:13
+2026-11-18T10:13:34Z INFO db timeout after 30s
+2026-11-18T10:13:35Z INFO request served in 215ms
+2026-11-18T10:13:36Z INFO request served in 216ms
+2026-11-18T10:13:37Z INFO request served in 217ms
+2026-11-18T10:13:38Z INFO request served in 218ms
+2026-11-18T10:13:39Z ERROR db timeout after 30s
+2026-11-18T10:13:40Z INFO request served in 220ms
+2026-11-18T10:13:41Z INFO request served in 221ms
+2026-11-18T10:13:42Z INFO request served in 222ms
+2026-11-18T10:13:43Z INFO request served in 223ms
+2026-11-18T10:13:44Z INFO db timeout after 30s
+2026-11-18T10:13:45Z INFO db timeout after 30s
+2026-11-18T10:13:46Z INFO db timeout after 30s
+2026-11-18T10:13:47Z INFO cache miss for key user:27
+2026-11-18T10:13:48Z ERROR db timeout after 30s
+2026-11-18T10:13:49Z INFO retrying upload chunk 1
+2026-11-18T10:13:50Z INFO retrying upload chunk 2
+2026-11-18T10:13:51Z INFO retrying upload chunk 3
+2026-11-18T10:13:52Z INFO request served in 232ms
+2026-11-18T10:13:53Z INFO retrying upload chunk 5
+2026-11-18T10:13:54Z INFO retrying upload chunk 6
+2026-11-18T10:13:55Z INFO cache miss for key user:35
+2026-11-18T10:13:56Z INFO retrying upload chunk 8
+2026-11-18T10:13:57Z ERROR cache miss for key user:37
+2026-11-18T10:13:58Z INFO db timeout after 30s
+2026-11-18T10:13:59Z INFO request served in 239ms
+2026-11-18T10:14:00Z INFO cache miss for key user:0
+2026-11-18T10:14:01Z INFO cache miss for key user:1
+2026-11-18T10:14:02Z INFO request served in 242ms
+2026-11-18T10:14:03Z INFO request served in 243ms
+2026-11-18T10:14:04Z INFO retrying upload chunk 4
+2026-11-18T10:14:05Z INFO request served in 245ms
+2026-11-18T10:14:06Z ERROR db timeout after 30s
+2026-11-18T10:14:07Z INFO cache miss for key user:7
+2026-11-18T10:14:08Z INFO retrying upload chunk 8
+2026-11-18T10:14:09Z INFO cache miss for key user:9
+2026-11-18T10:14:10Z INFO cache miss for key user:10
+2026-11-18T10:14:11Z INFO retrying upload chunk 11
+2026-11-18T10:14:12Z INFO db timeout after 30s
+2026-11-18T10:14:13Z INFO db timeout after 30s
+2026-11-18T10:14:14Z INFO retrying upload chunk 2
+2026-11-18T10:14:15Z ERROR request served in 255ms
+2026-11-18T10:14:16Z INFO cache miss for key user:16
+2026-11-18T10:14:17Z INFO retrying upload chunk 5
+2026-11-18T10:14:18Z INFO db timeout after 30s
+2026-11-18T10:14:19Z INFO db timeout after 30s
+2026-11-18T10:14:20Z INFO request served in 260ms
+2026-11-18T10:14:21Z INFO db timeout after 30s
+2026-11-18T10:14:22Z INFO cache miss for key user:22
+2026-11-18T10:14:23Z INFO db timeout after 30s
+2026-11-18T10:14:24Z ERROR retrying upload chunk 0
+2026-11-18T10:14:25Z INFO retrying upload chunk 1
+2026-11-18T10:14:26Z INFO retrying upload chunk 2
+2026-11-18T10:14:27Z INFO cache miss for key user:27
+2026-11-18T10:14:28Z INFO cache miss for key user:28
+2026-11-18T10:14:29Z INFO cache miss for key user:29
+2026-11-18T10:14:30Z INFO retrying upload chunk 6
+2026-11-18T10:14:31Z INFO retrying upload chunk 7
+2026-11-18T10:14:32Z INFO cache miss for key user:32
+2026-11-18T10:14:33Z ERROR db timeout after 30s
+2026-11-18T10:14:34Z INFO request served in 274ms
+2026-11-18T10:14:35Z INFO request served in 275ms
+2026-11-18T10:14:36Z INFO request served in 276ms
+2026-11-18T10:14:37Z INFO request served in 277ms
+2026-11-18T10:14:38Z INFO request served in 278ms
+2026-11-18T10:14:39Z INFO request served in 279ms
+2026-11-18T10:14:40Z INFO request served in 280ms
+2026-11-18T10:14:41Z INFO cache miss for key user:1
+2026-11-18T10:14:42Z ERROR retrying upload chunk 6
+2026-11-18T10:14:43Z INFO cache miss for key user:3
+2026-11-18T10:14:44Z INFO cache miss for key user:4
+2026-11-18T10:14:45Z INFO cache miss for key user:5
+2026-11-18T10:14:46Z INFO cache miss for key user:6
+2026-11-18T10:14:47Z INFO cache miss for key user:7
+2026-11-18T10:14:48Z INFO request served in 288ms
+2026-11-18T10:14:49Z INFO cache miss for key user:9
+2026-11-18T10:14:50Z INFO request served in 290ms
+2026-11-18T10:14:51Z ERROR db timeout after 30s
+2026-11-18T10:14:52Z INFO retrying upload chunk 4
+2026-11-18T10:14:53Z INFO request served in 293ms
+2026-11-18T10:14:54Z INFO cache miss for key user:14
+2026-11-18T10:14:55Z INFO cache miss for key user:15
+2026-11-18T10:14:56Z INFO db timeout after 30s
+2026-11-18T10:14:57Z INFO retrying upload chunk 9
+2026-11-18T10:14:58Z INFO db timeout after 30s
+2026-11-18T10:14:59Z INFO db timeout after 30s
+2026-11-18T10:15:00Z ERROR db timeout after 30s
+2026-11-18T10:15:01Z INFO retrying upload chunk 1
+2026-11-18T10:15:02Z INFO cache miss for key user:22
+2026-11-18T10:15:03Z INFO retrying upload chunk 3
+2026-11-18T10:15:04Z INFO request served in 4ms
+2026-11-18T10:15:05Z INFO db timeout after 30s
+2026-11-18T10:15:06Z INFO request served in 6ms
+2026-11-18T10:15:07Z INFO cache miss for key user:27
+2026-11-18T10:15:08Z INFO db timeout after 30s
+2026-11-18T10:15:09Z ERROR db timeout after 30s
+2026-11-18T10:15:10Z INFO cache miss for key user:30
+2026-11-18T10:15:11Z INFO cache miss for key user:31
+2026-11-18T10:15:12Z INFO db timeout after 30s
+2026-11-18T10:15:13Z INFO request served in 13ms
+2026-11-18T10:15:14Z INFO cache miss for key user:34
+2026-11-18T10:15:15Z INFO retrying upload chunk 3
+2026-11-18T10:15:16Z INFO request served in 16ms
+2026-11-18T10:15:17Z INFO db timeout after 30s
+2026-11-18T10:15:18Z ERROR db timeout after 30s
+2026-11-18T10:15:19Z INFO request served in 19ms
+2026-11-18T10:15:20Z INFO cache miss for key user:0
+2026-11-18T10:15:21Z INFO db timeout after 30s
+2026-11-18T10:15:22Z INFO request served in 22ms
+2026-11-18T10:15:23Z INFO request served in 23ms
+2026-11-18T10:15:24Z INFO cache miss for key user:4
+2026-11-18T10:15:25Z INFO db timeout after 30s
+2026-11-18T10:15:26Z INFO cache miss for key user:6
+2026-11-18T10:15:27Z ERROR request served in 27ms
+2026-11-18T10:15:28Z INFO db timeout after 30s
+2026-11-18T10:15:29Z INFO cache miss for key user:9
+2026-11-18T10:15:30Z INFO db timeout after 30s
+2026-11-18T10:15:31Z INFO request served in 31ms
+2026-11-18T10:15:32Z INFO retrying upload chunk 8
+2026-11-18T10:15:33Z INFO request served in 33ms
+2026-11-18T10:15:34Z INFO cache miss for key user:14
+2026-11-18T10:15:35Z INFO request served in 35ms
+2026-11-18T10:15:36Z ERROR db timeout after 30s
+2026-11-18T10:15:37Z INFO cache miss for key user:17
+2026-11-18T10:15:38Z INFO db timeout after 30s
+2026-11-18T10:15:39Z INFO retrying upload chunk 3
+2026-11-18T10:15:40Z INFO retrying upload chunk 4
+2026-11-18T10:15:41Z INFO db timeout after 30s
+2026-11-18T10:15:42Z INFO retrying upload chunk 6
+2026-11-18T10:15:43Z INFO db timeout after 30s
+2026-11-18T10:15:44Z INFO retrying upload chunk 8
+2026-11-18T10:15:45Z ERROR cache miss for key user:25
+2026-11-18T10:15:46Z INFO db timeout after 30s
+2026-11-18T10:15:47Z INFO cache miss for key user:27
+2026-11-18T10:15:48Z INFO retrying upload chunk 0
+2026-11-18T10:15:49Z INFO request served in 49ms
+2026-11-18T10:15:50Z INFO retrying upload chunk 2
+2026-11-18T10:15:51Z INFO request served in 51ms
+2026-11-18T10:15:52Z INFO request served in 52ms
+2026-11-18T10:15:53Z INFO retrying upload chunk 5
+2026-11-18T10:15:54Z ERROR db timeout after 30s
+2026-11-18T10:15:55Z INFO request served in 55ms
+2026-11-18T10:15:56Z INFO request served in 56ms
+2026-11-18T10:15:57Z INFO retrying upload chunk 9
+2026-11-18T10:15:58Z INFO retrying upload chunk 10
+2026-11-18T10:15:59Z INFO db timeout after 30s
+2026-11-18T10:16:00Z INFO request served in 60ms
+2026-11-18T10:16:01Z INFO cache miss for key user:1
+2026-11-18T10:16:02Z INFO retrying upload chunk 2
+2026-11-18T10:16:03Z ERROR retrying upload chunk 3
+2026-11-18T10:16:04Z INFO cache miss for key user:4
+2026-11-18T10:16:05Z INFO db timeout after 30s
+2026-11-18T10:16:06Z INFO retrying upload chunk 6
+2026-11-18T10:16:07Z INFO cache miss for key user:7
+2026-11-18T10:16:08Z INFO retrying upload chunk 8
+2026-11-18T10:16:09Z INFO db timeout after 30s
+2026-11-18T10:16:10Z INFO db timeout after 30s
+2026-11-18T10:16:11Z INFO retrying upload chunk 11
+2026-11-18T10:16:12Z ERROR request served in 72ms
+2026-11-18T10:16:13Z INFO retrying upload chunk 1
+2026-11-18T10:16:14Z INFO cache miss for key user:14
+2026-11-18T10:16:15Z INFO cache miss for key user:15
+2026-11-18T10:16:16Z INFO db timeout after 30s
+2026-11-18T10:16:17Z INFO db timeout after 30s
+2026-11-18T10:16:18Z INFO cache miss for key user:18
+2026-11-18T10:16:19Z INFO retrying upload chunk 7
+2026-11-18T10:16:20Z INFO db timeout after 30s
+2026-11-18T10:16:21Z ERROR request served in 81ms
+2026-11-18T10:16:22Z INFO cache miss for key user:22
+2026-11-18T10:16:23Z INFO cache miss for key user:23
+2026-11-18T10:16:24Z INFO request served in 84ms
+2026-11-18T10:16:25Z INFO request served in 85ms
+2026-11-18T10:16:26Z INFO cache miss for key user:26
+2026-11-18T10:16:27Z INFO cache miss for key user:27
+2026-11-18T10:16:28Z INFO db timeout after 30s
+2026-11-18T10:16:29Z INFO db timeout after 30s
+2026-11-18T10:16:30Z ERROR retrying upload chunk 6
+2026-11-18T10:16:31Z INFO retrying upload chunk 7
+2026-11-18T10:16:32Z INFO cache miss for key user:32
+2026-11-18T10:16:33Z INFO request served in 93ms
+2026-11-18T10:16:34Z INFO cache miss for key user:34
+2026-11-18T10:16:35Z INFO db timeout after 30s
+2026-11-18T10:16:36Z INFO retrying upload chunk 0
+2026-11-18T10:16:37Z INFO request served in 97ms
+2026-11-18T10:16:38Z INFO db timeout after 30s
+2026-11-18T10:16:39Z ERROR retrying upload chunk 3
+2026-11-18T10:16:40Z INFO db timeout after 30s
+2026-11-18T10:16:41Z INFO cache miss for key user:1
+2026-11-18T10:16:42Z INFO cache miss for key user:2
+2026-11-18T10:16:43Z INFO retrying upload chunk 7
+2026-11-18T10:16:44Z INFO cache miss for key user:4
+2026-11-18T10:16:45Z INFO retrying upload chunk 9
+2026-11-18T10:16:46Z INFO cache miss for key user:6
+2026-11-18T10:16:47Z INFO cache miss for key user:7
+2026-11-18T10:16:48Z ERROR db timeout after 30s
+2026-11-18T10:16:49Z INFO retrying upload chunk 1
+2026-11-18T10:16:50Z INFO cache miss for key user:10
+2026-11-18T10:16:51Z INFO retrying upload chunk 3
+2026-11-18T10:16:52Z INFO request served in 112ms
+2026-11-18T10:16:53Z INFO db timeout after 30s
+2026-11-18T10:16:54Z INFO cache miss for key user:14
+2026-11-18T10:16:55Z INFO cache miss for key user:15
+2026-11-18T10:16:56Z INFO cache miss for key user:16
+2026-11-18T10:16:57Z ERROR db timeout after 30s
+2026-11-18T10:16:58Z INFO db timeout after 30s
+2026-11-18T10:16:59Z INFO request served in 119ms
+2026-11-18T10:17:00Z INFO db timeout after 30s
+2026-11-18T10:17:01Z INFO retrying upload chunk 1
+2026-11-18T10:17:02Z INFO retrying upload chunk 2
+2026-11-18T10:17:03Z INFO request served in 123ms
+2026-11-18T10:17:04Z INFO retrying upload chunk 4
+2026-11-18T10:17:05Z INFO request served in 125ms
+2026-11-18T10:17:06Z ERROR cache miss for key user:26
+2026-11-18T10:17:07Z INFO retrying upload chunk 7
+2026-11-18T10:17:08Z INFO retrying upload chunk 8
+2026-11-18T10:17:09Z INFO request served in 129ms
+2026-11-18T10:17:10Z INFO retrying upload chunk 10
+2026-11-18T10:17:11Z INFO retrying upload chunk 11
+2026-11-18T10:17:12Z INFO cache miss for key user:32
+2026-11-18T10:17:13Z INFO db timeout after 30s
+2026-11-18T10:17:14Z INFO db timeout after 30s
+2026-11-18T10:17:15Z ERROR retrying upload chunk 3
+2026-11-18T10:17:16Z INFO retrying upload chunk 4
+2026-11-18T10:17:17Z INFO cache miss for key user:37
+2026-11-18T10:17:18Z INFO retrying upload chunk 6
+2026-11-18T10:17:19Z INFO retrying upload chunk 7
+2026-11-18T10:17:20Z INFO cache miss for key user:0
+2026-11-18T10:17:21Z INFO retrying upload chunk 9
+2026-11-18T10:17:22Z INFO retrying upload chunk 10
+2026-11-18T10:17:23Z INFO db timeout after 30s
+2026-11-18T10:17:24Z ERROR db timeout after 30s
+2026-11-18T10:17:25Z INFO cache miss for key user:5
+2026-11-18T10:17:26Z INFO request served in 146ms
+2026-11-18T10:17:27Z INFO retrying upload chunk 3
+2026-11-18T10:17:28Z INFO request served in 148ms
+2026-11-18T10:17:29Z INFO db timeout after 30s
+2026-11-18T10:17:30Z INFO retrying upload chunk 6
+2026-11-18T10:17:31Z INFO db timeout after 30s
+2026-11-18T10:17:32Z INFO db timeout after 30s
+2026-11-18T10:17:33Z ERROR cache miss for key user:13
+2026-11-18T10:17:34Z INFO db timeout after 30s
+2026-11-18T10:17:35Z INFO request served in 155ms
+2026-11-18T10:17:36Z INFO db timeout after 30s
+2026-11-18T10:17:37Z INFO db timeout after 30s
+2026-11-18T10:17:38Z INFO retrying upload chunk 2
+2026-11-18T10:17:39Z INFO cache miss for key user:19
+2026-11-18T10:17:40Z INFO db timeout after 30s
+2026-11-18T10:17:41Z INFO db timeout after 30s
+2026-11-18T10:17:42Z ERROR db timeout after 30s
+2026-11-18T10:17:43Z INFO cache miss for key user:23
+2026-11-18T10:17:44Z INFO cache miss for key user:24
+2026-11-18T10:17:45Z INFO retrying upload chunk 9
+2026-11-18T10:17:46Z INFO request served in 166ms
+2026-11-18T10:17:47Z INFO cache miss for key user:27
+2026-11-18T10:17:48Z INFO cache miss for key user:28
+2026-11-18T10:17:49Z INFO db timeout after 30s
+2026-11-18T10:17:50Z INFO request served in 170ms
+2026-11-18T10:17:51Z ERROR request served in 171ms
+2026-11-18T10:17:52Z INFO cache miss for key user:32
+2026-11-18T10:17:53Z INFO request served in 173ms
+2026-11-18T10:17:54Z INFO request served in 174ms
+2026-11-18T10:17:55Z INFO retrying upload chunk 7
+2026-11-18T10:17:56Z INFO cache miss for key user:36
+2026-11-18T10:17:57Z INFO request served in 177ms
+2026-11-18T10:17:58Z INFO retrying upload chunk 10
+2026-11-18T10:17:59Z INFO cache miss for key user:39
+2026-11-18T10:18:00Z ERROR request served in 180ms
+2026-11-18T10:18:01Z INFO cache miss for key user:1
+2026-11-18T10:18:02Z INFO request served in 182ms
+2026-11-18T10:18:03Z INFO request served in 183ms
+2026-11-18T10:18:04Z INFO db timeout after 30s
+2026-11-18T10:18:05Z INFO cache miss for key user:5
+2026-11-18T10:18:06Z INFO cache miss for key user:6
+2026-11-18T10:18:07Z INFO retrying upload chunk 7
+2026-11-18T10:18:08Z INFO cache miss for key user:8
+2026-11-18T10:18:09Z ERROR request served in 189ms
+2026-11-18T10:18:10Z INFO request served in 190ms
+2026-11-18T10:18:11Z INFO retrying upload chunk 11
+2026-11-18T10:18:12Z INFO cache miss for key user:12
+2026-11-18T10:18:13Z INFO request served in 193ms
+2026-11-18T10:18:14Z INFO db timeout after 30s
+2026-11-18T10:18:15Z INFO db timeout after 30s
+2026-11-18T10:18:16Z INFO request served in 196ms
+2026-11-18T10:18:17Z INFO retrying upload chunk 5
+2026-11-18T10:18:18Z ERROR db timeout after 30s
+2026-11-18T10:18:19Z INFO request served in 199ms
+2026-11-18T10:18:20Z INFO retrying upload chunk 8
+2026-11-18T10:18:21Z INFO request served in 201ms
+2026-11-18T10:18:22Z INFO request served in 202ms
+2026-11-18T10:18:23Z INFO retrying upload chunk 11
+2026-11-18T10:18:24Z INFO request served in 204ms
+2026-11-18T10:18:25Z INFO cache miss for key user:25
+2026-11-18T10:18:26Z INFO request served in 206ms
+2026-11-18T10:18:27Z ERROR request served in 207ms
+2026-11-18T10:18:28Z INFO db timeout after 30s
+2026-11-18T10:18:29Z INFO retrying upload chunk 5
+2026-11-18T10:18:30Z INFO cache miss for key user:30
+2026-11-18T10:18:31Z INFO cache miss for key user:31
+2026-11-18T10:18:32Z INFO db timeout after 30s
+2026-11-18T10:18:33Z INFO request served in 213ms
+2026-11-18T10:18:34Z INFO request served in 214ms
+2026-11-18T10:18:35Z INFO request served in 215ms
+2026-11-18T10:18:36Z ERROR request served in 216ms
+2026-11-18T10:18:37Z INFO db timeout after 30s
+2026-11-18T10:18:38Z INFO db timeout after 30s
+2026-11-18T10:18:39Z INFO cache miss for key user:39
+2026-11-18T10:18:40Z INFO cache miss for key user:0
+2026-11-18T10:18:41Z INFO request served in 221ms
+2026-11-18T10:18:42Z INFO retrying upload chunk 6
+2026-11-18T10:18:43Z INFO retrying upload chunk 7
+2026-11-18T10:18:44Z INFO request served in 224ms
+2026-11-18T10:18:45Z ERROR db timeout after 30s
+2026-11-18T10:18:46Z INFO cache miss for key user:6
+2026-11-18T10:18:47Z INFO retrying upload chunk 11
+2026-11-18T10:18:48Z INFO cache miss for key user:8
+2026-11-18T10:18:49Z INFO db timeout after 30s
+2026-11-18T10:18:50Z INFO db timeout after 30s
+2026-11-18T10:18:51Z INFO db timeout after 30s
+2026-11-18T10:18:52Z INFO db timeout after 30s
+2026-11-18T10:18:53Z INFO request served in 233ms
+2026-11-18T10:18:54Z ERROR request served in 234ms
+2026-11-18T10:18:55Z INFO db timeout after 30s
+2026-11-18T10:18:56Z INFO request served in 236ms
+2026-11-18T10:18:57Z INFO cache miss for key user:17
+2026-11-18T10:18:58Z INFO retrying upload chunk 10
+2026-11-18T10:18:59Z INFO request served in 239ms
+2026-11-18T10:19:00Z INFO cache miss for key user:20
+2026-11-18T10:19:01Z INFO cache miss for key user:21
+2026-11-18T10:19:02Z INFO request served in 242ms
+2026-11-18T10:19:03Z ERROR retrying upload chunk 3
+2026-11-18T10:19:04Z INFO cache miss for key user:24
+2026-11-18T10:19:05Z INFO cache miss for key user:25
+2026-11-18T10:19:06Z INFO db timeout after 30s
+2026-11-18T10:19:07Z INFO cache miss for key user:27
+2026-11-18T10:19:08Z INFO cache miss for key user:28
+2026-11-18T10:19:09Z INFO retrying upload chunk 9
+2026-11-18T10:19:10Z INFO db timeout after 30s
+2026-11-18T10:19:11Z INFO db timeout after 30s
+2026-11-18T10:19:12Z ERROR cache miss for key user:32
+2026-11-18T10:19:13Z INFO request served in 253ms
+2026-11-18T10:19:14Z INFO retrying upload chunk 2
+2026-11-18T10:19:15Z INFO request served in 255ms
+2026-11-18T10:19:16Z INFO db timeout after 30s
+2026-11-18T10:19:17Z INFO db timeout after 30s
+2026-11-18T10:19:18Z INFO request served in 258ms
+2026-11-18T10:19:19Z INFO retrying upload chunk 7
+2026-11-18T10:19:20Z INFO retrying upload chunk 8
+2026-11-18T10:19:21Z ERROR cache miss for key user:1
+2026-11-18T10:19:22Z INFO cache miss for key user:2
+2026-11-18T10:19:23Z INFO db timeout after 30s
+2026-11-18T10:19:24Z INFO db timeout after 30s
+2026-11-18T10:19:25Z INFO db timeout after 30s
+2026-11-18T10:19:26Z INFO db timeout after 30s
+2026-11-18T10:19:27Z INFO retrying upload chunk 3
+2026-11-18T10:19:28Z INFO cache miss for key user:8
+2026-11-18T10:19:29Z INFO cache miss for key user:9
+2026-11-18T10:19:30Z ERROR cache miss for key user:10
+2026-11-18T10:19:31Z INFO db timeout after 30s
+2026-11-18T10:19:32Z INFO db timeout after 30s
+2026-11-18T10:19:33Z INFO db timeout after 30s
+2026-11-18T10:19:34Z INFO cache miss for key user:14
+2026-11-18T10:19:35Z INFO cache miss for key user:15
+2026-11-18T10:19:36Z INFO retrying upload chunk 0
+2026-11-18T10:19:37Z INFO cache miss for key user:17
+2026-11-18T10:19:38Z INFO retrying upload chunk 2
+2026-11-18T10:19:39Z ERROR cache miss for key user:19
+2026-11-18T10:19:40Z INFO request served in 280ms
+2026-11-18T10:19:41Z INFO db timeout after 30s
+2026-11-18T10:19:42Z INFO request served in 282ms
+2026-11-18T10:19:43Z INFO db timeout after 30s
+2026-11-18T10:19:44Z INFO retrying upload chunk 8
+2026-11-18T10:19:45Z INFO db timeout after 30s
+2026-11-18T10:19:46Z INFO retrying upload chunk 10
+2026-11-18T10:19:47Z INFO retrying upload chunk 11
+2026-11-18T10:19:48Z ERROR retrying upload chunk 0
+2026-11-18T10:19:49Z INFO db timeout after 30s
+2026-11-18T10:19:50Z INFO retrying upload chunk 2
+2026-11-18T10:19:51Z INFO cache miss for key user:31
+2026-11-18T10:19:52Z INFO cache miss for key user:32
+2026-11-18T10:19:53Z INFO db timeout after 30s
+2026-11-18T10:19:54Z INFO request served in 294ms
+2026-11-18T10:19:55Z INFO cache miss for key user:35
+2026-11-18T10:19:56Z INFO db timeout after 30s
+2026-11-18T10:19:57Z ERROR db timeout after 30s
+2026-11-18T10:19:58Z INFO request served in 298ms
+2026-11-18T10:19:59Z INFO request served in 299ms
+2026-11-18T10:20:00Z INFO db timeout after 30s
+2026-11-18T10:20:01Z INFO request served in 1ms
+2026-11-18T10:20:02Z INFO retrying upload chunk 2
+2026-11-18T10:20:03Z INFO request served in 3ms
+2026-11-18T10:20:04Z INFO request served in 4ms
+2026-11-18T10:20:05Z INFO cache miss for key user:5
+2026-11-18T10:20:06Z ERROR db timeout after 30s
+2026-11-18T10:20:07Z INFO db timeout after 30s
+2026-11-18T10:20:08Z INFO cache miss for key user:8
+2026-11-18T10:20:09Z INFO request served in 9ms
+2026-11-18T10:20:10Z INFO cache miss for key user:10
+2026-11-18T10:20:11Z INFO cache miss for key user:11
+2026-11-18T10:20:12Z INFO cache miss for key user:12
+2026-11-18T10:20:13Z INFO request served in 13ms
+2026-11-18T10:20:14Z INFO cache miss for key user:14
+2026-11-18T10:20:15Z ERROR retrying upload chunk 3
+2026-11-18T10:20:16Z INFO request served in 16ms
+2026-11-18T10:20:17Z INFO cache miss for key user:17
+2026-11-18T10:20:18Z INFO retrying upload chunk 6
+2026-11-18T10:20:19Z INFO retrying upload chunk 7
+2026-11-18T10:20:20Z INFO retrying upload chunk 8
+2026-11-18T10:20:21Z INFO db timeout after 30s
+2026-11-18T10:20:22Z INFO db timeout after 30s
+2026-11-18T10:20:23Z INFO retrying upload chunk 11
+2026-11-18T10:20:24Z ERROR cache miss for key user:24
+2026-11-18T10:20:25Z INFO request served in 25ms
+2026-11-18T10:20:26Z INFO cache miss for key user:26
+2026-11-18T10:20:27Z INFO retrying upload chunk 3
+2026-11-18T10:20:28Z INFO db timeout after 30s
+2026-11-18T10:20:29Z INFO cache miss for key user:29
+2026-11-18T10:20:30Z INFO cache miss for key user:30
+2026-11-18T10:20:31Z INFO db timeout after 30s
+2026-11-18T10:20:32Z INFO db timeout after 30s
+2026-11-18T10:20:33Z ERROR db timeout after 30s
+2026-11-18T10:20:34Z INFO db timeout after 30s
+2026-11-18T10:20:35Z INFO cache miss for key user:35
+2026-11-18T10:20:36Z INFO request served in 36ms
+2026-11-18T10:20:37Z INFO cache miss for key user:37
+2026-11-18T10:20:38Z INFO db timeout after 30s
+2026-11-18T10:20:39Z INFO db timeout after 30s
+2026-11-18T10:20:40Z INFO db timeout after 30s
+2026-11-18T10:20:41Z INFO cache miss for key user:1
+2026-11-18T10:20:42Z ERROR db timeout after 30s
+2026-11-18T10:20:43Z INFO db timeout after 30s
+2026-11-18T10:20:44Z INFO db timeout after 30s
+2026-11-18T10:20:45Z INFO db timeout after 30s
+2026-11-18T10:20:46Z INFO request served in 46ms
+2026-11-18T10:20:47Z INFO cache miss for key user:7
+2026-11-18T10:20:48Z INFO db timeout after 30s
+2026-11-18T10:20:49Z INFO retrying upload chunk 1
+2026-11-18T10:20:50Z INFO db timeout after 30s
+2026-11-18T10:20:51Z ERROR cache miss for key user:11
+2026-11-18T10:20:52Z INFO cache miss for key user:12
+2026-11-18T10:20:53Z INFO cache miss for key user:13
+2026-11-18T10:20:54Z INFO db timeout after 30s
+2026-11-18T10:20:55Z INFO db timeout after 30s
+2026-11-18T10:20:56Z INFO db timeout after 30s
+2026-11-18T10:20:57Z INFO db timeout after 30s
+2026-11-18T10:20:58Z INFO request served in 58ms
+2026-11-18T10:20:59Z INFO retrying upload chunk 11
+2026-11-18T10:21:00Z ERROR db timeout after 30s
+2026-11-18T10:21:01Z INFO cache miss for key user:21
+2026-11-18T10:21:02Z INFO db timeout after 30s
+2026-11-18T10:21:03Z INFO cache miss for key user:23
+2026-11-18T10:21:04Z INFO request served in 64ms
+2026-11-18T10:21:05Z INFO request served in 65ms
+2026-11-18T10:21:06Z INFO request served in 66ms
+2026-11-18T10:21:07Z INFO retrying upload chunk 7
+2026-11-18T10:21:08Z INFO request served in 68ms
+2026-11-18T10:21:09Z ERROR db timeout after 30s
+2026-11-18T10:21:10Z INFO request served in 70ms
+2026-11-18T10:21:11Z INFO request served in 71ms
+2026-11-18T10:21:12Z INFO request served in 72ms
+2026-11-18T10:21:13Z INFO db timeout after 30s
+2026-11-18T10:21:14Z INFO request served in 74ms
+2026-11-18T10:21:15Z INFO request served in 75ms
+2026-11-18T10:21:16Z INFO retrying upload chunk 4
+2026-11-18T10:21:17Z INFO request served in 77ms
+2026-11-18T10:21:18Z ERROR db timeout after 30s
+2026-11-18T10:21:19Z INFO retrying upload chunk 7
+2026-11-18T10:21:20Z INFO db timeout after 30s
+2026-11-18T10:21:21Z INFO retrying upload chunk 9
+2026-11-18T10:21:22Z INFO db timeout after 30s
+2026-11-18T10:21:23Z INFO request served in 83ms
+2026-11-18T10:21:24Z INFO retrying upload chunk 0
+2026-11-18T10:21:25Z INFO db timeout after 30s
+2026-11-18T10:21:26Z INFO cache miss for key user:6
+2026-11-18T10:21:27Z ERROR db timeout after 30s
+2026-11-18T10:21:28Z INFO request served in 88ms
+2026-11-18T10:21:29Z INFO cache miss for key user:9
+2026-11-18T10:21:30Z INFO retrying upload chunk 6
+2026-11-18T10:21:31Z INFO db timeout after 30s
+2026-11-18T10:21:32Z INFO cache miss for key user:12
+2026-11-18T10:21:33Z INFO request served in 93ms
+2026-11-18T10:21:34Z INFO db timeout after 30s
+2026-11-18T10:21:35Z INFO db timeout after 30s
+2026-11-18T10:21:36Z ERROR request served in 96ms
+2026-11-18T10:21:37Z INFO retrying upload chunk 1
+2026-11-18T10:21:38Z INFO db timeout after 30s
+2026-11-18T10:21:39Z INFO retrying upload chunk 3
+2026-11-18T10:21:40Z INFO cache miss for key user:20
+2026-11-18T10:21:41Z INFO retrying upload chunk 5
+2026-11-18T10:21:42Z INFO request served in 102ms
+2026-11-18T10:21:43Z INFO request served in 103ms
+2026-11-18T10:21:44Z INFO cache miss for key user:24
+2026-11-18T10:21:45Z ERROR request served in 105ms
+2026-11-18T10:21:46Z INFO cache miss for key user:26
+2026-11-18T10:21:47Z INFO cache miss for key user:27
+2026-11-18T10:21:48Z INFO retrying upload chunk 0
+2026-11-18T10:21:49Z INFO cache miss for key user:29
+2026-11-18T10:21:50Z INFO db timeout after 30s
+2026-11-18T10:21:51Z INFO db timeout after 30s
+2026-11-18T10:21:52Z INFO retrying upload chunk 4
+2026-11-18T10:21:53Z INFO db timeout after 30s
+2026-11-18T10:21:54Z ERROR request served in 114ms
+2026-11-18T10:21:55Z INFO request served in 115ms
+2026-11-18T10:21:56Z INFO db timeout after 30s
+2026-11-18T10:21:57Z INFO retrying upload chunk 9
+2026-11-18T10:21:58Z INFO retrying upload chunk 10
+2026-11-18T10:21:59Z INFO db timeout after 30s
+2026-11-18T10:22:00Z INFO retrying upload chunk 0
+2026-11-18T10:22:01Z INFO db timeout after 30s
+2026-11-18T10:22:02Z INFO request served in 122ms
+2026-11-18T10:22:03Z ERROR cache miss for key user:3
+2026-11-18T10:22:04Z INFO request served in 124ms
+2026-11-18T10:22:05Z INFO request served in 125ms
+2026-11-18T10:22:06Z INFO retrying upload chunk 6
+2026-11-18T10:22:07Z INFO cache miss for key user:7
+2026-11-18T10:22:08Z INFO retrying upload chunk 8
+2026-11-18T10:22:09Z INFO cache miss for key user:9
+2026-11-18T10:22:10Z INFO retrying upload chunk 10
+2026-11-18T10:22:11Z INFO cache miss for key user:11
+2026-11-18T10:22:12Z ERROR db timeout after 30s
+2026-11-18T10:22:13Z INFO request served in 133ms
+2026-11-18T10:22:14Z INFO request served in 134ms
+2026-11-18T10:22:15Z INFO cache miss for key user:15
+2026-11-18T10:22:16Z INFO retrying upload chunk 4
+2026-11-18T10:22:17Z INFO request served in 137ms
+2026-11-18T10:22:18Z INFO cache miss for key user:18
+2026-11-18T10:22:19Z INFO retrying upload chunk 7
+2026-11-18T10:22:20Z INFO retrying upload chunk 8
+2026-11-18T10:22:21Z ERROR request served in 141ms
+2026-11-18T10:22:22Z INFO cache miss for key user:22
+2026-11-18T10:22:23Z INFO cache miss for key user:23
+2026-11-18T10:22:24Z INFO request served in 144ms
+2026-11-18T10:22:25Z INFO retrying upload chunk 1
+2026-11-18T10:22:26Z INFO cache miss for key user:26
+2026-11-18T10:22:27Z INFO cache miss for key user:27
+2026-11-18T10:22:28Z INFO request served in 148ms
+2026-11-18T10:22:29Z INFO request served in 149ms
+2026-11-18T10:22:30Z ERROR cache miss for key user:30
+2026-11-18T10:22:31Z INFO cache miss for key user:31
+2026-11-18T10:22:32Z INFO cache miss for key user:32
+2026-11-18T10:22:33Z INFO request served in 153ms
+2026-11-18T10:22:34Z INFO request served in 154ms
+2026-11-18T10:22:35Z INFO cache miss for key user:35
+2026-11-18T10:22:36Z INFO cache miss for key user:36
+2026-11-18T10:22:37Z INFO request served in 157ms
+2026-11-18T10:22:38Z INFO cache miss for key user:38
+2026-11-18T10:22:39Z ERROR request served in 159ms
+2026-11-18T10:22:40Z INFO db timeout after 30s
+2026-11-18T10:22:41Z INFO cache miss for key user:1
+2026-11-18T10:22:42Z INFO db timeout after 30s
+2026-11-18T10:22:43Z INFO cache miss for key user:3
+2026-11-18T10:22:44Z INFO retrying upload chunk 8
+2026-11-18T10:22:45Z INFO cache miss for key user:5
+2026-11-18T10:22:46Z INFO cache miss for key user:6
+2026-11-18T10:22:47Z INFO request served in 167ms
+2026-11-18T10:22:48Z ERROR request served in 168ms
+2026-11-18T10:22:49Z INFO retrying upload chunk 1
+2026-11-18T10:22:50Z INFO request served in 170ms
+2026-11-18T10:22:51Z INFO cache miss for key user:11
+2026-11-18T10:22:52Z INFO db timeout after 30s
+2026-11-18T10:22:53Z INFO db timeout after 30s
+2026-11-18T10:22:54Z INFO request served in 174ms
+2026-11-18T10:22:55Z INFO cache miss for key user:15
+2026-11-18T10:22:56Z INFO retrying upload chunk 8
+2026-11-18T10:22:57Z ERROR retrying upload chunk 9
+2026-11-18T10:22:58Z INFO db timeout after 30s
+2026-11-18T10:22:59Z INFO db timeout after 30s
+2026-11-18T10:23:00Z INFO retrying upload chunk 0
+2026-11-18T10:23:01Z INFO retrying upload chunk 1
+2026-11-18T10:23:02Z INFO cache miss for key user:22
+2026-11-18T10:23:03Z INFO request served in 183ms
+2026-11-18T10:23:04Z INFO retrying upload chunk 4
+2026-11-18T10:23:05Z INFO db timeout after 30s
+2026-11-18T10:23:06Z ERROR cache miss for key user:26
+2026-11-18T10:23:07Z INFO request served in 187ms
+2026-11-18T10:23:08Z INFO retrying upload chunk 8
+2026-11-18T10:23:09Z INFO db timeout after 30s
+2026-11-18T10:23:10Z INFO cache miss for key user:30
+2026-11-18T10:23:11Z INFO retrying upload chunk 11
+2026-11-18T10:23:12Z INFO retrying upload chunk 0
+2026-11-18T10:23:13Z INFO cache miss for key user:33
+2026-11-18T10:23:14Z INFO cache miss for key user:34
+2026-11-18T10:23:15Z ERROR cache miss for key user:35
+2026-11-18T10:23:16Z INFO db timeout after 30s
+2026-11-18T10:23:17Z INFO retrying upload chunk 5
+2026-11-18T10:23:18Z INFO retrying upload chunk 6
+2026-11-18T10:23:19Z INFO request served in 199ms
+2026-11-18T10:23:20Z INFO request served in 200ms
+2026-11-18T10:23:21Z INFO db timeout after 30s
+2026-11-18T10:23:22Z INFO retrying upload chunk 10
+2026-11-18T10:23:23Z INFO cache miss for key user:3
+2026-11-18T10:23:24Z ERROR retrying upload chunk 0
+2026-11-18T10:23:25Z INFO cache miss for key user:5
+2026-11-18T10:23:26Z INFO request served in 206ms
+2026-11-18T10:23:27Z INFO retrying upload chunk 3
+2026-11-18T10:23:28Z INFO retrying upload chunk 4
+2026-11-18T10:23:29Z INFO retrying upload chunk 5
+2026-11-18T10:23:30Z INFO db timeout after 30s
+2026-11-18T10:23:31Z INFO retrying upload chunk 7
+2026-11-18T10:23:32Z INFO cache miss for key user:12
+2026-11-18T10:23:33Z ERROR request served in 213ms
+2026-11-18T10:23:34Z INFO db timeout after 30s
+2026-11-18T10:23:35Z INFO retrying upload chunk 11
+2026-11-18T10:23:36Z INFO retrying upload chunk 0
+2026-11-18T10:23:37Z INFO db timeout after 30s
+2026-11-18T10:23:38Z INFO db timeout after 30s
+2026-11-18T10:23:39Z INFO request served in 219ms
+2026-11-18T10:23:40Z INFO cache miss for key user:20
+2026-11-18T10:23:41Z INFO cache miss for key user:21
+2026-11-18T10:23:42Z ERROR cache miss for key user:22
+2026-11-18T10:23:43Z INFO request served in 223ms
+2026-11-18T10:23:44Z INFO db timeout after 30s
+2026-11-18T10:23:45Z INFO retrying upload chunk 9
+2026-11-18T10:23:46Z INFO cache miss for key user:26
+2026-11-18T10:23:47Z INFO retrying upload chunk 11
+2026-11-18T10:23:48Z INFO db timeout after 30s
+2026-11-18T10:23:49Z INFO request served in 229ms
+2026-11-18T10:23:50Z INFO request served in 230ms
+2026-11-18T10:23:51Z ERROR retrying upload chunk 3
+2026-11-18T10:23:52Z INFO retrying upload chunk 4
+2026-11-18T10:23:53Z INFO cache miss for key user:33
+2026-11-18T10:23:54Z INFO cache miss for key user:34
+2026-11-18T10:23:55Z INFO retrying upload chunk 7
+2026-11-18T10:23:56Z INFO db timeout after 30s
+2026-11-18T10:23:57Z INFO request served in 237ms
+2026-11-18T10:23:58Z INFO db timeout after 30s
+2026-11-18T10:23:59Z INFO request served in 239ms
+2026-11-18T10:24:00Z ERROR request served in 240ms
+2026-11-18T10:24:01Z INFO retrying upload chunk 1
+2026-11-18T10:24:02Z INFO retrying upload chunk 2
+2026-11-18T10:24:03Z INFO db timeout after 30s
+2026-11-18T10:24:04Z INFO db timeout after 30s
+2026-11-18T10:24:05Z INFO db timeout after 30s
+2026-11-18T10:24:06Z INFO retrying upload chunk 6
+2026-11-18T10:24:07Z INFO retrying upload chunk 7
+2026-11-18T10:24:08Z INFO request served in 248ms
+2026-11-18T10:24:09Z ERROR request served in 249ms
+2026-11-18T10:24:10Z INFO db timeout after 30s
+2026-11-18T10:24:11Z INFO cache miss for key user:11
+2026-11-18T10:24:12Z INFO request served in 252ms
+2026-11-18T10:24:13Z INFO retrying upload chunk 1
+2026-11-18T10:24:14Z INFO cache miss for key user:14
+2026-11-18T10:24:15Z INFO retrying upload chunk 3
+2026-11-18T10:24:16Z INFO retrying upload chunk 4
+2026-11-18T10:24:17Z INFO cache miss for key user:17
+2026-11-18T10:24:18Z ERROR cache miss for key user:18
+2026-11-18T10:24:19Z INFO cache miss for key user:19
+2026-11-18T10:24:20Z INFO db timeout after 30s
+2026-11-18T10:24:21Z INFO cache miss for key user:21
+2026-11-18T10:24:22Z INFO retrying upload chunk 10
+2026-11-18T10:24:23Z INFO cache miss for key user:23
+2026-11-18T10:24:24Z INFO cache miss for key user:24
+2026-11-18T10:24:25Z INFO request served in 265ms
+2026-11-18T10:24:26Z INFO retrying upload chunk 2
+2026-11-18T10:24:27Z ERROR retrying upload chunk 3
+2026-11-18T10:24:28Z INFO request served in 268ms
+2026-11-18T10:24:29Z INFO cache miss for key user:29
+2026-11-18T10:24:30Z INFO retrying upload chunk 6
+2026-11-18T10:24:31Z INFO request served in 271ms
+2026-11-18T10:24:32Z INFO cache miss for key user:32
+2026-11-18T10:24:33Z INFO request served in 273ms
+2026-11-18T10:24:34Z INFO retrying upload chunk 10
+2026-11-18T10:24:35Z INFO request served in 275ms
+2026-11-18T10:24:36Z ERROR retrying upload chunk 0
+2026-11-18T10:24:37Z INFO cache miss for key user:37
+2026-11-18T10:24:38Z INFO retrying upload chunk 2
+2026-11-18T10:24:39Z INFO db timeout after 30s
+2026-11-18T10:24:40Z INFO request served in 280ms
+2026-11-18T10:24:41Z INFO request served in 281ms
+2026-11-18T10:24:42Z INFO cache miss for key user:2
+2026-11-18T10:24:43Z INFO request served in 283ms
+2026-11-18T10:24:44Z INFO request served in 284ms
+2026-11-18T10:24:45Z ERROR retrying upload chunk 9
+2026-11-18T10:24:46Z INFO retrying upload chunk 10
+2026-11-18T10:24:47Z INFO retrying upload chunk 11
+2026-11-18T10:24:48Z INFO db timeout after 30s
+2026-11-18T10:24:49Z INFO request served in 289ms
+2026-11-18T10:24:50Z INFO cache miss for key user:10
+2026-11-18T10:24:51Z INFO request served in 291ms
+2026-11-18T10:24:52Z INFO retrying upload chunk 4
+2026-11-18T10:24:53Z INFO db timeout after 30s
+2026-11-18T10:24:54Z ERROR db timeout after 30s
+2026-11-18T10:24:55Z INFO request served in 295ms
+2026-11-18T10:24:56Z INFO cache miss for key user:16
+2026-11-18T10:24:57Z INFO request served in 297ms
+2026-11-18T10:24:58Z INFO db timeout after 30s
+2026-11-18T10:24:59Z INFO db timeout after 30s

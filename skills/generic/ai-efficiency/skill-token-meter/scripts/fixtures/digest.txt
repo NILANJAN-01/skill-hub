@@ -1,0 +1,4 @@
+167 ERROR lines
+ 61 db timeout after 30s
+ 45 retrying upload chunk
+ 61 other

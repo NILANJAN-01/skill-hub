@@ -1,0 +1,6 @@
+{"type": "assistant", "message": {"id": "msg_1", "usage": {"input_tokens": 100, "output_tokens": 20, "cache_read_input_tokens": 1000, "cache_creation_input_tokens": 200}}}
+{"type": "assistant", "message": {"id": "msg_1", "usage": {"input_tokens": 100, "output_tokens": 20, "cache_read_input_tokens": 1000, "cache_creation_input_tokens": 200}}}
+{"id": "chatcmpl-9", "usage": {"prompt_tokens": 400, "completion_tokens": 80, "total_tokens": 480}}
+{"response": {"usageMetadata": {"promptTokenCount": 50, "candidatesTokenCount": 10, "totalTokenCount": 60}}}
+{"type": "user", "message": {"role": "user", "content": "hi"}}
+not json
