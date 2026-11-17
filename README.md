@@ -87,6 +87,19 @@ Run it with **no options** for a menu instead: set up everything, choose agents 
 
 How the MCP server is set up: the installer copies the hub to `~/.skill-hub/hub` (or `$SKILLHUB_HOME/hub`) and adds one `skill-hub` entry to each agent's MCP config ([locations below](#where-each-agent-reads-skills)). It merges into existing files, changes only its own entry, keeps a `.skillhub-backup` of each file it first edits, and leaves files it can't parse safely (for example JSON with comments) alone and prints the entry to paste instead. The server is read-only; add `--mcp-allow-install` to let agents install skills after you approve each plan.
 
+**Other MCP servers, into every agent at once.** The same installer adds any stdio MCP server to every detected agent's config (user-level, merged, with backups). It has presets for common servers, and `--mcp-test` starts the server and checks that it answers before anything is written:
+
+```bash
+python install.py --list-mcp                                        # servers each agent has, and the presets
+python install.py --add-mcp playwright --mcp-test                   # preset: filesystem, memory, fetch, git, time, playwright, github, ...
+python install.py --add-mcp filesystem --mcp-arg ~/work             # presets that need arguments
+python install.py --add-mcp github --mcp-env GITHUB_PERSONAL_ACCESS_TOKEN   # secret copied from your environment
+python install.py --add-mcp mydb --mcp-command "uvx my-db-mcp --readonly"   # any other server
+python install.py --remove-mcp playwright
+```
+
+On Windows, `npx`-style launchers are written as `cmd /c npx ...` so agents can start them.
+
 More ways to run it:
 
 ```bash

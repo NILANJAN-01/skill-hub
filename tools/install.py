@@ -15,6 +15,14 @@ SCRIPTED MODE (CI, dotfiles, power users):
     python install.py --setup --yes                                     # everything, no questions
     python install.py --agent cursor --plugin ai-agent-tools --mcp      # some skills + the MCP server
     python install.py --agent detected --mcp --global                   # only the MCP server
+
+OTHER MCP SERVERS, into every detected agent at once (user-level; merged, with backups):
+    python install.py --list-mcp                                        # what each agent has + presets
+    python install.py --add-mcp playwright --mcp-test                   # a preset; test it first
+    python install.py --add-mcp filesystem --mcp-arg C:/work            # presets that need arguments
+    python install.py --add-mcp github --mcp-env GITHUB_PERSONAL_ACCESS_TOKEN   # secret copied from env
+    python install.py --add-mcp mydb --mcp-command "uvx my-db-mcp --readonly"   # any other server
+    python install.py --remove-mcp playwright
     python install.py --list                                            # agents (+ detected), plugins, skills
     python install.py --detect                                          # just show which agents are installed
     python install.py --agent detected --plugin git-skills --global --yes
@@ -607,33 +615,41 @@ def _same_entry(a, b) -> bool:
     return norm(a) == norm(b)
 
 
-# ---- TOML configs (Codex). Only our own [mcp_servers.skill-hub] table is touched, as text.
-def _toml_header_is_ours(line: str, key: str) -> bool | None:
-    """True for our table header (or its sub-tables), False for another header, None for a non-header."""
+# ---- TOML configs (Codex). Only the one [mcp_servers.<name>] table being changed is touched, as text.
+def _toml_table(line: str):
+    """For a table header line, its dotted key parts; None for any other line."""
     s = line.strip()
     if not s.startswith("["):
         return None
     m = re.match(r'^\[\[?\s*([^\]]+?)\s*\]\]?\s*(#.*)?$', s)
     if not m:
-        return False
-    parts = [p.strip().strip('"').strip("'") for p in m.group(1).split(".")]
-    return len(parts) >= 2 and parts[0] == key and parts[1] == MCP_NAME
+        return []
+    return [p.strip().strip('"').strip("'") for p in m.group(1).split(".")]
 
 
-def toml_split(text: str, key: str):
-    """(text without our table, our table's text or None)."""
+def toml_split(text: str, key: str, name: str = MCP_NAME):
+    """(text without the [key.name] table and its sub-tables, that table's text or None)."""
     keep, ours, inside = [], [], False
     for line in text.splitlines(True):
-        state = _toml_header_is_ours(line, key)
-        if state is not None:
-            inside = state
+        parts = _toml_table(line)
+        if parts is not None:
+            inside = len(parts) >= 2 and parts[0] == key and parts[1] == name
         (ours if inside else keep).append(line)
     return "".join(keep), ("".join(ours) if ours else None)
 
 
-def toml_render(key: str, entry: dict) -> str:
+def toml_server_names(text: str, key: str) -> list:
+    names = []
+    for line in text.splitlines():
+        parts = _toml_table(line)
+        if parts and len(parts) == 2 and parts[0] == key and parts[1] not in names:
+            names.append(parts[1])
+    return names
+
+
+def toml_render(key: str, entry: dict, name: str = MCP_NAME) -> str:
     q = json.dumps                                    # JSON strings are valid TOML basic strings
-    lines = [f"[{key}.{MCP_NAME}]", f"command = {q(entry['command'])}",
+    lines = [f"[{key}.{name}]", f"command = {q(entry['command'])}",
              "args = [" + ", ".join(q(a) for a in entry["args"]) + "]"]
     if entry.get("env"):
         lines.append("env = { " + ", ".join(f"{k} = {q(v)}" for k, v in entry["env"].items()) + " }")
@@ -641,26 +657,37 @@ def toml_render(key: str, entry: dict) -> str:
 
 
 # ---- planning and applying
-def mcp_status(path: Path, info: dict, entry: dict) -> str:
-    """'missing', 'same', 'differs' or 'unreadable: <why>' for our entry in one config file."""
+def mcp_status(path: Path, info: dict, entry: dict, name: str = MCP_NAME) -> str:
+    """'missing', 'same', 'differs' or 'unreadable: <why>' for one server entry in one config file."""
     try:
         if info["format"] == "toml":
             text = path.read_text(encoding="utf-8-sig") if path.is_file() else ""
-            _, ours = toml_split(text, info["key"])
+            _, ours = toml_split(text, info["key"], name)
             if ours is None:
                 return "missing"
-            return "same" if ours.strip() == toml_render(info["key"], entry).strip() else "differs"
+            return "same" if ours.strip() == toml_render(info["key"], entry, name).strip() else "differs"
         servers = read_json_config(path).get(info["key"]) or {}
         if not isinstance(servers, dict):
             return f"unreadable: '{info['key']}' is not an object"
-        if MCP_NAME not in servers:
+        if name not in servers:
             return "missing"
-        return "same" if _same_entry(servers[MCP_NAME], entry) else "differs"
+        return "same" if _same_entry(servers[name], entry) else "differs"
     except (OSError, ValueError) as exc:
         return f"unreadable: {exc}"
 
 
-def make_mcp_plan(agents: list, use_global: bool, project: Path, entry: dict) -> list:
+def configured_servers(path: Path, info: dict) -> list:
+    """Names of every MCP server in one config file ([] if missing or unreadable)."""
+    try:
+        if info["format"] == "toml":
+            return toml_server_names(path.read_text(encoding="utf-8-sig"), info["key"]) if path.is_file() else []
+        servers = read_json_config(path).get(info["key"]) or {}
+        return list(servers) if isinstance(servers, dict) else []
+    except (OSError, ValueError):
+        return []
+
+
+def make_mcp_plan(agents: list, use_global: bool, project: Path, entry: dict, name: str = MCP_NAME) -> list:
     """One row per config file: {"path", "agents", "info", "status"}. Agents sharing a file share a row."""
     rows: dict = {}
     for a in agents:
@@ -671,7 +698,7 @@ def make_mcp_plan(agents: list, use_global: bool, project: Path, entry: dict) ->
             rows[path]["agents"].append(a)
             continue
         info = mcp_info(a)
-        rows[path] = {"path": path, "agents": [a], "info": info, "status": mcp_status(path, info, entry)}
+        rows[path] = {"path": path, "agents": [a], "info": info, "status": mcp_status(path, info, entry, name)}
     return list(rows.values())
 
 
@@ -686,13 +713,13 @@ def _write_atomic(path: Path, text: str, backup_first: bool = True) -> None:
     os.replace(str(tmp), str(path))
 
 
-def write_mcp_entry(path: Path, info: dict, entry: dict | None) -> None:
-    """Add/replace our entry (entry=None removes it), keeping everything else in the file."""
+def write_mcp_entry(path: Path, info: dict, entry: dict | None, name: str = MCP_NAME) -> None:
+    """Add/replace one server entry (entry=None removes it), keeping everything else in the file."""
     if info["format"] == "toml":
         text = path.read_text(encoding="utf-8-sig") if path.is_file() else ""
-        rest, _ = toml_split(text, info["key"])
+        rest, _ = toml_split(text, info["key"], name)
         if entry is not None:
-            rest = rest.rstrip("\n") + ("\n\n" if rest.strip() else "") + toml_render(info["key"], entry)
+            rest = rest.rstrip("\n") + ("\n\n" if rest.strip() else "") + toml_render(info["key"], entry, name)
         _write_atomic(path, rest, backup_first=entry is not None)
         return
     data = read_json_config(path)
@@ -700,24 +727,24 @@ def write_mcp_entry(path: Path, info: dict, entry: dict | None) -> None:
     if not isinstance(servers, dict):
         servers = {}
     if entry is None:
-        servers.pop(MCP_NAME, None)
+        servers.pop(name, None)
     else:
-        servers[MCP_NAME] = entry
+        servers[name] = entry
     data[info["key"]] = servers
     _write_atomic(path, json.dumps(data, indent=2) + "\n", backup_first=entry is not None)
 
 
-def manual_snippet(info: dict, entry: dict) -> str:
+def manual_snippet(info: dict, entry: dict, name: str = MCP_NAME) -> str:
     if info["format"] == "toml":
-        return toml_render(info["key"], entry)
-    return json.dumps({info["key"]: {MCP_NAME: entry}}, indent=2)
+        return toml_render(info["key"], entry, name)
+    return json.dumps({info["key"]: {name: entry}}, indent=2)
 
 
-def show_mcp_plan(rows: list, snap: str, removing: bool = False) -> int:
-    """Print the MCP part of the plan; return how many config files would change."""
+def show_mcp_plan(rows: list, snap: str | None, removing: bool = False, name: str = MCP_NAME) -> int:
+    """Print the MCP part of the plan; return how many config files would change. snap=None: no hub copy."""
     work = 0
-    print("\nMCP server (skill-hub):")
-    if not removing:
+    print(f"\nMCP server ({name}):")
+    if not removing and snap is not None:
         if snap == "missing":
             print(f"  + copy the hub to {fmt(snapshot_dir())} (the server runs from there)")
         elif snap == "outdated":
@@ -746,10 +773,11 @@ def show_mcp_plan(rows: list, snap: str, removing: bool = False) -> int:
     return work
 
 
-def apply_mcp_plan(root: Path, rows: list, entry: dict | None, snap: str, dry: bool) -> int:
+def apply_mcp_plan(root: Path, rows: list, entry: dict | None, snap: str | None, dry: bool,
+                   name: str = MCP_NAME) -> int:
     """entry=None removes. Returns files changed. Unreadable files get a manual snippet instead."""
     pre = "would " if dry else ""
-    if entry is not None and snap != "current":
+    if entry is not None and snap not in (None, "current"):
         print(f"  {pre}copy hub  ->  {fmt(snapshot_dir())}")
         if not dry:
             write_snapshot(root)
@@ -759,14 +787,14 @@ def apply_mcp_plan(root: Path, rows: list, entry: dict | None, snap: str, dry: b
         if st.startswith("unreadable"):
             if entry is not None:
                 print(f"  skip  {fmt(r['path'])}: add this by hand ({r['info']['docs']}):\n"
-                      + "\n".join("        " + line for line in manual_snippet(r["info"], entry).splitlines()))
+                      + "\n".join("        " + line for line in manual_snippet(r["info"], entry, name).splitlines()))
             continue
         if (entry is None and st == "missing") or (entry is not None and st == "same"):
             continue
         verb = "remove" if entry is None else ("add" if st == "missing" else "update")
-        print(f"  {pre}{verb} mcp  {MCP_NAME}  in  {fmt(r['path'])}")
+        print(f"  {pre}{verb} mcp  {name}  in  {fmt(r['path'])}")
         if not dry:
-            write_mcp_entry(r["path"], r["info"], entry)
+            write_mcp_entry(r["path"], r["info"], entry, name)
         n += 1
     return n
 
@@ -783,6 +811,191 @@ def check_server(timeout: int = 60) -> str:
         return f"FAILED: {exc}"
     msg = (out.stderr or out.stdout).strip().splitlines()
     return ("ok: " if out.returncode == 0 else "FAILED: ") + (msg[-1] if msg else f"exit {out.returncode}")
+
+
+# ============================================================================ other MCP servers
+# --add-mcp writes any stdio MCP server into every chosen agent's config, with the same merging and
+# backups as the skill-hub entry. Presets are well-known servers from their maintainers' docs; any
+# other server works with --mcp-command. Secrets: --mcp-env NAME copies the value from your environment.
+MCP_PRESETS = {
+    "filesystem": {"command": "npx", "args": ["-y", "@modelcontextprotocol/server-filesystem"],
+                   "needs_args": "the folders it may read and write (--mcp-arg <folder>, repeatable)",
+                   "description": "Read, write and search files in the folders you allow",
+                   "docs": "https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem"},
+    "memory": {"command": "npx", "args": ["-y", "@modelcontextprotocol/server-memory"],
+               "description": "Persistent knowledge-graph memory across sessions",
+               "docs": "https://github.com/modelcontextprotocol/servers/tree/main/src/memory"},
+    "sequential-thinking": {"command": "npx", "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+                            "description": "Step-by-step problem solving with revisable thoughts",
+                            "docs": "https://github.com/modelcontextprotocol/servers/tree/main/src/sequentialthinking"},
+    "fetch": {"command": "uvx", "args": ["mcp-server-fetch"],
+              "description": "Fetch web pages and convert them to markdown",
+              "docs": "https://github.com/modelcontextprotocol/servers/tree/main/src/fetch"},
+    "git": {"command": "uvx", "args": ["mcp-server-git"],
+            "description": "Read, search and change local git repositories",
+            "docs": "https://github.com/modelcontextprotocol/servers/tree/main/src/git"},
+    "time": {"command": "uvx", "args": ["mcp-server-time"],
+             "description": "Current time and time-zone conversion",
+             "docs": "https://github.com/modelcontextprotocol/servers/tree/main/src/time"},
+    "playwright": {"command": "npx", "args": ["-y", "@playwright/mcp@latest"],
+                   "description": "Drive a browser: open pages, click, fill forms, take snapshots",
+                   "docs": "https://github.com/microsoft/playwright-mcp"},
+    "github": {"command": "docker",
+               "args": ["run", "-i", "--rm", "-e", "GITHUB_PERSONAL_ACCESS_TOKEN", "ghcr.io/github/github-mcp-server"],
+               "env": ["GITHUB_PERSONAL_ACCESS_TOKEN"],
+               "description": "GitHub issues, pull requests, code search and repos (needs Docker and a token)",
+               "docs": "https://github.com/github/github-mcp-server"},
+    "everything": {"command": "npx", "args": ["-y", "@modelcontextprotocol/server-everything"],
+                   "description": "Reference server exposing every MCP feature, for testing clients",
+                   "docs": "https://github.com/modelcontextprotocol/servers/tree/main/src/everything"},
+}
+SERVER_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$")
+RUNTIME_HINTS = {"npx": "Node.js (https://nodejs.org)", "uvx": "uv (https://docs.astral.sh/uv/)",
+                 "docker": "Docker (https://docs.docker.com/get-docker/)"}
+
+
+class McpError(Exception):
+    """A server definition that cannot be written (bad name, missing argument or secret)."""
+
+
+def _split_command(cmd: str) -> list:
+    import shlex
+    if os.name == "nt":                       # keep backslashes in Windows paths; drop wrapping quotes
+        return [p[1:-1] if len(p) > 1 and p[0] == p[-1] and p[0] in "\"'" else p for p in shlex.split(cmd, posix=False)]
+    return shlex.split(cmd)
+
+
+def build_server(name: str, command: str | None = None, extra_args: list | None = None,
+                 env_pairs: list | None = None, environ: dict | None = None) -> tuple:
+    """(entry, notes) for a preset or a custom command. Raises McpError when something required is missing."""
+    environ = os.environ if environ is None else environ
+    if not SERVER_NAME_RE.match(name or ""):
+        raise McpError(f"server name {name!r} must be letters, digits, '-' or '_' (max 64)")
+    if name == MCP_NAME:
+        raise McpError("the skill-hub server is managed with --mcp (or --setup)")
+    preset = MCP_PRESETS.get(name) if not command else None
+    if preset is None and not command:
+        raise McpError(f"{name!r} is not a preset. Pass --mcp-command \"<command> <args>\" "
+                       f"(presets: {', '.join(MCP_PRESETS)})")
+    parts = _split_command(command) if command else [preset["command"]] + list(preset["args"])
+    if not parts:
+        raise McpError("--mcp-command is empty")
+    args = parts[1:] + list(extra_args or [])
+    if preset and preset.get("needs_args") and not extra_args:
+        raise McpError(f"{name} needs {preset['needs_args']}")
+    env, notes = {}, []
+    wanted = [(p.split("=", 1) if "=" in p else [p, None]) for p in (env_pairs or [])]
+    named = {k for k, _ in wanted}
+    wanted += [[k, None] for k in (preset or {}).get("env", []) if k not in named]
+    for key, value in wanted:
+        if not re.match(r"^[A-Za-z_][A-Za-z0-9_]*$", key):
+            raise McpError(f"bad environment variable name {key!r}")
+        if value is None:
+            value = environ.get(key)
+            if not value:
+                raise McpError(f"{name} needs {key}. Set it in your environment first (it is copied from "
+                               f"there, so it stays out of your shell history), or pass --mcp-env {key}=<value>")
+        env[key] = value
+    exe = parts[0]
+    found = shutil.which(exe)
+    if not found:
+        notes.append(f"'{exe}' is not on PATH yet; install {RUNTIME_HINTS.get(exe, exe)} before using this server")
+    if os.name == "nt" and found and found.lower().endswith((".cmd", ".bat")):
+        args, exe = ["/c", exe] + args, "cmd"     # agents start servers without a shell; .cmd needs cmd /c
+    entry = {"command": exe, "args": args}
+    if env:
+        entry["env"] = env
+        notes.append("secrets are written into the agents' config files: keep those files private")
+    return entry, notes
+
+
+def find_probe(root: Path):
+    """The mcp_probe module from the mcp-server-builder skill, or None."""
+    import importlib.util
+    path = skill_index(root).get("mcp-server-builder")
+    script = path / "scripts" / "mcp_probe.py" if path else None
+    if not script or not script.is_file():
+        return None
+    spec = importlib.util.spec_from_file_location("skillhub_mcp_probe", str(script))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def test_server(root: Path, entry: dict, timeout: float = 120) -> tuple:
+    """(ok, summary): start the server, handshake, list tools. Uses mcp-server-builder's probe."""
+    probe = find_probe(root)
+    if probe is None:
+        return False, "the mcp-server-builder skill (with its probe) is not in this hub"
+    saved = dict(os.environ)
+    os.environ.update(entry.get("env") or {})
+    try:
+        report = probe.run_probe([entry["command"]] + entry["args"], timeout=timeout)
+    except probe.ProbeError as exc:
+        return False, str(exc).splitlines()[0]
+    finally:
+        os.environ.clear()
+        os.environ.update(saved)
+    errors = [m for lv, m in report["findings"] if lv == "ERROR"]
+    tools = [t.get("name") for t in report.get("tools", []) if isinstance(t, dict)]
+    summary = f"{(report.get('server') or {}).get('name', '?')}: {len(tools)} tool(s)" + \
+              (f" ({', '.join(tools[:6])}{', ...' if len(tools) > 6 else ''})" if tools else "")
+    return not errors, summary + ("; " + "; ".join(errors[:3]) if errors else "")
+
+
+def manage_server(root: Path, name: str, agents: list, use_global: bool, project: Path, entry: dict | None,
+                  yes: bool = False, dry: bool = False, test: bool = False) -> int:
+    """Add/update (entry) or remove (entry=None) one server for the agents. Returns config files changed."""
+    probe_entry = entry
+    if entry is None:                            # removing: any entry with that name counts
+        probe_entry = {"command": "", "args": []}
+    rows = make_mcp_plan(agents, use_global, project, probe_entry, name)
+    if entry is None:
+        for r in rows:
+            if r["status"] == "differs":
+                r["status"] = "present"
+    work = show_mcp_plan(rows, None, removing=entry is None, name=name)
+    if not work:
+        print("\nNothing to change." if entry is not None else f"\n{name} is not set up for these agents.")
+        return 0
+    if test and entry is not None:
+        print(f"\nTesting {name} (starts it, runs the MCP handshake, lists its tools) ...")
+        ok, summary = test_server(root, entry)
+        print(("  ok: " if ok else "  FAILED: ") + summary)
+        if not ok:
+            print("Nothing was changed. Fix the server, or run without --mcp-test to add it anyway.")
+            return 0
+    if not dry and not yes and not yes_no("\nGo ahead?", True):
+        print("Cancelled. Nothing was changed.")
+        return 0
+    print()
+    n = apply_mcp_plan(root, rows, entry, None, dry, name)
+    print(f"\n{'Would change' if dry else 'Changed'} {n} MCP config file(s)."
+          + ("" if dry else " Restart or reload your agents to pick it up."))
+    return n
+
+
+def print_servers(agents: list, project: Path) -> None:
+    """Every MCP server configured for the agents, user-level and for this project, then the presets."""
+    for use_global, label in ((True, "user-level"), (False, f"project {fmt(project)}")):
+        print(f"\nMCP servers, {label}:")
+        seen = False
+        for a in agents:
+            path = mcp_config_path(a, use_global, project)
+            if path is None:
+                continue
+            names = configured_servers(path, mcp_info(a))
+            if names:
+                seen = True
+                print(f"  {AGENTS[a]['name']:<26} {', '.join(names)}   ({fmt(path)})")
+        if not seen:
+            print("  (none)")
+    print("\nPresets for --add-mcp <name>:")
+    for k, p in MCP_PRESETS.items():
+        extra = "  [needs " + ", ".join(p["env"]) + "]" if p.get("env") else ""
+        extra += "  [needs --mcp-arg]" if p.get("needs_args") else ""
+        print(f"  {k:<20} {p['description']}{extra}")
+    print('  any other:          --add-mcp <name> --mcp-command "<command> <args>"')
 
 
 # ============================================================================ prompting
@@ -1114,6 +1327,21 @@ def print_list(root: Path) -> None:
         print(f"  {s}")
 
 
+def choose_agents(ap, spec: str) -> list:
+    """Agent ids from --agent: 'detected' or a comma list. Exits with a message on unknown ids."""
+    if spec.strip() == "detected":
+        agents = list(detect_agents())
+        if not agents:
+            sys.exit("No supported agents detected. Pass --agent explicitly (see --list).")
+        print("Detected: " + ", ".join(AGENTS[a]["name"] for a in agents))
+        return agents
+    agents = list(dict.fromkeys(a.strip() for a in spec.split(",") if a.strip()))
+    for a in agents:
+        if a not in AGENTS:
+            ap.error(f"unknown agent {a!r}. Agents: {', '.join(AGENTS)}, detected")
+    return agents
+
+
 def main() -> None:
     global REPO
     ap = argparse.ArgumentParser(description="Install skill-hub skills into AI coding agents. "
@@ -1134,6 +1362,18 @@ def main() -> None:
                     help="also register the skill-hub MCP server with the chosen agents (alone: only the server)")
     ap.add_argument("--mcp-allow-install", action="store_true",
                     help="let the MCP server install skills (after you approve each plan in the agent)")
+    ap.add_argument("--add-mcp", metavar="NAME",
+                    help="add any MCP server to the chosen agents (default: every detected agent, user-level): "
+                         "a preset (see --list-mcp) or your own with --mcp-command")
+    ap.add_argument("--remove-mcp", metavar="NAME", help="remove an MCP server from the chosen agents")
+    ap.add_argument("--list-mcp", action="store_true", help="list the MCP servers each agent has, and the presets")
+    ap.add_argument("--mcp-command", metavar='"CMD ARGS"', help='command that starts the server, e.g. "npx -y my-server"')
+    ap.add_argument("--mcp-arg", action="append", default=[], metavar="ARG",
+                    help="extra argument for the server (repeatable), e.g. a folder for the filesystem preset")
+    ap.add_argument("--mcp-env", action="append", default=[], metavar="NAME[=VALUE]",
+                    help="environment variable for the server (repeatable); NAME alone copies it from your environment")
+    ap.add_argument("--mcp-test", action="store_true",
+                    help="with --add-mcp: start the server and check it answers before writing anything")
     ap.add_argument("--global", dest="use_global", action="store_true", help="install for the user, not the project")
     ap.add_argument("--project", type=Path, default=None, help="project root (default: current directory)")
     ap.add_argument("--dest", type=Path, help="install into this exact folder instead of an agent's folder")
@@ -1182,6 +1422,27 @@ def main() -> None:
         else:
             agents = list(detect_agents()) or [k for k in AGENTS if k != "universal"]
         sys.exit(1 if doctor(root, agents, project) else 0)
+    if args.add_mcp or args.remove_mcp or args.list_mcp:
+        agents = choose_agents(ap, args.agent or "detected")
+        if args.list_mcp:
+            print_servers(agents, project)
+            return
+        use_global = args.use_global or args.project is None      # user-level unless --project is given
+        if args.remove_mcp:
+            manage_server(root, args.remove_mcp, agents, use_global, project, None, args.yes, args.dry_run)
+            return
+        try:
+            entry, notes = build_server(args.add_mcp, args.mcp_command, args.mcp_arg, args.mcp_env)
+        except McpError as exc:
+            sys.exit(f"Can't add {args.add_mcp}: {exc}")
+        print(f"Server {args.add_mcp}: {entry['command']} {' '.join(entry['args'])}")
+        for note in notes:
+            print(f"  note: {note}")
+        if entry.get("env") and not use_global:
+            print("  WARNING: this writes the secret into project files that may be committed. "
+                  "Prefer user-level (omit --project).")
+        manage_server(root, args.add_mcp, agents, use_global, project, entry, args.yes, args.dry_run, args.mcp_test)
+        return
     if args.installed:
         if args.agent and args.agent.strip() != "detected":
             agents = [a.strip() for a in args.agent.split(",") if a.strip()]
@@ -1226,16 +1487,7 @@ def main() -> None:
 
     if not args.agent:
         ap.error("choose --agent (an id, a comma list, or 'detected'), --dest or --zip")
-    if args.agent.strip() == "detected":
-        agents = list(detect_agents())
-        if not agents:
-            sys.exit("No supported agents detected. Pass --agent explicitly (see --list).")
-        print("Detected: " + ", ".join(AGENTS[a]["name"] for a in agents))
-    else:
-        agents = list(dict.fromkeys(a.strip() for a in args.agent.split(",") if a.strip()))
-        for a in agents:
-            if a not in AGENTS:
-                ap.error(f"unknown agent {a!r}. Agents: {', '.join(AGENTS)}, detected")
+    agents = choose_agents(ap, args.agent)
     if args.use_global:
         nohome = [a for a in agents if not AGENTS[a]["global"]]
         if nohome:

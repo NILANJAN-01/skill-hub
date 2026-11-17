@@ -146,6 +146,7 @@ Everyone who clones the repo now gets the skills in their agent automatically.
 
 - **Check everything:** `python install.py --doctor` lists, per agent, how many hub skills it has (and which differ from the hub), whether the MCP server is registered, and runs a self-check of the server.
 - **See what is installed:** `python install.py --installed --global` lists every hub skill, the hub version it came from, and whether it still matches the hub. (Drop `--global` for the current project.)
+- **Add other MCP servers to every agent:** `python install.py --list-mcp` shows the presets; `python install.py --add-mcp playwright --mcp-test` tests the server, then adds it to every detected agent. Use `--mcp-command "<command> <args>"` for any other server, `--mcp-env NAME` to copy a secret from your environment, and `--remove-mcp <name>` to take it out again.
 - **Remove everything:** `python install.py --uninstall` removes the hub skills, the `skill-hub` MCP entries and the hub copy in `~/.skill-hub`. It lists everything and asks first.
 - **Update:** run the installer again, or add `--update`. It compares every file of a skill (not only `SKILL.md`), lists the skills that differ from the hub and asks before replacing them.
 - **Remove a skill:** `python install.py --agent <agent> --skill <name> --global --remove`. It lists the copies it found and asks first. Deleting the folder by hand also works.

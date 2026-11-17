@@ -229,5 +229,40 @@ class SetupFlowTests(Sandbox):
         self.assertFalse(install.snapshot_dir().exists())
 
 
+class OtherServerTests(Sandbox):
+    def test_preset_needs_its_secret_and_copies_it_from_the_environment(self):
+        with self.assertRaises(install.McpError) as ctx:
+            install.build_server("github", environ={})
+        self.assertIn("GITHUB_PERSONAL_ACCESS_TOKEN", str(ctx.exception))
+        entry, notes = install.build_server("github", environ={"GITHUB_PERSONAL_ACCESS_TOKEN": "tok"})
+        self.assertEqual(entry["env"], {"GITHUB_PERSONAL_ACCESS_TOKEN": "tok"})
+        self.assertTrue(any("secrets" in n for n in notes))
+
+    def test_preset_args_and_custom_command(self):
+        with self.assertRaises(install.McpError):
+            install.build_server("filesystem")                       # needs a folder
+        entry, _ = install.build_server("filesystem", extra_args=["/data"])
+        self.assertEqual(entry["args"][-1], "/data")
+        entry, _ = install.build_server("mydb", command="mydb-server --readonly", env_pairs=["MODE=ro"])
+        self.assertEqual((entry["command"], entry["args"], entry["env"]), ("mydb-server", ["--readonly"], {"MODE": "ro"}))
+        for bad in ("bad name", "skill-hub", "unknown-preset"):
+            with self.assertRaises(install.McpError):
+                install.build_server(bad)
+
+    def test_add_list_remove_keeps_skill_hub_entry(self):
+        agents = ["cursor", "codex"]
+        install.execute(self.root, agents, [], True, self.project, mcp=True, yes=True)
+        entry, _ = install.build_server("tool-x", command="tool-x --stdio")
+        self.assertEqual(install.manage_server(self.root, "tool-x", agents, True, self.project, entry, yes=True), 2)
+        cursor = self.home / ".cursor" / "mcp.json"
+        codex = self.home / ".codex" / "config.toml"
+        self.assertEqual(install.configured_servers(cursor, install.mcp_info("cursor")), ["skill-hub", "tool-x"])
+        self.assertEqual(install.configured_servers(codex, install.mcp_info("codex")), ["skill-hub", "tool-x"])
+        self.assertEqual(install.manage_server(self.root, "tool-x", agents, True, self.project, entry, yes=True), 0)
+        self.assertEqual(install.manage_server(self.root, "tool-x", agents, True, self.project, None, yes=True), 2)
+        self.assertEqual(install.configured_servers(cursor, install.mcp_info("cursor")), ["skill-hub"])
+        self.assertEqual(install.configured_servers(codex, install.mcp_info("codex")), ["skill-hub"])
+
+
 if __name__ == "__main__":
     unittest.main()
