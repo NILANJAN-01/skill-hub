@@ -1,0 +1,31 @@
+{
+  "tools": [
+    {
+      "name": "search_issues",
+      "description": "Search open and closed issues in the current repository by keywords. Use when the user asks about existing bugs or feature requests. Returns up to 20 issues, newest first.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {"type": "string", "description": "Keywords to match in title and body"},
+          "state": {"type": "string", "enum": ["open", "closed", "all"]}
+        },
+        "required": ["query"]
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "create_issue",
+        "description": "Create a new issue with a title and body. Use when the user wants to report a bug or request a feature. Do not use to look up issues.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "title": {"type": "string", "description": "Short summary"},
+            "labels": {"type": "array", "items": {"type": "string"}, "description": "Label names"}
+          },
+          "required": ["title"]
+        }
+      }
+    }
+  ]
+}

@@ -201,6 +201,7 @@ Categories for `--plugin`:
 | `shell-tools` | 1 | Shell: run files, text, process, network, Git and build tasks correctly in PowerShell on Windows, with a bash-to-PowerShell map and troubleshooting |
 | `learning-tools` | 1 | Learning: explain any Python file from beginner to advanced and generate study-notes HTML for interview preparation (concepts, gotchas, Q&A, fundamentals checklist) |
 | `ai-efficiency-tools` | 2 | AI efficiency: audit a project for token waste, save tokens and cost, and centralize context across any AI IDE, agent or model |
+| `ai-agent-tools` | 4 | AI agents: build and probe MCP servers, design tool/function definitions models use well, run LLM evals with regression checks, and build and evaluate RAG pipelines,... |
 <!-- plugins-simple:end -->
 
 `--all` installs every skill. `--skill a,b` installs specific skills by name.

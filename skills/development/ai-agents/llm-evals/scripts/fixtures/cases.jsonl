@@ -1,0 +1,6 @@
+{"id": "refund-01", "input": "How long do refunds take?", "tags": ["policy"], "checks": [{"type": "icontains", "value": "5 business days"}, {"type": "max_chars", "value": 200}]}
+{"id": "tool-02", "input": "Open a bug: login button broken", "tags": ["tools"], "checks": [{"type": "tool_called", "value": "create_issue"}, {"type": "tool_not_called", "value": "delete_issue"}]}
+{"id": "json-03", "input": "Extract the invoice fields", "tags": ["extraction"], "checks": [{"type": "json_valid"}, {"type": "json_field", "path": "items.0.sku", "value": "A-1"}]}
+{"id": "tone-04", "input": "Customer is angry about a late order", "tags": ["tone"], "checks": [{"type": "judge", "rubric": "Apologizes and gives a next step"}]}
+{"id": "class-05", "input": "Classify: 'app crashes on start'", "tags": ["policy"], "checks": [{"type": "one_of", "value": ["bug", "crash"]}, {"type": "not_regex", "value": "feature"}]}
+{"id": "missing-06", "input": "No output for this one", "checks": [{"type": "contains", "value": "x"}]}

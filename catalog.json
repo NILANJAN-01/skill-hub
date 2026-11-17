@@ -306,6 +306,17 @@
         "ai-token-saver",
         "context-engineering"
       ]
+    },
+    {
+      "name": "ai-agent-tools",
+      "description": "AI agents: build and probe MCP servers, design tool/function definitions models use well, run LLM evals with regression checks, and build and evaluate RAG pipelines, each with a stdlib Python script",
+      "category": "ai-agent-tools",
+      "skills": [
+        "mcp-server-builder",
+        "agent-tool-design",
+        "llm-evals",
+        "rag-pipeline"
+      ]
     }
   ],
   "categories": [
@@ -373,6 +384,11 @@
       "name": "ai-efficiency-tools",
       "title": "AI efficiency: save tokens & cost",
       "count": 2
+    },
+    {
+      "name": "ai-agent-tools",
+      "title": "AI agents: MCP, tools, evals & RAG",
+      "count": 4
     },
     {
       "name": "git-getting-started",
@@ -447,6 +463,15 @@
       "name": "development",
       "title": "Development",
       "groups": [
+        {
+          "name": "ai-agents",
+          "skills": [
+            "agent-tool-design",
+            "llm-evals",
+            "mcp-server-builder",
+            "rag-pipeline"
+          ]
+        },
         {
           "name": "git-branching",
           "skills": [
@@ -936,6 +961,28 @@
       "files": [
         "references/command-reference.md",
         "references/sources.md"
+      ]
+    },
+    {
+      "name": "agent-tool-design",
+      "title": "Agent tool design: names, schemas and errors models use well",
+      "category": "ai-agent-tools",
+      "area": "development",
+      "group": "ai-agents",
+      "description": "Design and review agent tools (function calling): names, descriptions, JSON Schema parameters, outputs and errors, with a script that lints tool definitions in common formats. Use when the user writes tool or function definitions, or an agent picks the wrong tool or passes bad arguments.",
+      "plugins": [
+        "ai-agent-tools"
+      ],
+      "path": "skills/development/ai-agents/agent-tool-design",
+      "license": "MIT",
+      "compatibility": "Needs Python 3.8+ (standard library only) for the lint script. The guidance applies to any model provider or agent framework.",
+      "examples": [
+        "Review these function calling definitions; the model keeps choosing the wrong tool.",
+        "Design the tools for a support agent that can look up orders and issue refunds.",
+        "Lint tools.json and improve the descriptions and parameter schemas."
+      ],
+      "files": [
+        "references/checklist.md"
       ]
     },
     {
@@ -2782,6 +2829,50 @@
       ]
     },
     {
+      "name": "llm-evals",
+      "title": "LLM evals: test sets, scoring and regression checks",
+      "category": "ai-agent-tools",
+      "area": "development",
+      "group": "ai-agents",
+      "description": "Build and run evals for an LLM prompt or agent: case sets, code checks (contains, regex, JSON, tool called), LLM-as-judge, pass rate by tag and regressions against a baseline, with a scoring script. Use when the user wants to test a prompt or agent, compare models or prompt versions, measure answer quality or gate a release in CI.",
+      "plugins": [
+        "ai-agent-tools"
+      ],
+      "path": "skills/development/ai-agents/llm-evals",
+      "license": "MIT",
+      "compatibility": "Needs Python 3.8+ (standard library only) for the scoring script. Generating outputs uses whatever model or agent the project already calls.",
+      "examples": [
+        "Set up an eval set for our summarization prompt and score the current outputs.",
+        "Compare the new prompt version against last week's baseline and list regressions.",
+        "Add an LLM eval to CI that fails the build if the pass rate drops below 90%."
+      ],
+      "files": [
+        "references/eval-design.md"
+      ]
+    },
+    {
+      "name": "mcp-server-builder",
+      "title": "MCP server builder: create, probe and debug MCP servers",
+      "category": "ai-agent-tools",
+      "area": "development",
+      "group": "ai-agents",
+      "description": "Build, test and debug a Model Context Protocol (MCP) server in Python or TypeScript, with a script that runs the handshake, lists and lints tools, and calls one. Use when the user wants to create an MCP server, wrap an API as MCP tools, or says an MCP server does not start, shows no tools, times out or prints invalid JSON.",
+      "plugins": [
+        "ai-agent-tools"
+      ],
+      "path": "skills/development/ai-agents/mcp-server-builder",
+      "license": "MIT",
+      "compatibility": "Needs Python 3.8+ (standard library only) for the probe script. The server itself can be written in any language with an MCP SDK.",
+      "examples": [
+        "Build an MCP server in Python that exposes our internal notes search as a tool.",
+        "My MCP server starts but the agent shows no tools. Probe it and tell me what is wrong.",
+        "Wrap this REST API as an MCP server in TypeScript and test it before I add it to my agent."
+      ],
+      "files": [
+        "references/mcp-protocol.md"
+      ]
+    },
+    {
       "name": "powershell-commands",
       "title": "PowerShell Commands for Agents",
       "category": "shell-tools",
@@ -2882,6 +2973,29 @@
       "files": [
         "references/diagnosis.md",
         "references/writing-tests.md"
+      ]
+    },
+    {
+      "name": "rag-pipeline",
+      "title": "RAG pipeline: chunk, retrieve, ground and evaluate",
+      "category": "ai-agent-tools",
+      "area": "development",
+      "group": "ai-agents",
+      "description": "Build and debug a RAG (retrieval-augmented generation) pipeline: chunking, embeddings, hybrid search, reranking, cited answers, with a script that chunks docs and scores retrieval (recall@k, MRR). Use when the user wants to chat with documents, pick a chunk size or vector store, or says retrieval finds the wrong passages.",
+      "plugins": [
+        "ai-agent-tools"
+      ],
+      "path": "skills/development/ai-agents/rag-pipeline",
+      "license": "MIT",
+      "compatibility": "Needs Python 3.8+ (standard library only) for the script. Embedding models and vector stores are whatever the project uses.",
+      "examples": [
+        "Build a RAG pipeline so users can chat with our Markdown docs.",
+        "Our RAG bot answers without using the docs. Find out if retrieval is the problem.",
+        "Chunk the docs folder and measure recall@5 for these labelled questions."
+      ],
+      "files": [
+        "references/rag-design.md",
+        "scripts/fixtures/docs/security.md"
       ]
     },
     {

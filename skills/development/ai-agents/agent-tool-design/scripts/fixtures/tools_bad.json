@@ -1,0 +1,9 @@
+[
+  {"name": "get data", "description": "Gets data", "input_schema": {"type": "object", "properties": {"id": {"type": "str"}}, "required": ["id", "t"]}},
+  {"name": "GET DATA", "description": "", "input_schema": {"type": "array"}},
+  {"name": "lookup", "description": "Look up a customer record by email address and return orders, invoices, refunds and shipping status.",
+   "input_schema": {"type": "object", "properties": {"email": {"type": "string", "description": "Email"}}}},
+  {"name": "lookup_orders", "description": "Look up a customer record by email address and return orders, invoices, refunds and shipping status.",
+   "input_schema": {"type": "object", "properties": {"email": {"type": "string", "description": "Email"}, "tags": {"type": "array"}}}},
+  {"name": "no_schema", "description": "Use when nothing else works. Does nothing useful at all, really."}
+]

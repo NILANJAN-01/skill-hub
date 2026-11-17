@@ -2,9 +2,9 @@
 
 <!-- Generated from examples/prompts.json by tools/build_catalog.py - do not edit by hand. -->
 
-288 things you can say to your AI coding agent, for all 88 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
+300 things you can say to your AI coding agent, for all 92 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
 
-**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [ADB: connect, control & debug Android devices](#adb-connect-control--debug-android-devices) · [Gradle: Android setup, diagnosis & tests](#gradle-android-setup-diagnosis--tests) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Shell: PowerShell on Windows](#shell-powershell-on-windows) · [Learning: Python tutor & interview notes](#learning-python-tutor--interview-notes) · [AI efficiency: save tokens & cost](#ai-efficiency-save-tokens--cost) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
+**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [ADB: connect, control & debug Android devices](#adb-connect-control--debug-android-devices) · [Gradle: Android setup, diagnosis & tests](#gradle-android-setup-diagnosis--tests) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Shell: PowerShell on Windows](#shell-powershell-on-windows) · [Learning: Python tutor & interview notes](#learning-python-tutor--interview-notes) · [AI efficiency: save tokens & cost](#ai-efficiency-save-tokens--cost) · [AI agents: MCP, tools, evals & RAG](#ai-agents-mcp-tools-evals--rag) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
 
 ## Hub tools
 
@@ -297,6 +297,42 @@ Install the whole category: `--plugin ai-efficiency-tools`
 - “My repo has CLAUDE.md, GEMINI.md and Copilot instructions that disagree. Centralize them into one source of truth.”
 - “Set up a context engineering approach for this project so every AI agent loads the same short brief.”
 - “Check how much context my instruction files send on every request and split what is too large.”
+
+## AI agents: MCP, tools, evals & RAG
+
+Install the whole category: `--plugin ai-agent-tools`
+
+### Agent tool design: names, schemas and errors models use well
+
+[`agent-tool-design`](../skills/development/ai-agents/agent-tool-design/SKILL.md) · install: `--skill agent-tool-design`
+
+- “Review these function calling definitions; the model keeps choosing the wrong tool.”
+- “Design the tools for a support agent that can look up orders and issue refunds.”
+- “Lint tools.json and improve the descriptions and parameter schemas.”
+
+### LLM evals: test sets, scoring and regression checks
+
+[`llm-evals`](../skills/development/ai-agents/llm-evals/SKILL.md) · install: `--skill llm-evals`
+
+- “Set up an eval set for our summarization prompt and score the current outputs.”
+- “Compare the new prompt version against last week's baseline and list regressions.”
+- “Add an LLM eval to CI that fails the build if the pass rate drops below 90%.”
+
+### MCP server builder: create, probe and debug MCP servers
+
+[`mcp-server-builder`](../skills/development/ai-agents/mcp-server-builder/SKILL.md) · install: `--skill mcp-server-builder`
+
+- “Build an MCP server in Python that exposes our internal notes search as a tool.”
+- “My MCP server starts but the agent shows no tools. Probe it and tell me what is wrong.”
+- “Wrap this REST API as an MCP server in TypeScript and test it before I add it to my agent.”
+
+### RAG pipeline: chunk, retrieve, ground and evaluate
+
+[`rag-pipeline`](../skills/development/ai-agents/rag-pipeline/SKILL.md) · install: `--skill rag-pipeline`
+
+- “Build a RAG pipeline so users can chat with our Markdown docs.”
+- “Our RAG bot answers without using the docs. Find out if retrieval is the problem.”
+- “Chunk the docs folder and measure recall@5 for these labelled questions.”
 
 ## Git: getting started
 

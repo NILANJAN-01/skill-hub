@@ -462,5 +462,25 @@
     "My repo has CLAUDE.md, GEMINI.md and Copilot instructions that disagree. Centralize them into one source of truth.",
     "Set up a context engineering approach for this project so every AI agent loads the same short brief.",
     "Check how much context my instruction files send on every request and split what is too large."
+  ],
+  "mcp-server-builder": [
+    "Build an MCP server in Python that exposes our internal notes search as a tool.",
+    "My MCP server starts but the agent shows no tools. Probe it and tell me what is wrong.",
+    "Wrap this REST API as an MCP server in TypeScript and test it before I add it to my agent."
+  ],
+  "agent-tool-design": [
+    "Review these function calling definitions; the model keeps choosing the wrong tool.",
+    "Design the tools for a support agent that can look up orders and issue refunds.",
+    "Lint tools.json and improve the descriptions and parameter schemas."
+  ],
+  "llm-evals": [
+    "Set up an eval set for our summarization prompt and score the current outputs.",
+    "Compare the new prompt version against last week's baseline and list regressions.",
+    "Add an LLM eval to CI that fails the build if the pass rate drops below 90%."
+  ],
+  "rag-pipeline": [
+    "Build a RAG pipeline so users can chat with our Markdown docs.",
+    "Our RAG bot answers without using the docs. Find out if retrieval is the problem.",
+    "Chunk the docs folder and measure recall@5 for these labelled questions."
   ]
 }

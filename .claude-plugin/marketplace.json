@@ -354,6 +354,19 @@
         "./skills/generic/ai-efficiency/ai-token-saver",
         "./skills/generic/ai-efficiency/context-engineering"
       ]
+    },
+    {
+      "name": "ai-agent-tools",
+      "description": "AI agents: build and probe MCP servers, design tool/function definitions models use well, run LLM evals with regression checks, and build and evaluate RAG pipelines, each with a stdlib Python script",
+      "source": "./",
+      "strict": false,
+      "category": "ai-agent-tools",
+      "skills": [
+        "./skills/development/ai-agents/mcp-server-builder",
+        "./skills/development/ai-agents/agent-tool-design",
+        "./skills/development/ai-agents/llm-evals",
+        "./skills/development/ai-agents/rag-pipeline"
+      ]
     }
   ]
 }
