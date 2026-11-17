@@ -676,6 +676,13 @@
         "paths": [
           "~/.claude"
         ]
+      },
+      "mcp": {
+        "project": ".mcp.json",
+        "global": "~/.claude.json",
+        "format": "json",
+        "key": "mcpServers",
+        "docs": "https://code.claude.com/docs/en/mcp"
       }
     },
     {
@@ -688,6 +695,13 @@
       ],
       "global_also_reads": [],
       "docs": "https://antigravity.google/docs/skills",
+      "mcp": {
+        "project": ".agents/mcp_config.json",
+        "global": "~/.gemini/config/mcp_config.json",
+        "format": "json",
+        "key": "mcpServers",
+        "docs": "https://antigravity.google/docs/mcp"
+      },
       "detect": {
         "commands": [
           "antigravity",
@@ -727,6 +741,16 @@
           "~/.config/devin",
           "/Applications/Devin.app"
         ]
+      },
+      "mcp": {
+        "project": ".devin/mcp_config.json",
+        "global": {
+          "nt": "%APPDATA%/devin/mcp_config.json",
+          "posix": "~/.config/devin/mcp_config.json"
+        },
+        "format": "json",
+        "key": "mcpServers",
+        "docs": "https://docs.devin.ai/cli/extensibility/mcp/configuration"
       }
     },
     {
@@ -759,6 +783,13 @@
           "/usr/share/code",
           "/snap/bin/code"
         ]
+      },
+      "mcp": {
+        "project": ".mcp.json",
+        "global": "~/.copilot/mcp-config.json",
+        "format": "json",
+        "key": "mcpServers",
+        "docs": "https://code.visualstudio.com/docs/agents/reference/mcp-configuration"
       }
     },
     {
@@ -785,6 +816,13 @@
           "%LOCALAPPDATA%/Programs/cursor",
           "/Applications/Cursor.app"
         ]
+      },
+      "mcp": {
+        "project": ".cursor/mcp.json",
+        "global": "~/.cursor/mcp.json",
+        "format": "json",
+        "key": "mcpServers",
+        "docs": "https://cursor.com/docs/context/mcp"
       }
     },
     {
@@ -810,6 +848,16 @@
           "%LOCALAPPDATA%/Programs/Windsurf",
           "/Applications/Windsurf.app"
         ]
+      },
+      "mcp": {
+        "project": ".devin/mcp_config.json",
+        "global": {
+          "nt": "%APPDATA%/devin/mcp_config.json",
+          "posix": "~/.config/devin/mcp_config.json"
+        },
+        "format": "json",
+        "key": "mcpServers",
+        "docs": "https://docs.devin.ai/desktop/cascade/mcp"
       }
     },
     {
@@ -827,6 +875,13 @@
         "paths": [
           "~/.codex"
         ]
+      },
+      "mcp": {
+        "project": ".codex/config.toml",
+        "global": "~/.codex/config.toml",
+        "format": "toml",
+        "key": "mcp_servers",
+        "docs": "https://developers.openai.com/codex/mcp"
       }
     },
     {
@@ -846,6 +901,13 @@
           "gemini"
         ],
         "paths": []
+      },
+      "mcp": {
+        "project": ".gemini/settings.json",
+        "global": "~/.gemini/settings.json",
+        "format": "json",
+        "key": "mcpServers",
+        "docs": "https://geminicli.com/docs/tools/mcp-server/"
       }
     },
     {

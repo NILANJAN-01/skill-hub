@@ -2,7 +2,8 @@
 rem skill-hub one-shot installer for Windows.
 rem Checks the preconditions, shows which agents it found, then runs tools\install.py.
 rem
-rem   install.bat                      default: every skill, every detected agent, for your user (asks y/n first)
+rem   install.bat                      default (--setup): every skill + the skill-hub MCP server, every
+rem                                    detected agent, for your user (asks y/n first)
 rem   install.bat --check              only check the preconditions, change nothing
 rem   install.bat --yes                default install without the y/n question
 rem   install.bat --dry-run            show the plan, change nothing
@@ -103,7 +104,7 @@ set "REST=%REST: -y=%"
 set "REST=%REST: --dry-run=%"
 if not "%REST%"=="" goto run_install
 :default_args
-set ARGS=--agent detected --all --global%ARGS%
+set ARGS=--setup%ARGS%
 :run_install
 echo.
 echo Running: %PY% tools\install.py %ARGS%

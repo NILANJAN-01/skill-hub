@@ -55,7 +55,15 @@ With `--remote`, installing downloads the hub archive for that ref first. A rele
 
 ## Add it to an agent
 
-Most agents take this JSON shape. Use absolute paths:
+The easy way: let the hub installer do it. It copies the hub to `~/.skill-hub/hub` and registers the server in the MCP config of every agent it detects (merging, with a backup of each file it edits):
+
+```bash
+python tools/install.py --setup                      # all skills + this server, every detected agent
+python tools/install.py --agent detected --mcp --global   # only this server
+python tools/install.py --doctor                     # is it registered, and does it start?
+```
+
+By hand: most agents take this JSON shape. Use absolute paths:
 
 ```json
 {

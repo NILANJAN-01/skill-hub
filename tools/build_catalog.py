@@ -49,12 +49,24 @@ def prompts_markdown(skills: list, categories: list) -> str:
 
 def agents_table() -> str:
     """Markdown matrix of supported agents, from install.AGENTS."""
-    rows = ["| Agent | `--agent` | Project folder | User folder | Also reads |", "|---|---|---|---|---|"]
+    rows = ["| Agent | `--agent` | Project folder | User folder | Also reads | MCP config (project / user) |",
+            "|---|---|---|---|---|---|"]
     for k, a in AGENTS.items():
         also = ", ".join(f"`{p}`" for p in a["also_reads"]) or "-"
         user = f"`{a['global']}`" if a["global"] else "-"
-        rows.append(f"| [{a['name']}]({a['docs']}) | `{k}` | `{a['project']}` | {user} | {also} |")
+        rows.append(f"| [{a['name']}]({a['docs']}) | `{k}` | `{a['project']}` | {user} | {also} | {mcp_cell(a)} |")
     return "\n".join(rows)
+
+
+def mcp_cell(agent: dict) -> str:
+    """'`project` / `user`' MCP config locations, linked to the vendor's MCP docs; '-' if none."""
+    m = agent.get("mcp")
+    if not m:
+        return "-"
+    user = m["global"]
+    if isinstance(user, dict):
+        user = f"{user['posix']}` (Windows: `{user['nt']}"
+    return f"[`{m['project']}` / `{user}`]({m['docs']})"
 
 
 def agents_table_simple() -> str:

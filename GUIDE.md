@@ -21,7 +21,16 @@ No Python? Install it from https://www.python.org/downloads/. On Windows, tick *
 
 ## Step 2: Run the installer. It finds your agents and asks you
 
-Run the installer with **no options**. It works out which AI agents and IDEs are on your computer and asks what you want. **Nothing is written until you say yes.**
+**Fastest: one command for everything.** `--setup` installs every skill and the skill-hub MCP server into every agent it finds, for your user. It shows the plan first; **nothing is written until you say yes.**
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py | python3 - --setup   # macOS / Linux
+python install.py --setup                                                                                     # Windows, after the download below
+```
+
+Later, `python install.py --doctor` shows what is set up for each agent and checks that the MCP server starts, and `python install.py --uninstall` removes everything the installer set up.
+
+**Prefer to choose?** Run the installer with **no options**. It works out which AI agents and IDEs are on your computer and offers a menu: set up everything, choose agents and skills, check, or remove. **Nothing is written until you say yes.**
 
 **macOS / Linux**
 
@@ -135,7 +144,9 @@ Everyone who clones the repo now gets the skills in their agent automatically.
 
 ## Step 7: Update or remove skills
 
+- **Check everything:** `python install.py --doctor` lists, per agent, how many hub skills it has (and which differ from the hub), whether the MCP server is registered, and runs a self-check of the server.
 - **See what is installed:** `python install.py --installed --global` lists every hub skill, the hub version it came from, and whether it still matches the hub. (Drop `--global` for the current project.)
+- **Remove everything:** `python install.py --uninstall` removes the hub skills, the `skill-hub` MCP entries and the hub copy in `~/.skill-hub`. It lists everything and asks first.
 - **Update:** run the installer again, or add `--update`. It compares every file of a skill (not only `SKILL.md`), lists the skills that differ from the hub and asks before replacing them.
 - **Remove a skill:** `python install.py --agent <agent> --skill <name> --global --remove`. It lists the copies it found and asks first. Deleting the folder by hand also works.
 - **Stay on one version:** use the installer from a [release](https://github.com/NILANJAN-01/skill-hub/releases), or pass `--ref v1.3.0` (or set `SKILLHUB_REF`). Release downloads are checked against the release's `SHA256SUMS`.
@@ -147,6 +158,8 @@ Everyone who clones the repo now gets the skills in their agent automatically.
 Use options when you already know what you want, or for scripts, dotfiles and CI. Replace `...` with `curl -fsSL <installer-url> | python3 -` (macOS/Linux) or `python install.py` (Windows / a clone).
 
 ```bash
+... --setup --yes                                    # everything: all skills + MCP server, every detected agent
+... --agent detected --mcp --global                  # only the skill-hub MCP server
 ... --detect                                         # just show which agents are installed
 ... --list                                           # agents, categories and every skill
 ... --agent detected --all --global                  # every skill, every detected agent, for you
