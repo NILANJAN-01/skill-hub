@@ -938,7 +938,9 @@ def doctor(root: Path, agents: list, project: Path) -> int:
         problems += result.startswith("FAILED")
     entry = server_entry()
     stale_total, mcp_bad = set(), 0
-    for use_global, label in ((True, "user-level"), (False, f"project {fmt(project)}")):
+    user_skills, user_mcp = {}, {}              # per agent, from the user-level pass, to explain project rows
+    for use_global, label in ((True, "user-level (applies to every project)"),
+                              (False, f"project {fmt(project)} (only this folder; optional)")):
         print(f"\n{label}:")
         for a in agents:
             folders = reads(a, use_global, project) if (AGENTS[a]["global"] or not use_global) else []
@@ -954,6 +956,13 @@ def doctor(root: Path, agents: list, project: Path) -> int:
                 mcp_bad += st == "differs" or st.startswith("unreadable")
             skills = f"{len(names)}" + (f" ({len(stale)} differ from the hub)" if stale else "")
             stale_total |= stale
+            if use_global:
+                user_skills[a], user_mcp[a] = len(names), mcp == "set up"
+            else:
+                if not names and user_skills.get(a):
+                    skills = "0 (user-level covers it)"
+                if mcp == "not set up" and user_mcp.get(a):
+                    mcp = "not needed (user-level covers it)"
             print(f"  {AGENTS[a]['name']:<26} skills: {skills:<29} MCP: {mcp}")
     if stale_total:
         print(f"\nSkills that differ from the hub (an older hub version, or edited locally): "
