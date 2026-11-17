@@ -509,7 +509,9 @@ only or other our out over own same she should so some such than that the their 
 those through to too under until up very was we were what when where which while who whom why will with would you
 your yours yourself okay ok yeah uh um so right gonna wanna like really actually basically going get got one two
 thing things kind lot way well know see say said look little bit just mean want make sure let's we're it's that's
-there's you're i'm don't can't isn't here's what's also us thats dont im youre theyre theres""".split())
+there's you're i'm don't can't isn't here's what's also us thats dont im youre theyre theres might next
+zero three four five six seven eight nine ten eleven twelve twenty thirty forty fifty sixty seventy eighty
+ninety hundred thousand million first second""".split())
 
 
 def fmt_time(sec: float) -> str:
@@ -546,8 +548,11 @@ def sentences(segs: list) -> list:
     units, cur, start = [], [], None
     sample = " ".join(s["text"] for s in segs[:40])
     punctuated = len(re.findall(r"[.!?]", sample)) >= max(2, len(sample.split()) // 60)
-    limit = 28 if punctuated else 20     # unpunctuated speech-to-text: shorter chunks read better
+    limit = 28 if punctuated else 30
     for s in segs:
+        if not punctuated and cur:      # no punctuation: a new segment starts after a pause, a natural break
+            units.append({"start": start, "text": _tidy(" ".join(cur))})
+            cur, start = [], None
         pieces = []
         for part in re.split(r"(?<=[.!?])\s+", s["text"]):
             w = part.split()
@@ -653,38 +658,57 @@ def transcript_text(segs: list) -> str:
 
 
 def overview_markdown(info: dict, notes: dict, meta: dict) -> str:
+    """The overview as plain text, in the same reading order as the HTML page."""
+    from yt_html import fmt_length, nice_date, sentence
     link = info["url"]
-    out = [f"# {info['title']}", "",
-           f"- Channel: {info.get('channel') or 'unknown'}",
-           f"- Length: {fmt_time(info.get('duration') or 0)}  |  Published: {info.get('published') or 'unknown'}",
-           f"- Link: {link}",
-           f"- Transcript source: {meta.get('source', '')}  |  Words: {meta.get('words', 0)}"]
+    draft = notes.get("written_by") == "auto-draft"
+    cut = 32 if draft else 0
+    src = meta.get("source", "")
+    duration = info.get("duration") or 0
+    facts = [info.get("channel") or "", nice_date(info.get("published", "")), f"{fmt_length(duration)} long",
+             f"{meta.get('words', 0):,} words spoken",
+             "text from the audio" if src.startswith("audio") else
+             "text from captions" if "caption" in src or "subtitle" in src else "text from a transcript file"]
+    out = [f"# {info['title']}", "", " · ".join(x for x in facts if x), "", f"Watch: {link}", ""]
     if info.get("clip"):
-        out.append(f"- Clip processed: {info['clip']}")
-    out += [f"- Note: {w}" for w in meta.get("warnings") or []] + [""]
-    if notes.get("written_by") == "auto-draft":
-        out += ["> Automatic draft: sentences picked from the transcript, not yet reviewed.", ""]
-    out += ["## Summary", "", notes.get("summary") or "_(not written yet)_", ""]
-    out += audio_markdown(meta.get("audio"), meta.get("words_per_minute", 0), link)
-    if notes.get("key_takeaways"):
-        out += ["## Key takeaways", ""] + [f"- {t}" for t in notes["key_takeaways"]] + [""]
-    if notes.get("sections"):
-        out += ["## Sections", ""]
-        for s in notes["sections"]:
-            out += [f"### [{fmt_time(s.get('start', 0))}]({link}&t={int(s.get('start', 0))}s) {s.get('title', '')}", ""]
-            out += [f"- {p}" for p in s.get("points") or []] + [""]
-    terms = [t for t in notes.get("terms") or [] if t.get("term")]
-    if terms:
-        out += ["## Key terms", ""] + [f"- **{t['term']}**" + (f": {t['meaning']}" if t.get("meaning") else "")
-                                       for t in terms] + [""]
-    for key, title in (("prerequisites", "Prerequisites"), ("further_study", "Further study")):
-        if notes.get(key):
-            out += [f"## {title}", ""] + [f"- {x}" for x in notes[key]] + [""]
-    if notes.get("review_questions"):
-        out += ["## Review questions", ""]
-        for i, q in enumerate(notes["review_questions"], 1):
-            out += [f"{i}. {q.get('q', '')}"] + ([f"   - Answer: {q['a']}"] if q.get("a") else [])
+        out += [f"Part processed: {info['clip']}", ""]
+    if draft:
+        out += ["> **Automatic draft.** The sentences below were picked from what was said, word for word, and "
+                "have not been checked or rewritten yet.", ""]
+    out += [f"> **Please note:** {sentence(w)}" for w in meta.get("warnings") or []]
+    if meta.get("warnings"):
         out.append("")
+    out += ["## Summary", "", sentence(notes.get("summary"), 60 if draft else 0) or "_Not written yet._", ""]
+    take = (notes.get("key_takeaways") or [])[:5 if draft else 8]
+    if take:
+        out += ["**Remember these**", ""] + [f"{i}. {sentence(t, cut)}" for i, t in enumerate(take, 1)] + [""]
+    sections = notes.get("sections") or []
+    if sections:
+        out += ["## Outline", "", "| # | Topic | Starts | Length |", "|---|---|---|---|"]
+        for i, s in enumerate(sections):
+            start = int(s.get("start", 0))
+            end = s.get("end") or (sections[i + 1]["start"] if i + 1 < len(sections) else duration)
+            out.append(f"| {i + 1} | {s.get('title', '')} | [{fmt_time(start)}]({link}&t={start}s) | "
+                       f"{fmt_length(max(0, end - start))} |")
+        out += ["", "## Section notes", ""]
+        for i, s in enumerate(sections):
+            start = int(s.get("start", 0))
+            out += [f"### {i + 1}. {s.get('title', '')} ([{fmt_time(start)}]({link}&t={start}s))", ""]
+            out += [f"- {sentence(p, cut)}" for p in (s.get("points") or [])[:4]] + [""]
+    terms = [t for t in notes.get("terms") or [] if t.get("term") and t.get("meaning")]
+    if terms:
+        out += ["## Key terms", ""] + [f"- **{t['term']}**: {sentence(t['meaning'])}" for t in terms] + [""]
+    questions = [q for q in notes.get("review_questions") or [] if q.get("q")]
+    if questions:
+        out += ["## Check yourself", ""]
+        for i, q in enumerate(questions, 1):
+            out += [f"{i}. {q['q']}"] + ([f"   - Answer: {q['a']}"] if q.get("a") else [])
+        out.append("")
+    if notes.get("prerequisites"):
+        out += ["## Good to know before watching", ""] + [f"- {sentence(x)}" for x in notes["prerequisites"]] + [""]
+    if notes.get("further_study"):
+        out += ["## What to study next", ""] + [f"- {sentence(x)}" for x in notes["further_study"]] + [""]
+    out += audio_markdown(meta.get("audio"), meta.get("words_per_minute", 0), link)
     return "\n".join(out)
 
 
@@ -698,24 +722,29 @@ def speaking_rate(segs: list, audio: dict | None) -> int:
 
 
 def audio_markdown(audio: dict | None, wpm: int, link: str) -> list:
+    """The audio findings in plain words."""
+    from yt_html import fmt_length, pace_label
     if not audio:
         return []
     a, f, stt = audio.get("analysis") or {}, audio.get("audio") or {}, audio.get("speech_to_text") or {}
-    out = ["## Audio analysis", ""]
-    if f:
-        out.append(f"- Audio track: {f.get('codec', f.get('format', '?'))}, {f.get('bitrate_kbps', '?')} kbps, "
-                   f"{f.get('sample_rate', '?')} Hz, {f.get('channels', '?')} channel(s), "
-                   f"{round((f.get('size_bytes') or 0) / 1e6, 1)} MB")
-    if stt:
-        out.append(f"- Speech to text: {stt.get('engine', '?')} ({stt.get('model', '')}), language "
-                   f"{stt.get('language', '?')}")
+    out = ["## About the audio", ""]
     if a:
-        out.append(f"- Speech: {round(100 * a.get('speech_ratio', 0))}% of {fmt_time(a.get('analysed_seconds', 0))} "
-                   f"({fmt_time(a.get('speech_seconds', 0))} speaking), pace about {wpm} words per minute")
-        out.append(f"- Pauses of 2 s or more: {a.get('pause_count', 0)}, longest {a.get('longest_pause', 0)} s; "
-                   f"loudness {a.get('mean_dbfs', '?')} dBFS average")
-        for p in (a.get("pauses") or [])[:5]:
-            out.append(f"  - [{fmt_time(p['start'])}]({link}&t={int(p['start'])}s) pause of {p['length']} s")
+        out.append(f"- Someone is speaking {round(100 * a.get('speech_ratio', 0))}% of the time "
+                   f"({fmt_length(a.get('speech_seconds', 0))} of {fmt_length(a.get('analysed_seconds', 0))}).")
+    if wpm:
+        out.append(f"- Speaking pace: {wpm} words per minute ({pace_label(wpm)}; lectures are usually 120-160).")
+    if a:
+        out.append(f"- Pauses longer than 2 seconds: {a.get('pause_count', 0)}. Longest pauses (often a change of "
+                   "topic or a demo):")
+        out += [f"  - [{fmt_time(p['start'])}]({link}&t={int(p['start'])}s): {p['length']} s"
+                for p in (a.get("pauses") or [])[:5]]
+    if stt:
+        out.append(f"- The speech was turned into text by {stt.get('engine', '?')} ({stt.get('model', '')}, "
+                   f"language {stt.get('language', '?')}), so some words may be misheard.")
+    if f:
+        out.append(f"- Technical: {f.get('codec') or f.get('format', '?')} audio, {f.get('bitrate_kbps', '?')} kbps, "
+                   f"{round((f.get('size_bytes') or 0) / 1e6, 1)} MB downloaded"
+                   f"{' (a copy was kept)' if f.get('kept') else ' and deleted after processing'}.")
     return out + [""]
 
 

@@ -15,7 +15,17 @@ This skill turns one YouTube video link into study material:
 1. **It extracts the audio** with `yt-dlp`. Only the audio track is downloaded, never the video.
 2. **It analyses the audio** to measure how much of the time someone speaks, where the pauses are, how fast the speaker talks (words per minute) and how loud it is. It also draws a per-minute speech-activity chart.
 3. **It turns the speech into text** with `faster-whisper`, `openai-whisper` or `vosk`.
-4. **It writes the outputs**: the text, Markdown notes, and one self-contained `overview.html`. The page shows a summary, key takeaways, an audio-analysis card, a coloured timeline of sections with links to each timestamp, a topic map, a word cloud, section notes, key terms, review questions and the searchable full transcript.
+4. **It writes the outputs**: the text, Markdown notes, and one self-contained `overview.html` built for easy reading, top to bottom:
+
+   - **Summary** and the points to remember.
+   - **Outline**: a timeline where each block is one part and its width is how long it lasts, plus a table of topics, start times and lengths.
+   - **Section notes**, each with a "watch" link and the words said in that part.
+   - **Key terms**, a **Check yourself** quiz (click a question to see the answer) and a **Study path**.
+   - **Words used most**.
+   - **About the audio**, in plain words: how much of the time someone speaks, the speaking pace, the longest pauses and a per-minute speech chart. Technical details are collapsed.
+   - The **searchable transcript**.
+
+   A sticky menu jumps between the parts. The page works on phones, in dark mode and when printed.
 
 YouTube captions are used **only as a fallback** when the audio cannot be processed, and the output then says so. The downloaded audio is deleted after processing unless the user asks to keep it (`--keep-audio`).
 
@@ -124,6 +134,7 @@ Read `transcript.txt` all the way through (in parts if it is long), together wit
 - Keep section `start` times (seconds) that fit the transcript. Use the video's chapters when it has them.
 - Everything must come from the transcript. Mark guesses, and do not add facts the speaker did not say. Leave out sponsor segments and requests to subscribe.
 - You may use the audio analysis: a long pause often means a demo or a change of topic, and a low-speech minute is worth a look.
+- Write for a student: short, plain sentences, one idea per point, and terms explained the first time they appear. Section titles are short topic names ("How a neuron detects an edge"), not "Part 3". The page shows your notes exactly as written; until you write them, it shows an "Automatic draft" banner.
 
 ### 4. Render and hand over
 

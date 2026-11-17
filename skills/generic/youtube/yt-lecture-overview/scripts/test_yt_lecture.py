@@ -221,11 +221,12 @@ class AudioTests(unittest.TestCase):
         self.assertEqual(cmd[cmd.index("--url") + 1], "https://www.youtube.com/watch?v=abcDEF12345")
         folder = Path(res["folder"])
         page = (folder / "overview.html").read_text(encoding="utf-8")
-        for text in ("Audio analysis", "Speech activity per minute", "80%", "Longest pauses", "words per minute"):
+        for text in ("About the audio", "How much of each minute is speech", "80%", "Longest pauses",
+                     "words per minute", "Show the numbers as a table", "Outline"):
             self.assertIn(text, page)
         md = (folder / "overview.md").read_text(encoding="utf-8")
-        self.assertIn("## Audio analysis", md)
-        self.assertIn("pause of 6.5 s", md)
+        self.assertIn("## About the audio", md)
+        self.assertIn("&t=250s): 6.5 s", md)
         info = json.loads((folder / "info.json").read_text(encoding="utf-8"))
         self.assertEqual(info["audio"]["speech_to_text"]["engine"], "vosk")
 
