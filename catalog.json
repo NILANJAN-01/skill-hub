@@ -300,7 +300,7 @@
     },
     {
       "name": "youtube-tools",
-      "description": "YouTube: extract a study or tech video's audio, analyse it (speech, pauses, pace) and turn the speech into text, then make text notes and a visual HTML overview (summary, timeline, topic map, key terms, review questions); captions only as fallback; a title guardrail refuses non-study videos; includes an MCP server",
+      "description": "YouTube: extract a study or tech video's audio, analyse it (speech, pauses, pace) and turn the speech into text, then make text notes and a easy-to-read HTML overview (summary, outline timeline, section notes, key terms, self-check quiz); captions only as fallback; a title guardrail refuses non-study videos; includes an MCP server",
       "category": "youtube-tools",
       "skills": [
         "yt-lecture-overview"
@@ -3479,7 +3479,7 @@
       "category": "youtube-tools",
       "area": "generic",
       "group": "youtube",
-      "description": "Turn a YouTube link of a study or tech video (lecture, tutorial, course, talk) into text and a visual HTML overview: extract the audio, analyse it (speech, pauses, pace), turn the speech into text, then write notes, timeline, topic map, key terms and review questions. Captions only as a fallback. A guardrail checks the real title and refuses non-study videos. Use when the user shares a YouTube lecture link and wants an overview, notes, summary or transcript.",
+      "description": "Turn a YouTube link of a study or tech video (lecture, tutorial, course, talk) into text and a visual HTML overview: extract the audio, analyse it (speech, pauses, pace), turn the speech into text, then write notes, an outline timeline, key terms and a self-check quiz. Captions only as a fallback. A guardrail checks the real title and refuses non-study videos. Use when the user shares a YouTube lecture link and wants an overview, notes, summary or transcript.",
       "plugins": [
         "youtube-tools"
       ],

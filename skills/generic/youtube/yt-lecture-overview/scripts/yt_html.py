@@ -350,9 +350,9 @@ def render_html(info: dict, notes: dict, segs: list, keywords: list, meta: dict)
             body.append(f'<div class="sec" id="part-{i + 1}"><div class="sec-head"><h3><span class="badge">{i + 1}</span>'
                         f'{e(s.get("title", ""))}</h3><span class="sec-time">{fmt_time(start)}–{fmt_time(end)} · '
                         f'{fmt_length(end - start)}</span>{watch(info, start, "▶ watch")}</div>'
-                        f'{_ul((s.get("points") or [])[:4], cut)}'
-                        f'<details><summary>Read what was said in this part ({len(said.split()):,} words)</summary>'
-                        f'<p class="said">{e(said)}</p></details></div>')
+                        f'{_ul((s.get("points") or [])[:4], cut)}' +
+                        (f'<details><summary>Read what was said in this part ({len(said.split()):,} words)</summary>'
+                         f'<p class="said">{e(said)}</p></details>' if said else "") + "</div>")
         out.append('<section class="card" id="notes"><h2>Section notes</h2>'
                    '<p class="lead">The main points of each part.</p>' + "".join(body) + "</section>")
 

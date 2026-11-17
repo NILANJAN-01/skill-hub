@@ -1,6 +1,6 @@
 ---
 name: yt-lecture-overview
-description: "Turn a YouTube link of a study or tech video (lecture, tutorial, course, talk) into text and a visual HTML overview: extract the audio, analyse it (speech, pauses, pace), turn the speech into text, then write notes, timeline, topic map, key terms and review questions. Captions only as a fallback. A guardrail checks the real title and refuses non-study videos. Use when the user shares a YouTube lecture link and wants an overview, notes, summary or transcript."
+description: "Turn a YouTube link of a study or tech video (lecture, tutorial, course, talk) into text and a visual HTML overview: extract the audio, analyse it (speech, pauses, pace), turn the speech into text, then write notes, an outline timeline, key terms and a self-check quiz. Captions only as a fallback. A guardrail checks the real title and refuses non-study videos. Use when the user shares a YouTube lecture link and wants an overview, notes, summary or transcript."
 license: MIT
 compatibility: "Python 3.8+ (standard library) for links, guardrail, captions, notes and HTML; needs internet access to youtube.com. The audio stage needs, in some Python (--audio-python): yt-dlp, av and numpy, plus one speech-to-text engine: faster-whisper, openai-whisper or vosk. Node.js helps yt-dlp. Includes an optional stdio MCP server (scripts/yt_lecture_mcp.py)."
 metadata:
