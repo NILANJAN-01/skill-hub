@@ -418,6 +418,19 @@
         "./skills/testing/uiautomator/uiautomator-run-debug",
         "./skills/testing/aaos-testing/android-uiautomator-locators"
       ]
+    },
+    {
+      "name": "junit-tools",
+      "description": "JUnit 6 skill set from the official JUnit User Guide (Java and Kotlin, JUnit 6.1.3): junit-test-authoring sets up Gradle/Maven and writes Jupiter tests (assertions, lifecycle, nested, parameterized tests and classes, extensions, parallel runs) and generates a test class for a source file; junit-migration audits suites and migrates JUnit 3/4 and JUnit 5 code to JUnit 6, finding tests that never run; junit-run-reports runs tests with Gradle, Maven or the ConsoleLauncher and explains JUnit XML and Open Test Reporting results (causes, flaky, slowest, Markdown summary); kotlin-unit-test adds Kotlin coverage and mutation checks",
+      "source": "./",
+      "strict": false,
+      "category": "junit-tools",
+      "skills": [
+        "./skills/testing/junit/junit-test-authoring",
+        "./skills/testing/junit/junit-migration",
+        "./skills/testing/junit/junit-run-reports",
+        "./skills/testing/libs/kotlin-unit-test"
+      ]
     }
   ]
 }

@@ -222,6 +222,7 @@ Categories for `--plugin`:
 | `playwright-tools` | 5 | Playwright (up to 1.65): write resilient end-to-end tests that fit your team's conventions (with a suite audit script), debug failing and flaky tests from JSON or... |
 | `robotframework-tools` | 4 | Robot Framework (up to 7.5): write and modernise suites with VAR, typed and secret variables, GROUP, test metadata and Markdown tests (with an audit script), build... |
 | `uiautomator-tools` | 4 | Android UI Automator skill set from the official docs (Kotlin and Java, androidx.test.uiautomator 2.4.1): uiautomator-test-authoring sets up the project and writes... |
+| `junit-tools` | 4 | JUnit 6 skill set from the official JUnit User Guide (Java and Kotlin, JUnit 6.1.3): junit-test-authoring sets up Gradle/Maven and writes Jupiter tests (assertions,... |
 <!-- plugins-simple:end -->
 
 `--all` installs every skill. `--skill a,b` installs specific skills by name.

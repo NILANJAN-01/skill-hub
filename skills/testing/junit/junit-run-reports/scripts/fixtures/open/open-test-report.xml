@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<e:events xmlns="https://schemas.opentest4j.org/reporting/core/0.2.0" xmlns:e="https://schemas.opentest4j.org/reporting/events/0.2.0" xmlns:java="https://schemas.opentest4j.org/reporting/java/0.2.0" xmlns:junit="https://schemas.junit.org/open-test-reporting">
+  <infrastructure>
+    <hostName>build-agent</hostName>
+    <java:javaVersion>21.0.5</java:javaVersion>
+  </infrastructure>
+  <e:started id="1" name="JUnit Jupiter" time="2026-11-18T09:00:00.000Z">
+    <metadata><junit:uniqueId>[engine:junit-jupiter]</junit:uniqueId><junit:type>CONTAINER</junit:type></metadata>
+  </e:started>
+  <e:started id="2" name="BasketTest" parentId="1" time="2026-11-18T09:00:00.010Z">
+    <metadata><junit:uniqueId>[engine:junit-jupiter]/[class:com.example.shop.BasketTest]</junit:uniqueId><junit:type>CONTAINER</junit:type></metadata>
+    <sources><java:classSource className="com.example.shop.BasketTest"/></sources>
+  </e:started>
+  <e:started id="3" name="adds an item" parentId="2" time="2026-11-18T09:00:00.020Z">
+    <metadata><junit:uniqueId>[engine:junit-jupiter]/[class:com.example.shop.BasketTest]/[method:adds an item()]</junit:uniqueId><junit:type>TEST</junit:type></metadata>
+    <sources><java:methodSource className="com.example.shop.BasketTest" methodName="adds an item" methodParameterTypes=""/></sources>
+  </e:started>
+  <e:finished id="3" time="2026-11-18T09:00:00.120Z">
+    <result status="SUCCESSFUL"/>
+  </e:finished>
+  <e:started id="4" name="rejects more items" parentId="2" time="2026-11-18T09:00:00.130Z">
+    <metadata><junit:uniqueId>[engine:junit-jupiter]/[class:com.example.shop.BasketTest]/[method:rejects more items()]</junit:uniqueId><junit:type>TEST</junit:type></metadata>
+    <sources><java:methodSource className="com.example.shop.BasketTest" methodName="rejects more items" methodParameterTypes=""/></sources>
+  </e:started>
+  <e:finished id="4" time="2026-11-18T09:00:00.180Z">
+    <result status="FAILED">
+      <java:throwable assertionError="true" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: Expected java.lang.IllegalStateException to be thrown, but nothing was thrown.
+	at com.example.shop.BasketTest.rejects more items(BasketTest.kt:44)</java:throwable>
+    </result>
+  </e:finished>
+  <e:started id="5" name="runs on CI only" parentId="2" time="2026-11-18T09:00:00.190Z">
+    <metadata><junit:type>TEST</junit:type></metadata>
+    <sources><java:methodSource className="com.example.shop.BasketTest" methodName="runs on CI only" methodParameterTypes=""/></sources>
+  </e:started>
+  <e:finished id="5" time="2026-11-18T09:00:00.191Z">
+    <result status="ABORTED"><reason>Assumption failed: CI is not set</reason></result>
+  </e:finished>
+  <e:started id="6" name="loads the catalog" parentId="2" time="2026-11-18T09:00:00.200Z">
+    <metadata><junit:type>TEST</junit:type></metadata>
+    <sources><java:methodSource className="com.example.shop.BasketTest" methodName="loads the catalog" methodParameterTypes=""/></sources>
+  </e:started>
+  <e:finished id="6" time="2026-11-18T09:00:00.700Z">
+    <result status="ERRORED">
+      <java:throwable assertionError="false" type="java.lang.NoSuchMethodError">java.lang.NoSuchMethodError: 'org.junit.platform.engine.support.store.NamespacedHierarchicalStore org.junit.platform.engine.ExecutionRequest.getStore()'
+	at org.junit.jupiter.engine.execution.JupiterEngineExecutionContext.getStore(JupiterEngineExecutionContext.java:80)</java:throwable>
+    </result>
+  </e:finished>
+  <e:finished id="2" time="2026-11-18T09:00:00.710Z"><result status="FAILED"/></e:finished>
+  <e:finished id="1" time="2026-11-18T09:00:00.720Z"><result status="SUCCESSFUL"/></e:finished>
+</e:events>

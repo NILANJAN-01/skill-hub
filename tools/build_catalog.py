@@ -162,6 +162,7 @@ CATEGORY_TITLES = {
     "playwright-tools": "Playwright: E2E tests, debugging, CI & browser agent",
     "robotframework-tools": "Robot Framework: suites, libraries, results & CI",
     "uiautomator-tools": "UI Automator: Android UI tests in Kotlin & Java",
+    "junit-tools": "JUnit 6: Java & Kotlin tests, migration & reports",
     "git-getting-started": "Git: getting started",
     "git-branching": "Git: branching & merging",
     "git-collaboration": "Git: remotes & collaboration",

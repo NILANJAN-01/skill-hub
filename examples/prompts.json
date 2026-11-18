@@ -559,5 +559,24 @@
     "Here's the am instrument output from CI. Which tests failed and why?",
     "Our UI Automator tests fail with UiAutomationService already registered. What's wrong?",
     "Shard the instrumented tests across 4 devices and summarise the JUnit results."
+  ],
+  "junit-test-authoring": [
+    "Set up JUnit 6 in our Gradle project and write tests for the OrderService class.",
+    "Write JUnit tests for PriceCalculator.java, including a parameterized test for the price rules.",
+    "Generate a JUnit test class for Basket.kt with nested groups per function.",
+    "How do I test that this method throws IllegalArgumentException with the right message in JUnit 5?",
+    "Make this JUnit test run for both postgres and mysql without copying the class."
+  ],
+  "junit-migration": [
+    "Migrate our JUnit 4 tests to JUnit 5/6: rules, @Test(expected) and Parameterized runners.",
+    "We upgraded to JUnit 6 and the build fails with MethodOrderer.Alphanumeric not found. What else breaks?",
+    "Audit our test suite for tests that never run or have no assertions.",
+    "Half our tests stopped running after adding junit-jupiter. Why?"
+  ],
+  "junit-run-reports": [
+    "Run only OrderServiceTest#placesOrder with Maven and tell me why it fails.",
+    "Summarise the JUnit XML results in target/surefire-reports and list the flaky tests.",
+    "Run the tests tagged fast with Gradle and show the slowest ones.",
+    "Turn our JUnit results into a Markdown summary for the GitHub Actions job."
   ]
 }

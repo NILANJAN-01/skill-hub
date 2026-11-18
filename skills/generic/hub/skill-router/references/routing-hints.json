@@ -551,6 +551,74 @@
       "needs": [
         "device"
       ]
+    },
+    "junit-test-authoring": {
+      "keywords": [
+        "junit",
+        "jupiter",
+        "parameterizedtest",
+        "assertthrows",
+        "beforeeach",
+        "nested",
+        "tempdir"
+      ],
+      "phrases": [
+        "junit test",
+        "write junit",
+        "java unit test",
+        "parameterized test",
+        "junit 5 test",
+        "junit 6 test",
+        "set up junit"
+      ]
+    },
+    "junit-migration": {
+      "keywords": [
+        "junit4",
+        "vintage",
+        "migrate",
+        "upgrade",
+        "expectedexception",
+        "temporaryfolder",
+        "runwith"
+      ],
+      "phrases": [
+        "junit 4 to junit 5",
+        "migrate junit",
+        "upgrade junit",
+        "tests not running",
+        "junit 6 upgrade",
+        "junit 4",
+        "junit 3",
+        "migrate our junit",
+        "to junit 6",
+        "upgrade from junit",
+        "junit 5 to",
+        "to junit 5"
+      ]
+    },
+    "junit-run-reports": {
+      "keywords": [
+        "surefire",
+        "failsafe",
+        "junit-xml",
+        "flaky",
+        "report",
+        "consolelauncher",
+        "rerun"
+      ],
+      "phrases": [
+        "junit results",
+        "test report",
+        "run junit",
+        "why does this test fail",
+        "slowest tests",
+        "surefire",
+        "failsafe",
+        "junit xml",
+        "test-results",
+        "open-test-report"
+      ]
     }
   }
 }

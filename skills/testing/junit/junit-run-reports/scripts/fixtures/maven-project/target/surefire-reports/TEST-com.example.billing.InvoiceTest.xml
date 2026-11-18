@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.example.billing.InvoiceTest" time="1.204" tests="4" errors="0" skipped="1" failures="1" flakes="1">
+  <properties>
+    <property name="java.version" value="21.0.5"/>
+  </properties>
+  <testcase name="total" classname="com.example.billing.InvoiceTest" time="0.021"/>
+  <testcase name="sendsReminder" classname="com.example.billing.InvoiceTest" time="0.402">
+    <flakyFailure message="expected: &lt;1&gt; but was: &lt;0&gt;" type="org.opentest4j.AssertionFailedError">
+      <stackTrace>org.opentest4j.AssertionFailedError: expected: &lt;1&gt; but was: &lt;0&gt;
+	at com.example.billing.InvoiceTest.sendsReminder(InvoiceTest.java:41)</stackTrace>
+    </flakyFailure>
+  </testcase>
+  <testcase name="rejectsNegative" classname="com.example.billing.InvoiceTest" time="0.010">
+    <failure message="Unexpected exception type thrown, expected: &lt;java.lang.IllegalArgumentException&gt; but was: &lt;java.lang.IllegalStateException&gt;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: Unexpected exception type thrown, expected: &lt;java.lang.IllegalArgumentException&gt; but was: &lt;java.lang.IllegalStateException&gt;
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:67)
+	at com.example.billing.InvoiceTest.rejectsNegative(InvoiceTest.java:55)</failure>
+    <rerunFailure message="Unexpected exception type thrown" type="org.opentest4j.AssertionFailedError">
+      <stackTrace>org.opentest4j.AssertionFailedError: Unexpected exception type thrown</stackTrace>
+    </rerunFailure>
+  </testcase>
+  <testcase name="legacyFormat" classname="com.example.billing.InvoiceTest" time="0">
+    <skipped message="old format removed in 3.0, see BILL-120"/>
+  </testcase>
+</testsuite>

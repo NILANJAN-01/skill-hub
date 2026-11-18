@@ -360,6 +360,17 @@
         "uiautomator-run-debug",
         "android-uiautomator-locators"
       ]
+    },
+    {
+      "name": "junit-tools",
+      "description": "JUnit 6 skill set from the official JUnit User Guide (Java and Kotlin, JUnit 6.1.3): junit-test-authoring sets up Gradle/Maven and writes Jupiter tests (assertions, lifecycle, nested, parameterized tests and classes, extensions, parallel runs) and generates a test class for a source file; junit-migration audits suites and migrates JUnit 3/4 and JUnit 5 code to JUnit 6, finding tests that never run; junit-run-reports runs tests with Gradle, Maven or the ConsoleLauncher and explains JUnit XML and Open Test Reporting results (causes, flaky, slowest, Markdown summary); kotlin-unit-test adds Kotlin coverage and mutation checks",
+      "category": "junit-tools",
+      "skills": [
+        "junit-test-authoring",
+        "junit-migration",
+        "junit-run-reports",
+        "kotlin-unit-test"
+      ]
     }
   ],
   "categories": [
@@ -454,6 +465,11 @@
       "count": 3
     },
     {
+      "name": "junit-tools",
+      "title": "JUnit 6: Java & Kotlin tests, migration & reports",
+      "count": 3
+    },
+    {
       "name": "git-getting-started",
       "title": "Git: getting started",
       "count": 11
@@ -504,6 +520,14 @@
           "skills": [
             "android-logcat-analyzer",
             "android-uiautomator-locators"
+          ]
+        },
+        {
+          "name": "junit",
+          "skills": [
+            "junit-migration",
+            "junit-run-reports",
+            "junit-test-authoring"
           ]
         },
         {
@@ -2963,6 +2987,81 @@
       ]
     },
     {
+      "name": "junit-migration",
+      "title": "JUnit migration and audit (JUnit 4/5 to 6, Java and Kotlin)",
+      "category": "junit-tools",
+      "area": "testing",
+      "group": "junit",
+      "description": "Migrate Java and Kotlin tests from JUnit 3/4 or JUnit 5 to JUnit 6 (Jupiter) and audit a suite: imports, @Test(expected), rules, runners, Parameterized, categories, message order, removed JUnit 6 APIs, tests that never run (private, static, non-void, static @Nested), weak tests and build setup. A script reports each issue with file, line and fix. Use when the user wants to upgrade or review JUnit tests.",
+      "plugins": [
+        "junit-tools"
+      ],
+      "path": "skills/testing/junit/junit-migration",
+      "license": "Complete terms in the repository README",
+      "compatibility": "The audit script needs Python 3.8+ (standard library only) and only reads files. Verifying a migration needs JDK 17+ and the project's Gradle or Maven build. Part of the junit-tools bundle with junit-test-authoring and junit-run-reports.",
+      "examples": [
+        "Migrate our JUnit 4 tests to JUnit 5/6: rules, @Test(expected) and Parameterized runners.",
+        "We upgraded to JUnit 6 and the build fails with MethodOrderer.Alphanumeric not found. What else breaks?",
+        "Audit our test suite for tests that never run or have no assertions.",
+        "Half our tests stopped running after adding junit-jupiter. Why?"
+      ],
+      "files": [
+        "references/junit4-to-jupiter.md",
+        "references/junit5-to-6.md"
+      ]
+    },
+    {
+      "name": "junit-run-reports",
+      "title": "JUnit: run tests and explain the results",
+      "category": "junit-tools",
+      "area": "testing",
+      "group": "junit",
+      "description": "Run JUnit tests (Java or Kotlin) with Gradle, Maven or the ConsoleLauncher, select by class, method, package or tag, rerun failures, and explain results from JUnit XML or Open Test Reporting files: each failure with cause and fix, flaky tests, skipped tests without a reason, slowest tests, a Markdown CI summary. Use when JUnit tests must be run, fail, flake or need a report.",
+      "plugins": [
+        "junit-tools"
+      ],
+      "path": "skills/testing/junit/junit-run-reports",
+      "license": "Complete terms in the repository README",
+      "compatibility": "Needs Python 3.8+ (standard library only). Running tests needs JDK 17+ and the project's Gradle wrapper or Maven (or the JUnit ConsoleLauncher jar); reading reports needs nothing else. Part of the junit-tools bundle with junit-test-authoring and junit-migration.",
+      "examples": [
+        "Run only OrderServiceTest#placesOrder with Maven and tell me why it fails.",
+        "Summarise the JUnit XML results in target/surefire-reports and list the flaky tests.",
+        "Run the tests tagged fast with Gradle and show the slowest ones.",
+        "Turn our JUnit results into a Markdown summary for the GitHub Actions job."
+      ],
+      "files": [
+        "references/failures.md",
+        "references/running.md"
+      ]
+    },
+    {
+      "name": "junit-test-authoring",
+      "title": "JUnit 6 test authoring (Java and Kotlin)",
+      "category": "junit-tools",
+      "area": "testing",
+      "group": "junit",
+      "description": "Write JUnit 6 (Jupiter) tests in Java or Kotlin: Gradle/Maven setup, assertions, lifecycle, @Nested, @DisplayName, tags, @ParameterizedTest and @ParameterizedClass, dynamic tests, @TempDir, @Timeout, conditions, extensions and parallel runs. A script checks the build setup and generates a test class for a source file. Use when the user wants JUnit tests written or JUnit set up.",
+      "plugins": [
+        "junit-tools"
+      ],
+      "path": "skills/testing/junit/junit-test-authoring",
+      "license": "Complete terms in the repository README",
+      "compatibility": "Scripts need Python 3.8+ (standard library only). The tests need JDK 17+ and Gradle or Maven with JUnit 6.1.3 (Kotlin 2.2+ for Kotlin tests). Works with junit-migration and junit-run-reports (the junit-tools bundle); kotlin-unit-test adds coverage and mutation checks for Kotlin.",
+      "examples": [
+        "Set up JUnit 6 in our Gradle project and write tests for the OrderService class.",
+        "Write JUnit tests for PriceCalculator.java, including a parameterized test for the price rules.",
+        "Generate a JUnit test class for Basket.kt with nested groups per function.",
+        "How do I test that this method throws IllegalArgumentException with the right message in JUnit 5?",
+        "Make this JUnit test run for both postgres and mysql without copying the class."
+      ],
+      "files": [
+        "references/extensions-and-parallel.md",
+        "references/jupiter-api.md",
+        "references/parameterized.md",
+        "references/sources.md"
+      ]
+    },
+    {
       "name": "kotlin-unit-test",
       "title": "Kotlin unit tests: class/method-wise testing, verification and HTML report",
       "category": "testing-tools",
@@ -2970,7 +3069,8 @@
       "group": "libs",
       "description": "Write, run and verify unit tests for Kotlin code (apps, libraries, Android, Appium/Selenium page objects) with Gradle, Maven or kotlinc, then produce an HTML report of results, coverage and weak tests (no assertions, disabled, untested methods, mutation check). Use when the user asks to unit test Kotlin code, add or run Kotlin tests, get a test or coverage report, or check test quality.",
       "plugins": [
-        "testing-tools"
+        "testing-tools",
+        "junit-tools"
       ],
       "path": "skills/testing/libs/kotlin-unit-test",
       "license": "Complete terms in the repository README",

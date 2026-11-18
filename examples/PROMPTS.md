@@ -2,9 +2,9 @@
 
 <!-- Generated from examples/prompts.json by tools/build_catalog.py - do not edit by hand. -->
 
-349 things you can say to your AI coding agent, for all 106 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
+362 things you can say to your AI coding agent, for all 109 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
 
-**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [ADB: connect, control & debug Android devices](#adb-connect-control--debug-android-devices) · [Gradle: Android setup, diagnosis & tests](#gradle-android-setup-diagnosis--tests) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Shell: PowerShell on Windows](#shell-powershell-on-windows) · [Learning: Python tutor & interview notes](#learning-python-tutor--interview-notes) · [YouTube: lecture overviews (study & tech only)](#youtube-lecture-overviews-study--tech-only) · [AI efficiency: save tokens & cost](#ai-efficiency-save-tokens--cost) · [AI agents: MCP, tools, evals & RAG](#ai-agents-mcp-tools-evals--rag) · [Playwright: E2E tests, debugging, CI & browser agent](#playwright-e2e-tests-debugging-ci--browser-agent) · [Robot Framework: suites, libraries, results & CI](#robot-framework-suites-libraries-results--ci) · [UI Automator: Android UI tests in Kotlin & Java](#ui-automator-android-ui-tests-in-kotlin--java) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
+**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [ADB: connect, control & debug Android devices](#adb-connect-control--debug-android-devices) · [Gradle: Android setup, diagnosis & tests](#gradle-android-setup-diagnosis--tests) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Shell: PowerShell on Windows](#shell-powershell-on-windows) · [Learning: Python tutor & interview notes](#learning-python-tutor--interview-notes) · [YouTube: lecture overviews (study & tech only)](#youtube-lecture-overviews-study--tech-only) · [AI efficiency: save tokens & cost](#ai-efficiency-save-tokens--cost) · [AI agents: MCP, tools, evals & RAG](#ai-agents-mcp-tools-evals--rag) · [Playwright: E2E tests, debugging, CI & browser agent](#playwright-e2e-tests-debugging-ci--browser-agent) · [Robot Framework: suites, libraries, results & CI](#robot-framework-suites-libraries-results--ci) · [UI Automator: Android UI tests in Kotlin & Java](#ui-automator-android-ui-tests-in-kotlin--java) · [JUnit 6: Java & Kotlin tests, migration & reports](#junit-6-java--kotlin-tests-migration--reports) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
 
 ## Hub tools
 
@@ -468,6 +468,38 @@ Install the whole category: `--plugin uiautomator-tools`
 - “Here's the am instrument output from CI. Which tests failed and why?”
 - “Our UI Automator tests fail with UiAutomationService already registered. What's wrong?”
 - “Shard the instrumented tests across 4 devices and summarise the JUnit results.”
+
+## JUnit 6: Java & Kotlin tests, migration & reports
+
+Install the whole category: `--plugin junit-tools`
+
+### JUnit 6 test authoring (Java and Kotlin)
+
+[`junit-test-authoring`](../skills/testing/junit/junit-test-authoring/SKILL.md) · install: `--skill junit-test-authoring`
+
+- “Set up JUnit 6 in our Gradle project and write tests for the OrderService class.”
+- “Write JUnit tests for PriceCalculator.java, including a parameterized test for the price rules.”
+- “Generate a JUnit test class for Basket.kt with nested groups per function.”
+- “How do I test that this method throws IllegalArgumentException with the right message in JUnit 5?”
+- “Make this JUnit test run for both postgres and mysql without copying the class.”
+
+### JUnit migration and audit (JUnit 4/5 to 6, Java and Kotlin)
+
+[`junit-migration`](../skills/testing/junit/junit-migration/SKILL.md) · install: `--skill junit-migration`
+
+- “Migrate our JUnit 4 tests to JUnit 5/6: rules, @Test(expected) and Parameterized runners.”
+- “We upgraded to JUnit 6 and the build fails with MethodOrderer.Alphanumeric not found. What else breaks?”
+- “Audit our test suite for tests that never run or have no assertions.”
+- “Half our tests stopped running after adding junit-jupiter. Why?”
+
+### JUnit: run tests and explain the results
+
+[`junit-run-reports`](../skills/testing/junit/junit-run-reports/SKILL.md) · install: `--skill junit-run-reports`
+
+- “Run only OrderServiceTest#placesOrder with Maven and tell me why it fails.”
+- “Summarise the JUnit XML results in target/surefire-reports and list the flaky tests.”
+- “Run the tests tagged fast with Gradle and show the slowest ones.”
+- “Turn our JUnit results into a Markdown summary for the GitHub Actions job.”
 
 ## Git: getting started
 

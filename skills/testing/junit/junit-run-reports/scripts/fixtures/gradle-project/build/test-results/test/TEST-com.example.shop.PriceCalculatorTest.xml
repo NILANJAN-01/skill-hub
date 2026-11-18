@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.shop.PriceCalculatorTest" tests="6" skipped="1" failures="2" errors="1" timestamp="2026-11-18T09:10:11" hostname="build-agent" time="2.912">
+  <properties/>
+  <testcase name="addsVat()" classname="com.example.shop.PriceCalculatorTest" time="0.012"/>
+  <testcase name="[1] quantity=1, expected=10" classname="com.example.shop.PriceCalculatorTest" time="0.004"/>
+  <testcase name="[2] quantity=3, expected=30" classname="com.example.shop.PriceCalculatorTest" time="0.003">
+    <failure message="org.opentest4j.AssertionFailedError: price for 3 ==&gt; expected: &lt;30&gt; but was: &lt;27&gt;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: price for 3 ==&gt; expected: &lt;30&gt; but was: &lt;27&gt;
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:158)
+	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:531)
+	at com.example.shop.PriceCalculatorTest.pricePerQuantity(PriceCalculatorTest.java:48)
+</failure>
+  </testcase>
+  <testcase name="exportsPriceList(Path)" classname="com.example.shop.PriceCalculatorTest" time="2.410">
+    <failure message="java.util.concurrent.TimeoutException: exportsPriceList(Path) timed out after 2 seconds" type="java.util.concurrent.TimeoutException">java.util.concurrent.TimeoutException: exportsPriceList(Path) timed out after 2 seconds
+	at org.junit.jupiter.engine.extension.TimeoutExceptionFactory.create(TimeoutExceptionFactory.java:29)
+	at com.example.shop.PriceCalculatorTest.exportsPriceList(PriceCalculatorTest.java:63)
+</failure>
+  </testcase>
+  <testcase name="reducesPrice()" classname="com.example.shop.PriceCalculatorTest$WithDiscount" time="0.002">
+    <failure message="java.lang.NullPointerException: Cannot invoke &quot;com.example.shop.PriceCalculator.discount(int)&quot; because &quot;this.calculator&quot; is null" type="java.lang.NullPointerException">java.lang.NullPointerException: Cannot invoke "com.example.shop.PriceCalculator.discount(int)" because "this.calculator" is null
+	at com.example.shop.PriceCalculatorTest$WithDiscount.applyDiscount(PriceCalculatorTest.java:72)
+</failure>
+  </testcase>
+  <testcase name="reducesPrice()" classname="com.example.shop.PriceCalculatorTest$WithDiscount" time="0.002"/>
+  <testcase name="onWindowsOnly()" classname="com.example.shop.PriceCalculatorTest" time="0.0">
+    <skipped/>
+  </testcase>
+  <testcase name="loadsFixture(Path)" classname="com.example.shop.PriceCalculatorTest" time="0.001">
+    <error message="org.junit.jupiter.api.extension.ParameterResolutionException: No ParameterResolver registered for parameter [java.nio.file.Path arg0] in method [void com.example.shop.PriceCalculatorTest.loadsFixture(java.nio.file.Path)]." type="org.junit.jupiter.api.extension.ParameterResolutionException">org.junit.jupiter.api.extension.ParameterResolutionException: No ParameterResolver registered for parameter [java.nio.file.Path arg0]
+</error>
+  </testcase>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -23,3 +23,12 @@ The UI Automator skills under `skills/testing/uiautomator/` (`uiautomator-test-a
 Documentation text on developer.android.com is licensed under the [Creative Commons Attribution 4.0 License (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/); code samples and the AndroidX source are licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
 
 Changes made: the material was paraphrased and reorganised into task-focused skills, cross-checked against the 2.4.1 API reference and library source (with differences noted in `sources.md`), and extended with original scripts, examples and troubleshooting.
+
+## JUnit User Guide (JUnit skills)
+
+The JUnit skills under `skills/testing/junit/` (`junit-test-authoring`, `junit-migration`, `junit-run-reports`), including their `references/` files, are written from the JUnit 6 User Guide and release notes (https://docs.junit.org/, listed in `junit-test-authoring/references/sources.md`) by the JUnit team.
+
+The User Guide content is made available under the [Eclipse Public License v2.0 (EPL-2.0)](https://www.eclipse.org/legal/epl-2.0/), the same licence as JUnit. The Open Test Reporting schemas referenced by `junit-run-reports` are from the ota4j-team/open-test-reporting project.
+
+Changes made: the material was paraphrased and reorganised into task-focused skills, Java examples were checked by compiling them against the JUnit 6.1.3 artifacts, and original scripts, examples and troubleshooting were added.
+
