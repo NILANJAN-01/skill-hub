@@ -1,0 +1,74 @@
+{
+  "name": "Orders API",
+  "description": "Runs against the local test server in test_api_check.py (and shows the suite format).",
+  "base_url": "${BASE_URL}",
+  "allowed_hosts": ["127.0.0.1", "localhost"],
+  "defaults": {
+    "headers": {"Accept": "application/json"},
+    "timeout": 5,
+    "auth": {"bearer": "${API_TOKEN}"}
+  },
+  "variables": {"customer_email": "qa+${$run_id}@example.test"},
+  "tests": [
+    {
+      "name": "health check",
+      "tags": ["smoke"],
+      "request": {"method": "GET", "path": "/health", "auth": null},
+      "expect": {"status": 200, "content_type": "application/json",
+                 "schema": {"$ref": "openapi.json#/paths/~1health/get/responses/200/content/application~1json/schema"},
+                 "max_ms": 2000}
+    },
+    {
+      "name": "create order",
+      "tags": ["smoke", "write"],
+      "request": {"method": "POST", "path": "/orders", "headers": {"Idempotency-Key": "${$uuid}"},
+                  "json": {"customer": "${customer_email}", "items": [{"sku": "SKU-1", "qty": 2}]}},
+      "expect": {"status": 201,
+                 "headers": {"Location": {"regex": "^/orders/"}},
+                 "json": {"$.id": {"type": "string", "min_len": 1}, "$.status": "NEW", "$.items.length": 1,
+                          "$.customer": "${customer_email}"},
+                 "schema": {"$ref": "openapi.json#/components/schemas/Order"}},
+      "capture": {"order_id": "$.id", "order_url": {"header": "Location"}}
+    },
+    {
+      "name": "read the order",
+      "depends_on": ["create order"],
+      "request": {"method": "GET", "path": "${order_url}"},
+      "expect": {"status": 200, "json": {"$.id": "${order_id}", "$.items[0].qty": 2, "$.total": {"gte": 0}},
+                 "schema": {"$ref": "openapi.json#/components/schemas/Order"}}
+    },
+    {
+      "name": "order becomes confirmed",
+      "depends_on": ["create order"],
+      "request": {"method": "GET", "path": "/orders/${order_id}"},
+      "poll": {"timeout_ms": 5000, "interval_ms": 100},
+      "expect": {"status": 200, "json": {"$.status": "CONFIRMED"}}
+    },
+    {
+      "name": "rejects an order without items",
+      "tags": ["negative"],
+      "request": {"method": "POST", "path": "/orders", "json": {"customer": "${customer_email}", "items": []}},
+      "expect": {"status": 422, "content_type": "application/problem+json",
+                 "json": {"$.title": {"exists": true}, "$.status": 422}}
+    },
+    {
+      "name": "requires a token",
+      "tags": ["negative", "security"],
+      "depends_on": ["create order"],
+      "request": {"method": "GET", "path": "/orders/${order_id}", "headers": {"Authorization": null}},
+      "expect": {"status": 401, "no_headers": ["X-Debug"]}
+    },
+    {
+      "name": "unknown order is 404",
+      "tags": ["negative"],
+      "request": {"method": "GET", "path": "/orders/does-not-exist-${$run_id}"},
+      "expect": {"status": 404}
+    },
+    {
+      "name": "delete the order (cleanup)",
+      "always_run": true,
+      "request": {"method": "DELETE", "path": "/orders/${order_id}"},
+      "expect": {"status": [204, 404]}
+    }
+  ]
+}

@@ -2,9 +2,9 @@
 
 <!-- Generated from examples/prompts.json by tools/build_catalog.py - do not edit by hand. -->
 
-362 things you can say to your AI coding agent, for all 109 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
+367 things you can say to your AI coding agent, for all 110 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
 
-**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [ADB: connect, control & debug Android devices](#adb-connect-control--debug-android-devices) · [Gradle: Android setup, diagnosis & tests](#gradle-android-setup-diagnosis--tests) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Shell: PowerShell on Windows](#shell-powershell-on-windows) · [Learning: Python tutor & interview notes](#learning-python-tutor--interview-notes) · [YouTube: lecture overviews (study & tech only)](#youtube-lecture-overviews-study--tech-only) · [AI efficiency: save tokens & cost](#ai-efficiency-save-tokens--cost) · [AI agents: MCP, tools, evals & RAG](#ai-agents-mcp-tools-evals--rag) · [Playwright: E2E tests, debugging, CI & browser agent](#playwright-e2e-tests-debugging-ci--browser-agent) · [Robot Framework: suites, libraries, results & CI](#robot-framework-suites-libraries-results--ci) · [UI Automator: Android UI tests in Kotlin & Java](#ui-automator-android-ui-tests-in-kotlin--java) · [JUnit 6: Java & Kotlin tests, migration & reports](#junit-6-java--kotlin-tests-migration--reports) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
+**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [ADB: connect, control & debug Android devices](#adb-connect-control--debug-android-devices) · [Gradle: Android setup, diagnosis & tests](#gradle-android-setup-diagnosis--tests) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Shell: PowerShell on Windows](#shell-powershell-on-windows) · [Learning: Python tutor & interview notes](#learning-python-tutor--interview-notes) · [YouTube: lecture overviews (study & tech only)](#youtube-lecture-overviews-study--tech-only) · [AI efficiency: save tokens & cost](#ai-efficiency-save-tokens--cost) · [AI agents: MCP, tools, evals & RAG](#ai-agents-mcp-tools-evals--rag) · [Playwright: E2E tests, debugging, CI & browser agent](#playwright-e2e-tests-debugging-ci--browser-agent) · [Robot Framework: suites, libraries, results & CI](#robot-framework-suites-libraries-results--ci) · [UI Automator: Android UI tests in Kotlin & Java](#ui-automator-android-ui-tests-in-kotlin--java) · [JUnit 6: Java & Kotlin tests, migration & reports](#junit-6-java--kotlin-tests-migration--reports) · [API testing: REST APIs of web applications](#api-testing-rest-apis-of-web-applications) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
 
 ## Hub tools
 
@@ -500,6 +500,20 @@ Install the whole category: `--plugin junit-tools`
 - “Summarise the JUnit XML results in target/surefire-reports and list the flaky tests.”
 - “Run the tests tagged fast with Gradle and show the slowest ones.”
 - “Turn our JUnit results into a Markdown summary for the GitHub Actions job.”
+
+## API testing: REST APIs of web applications
+
+Install the whole category: `--plugin api-testing-tools`
+
+### REST API testing for web applications
+
+[`rest-api-testing`](../skills/testing/api/rest-api-testing/SKILL.md) · install: `--skill rest-api-testing`
+
+- “Write API tests for our orders REST endpoints: create, read, update, delete, plus validation and auth errors.”
+- “Generate an API test suite from our openapi.json and run it against staging with a JUnit report for CI.”
+- “Our REST API tests are flaky in CI. Review them and make them reliable.”
+- “Check that user A cannot read user B's invoices through the API.”
+- “We are a bank: what should we test in our payments API, and can you automate it with REST Assured?”
 
 ## Git: getting started
 

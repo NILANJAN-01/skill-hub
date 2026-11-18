@@ -371,6 +371,14 @@
         "junit-run-reports",
         "kotlin-unit-test"
       ]
+    },
+    {
+      "name": "api-testing-tools",
+      "description": "REST API testing for web applications in any field (banking, healthcare, e-commerce, insurance, telecom, government, SaaS): rest-api-testing plans cases from an OpenAPI spec, writes functional, negative, auth and contract tests, and runs JSON suites with a stdlib Python runner that retries only safe requests, polls instead of sleeping, masks secrets, restricts hosts and writes JUnit and Markdown reports; with REST Assured, pytest, Postman/Newman, Karate, Playwright and SuperTest examples",
+      "category": "api-testing-tools",
+      "skills": [
+        "rest-api-testing"
+      ]
     }
   ],
   "categories": [
@@ -470,6 +478,11 @@
       "count": 3
     },
     {
+      "name": "api-testing-tools",
+      "title": "API testing: REST APIs of web applications",
+      "count": 1
+    },
+    {
       "name": "git-getting-started",
       "title": "Git: getting started",
       "count": 11
@@ -520,6 +533,12 @@
           "skills": [
             "android-logcat-analyzer",
             "android-uiautomator-locators"
+          ]
+        },
+        {
+          "name": "api",
+          "skills": [
+            "rest-api-testing"
           ]
         },
         {
@@ -3407,6 +3426,33 @@
         "Study the src and docs folders line by line and give me a LEARNINGS.md."
       ],
       "files": []
+    },
+    {
+      "name": "rest-api-testing",
+      "title": "REST API testing for web applications",
+      "category": "api-testing-tools",
+      "area": "testing",
+      "group": "api",
+      "description": "Test the REST APIs of web applications reliably, in any field (banking, healthcare, e-commerce, telecom, SaaS): plan cases from an OpenAPI spec, write functional, negative, auth and contract tests, and run them with a script that retries only safe requests, polls instead of sleeping, masks secrets and writes JUnit reports. Use when the user wants API tests written, run or reviewed, or says API tests are flaky.",
+      "plugins": [
+        "api-testing-tools"
+      ],
+      "path": "skills/testing/api/rest-api-testing",
+      "license": "Complete terms in the repository README",
+      "compatibility": "The script needs Python 3.8+ (standard library only; PyYAML only to read a YAML OpenAPI file). It sends real HTTP requests, so it needs network access to the API under test. Framework examples need their own toolchains (JDK for REST Assured and Karate, Node.js for Newman, SuperTest and Playwright).",
+      "examples": [
+        "Write API tests for our orders REST endpoints: create, read, update, delete, plus validation and auth errors.",
+        "Generate an API test suite from our openapi.json and run it against staging with a JUnit report for CI.",
+        "Our REST API tests are flaky in CI. Review them and make them reliable.",
+        "Check that user A cannot read user B's invoices through the API.",
+        "We are a bank: what should we test in our payments API, and can you automate it with REST Assured?"
+      ],
+      "files": [
+        "references/frameworks.md",
+        "references/industry-checklists.md",
+        "references/suite-format.md",
+        "references/test-design.md"
+      ]
     },
     {
       "name": "robotframework-ci",

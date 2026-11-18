@@ -1,0 +1,78 @@
+{
+  "openapi": "3.0.3",
+  "info": {"title": "Orders API", "version": "1.0.0"},
+  "servers": [{"url": "http://127.0.0.1:8080"}],
+  "security": [{"bearerAuth": []}],
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "getHealth",
+        "security": [],
+        "responses": {
+          "200": {"description": "OK", "content": {"application/json": {"schema": {
+            "type": "object", "required": ["status"], "properties": {"status": {"type": "string", "enum": ["ok"]}}}}}}
+        }
+      }
+    },
+    "/orders": {
+      "post": {
+        "operationId": "createOrder",
+        "tags": ["orders"],
+        "requestBody": {"required": true, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/NewOrder"}}}},
+        "responses": {
+          "201": {"description": "Created", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Order"}}}},
+          "401": {"description": "No token"},
+          "422": {"description": "Invalid", "content": {"application/problem+json": {"schema": {"$ref": "#/components/schemas/Problem"}}}}
+        }
+      }
+    },
+    "/orders/{orderId}": {
+      "parameters": [{"name": "orderId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "operationId": "getOrder",
+        "tags": ["orders"],
+        "responses": {
+          "200": {"description": "OK", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Order"}}}},
+          "401": {"description": "No token"},
+          "404": {"description": "Not found"}
+        }
+      },
+      "delete": {
+        "operationId": "deleteOrder",
+        "tags": ["orders"],
+        "responses": {"204": {"description": "Deleted"}, "401": {"description": "No token"}, "404": {"description": "Not found"}}
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {"bearerAuth": {"type": "http", "scheme": "bearer"}},
+    "schemas": {
+      "NewOrder": {
+        "type": "object", "required": ["customer", "items"],
+        "properties": {
+          "customer": {"type": "string", "format": "email"},
+          "items": {"type": "array", "minItems": 1, "items": {"$ref": "#/components/schemas/Item"}}
+        }
+      },
+      "Item": {
+        "type": "object", "required": ["sku", "qty"], "additionalProperties": false,
+        "properties": {"sku": {"type": "string", "example": "SKU-1"}, "qty": {"type": "integer", "minimum": 1}}
+      },
+      "Order": {
+        "type": "object", "required": ["id", "status", "items", "total"],
+        "properties": {
+          "id": {"type": "string", "readOnly": true},
+          "status": {"type": "string", "enum": ["NEW", "CONFIRMED", "CANCELLED"]},
+          "customer": {"type": "string", "format": "email"},
+          "items": {"type": "array", "items": {"$ref": "#/components/schemas/Item"}},
+          "total": {"type": "number", "minimum": 0},
+          "createdAt": {"type": "string", "format": "date-time"}
+        }
+      },
+      "Problem": {
+        "type": "object", "required": ["title", "status"],
+        "properties": {"type": {"type": "string"}, "title": {"type": "string"}, "status": {"type": "integer"}, "detail": {"type": "string"}}
+      }
+    }
+  }
+}

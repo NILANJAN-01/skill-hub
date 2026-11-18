@@ -619,6 +619,41 @@
         "test-results",
         "open-test-report"
       ]
+    },
+    "rest-api-testing": {
+      "keywords": [
+        "api",
+        "rest",
+        "endpoint",
+        "endpoints",
+        "openapi",
+        "swagger",
+        "postman",
+        "newman",
+        "restassured",
+        "karate",
+        "supertest",
+        "microservice",
+        "contract",
+        "jsonschema"
+      ],
+      "phrases": [
+        "api test",
+        "api tests",
+        "api testing",
+        "test the api",
+        "test our api",
+        "rest api",
+        "rest assured",
+        "openapi spec",
+        "swagger file",
+        "api automation",
+        "endpoint tests",
+        "api tests are flaky",
+        "contract test",
+        "status code",
+        "web application api"
+      ]
     }
   }
 }

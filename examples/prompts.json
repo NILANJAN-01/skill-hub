@@ -578,5 +578,12 @@
     "Summarise the JUnit XML results in target/surefire-reports and list the flaky tests.",
     "Run the tests tagged fast with Gradle and show the slowest ones.",
     "Turn our JUnit results into a Markdown summary for the GitHub Actions job."
+  ],
+  "rest-api-testing": [
+    "Write API tests for our orders REST endpoints: create, read, update, delete, plus validation and auth errors.",
+    "Generate an API test suite from our openapi.json and run it against staging with a JUnit report for CI.",
+    "Our REST API tests are flaky in CI. Review them and make them reliable.",
+    "Check that user A cannot read user B's invoices through the API.",
+    "We are a bank: what should we test in our payments API, and can you automate it with REST Assured?"
   ]
 }

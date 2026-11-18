@@ -431,6 +431,16 @@
         "./skills/testing/junit/junit-run-reports",
         "./skills/testing/libs/kotlin-unit-test"
       ]
+    },
+    {
+      "name": "api-testing-tools",
+      "description": "REST API testing for web applications in any field (banking, healthcare, e-commerce, insurance, telecom, government, SaaS): rest-api-testing plans cases from an OpenAPI spec, writes functional, negative, auth and contract tests, and runs JSON suites with a stdlib Python runner that retries only safe requests, polls instead of sleeping, masks secrets, restricts hosts and writes JUnit and Markdown reports; with REST Assured, pytest, Postman/Newman, Karate, Playwright and SuperTest examples",
+      "source": "./",
+      "strict": false,
+      "category": "api-testing-tools",
+      "skills": [
+        "./skills/testing/api/rest-api-testing"
+      ]
     }
   ]
 }
