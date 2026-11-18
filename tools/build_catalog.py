@@ -161,6 +161,7 @@ CATEGORY_TITLES = {
     "ai-agent-tools": "AI agents: MCP, tools, evals & RAG",
     "playwright-tools": "Playwright: E2E tests, debugging, CI & browser agent",
     "robotframework-tools": "Robot Framework: suites, libraries, results & CI",
+    "uiautomator-tools": "UI Automator: Android UI tests in Kotlin & Java",
     "git-getting-started": "Git: getting started",
     "git-branching": "Git: branching & merging",
     "git-collaboration": "Git: remotes & collaboration",

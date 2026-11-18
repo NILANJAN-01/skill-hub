@@ -1,0 +1,7 @@
+[versions]
+uiautomator = "2.4.1"
+androidxJunit = "1.3.0"
+
+[libraries]
+androidx-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "uiautomator" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxJunit" }

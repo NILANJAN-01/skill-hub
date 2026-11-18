@@ -15,3 +15,11 @@ These derived skills are distributed under the same license, CC BY-NC-SA 3.0:
 - **ShareAlike**: if you remix or build on the material, you must distribute your contributions under the same license.
 
 Changes made: the text was split into topic-focused skills, reorganized into fixed sections (procedures, safety rules, troubleshooting, etc.), and lightly cleaned. Page numbers of the original are cited in each skill's `metadata.pages` and in its **Source** section.
+
+## Android Developers documentation (UI Automator)
+
+The UI Automator skills under `skills/testing/uiautomator/` (`uiautomator-test-authoring`, `uiautomator-migration`, `uiautomator-run-debug`), including their `references/` files, are written from the Android Developers documentation and the AndroidX UI Automator API reference and source (listed in `uiautomator-test-authoring/references/sources.md`), by Google / the Android Open Source Project.
+
+Documentation text on developer.android.com is licensed under the [Creative Commons Attribution 4.0 License (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/); code samples and the AndroidX source are licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
+
+Changes made: the material was paraphrased and reorganised into task-focused skills, cross-checked against the 2.4.1 API reference and library source (with differences noted in `sources.md`), and extended with original scripts, examples and troubleshooting.

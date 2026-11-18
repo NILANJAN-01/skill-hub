@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuite name="com.example.app.test.LoginTest" tests="3" failures="1" errors="0" skipped="1" time="18.2" timestamp="2026-11-18T08:00:00" hostname="localhost">
+  <properties>
+    <property name="device" value="Pixel_8(AVD) - 16" />
+    <property name="flavor" value="" />
+    <property name="project" value=":app" />
+  </properties>
+  <testcase name="signInShowsHome" classname="com.example.app.test.LoginTest" time="6.1" />
+  <testcase name="permissionDialogIsAccepted" classname="com.example.app.test.LoginTest" time="9.3">
+    <failure>java.lang.IllegalStateException: UiAutomationService android.accessibilityservice.IAccessibilityServiceClient$Stub$Proxy@3a1 already registered!
+	at android.app.UiAutomation.connectWithTimeout(UiAutomation.java:350)
+	at androidx.test.uiautomator.UiDevice.getUiAutomation(UiDevice.java:1500)
+	at com.example.app.test.LoginTest.permissionDialogIsAccepted(LoginTest.kt:60)
+</failure>
+  </testcase>
+  <testcase name="tabletLayout" classname="com.example.app.test.LoginTest" time="0.0">
+    <skipped />
+  </testcase>
+</testsuite>

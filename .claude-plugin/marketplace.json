@@ -405,6 +405,19 @@
         "./skills/testing/robot-framework/robotframework-results",
         "./skills/testing/robot-framework/robotframework-ci"
       ]
+    },
+    {
+      "name": "uiautomator-tools",
+      "description": "Android UI Automator skill set from the official docs (Kotlin and Java, androidx.test.uiautomator 2.4.1): uiautomator-test-authoring sets up the project and writes tests with the 2.4 uiAutomator { } DSL or UiDevice/By/Until/UiObject2, generates tests, page objects, Macrobenchmarks and Baseline Profile generators; uiautomator-migration audits suites and moves UiSelector/UiObject/UiScrollable code to the current APIs; uiautomator-run-debug runs tests with Gradle or am instrument and explains failures; android-uiautomator-locators turns the device screen into locators",
+      "source": "./",
+      "strict": false,
+      "category": "uiautomator-tools",
+      "skills": [
+        "./skills/testing/uiautomator/uiautomator-test-authoring",
+        "./skills/testing/uiautomator/uiautomator-migration",
+        "./skills/testing/uiautomator/uiautomator-run-debug",
+        "./skills/testing/aaos-testing/android-uiautomator-locators"
+      ]
     }
   ]
 }

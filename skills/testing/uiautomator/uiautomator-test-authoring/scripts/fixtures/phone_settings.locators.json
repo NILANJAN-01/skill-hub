@@ -1,0 +1,563 @@
+{
+  "generator": "android-uiautomator-locators 1.1",
+  "source": "phone_settings.xml",
+  "summary": {
+    "nodes": 21,
+    "nodes_kept": 21,
+    "elements": 15,
+    "with_resource_id": 16,
+    "windows": 1,
+    "packages": {
+      "com.android.settings": 21
+    }
+  },
+  "warnings": [],
+  "keywords": {
+    "settings_homepage_container": "com.android.settings:id/settings_homepage_container",
+    "homepage_title": "com.android.settings:id/homepage_title",
+    "search_action_bar": "com.android.settings:id/search_action_bar",
+    "recycler_view": "com.android.settings:id/recycler_view",
+    "icon": "android:id/icon",
+    "title": "android:id/title",
+    "summary": "android:id/summary"
+  },
+  "elements": [
+    {
+      "keyword": "settings_homepage_container",
+      "strategy": "resource_id",
+      "resource_id": "com.android.settings:id/settings_homepage_container",
+      "text": "",
+      "content_desc": "",
+      "class": "android.widget.LinearLayout",
+      "package": "com.android.settings",
+      "window": 1,
+      "clickable": false,
+      "enabled": true,
+      "bounds": [
+        0,
+        0,
+        1080,
+        2400
+      ],
+      "center": [
+        540,
+        1200
+      ],
+      "locators": {
+        "uiselector": "new UiSelector().resourceId(\"com.android.settings:id/settings_homepage_container\")",
+        "uiautomator2": {
+          "resourceId": "com.android.settings:id/settings_homepage_container"
+        },
+        "by": "By.res(\"com.android.settings:id/settings_homepage_container\")",
+        "xpath": "//*[@resource-id='com.android.settings:id/settings_homepage_container']",
+        "appium": {
+          "strategy": "id",
+          "value": "com.android.settings:id/settings_homepage_container"
+        }
+      }
+    },
+    {
+      "keyword": "homepage_title",
+      "strategy": "resource_id",
+      "resource_id": "com.android.settings:id/homepage_title",
+      "text": "Settings",
+      "content_desc": "",
+      "class": "android.widget.TextView",
+      "package": "com.android.settings",
+      "window": 1,
+      "clickable": false,
+      "enabled": true,
+      "bounds": [
+        63,
+        252,
+        1017,
+        385
+      ],
+      "center": [
+        540,
+        318
+      ],
+      "locators": {
+        "uiselector": "new UiSelector().resourceId(\"com.android.settings:id/homepage_title\")",
+        "uiautomator2": {
+          "resourceId": "com.android.settings:id/homepage_title"
+        },
+        "by": "By.res(\"com.android.settings:id/homepage_title\")",
+        "xpath": "//*[@resource-id='com.android.settings:id/homepage_title']",
+        "appium": {
+          "strategy": "id",
+          "value": "com.android.settings:id/homepage_title"
+        }
+      }
+    },
+    {
+      "keyword": "search_action_bar",
+      "strategy": "resource_id",
+      "resource_id": "com.android.settings:id/search_action_bar",
+      "text": "",
+      "content_desc": "Search settings",
+      "class": "android.widget.Button",
+      "package": "com.android.settings",
+      "window": 1,
+      "clickable": true,
+      "enabled": true,
+      "bounds": [
+        42,
+        427,
+        1038,
+        574
+      ],
+      "center": [
+        540,
+        500
+      ],
+      "locators": {
+        "uiselector": "new UiSelector().resourceId(\"com.android.settings:id/search_action_bar\")",
+        "uiautomator2": {
+          "resourceId": "com.android.settings:id/search_action_bar"
+        },
+        "by": "By.res(\"com.android.settings:id/search_action_bar\")",
+        "xpath": "//*[@resource-id='com.android.settings:id/search_action_bar']",
+        "appium": {
+          "strategy": "id",
+          "value": "com.android.settings:id/search_action_bar"
+        }
+      }
+    },
+    {
+      "keyword": "recycler_view",
+      "strategy": "resource_id",
+      "resource_id": "com.android.settings:id/recycler_view",
+      "text": "",
+      "content_desc": "",
+      "class": "androidx.recyclerview.widget.RecyclerView",
+      "package": "com.android.settings",
+      "window": 1,
+      "clickable": false,
+      "enabled": true,
+      "bounds": [
+        0,
+        616,
+        1080,
+        2337
+      ],
+      "center": [
+        540,
+        1476
+      ],
+      "locators": {
+        "uiselector": "new UiSelector().resourceId(\"com.android.settings:id/recycler_view\")",
+        "uiautomator2": {
+          "resourceId": "com.android.settings:id/recycler_view"
+        },
+        "by": "By.res(\"com.android.settings:id/recycler_view\")",
+        "xpath": "//*[@resource-id='com.android.settings:id/recycler_view']",
+        "appium": {
+          "strategy": "id",
+          "value": "com.android.settings:id/recycler_view"
+        }
+      }
+    },
+    {
+      "keyword": "icon",
+      "strategy": "resource_id",
+      "resource_id": "android:id/icon",
+      "text": "",
+      "content_desc": "",
+      "class": "android.widget.ImageView",
+      "package": "com.android.settings",
+      "window": 1,
+      "clickable": false,
+      "enabled": true,
+      "bounds": [
+        63,
+        682,
+        126,
+        745
+      ],
+      "center": [
+        94,
+        713
+      ],
+      "locators": {
+        "uiselector": "new UiSelector().resourceId(\"android:id/icon\")",
+        "uiautomator2": {
+          "resourceId": "android:id/icon"
+        },
+        "by": "By.res(\"android:id/icon\")",
+        "xpath": "//*[@resource-id='android:id/icon']",
+        "appium": {
+          "strategy": "id",
+          "value": "android:id/icon"
+        }
+      },
+      "occurrences": 4,
+      "samples": [],
+      "note": "4 elements share this id; add .instance(n) or use the per-item keywords with text"
+    },
+    {
+      "keyword": "title",
+      "strategy": "resource_id",
+      "resource_id": "android:id/title",
+      "text": "Network & internet",
+      "content_desc": "",
+      "class": "android.widget.TextView",
+      "package": "com.android.settings",
+      "window": 1,
+      "clickable": false,
+      "enabled": true,
+      "bounds": [
+        189,
+        664,
+        688,
+        723
+      ],
+      "center": [
+        438,
+        693
+      ],
+      "locators": {
+        "uiselector": "new UiSelector().resourceId(\"android:id/title\")",
+        "uiautomator2": {
+          "resourceId": "android:id/title"
+        },
+        "by": "By.res(\"android:id/title\")",
+        "xpath": "//*[@resource-id='android:id/title']",
+        "appium": {
+          "strategy": "id",
+          "value": "android:id/title"
+        }
+      },
+      "occurrences": 4,
+      "samples": [
+        "Network & internet",
+        "Connected devices",
+        "Apps",
+        "Display"
+      ],
+      "note": "4 elements share this id; add .instance(n) or use the per-item keywords with text"
+    },
+    {
+      "keyword": "title_network_internet",
+      "strategy": "resource_id+text",
+      "resource_id": "android:id/title",
+      "text": "Network & internet",
+      "content_desc": "",
+      "class": "android.widget.TextView",
+      "package": "com.android.settings",
+      "window": 1,
+      "clickable": false,
+      "enabled": true,
+      "bounds": [
+        189,
+        664,
+        688,
+        723
+      ],
+      "center": [
+        438,
+        693
+      ],
+      "locators": {
+        "uiselector": "new UiSelector().resourceId(\"android:id/title\").text(\"Network & internet\")",
+        "uiautomator2": {
+          "resourceId": "android:id/title",
+          "text": "Network & internet"
+        },
+        "by": "By.res(\"android:id/title\").text(\"Network & internet\")",
+        "xpath": "//*[@resource-id='android:id/title' and @text='Network & internet']",
+        "appium": {
+          "strategy": "xpath",
+          "value": "//*[@resource-id='android:id/title' and @text='Network & internet']"
+        }
+      }
+    },
+    {
+      "keyword": "summary",
+      "strategy": "resource_id",
+      "resource_id": "android:id/summary",
+      "text": "Mobile, Wi‑Fi, hotspot",
+      "content_desc": "",
+      "class": "android.widget.TextView",
+      "package": "com.android.settings",
+      "window": 1,
+      "clickable": false,
+      "enabled": true,
+      "bounds": [
+        189,
+        723,
+        668,
+        778
+      ],
+      "center": [
+        428,
+        750
+      ],
+      "locators": {
+        "uiselector": "new UiSelector().resourceId(\"android:id/summary\")",
+        "uiautomator2": {
+          "resourceId": "android:id/summary"
+        },
+        "by": "By.res(\"android:id/summary\")",
+        "xpath": "//*[@resource-id='android:id/summary']",
+        "appium": {
+          "strategy": "id",
+          "value": "android:id/summary"
+        }
+      },
+      "occurrences": 4,
+      "samples": [
+        "Mobile, Wi‑Fi, hotspot",
+        "Bluetooth, pairing",
+        "Default apps, app info",
+        "Dark theme, font size"
+      ],
+      "note": "4 elements share this id; add .instance(n) or use the per-item keywords with text"
+    },
+    {
+      "keyword": "summary_mobile_wifi_hotspot",
+      "strategy": "resource_id+text",
+      "resource_id": "android:id/summary",
+      "text": "Mobile, Wi‑Fi, hotspot",
+      "content_desc": "",
+      "class": "android.widget.TextView",
+      "package": "com.android.settings",
+      "window": 1,
+      "clickable": false,
+      "enabled": true,
+      "bounds": [
+        189,
+        723,
+        668,
+        778
+      ],
+      "center": [
+        428,
+        750
+      ],
+      "locators": {
+        "uiselector": "new UiSelector().resourceId(\"android:id/summary\").text(\"Mobile, Wi‑Fi, hotspot\")",
+        "uiautomator2": {
+          "resourceId": "android:id/summary",
+          "text": "Mobile, Wi‑Fi, hotspot"
+        },
+        "by": "By.res(\"android:id/summary\").text(\"Mobile, Wi‑Fi, hotspot\")",
+        "xpath": "//*[@resource-id='android:id/summary' and @text='Mobile, Wi‑Fi, hotspot']",
+        "appium": {
+          "strategy": "xpath",
+          "value": "//*[@resource-id='android:id/summary' and @text='Mobile, Wi‑Fi, hotspot']"
+        }
+      }
+    },
+    {
+      "keyword": "title_connected_devices",
+      "strategy": "resource_id+text",
+      "resource_id": "android:id/title",
+      "text": "Connected devices",
+      "content_desc": "",
+      "class": "android.widget.TextView",
+      "package": "com.android.settings",
+      "window": 1,
+      "clickable": false,
+      "enabled": true,
+      "bounds": [
+        189,
+        874,
+        639,
+        933
+      ],
+      "center": [
+        414,
+        903
+      ],
+      "locators": {
+        "uiselector": "new UiSelector().resourceId(\"android:id/title\").text(\"Connected devices\")",
+        "uiautomator2": {
+          "resourceId": "android:id/title",
+          "text": "Connected devices"
+        },
+        "by": "By.res(\"android:id/title\").text(\"Connected devices\")",
+        "xpath": "//*[@resource-id='android:id/title' and @text='Connected devices']",
+        "appium": {
+          "strategy": "xpath",
+          "value": "//*[@resource-id='android:id/title' and @text='Connected devices']"
+        }
+      }
+    },
+    {
+      "keyword": "summary_bluetooth_pairing",
+      "strategy": "resource_id+text",
+      "resource_id": "android:id/summary",
+      "text": "Bluetooth, pairing",
+      "content_desc": "",
+      "class": "android.widget.TextView",
+      "package": "com.android.settings",
+      "window": 1,
+      "clickable": false,
+      "enabled": true,
+      "bounds": [
+        189,
+        933,
+        560,
+        988
+      ],
+      "center": [
+        374,
+        960
+      ],
+      "locators": {
+        "uiselector": "new UiSelector().resourceId(\"android:id/summary\").text(\"Bluetooth, pairing\")",
+        "uiautomator2": {
+          "resourceId": "android:id/summary",
+          "text": "Bluetooth, pairing"
+        },
+        "by": "By.res(\"android:id/summary\").text(\"Bluetooth, pairing\")",
+        "xpath": "//*[@resource-id='android:id/summary' and @text='Bluetooth, pairing']",
+        "appium": {
+          "strategy": "xpath",
+          "value": "//*[@resource-id='android:id/summary' and @text='Bluetooth, pairing']"
+        }
+      }
+    },
+    {
+      "keyword": "title_apps",
+      "strategy": "resource_id+text",
+      "resource_id": "android:id/title",
+      "text": "Apps",
+      "content_desc": "",
+      "class": "android.widget.TextView",
+      "package": "com.android.settings",
+      "window": 1,
+      "clickable": false,
+      "enabled": true,
+      "bounds": [
+        189,
+        1084,
+        307,
+        1143
+      ],
+      "center": [
+        248,
+        1113
+      ],
+      "locators": {
+        "uiselector": "new UiSelector().resourceId(\"android:id/title\").text(\"Apps\")",
+        "uiautomator2": {
+          "resourceId": "android:id/title",
+          "text": "Apps"
+        },
+        "by": "By.res(\"android:id/title\").text(\"Apps\")",
+        "xpath": "//*[@resource-id='android:id/title' and @text='Apps']",
+        "appium": {
+          "strategy": "xpath",
+          "value": "//*[@resource-id='android:id/title' and @text='Apps']"
+        }
+      }
+    },
+    {
+      "keyword": "summary_default_apps_app_info",
+      "strategy": "resource_id+text",
+      "resource_id": "android:id/summary",
+      "text": "Default apps, app info",
+      "content_desc": "",
+      "class": "android.widget.TextView",
+      "package": "com.android.settings",
+      "window": 1,
+      "clickable": false,
+      "enabled": true,
+      "bounds": [
+        189,
+        1143,
+        590,
+        1198
+      ],
+      "center": [
+        389,
+        1170
+      ],
+      "locators": {
+        "uiselector": "new UiSelector().resourceId(\"android:id/summary\").text(\"Default apps, app info\")",
+        "uiautomator2": {
+          "resourceId": "android:id/summary",
+          "text": "Default apps, app info"
+        },
+        "by": "By.res(\"android:id/summary\").text(\"Default apps, app info\")",
+        "xpath": "//*[@resource-id='android:id/summary' and @text='Default apps, app info']",
+        "appium": {
+          "strategy": "xpath",
+          "value": "//*[@resource-id='android:id/summary' and @text='Default apps, app info']"
+        }
+      }
+    },
+    {
+      "keyword": "title_display",
+      "strategy": "resource_id+text",
+      "resource_id": "android:id/title",
+      "text": "Display",
+      "content_desc": "",
+      "class": "android.widget.TextView",
+      "package": "com.android.settings",
+      "window": 1,
+      "clickable": false,
+      "enabled": true,
+      "bounds": [
+        189,
+        1294,
+        355,
+        1353
+      ],
+      "center": [
+        272,
+        1323
+      ],
+      "locators": {
+        "uiselector": "new UiSelector().resourceId(\"android:id/title\").text(\"Display\")",
+        "uiautomator2": {
+          "resourceId": "android:id/title",
+          "text": "Display"
+        },
+        "by": "By.res(\"android:id/title\").text(\"Display\")",
+        "xpath": "//*[@resource-id='android:id/title' and @text='Display']",
+        "appium": {
+          "strategy": "xpath",
+          "value": "//*[@resource-id='android:id/title' and @text='Display']"
+        }
+      }
+    },
+    {
+      "keyword": "summary_dark_theme_font_size",
+      "strategy": "resource_id+text",
+      "resource_id": "android:id/summary",
+      "text": "Dark theme, font size",
+      "content_desc": "",
+      "class": "android.widget.TextView",
+      "package": "com.android.settings",
+      "window": 1,
+      "clickable": false,
+      "enabled": true,
+      "bounds": [
+        189,
+        1353,
+        574,
+        1408
+      ],
+      "center": [
+        381,
+        1380
+      ],
+      "locators": {
+        "uiselector": "new UiSelector().resourceId(\"android:id/summary\").text(\"Dark theme, font size\")",
+        "uiautomator2": {
+          "resourceId": "android:id/summary",
+          "text": "Dark theme, font size"
+        },
+        "by": "By.res(\"android:id/summary\").text(\"Dark theme, font size\")",
+        "xpath": "//*[@resource-id='android:id/summary' and @text='Dark theme, font size']",
+        "appium": {
+          "strategy": "xpath",
+          "value": "//*[@resource-id='android:id/summary' and @text='Dark theme, font size']"
+        }
+      }
+    }
+  ]
+}

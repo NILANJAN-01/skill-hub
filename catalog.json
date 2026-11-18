@@ -349,6 +349,17 @@
         "robotframework-results",
         "robotframework-ci"
       ]
+    },
+    {
+      "name": "uiautomator-tools",
+      "description": "Android UI Automator skill set from the official docs (Kotlin and Java, androidx.test.uiautomator 2.4.1): uiautomator-test-authoring sets up the project and writes tests with the 2.4 uiAutomator { } DSL or UiDevice/By/Until/UiObject2, generates tests, page objects, Macrobenchmarks and Baseline Profile generators; uiautomator-migration audits suites and moves UiSelector/UiObject/UiScrollable code to the current APIs; uiautomator-run-debug runs tests with Gradle or am instrument and explains failures; android-uiautomator-locators turns the device screen into locators",
+      "category": "uiautomator-tools",
+      "skills": [
+        "uiautomator-test-authoring",
+        "uiautomator-migration",
+        "uiautomator-run-debug",
+        "android-uiautomator-locators"
+      ]
     }
   ],
   "categories": [
@@ -438,6 +449,11 @@
       "count": 4
     },
     {
+      "name": "uiautomator-tools",
+      "title": "UI Automator: Android UI tests in Kotlin & Java",
+      "count": 3
+    },
+    {
       "name": "git-getting-started",
       "title": "Git: getting started",
       "count": 11
@@ -521,6 +537,14 @@
           "skills": [
             "image-inspector",
             "video-inspector"
+          ]
+        },
+        {
+          "name": "uiautomator",
+          "skills": [
+            "uiautomator-migration",
+            "uiautomator-run-debug",
+            "uiautomator-test-authoring"
           ]
         }
       ]
@@ -1171,7 +1195,8 @@
       "group": "aaos-testing",
       "description": "Dump the current screen of a connected Android device over adb, or read an existing window_dump.xml, and generate a JSON locator file with UiSelector, By, uiautomator2, Appium and XPath locators. Also handles Android Automotive head units. Use when the user wants resource-ids, element locators or page objects for Android UI tests, or mentions uiautomator dump.",
       "plugins": [
-        "android-automation"
+        "android-automation",
+        "uiautomator-tools"
       ],
       "path": "skills/testing/aaos-testing/android-uiautomator-locators",
       "license": "Complete terms in the repository README",
@@ -3452,6 +3477,80 @@
         "Show me the plan of skills skillforge would create from book.pdf before writing anything."
       ],
       "files": []
+    },
+    {
+      "name": "uiautomator-migration",
+      "title": "UI Automator migration and audit (Kotlin and Java)",
+      "category": "uiautomator-tools",
+      "area": "testing",
+      "group": "uiautomator",
+      "description": "Migrate and audit Android UI Automator tests in Kotlin and Java: UiSelector, UiObject, UiScrollable, UiCollection and the support library to By/UiObject2 (Java) or the 2.4 uiAutomator { } DSL (Kotlin), fix 2.4 alpha names, sleeps and other flaky code. A script reports each issue with file, line and fix. Use when the user wants to upgrade, modernise, review or de-flake UI Automator tests.",
+      "plugins": [
+        "uiautomator-tools"
+      ],
+      "path": "skills/testing/uiautomator/uiautomator-migration",
+      "license": "Complete terms in the repository README",
+      "compatibility": "The audit script needs Python 3.8+ (standard library only) and only reads files. Verifying a migration needs the Android project, Gradle and a device or emulator. Part of the uiautomator-tools bundle with uiautomator-test-authoring and uiautomator-run-debug.",
+      "examples": [
+        "Migrate our UI Automator tests from UiSelector and UiScrollable to the current API.",
+        "Audit the androidTest folder for flaky UI Automator code and deprecated calls.",
+        "We bumped uiautomator to 2.4.1 and onView { } no longer compiles. Fix our Kotlin tests.",
+        "Convert this Java test that uses UiObject and Thread.sleep to By, Until and UiObject2."
+      ],
+      "files": [
+        "references/migration-map.md"
+      ]
+    },
+    {
+      "name": "uiautomator-run-debug",
+      "title": "UI Automator: run tests and debug failures",
+      "category": "uiautomator-tools",
+      "area": "testing",
+      "group": "uiautomator",
+      "description": "Run Android UI Automator tests (Kotlin or Java) with Gradle or adb am instrument, filter by class, method, annotation or shard, and explain failures from raw instrumentation output or JUnit XML: ElementNotFoundException, StaleObjectException, null UiObject2, process crashes, missing instrumentation, UiAutomation already registered. Use when UI Automator tests must be run or fail, flake or hang.",
+      "plugins": [
+        "uiautomator-tools"
+      ],
+      "path": "skills/testing/uiautomator/uiautomator-run-debug",
+      "license": "Complete terms in the repository README",
+      "compatibility": "Needs Python 3.8+ (standard library only). Running tests needs adb (Android SDK Platform-Tools), the app and test APKs and a device or emulator; parsing saved output needs nothing else. Part of the uiautomator-tools bundle; uses adb-connect for connection problems and android-logcat-analyzer for crashes when installed.",
+      "examples": [
+        "Run only LoginTest#signIn from our UI Automator suite on the emulator and tell me why it fails.",
+        "Here's the am instrument output from CI. Which tests failed and why?",
+        "Our UI Automator tests fail with UiAutomationService already registered. What's wrong?",
+        "Shard the instrumented tests across 4 devices and summarise the JUnit results."
+      ],
+      "files": [
+        "references/failures.md",
+        "references/running.md"
+      ]
+    },
+    {
+      "name": "uiautomator-test-authoring",
+      "title": "UI Automator test authoring (Kotlin and Java)",
+      "category": "uiautomator-tools",
+      "area": "testing",
+      "group": "uiautomator",
+      "description": "Write Android UI Automator tests in Kotlin (2.4 uiAutomator { } DSL: onElement, watchFor, waitForStable) or Java (UiDevice, By, Until, UiObject2): project setup, selectors, waits, permission dialogs, system UI, multi-window, screenshots, Compose test tags, Macrobenchmark and Baseline Profiles. A script checks the Gradle setup and generates tests and page objects. Use when the user wants UI Automator tests written or set up.",
+      "plugins": [
+        "uiautomator-tools"
+      ],
+      "path": "skills/testing/uiautomator/uiautomator-test-authoring",
+      "license": "Complete terms in the repository README",
+      "compatibility": "Scripts need Python 3.8+ (standard library only). The generated tests need an Android Gradle project, androidx.test.uiautomator 2.4.1 (Kotlin DSL; Java works from 2.3.0), and a device or emulator to run on. Works with the uiautomator-migration, uiautomator-run-debug and android-uiautomator-locators skills (the uiautomator-tools bundle).",
+      "examples": [
+        "Set up UI Automator in our Android app and write a Kotlin test that signs in and checks the home screen.",
+        "Write a Java UI Automator test that opens Settings, turns on Do Not Disturb and checks it is on.",
+        "Generate a page object for this screen from locators/login.locators.json, in Kotlin with the new uiAutomator DSL.",
+        "Our test needs to accept the location permission dialog and then tap a notification. How do I do that with UI Automator?",
+        "Create a Macrobenchmark and a Baseline Profile generator for app startup using UI Automator."
+      ],
+      "files": [
+        "references/benchmark-and-baseline.md",
+        "references/java-api.md",
+        "references/kotlin-api.md",
+        "references/sources.md"
+      ]
     },
     {
       "name": "url-to-skill",

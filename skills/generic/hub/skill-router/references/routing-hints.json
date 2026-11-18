@@ -496,6 +496,61 @@
         "azure pipelines",
         "rerun failed"
       ]
+    },
+    "uiautomator-test-authoring": {
+      "keywords": [
+        "uiautomator",
+        "onelement",
+        "uidevice",
+        "uiobject2",
+        "byselector",
+        "macrobenchmark",
+        "instrumented"
+      ],
+      "phrases": [
+        "ui automator test",
+        "write uiautomator",
+        "uiautomator kotlin",
+        "uiautomator java",
+        "baseline profile",
+        "permission dialog"
+      ]
+    },
+    "uiautomator-migration": {
+      "keywords": [
+        "uiselector",
+        "uiscrollable",
+        "uiobject",
+        "uicollection",
+        "deprecated",
+        "migrate"
+      ],
+      "phrases": [
+        "migrate uiautomator",
+        "uiautomator 2.4",
+        "flaky uiautomator",
+        "convert uiselector"
+      ]
+    },
+    "uiautomator-run-debug": {
+      "keywords": [
+        "instrument",
+        "connectedandroidtest",
+        "androidjunitrunner",
+        "elementnotfoundexception",
+        "staleobjectexception",
+        "shard"
+      ],
+      "phrases": [
+        "am instrument",
+        "run uiautomator",
+        "uiautomator fails",
+        "uiautomation already registered",
+        "instrumented tests fail"
+      ],
+      "needs": [
+        "device"
+      ]
     }
   }
 }

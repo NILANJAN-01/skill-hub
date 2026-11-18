@@ -1,0 +1,91 @@
+INSTRUMENTATION_STATUS: class=com.example.app.test.LoginTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=4
+INSTRUMENTATION_STATUS: stream=
+com.example.app.test.LoginTest:
+INSTRUMENTATION_STATUS: test=signInShowsHome
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.example.app.test.LoginTest
+INSTRUMENTATION_STATUS: current=1
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=4
+INSTRUMENTATION_STATUS: stream=.
+INSTRUMENTATION_STATUS: test=signInShowsHome
+INSTRUMENTATION_STATUS_CODE: 0
+INSTRUMENTATION_STATUS: class=com.example.app.test.LoginTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=4
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=wrongPasswordShowsError
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.example.app.test.LoginTest
+INSTRUMENTATION_STATUS: current=2
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=4
+INSTRUMENTATION_STATUS: stack=androidx.test.uiautomator.ElementNotFoundException
+	at androidx.test.uiautomator.UiObject2ExtKt.notNull(UiObject2Ext.kt:220)
+	at androidx.test.uiautomator.UiDeviceExtKt.onElement(UiDeviceExt.kt:200)
+	at androidx.test.uiautomator.UiAutomatorTestScope.onElement(UiAutomatorTestScope.kt:120)
+	at com.example.app.test.LoginTest$wrongPasswordShowsError$1.invoke(LoginTest.kt:41)
+	at androidx.test.uiautomator.UiAutomatorTestScopeKt.uiAutomator(UiAutomatorTestScope.kt:59)
+	at com.example.app.test.LoginTest.wrongPasswordShowsError(LoginTest.kt:35)
+	at java.lang.reflect.Method.invoke(Native Method)
+
+INSTRUMENTATION_STATUS: stream=
+Error in wrongPasswordShowsError(com.example.app.test.LoginTest):
+androidx.test.uiautomator.ElementNotFoundException
+
+INSTRUMENTATION_STATUS: test=wrongPasswordShowsError
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.example.app.test.SettingsJavaTest
+INSTRUMENTATION_STATUS: current=3
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=4
+INSTRUMENTATION_STATUS: stream=
+com.example.app.test.SettingsJavaTest:
+INSTRUMENTATION_STATUS: test=opensWifi
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.example.app.test.SettingsJavaTest
+INSTRUMENTATION_STATUS: current=3
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=4
+INSTRUMENTATION_STATUS: stack=java.lang.NullPointerException: Attempt to invoke virtual method 'void androidx.test.uiautomator.UiObject2.click()' on a null object reference
+	at com.example.app.test.SettingsJavaTest.opensWifi(SettingsJavaTest.java:52)
+	at java.lang.reflect.Method.invoke(Native Method)
+
+INSTRUMENTATION_STATUS: stream=
+Error in opensWifi(com.example.app.test.SettingsJavaTest):
+java.lang.NullPointerException: Attempt to invoke virtual method 'void androidx.test.uiautomator.UiObject2.click()' on a null object reference
+
+INSTRUMENTATION_STATUS: test=opensWifi
+INSTRUMENTATION_STATUS_CODE: -2
+INSTRUMENTATION_STATUS: class=com.example.app.test.SettingsJavaTest
+INSTRUMENTATION_STATUS: current=4
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=4
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=tabletOnly
+INSTRUMENTATION_STATUS_CODE: 1
+INSTRUMENTATION_STATUS: class=com.example.app.test.SettingsJavaTest
+INSTRUMENTATION_STATUS: current=4
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+INSTRUMENTATION_STATUS: numtests=4
+INSTRUMENTATION_STATUS: stream=
+INSTRUMENTATION_STATUS: test=tabletOnly
+INSTRUMENTATION_STATUS_CODE: -3
+INSTRUMENTATION_RESULT: stream=
+
+Time: 23.871
+There were 2 failures:
+1) wrongPasswordShowsError(com.example.app.test.LoginTest)
+androidx.test.uiautomator.ElementNotFoundException
+2) opensWifi(com.example.app.test.SettingsJavaTest)
+java.lang.NullPointerException: Attempt to invoke virtual method 'void androidx.test.uiautomator.UiObject2.click()' on a null object reference
+
+FAILURES!!!
+Tests run: 3,  Failures: 2
+
+
+INSTRUMENTATION_CODE: -1

@@ -2,9 +2,9 @@
 
 <!-- Generated from examples/prompts.json by tools/build_catalog.py - do not edit by hand. -->
 
-336 things you can say to your AI coding agent, for all 103 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
+349 things you can say to your AI coding agent, for all 106 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
 
-**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [ADB: connect, control & debug Android devices](#adb-connect-control--debug-android-devices) · [Gradle: Android setup, diagnosis & tests](#gradle-android-setup-diagnosis--tests) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Shell: PowerShell on Windows](#shell-powershell-on-windows) · [Learning: Python tutor & interview notes](#learning-python-tutor--interview-notes) · [YouTube: lecture overviews (study & tech only)](#youtube-lecture-overviews-study--tech-only) · [AI efficiency: save tokens & cost](#ai-efficiency-save-tokens--cost) · [AI agents: MCP, tools, evals & RAG](#ai-agents-mcp-tools-evals--rag) · [Playwright: E2E tests, debugging, CI & browser agent](#playwright-e2e-tests-debugging-ci--browser-agent) · [Robot Framework: suites, libraries, results & CI](#robot-framework-suites-libraries-results--ci) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
+**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [ADB: connect, control & debug Android devices](#adb-connect-control--debug-android-devices) · [Gradle: Android setup, diagnosis & tests](#gradle-android-setup-diagnosis--tests) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Shell: PowerShell on Windows](#shell-powershell-on-windows) · [Learning: Python tutor & interview notes](#learning-python-tutor--interview-notes) · [YouTube: lecture overviews (study & tech only)](#youtube-lecture-overviews-study--tech-only) · [AI efficiency: save tokens & cost](#ai-efficiency-save-tokens--cost) · [AI agents: MCP, tools, evals & RAG](#ai-agents-mcp-tools-evals--rag) · [Playwright: E2E tests, debugging, CI & browser agent](#playwright-e2e-tests-debugging-ci--browser-agent) · [Robot Framework: suites, libraries, results & CI](#robot-framework-suites-libraries-results--ci) · [UI Automator: Android UI tests in Kotlin & Java](#ui-automator-android-ui-tests-in-kotlin--java) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
 
 ## Hub tools
 
@@ -436,6 +436,38 @@ Install the whole category: `--plugin robotframework-tools`
 - “Our Robot Framework run failed in CI; here is output.xml, tell me why.”
 - “Which Robot tests are flaky? Compare output.xml with the rerun output.”
 - “Why did our Robot suite get so slow? Find the slowest keywords.”
+
+## UI Automator: Android UI tests in Kotlin & Java
+
+Install the whole category: `--plugin uiautomator-tools`
+
+### UI Automator migration and audit (Kotlin and Java)
+
+[`uiautomator-migration`](../skills/testing/uiautomator/uiautomator-migration/SKILL.md) · install: `--skill uiautomator-migration`
+
+- “Migrate our UI Automator tests from UiSelector and UiScrollable to the current API.”
+- “Audit the androidTest folder for flaky UI Automator code and deprecated calls.”
+- “We bumped uiautomator to 2.4.1 and onView { } no longer compiles. Fix our Kotlin tests.”
+- “Convert this Java test that uses UiObject and Thread.sleep to By, Until and UiObject2.”
+
+### UI Automator test authoring (Kotlin and Java)
+
+[`uiautomator-test-authoring`](../skills/testing/uiautomator/uiautomator-test-authoring/SKILL.md) · install: `--skill uiautomator-test-authoring`
+
+- “Set up UI Automator in our Android app and write a Kotlin test that signs in and checks the home screen.”
+- “Write a Java UI Automator test that opens Settings, turns on Do Not Disturb and checks it is on.”
+- “Generate a page object for this screen from locators/login.locators.json, in Kotlin with the new uiAutomator DSL.”
+- “Our test needs to accept the location permission dialog and then tap a notification. How do I do that with UI Automator?”
+- “Create a Macrobenchmark and a Baseline Profile generator for app startup using UI Automator.”
+
+### UI Automator: run tests and debug failures
+
+[`uiautomator-run-debug`](../skills/testing/uiautomator/uiautomator-run-debug/SKILL.md) · install: `--skill uiautomator-run-debug`
+
+- “Run only LoginTest#signIn from our UI Automator suite on the emulator and tell me why it fails.”
+- “Here's the am instrument output from CI. Which tests failed and why?”
+- “Our UI Automator tests fail with UiAutomationService already registered. What's wrong?”
+- “Shard the instrumented tests across 4 devices and summarise the JUnit results.”
 
 ## Git: getting started
 

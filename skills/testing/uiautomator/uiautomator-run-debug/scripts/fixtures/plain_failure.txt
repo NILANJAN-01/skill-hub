@@ -1,0 +1,12 @@
+
+com.example.app.test.LoginTest:.E
+Time: 12.4
+There was 1 failure:
+1) signIn(com.example.app.test.LoginTest)
+androidx.test.uiautomator.StaleObjectException
+	at androidx.test.uiautomator.UiObject2.getAccessibilityNodeInfo(UiObject2.java:1100)
+	at androidx.test.uiautomator.UiObject2.click(UiObject2.java:300)
+	at com.example.app.test.LoginTest.signIn(LoginTest.kt:28)
+
+FAILURES!!!
+Tests run: 2,  Failures: 1

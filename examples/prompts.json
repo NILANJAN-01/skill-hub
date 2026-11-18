@@ -540,5 +540,24 @@
     "Add Robot Framework tests to GitHub Actions with a rerun of failed tests.",
     "Run our Robot suite in parallel with pabot in GitLab CI and publish JUnit results.",
     "Create a Jenkinsfile for our Robot Framework tests with the Browser library."
+  ],
+  "uiautomator-test-authoring": [
+    "Set up UI Automator in our Android app and write a Kotlin test that signs in and checks the home screen.",
+    "Write a Java UI Automator test that opens Settings, turns on Do Not Disturb and checks it is on.",
+    "Generate a page object for this screen from locators/login.locators.json, in Kotlin with the new uiAutomator DSL.",
+    "Our test needs to accept the location permission dialog and then tap a notification. How do I do that with UI Automator?",
+    "Create a Macrobenchmark and a Baseline Profile generator for app startup using UI Automator."
+  ],
+  "uiautomator-migration": [
+    "Migrate our UI Automator tests from UiSelector and UiScrollable to the current API.",
+    "Audit the androidTest folder for flaky UI Automator code and deprecated calls.",
+    "We bumped uiautomator to 2.4.1 and onView { } no longer compiles. Fix our Kotlin tests.",
+    "Convert this Java test that uses UiObject and Thread.sleep to By, Until and UiObject2."
+  ],
+  "uiautomator-run-debug": [
+    "Run only LoginTest#signIn from our UI Automator suite on the emulator and tell me why it fails.",
+    "Here's the am instrument output from CI. Which tests failed and why?",
+    "Our UI Automator tests fail with UiAutomationService already registered. What's wrong?",
+    "Shard the instrumented tests across 4 devices and summarise the JUnit results."
   ]
 }
