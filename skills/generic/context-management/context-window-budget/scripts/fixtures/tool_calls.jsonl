@@ -1,0 +1,5 @@
+{"role": "system", "content": "You are a helpful assistant."}
+{"role": "user", "content": "What is the weather in Pune?"}
+{"role": "assistant", "content": null, "tool_calls": [{"id": "c1", "type": "function", "function": {"name": "get_weather", "arguments": "{\"city\": \"Pune\"}"}}]}
+{"role": "tool", "tool_call_id": "c1", "content": "{\"temp_c\": 24, \"sky\": \"clear\"}"}
+{"role": "assistant", "content": "It is 24 C and clear in Pune."}

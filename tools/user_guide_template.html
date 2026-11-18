@@ -291,7 +291,7 @@ section("quick-start", "Quick start", null, `
     <div class="tabs" data-tabs="qs">${Object.keys(QS).map((k, i) => `<button class="tab${i ? "" : " on"}" type="button" data-k="${esc(k)}">${esc(k)}</button>`).join("")}</div>
     <div data-panel="qs">${code(QS[Object.keys(QS)[0]])}</div></div>
   <div class="stepcard"><h4>Restart your agents</h4><p>Agents read skills and MCP servers at start-up. Then check everything is in place:</p>${code("python install.py --doctor")}</div>
-  <div class="stepcard"><h4>Just ask</h4><p>Describe the task; the agent loads the matching skill. Examples: “Write Playwright tests for our login page”, “Migrate our JUnit 4 tests to JUnit 6”, “Write a UI Automator test in Kotlin that signs in”, “Write API tests for our orders endpoints from openapi.json”, “Our Robot run failed, here is output.xml”.</p></div>
+  <div class="stepcard"><h4>Just ask</h4><p>Describe the task; the agent loads the matching skill. Examples: “Write Playwright tests for our login page”, “Migrate our JUnit 4 tests to JUnit 6”, “Write a UI Automator test in Kotlin that signs in”, “Write API tests for our orders endpoints from openapi.json”, “Our Robot run failed, here is output.xml”, “This session is getting long: write a handoff note so we can restart”.</p></div>
 </div>
 <div class="callout ok"><b>Prefer to choose?</b> Run the installer with no options for a menu: everything, choose agents and skills, doctor, or remove. Narrow <code>--setup</code> with <code>--agent</code>, <code>--plugin</code>, <code>--skill</code> or <code>--project</code>.</div>`);
 
@@ -312,7 +312,7 @@ section("using-skills", "Using skills", null, `
 <p class="lead">You rarely name a skill: agents match your request against each skill's description.</p>
 <h3>Ways to ask</h3>
 <div class="tablewrap"><table><thead><tr><th>Goal</th><th>What to say</th></tr></thead><tbody>
-<tr><td>Normal use</td><td>Describe the task with the words you would use: “<i>our Playwright tests are flaky in CI, here is results.json</i>”, “<i>summarise target/surefire-reports and list the flaky JUnit tests</i>”, “<i>check that user A cannot read user B's invoices through our REST API</i>”.</td></tr>
+<tr><td>Normal use</td><td>Describe the task with the words you would use: “<i>our Playwright tests are flaky in CI, here is results.json</i>”, “<i>summarise target/surefire-reports and list the flaky JUnit tests</i>”, “<i>check that user A cannot read user B's invoices through our REST API</i>”, “<i>our chatbot fails with context length exceeded after long chats</i>”.</td></tr>
 <tr><td>Force a specific skill</td><td>“<i>Use the <code>robotframework-ci</code> skill: add a GitHub workflow with pabot.</i>”</td></tr>
 <tr><td>Vague or multi-part request</td><td>Ask as usual; the <code>skill-router</code> skill (or the MCP tool <code>route_request</code>) splits it and picks skills per part; <code>skill-orchestrator</code> chains them.</td></tr>
 <tr><td>Find a skill</td><td>“<i>Is there a skill for …?</i>” (<code>find-skills</code>), the search on this page, or the <a href="index.html">catalog browser</a>.</td></tr>

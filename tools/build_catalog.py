@@ -158,6 +158,7 @@ CATEGORY_TITLES = {
     "learning-tools": "Learning: Python tutor & interview notes",
     "youtube-tools": "YouTube: lecture overviews (study & tech only)",
     "ai-efficiency-tools": "AI efficiency: save tokens & cost",
+    "context-management-tools": "Context management: handoffs, memory & context windows",
     "ai-agent-tools": "AI agents: MCP, tools, evals & RAG",
     "playwright-tools": "Playwright: E2E tests, debugging, CI & browser agent",
     "robotframework-tools": "Robot Framework: suites, libraries, results & CI",

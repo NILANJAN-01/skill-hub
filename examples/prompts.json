@@ -585,5 +585,22 @@
     "Our REST API tests are flaky in CI. Review them and make them reliable.",
     "Check that user A cannot read user B's invoices through the API.",
     "We are a bank: what should we test in our payments API, and can you automate it with REST Assured?"
+  ],
+  "context-handoff": [
+    "This session is getting long and you keep retrying the same fix. Write a handoff note so we can restart cleanly.",
+    "I'm stopping for today. Save where we are so tomorrow's session can pick up exactly here.",
+    "Resume the task from .handoff/2026-11-18-export.md and check the state still matches before continuing.",
+    "Write a short brief for a sub-agent to find why GET /reports is slow, read-only, with a 10-line answer."
+  ],
+  "context-memory": [
+    "Remember that I never want summaries at the end of your replies.",
+    "Set up a memory folder for this project so you stop forgetting our conventions between sessions.",
+    "Audit my agent memory folder: find duplicates, stale facts and anything that should not be stored."
+  ],
+  "context-window-budget": [
+    "Our support chatbot fails with 'context length exceeded' after long conversations. Add a history strategy.",
+    "Here is a transcript of our agent loop as JSON. Where are the tokens going and how do we cut them?",
+    "Plan the context budget for a 200k window with a 3k system prompt, 6k of tools and 20k of retrieved docs.",
+    "Trim this conversation to 100k tokens without breaking tool call and tool result pairs."
   ]
 }

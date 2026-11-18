@@ -224,6 +224,7 @@ Categories for `--plugin`:
 | `uiautomator-tools` | 4 | Android UI Automator skill set from the official docs (Kotlin and Java, androidx.test.uiautomator 2.4.1): uiautomator-test-authoring sets up the project and writes... |
 | `junit-tools` | 4 | JUnit 6 skill set from the official JUnit User Guide (Java and Kotlin, JUnit 6.1.3): junit-test-authoring sets up Gradle/Maven and writes Jupiter tests (assertions,... |
 | `api-testing-tools` | 1 | REST API testing for web applications in any field (banking, healthcare, e-commerce, insurance, telecom, government, SaaS): rest-api-testing plans cases from an... |
+| `context-management-tools` | 4 | Context management for AI agents and LLM apps: context-handoff decides when to compact or restart a long session, drafts a handoff note from git state and checks... |
 <!-- plugins-simple:end -->
 
 `--all` installs every skill. `--skill a,b` installs specific skills by name.

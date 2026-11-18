@@ -441,6 +441,19 @@
       "skills": [
         "./skills/testing/api/rest-api-testing"
       ]
+    },
+    {
+      "name": "context-management-tools",
+      "description": "Context management for AI agents and LLM apps: context-handoff decides when to compact or restart a long session, drafts a handoff note from git state and checks notes and sub-agent briefs for gaps, lost-history phrases and secrets; context-memory sets up durable one-fact-per-file agent memory with an index and lints it for duplicates, stale facts and secrets; context-window-budget splits a model's window into budgets, shows where a transcript's tokens go and trims it to fit without breaking tool-call pairs; context-engineering keeps one shared project context file for every agent",
+      "source": "./",
+      "strict": false,
+      "category": "context-management-tools",
+      "skills": [
+        "./skills/generic/context-management/context-handoff",
+        "./skills/generic/context-management/context-memory",
+        "./skills/generic/context-management/context-window-budget",
+        "./skills/generic/ai-efficiency/context-engineering"
+      ]
     }
   ]
 }

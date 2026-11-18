@@ -654,6 +654,79 @@
         "status code",
         "web application api"
       ]
+    },
+    "context-handoff": {
+      "keywords": [
+        "handoff",
+        "hand-off",
+        "checkpoint",
+        "compact",
+        "compaction",
+        "resume",
+        "restart",
+        "brief",
+        "subagent",
+        "sub-agent",
+        "delegate"
+      ],
+      "phrases": [
+        "context management",
+        "long session",
+        "session is too long",
+        "pick up where",
+        "where we left off",
+        "start a fresh session",
+        "handoff note",
+        "running out of context",
+        "context is full"
+      ]
+    },
+    "context-memory": {
+      "keywords": [
+        "memory",
+        "memories",
+        "remember",
+        "forget",
+        "forgetting",
+        "preferences",
+        "prefer",
+        "preference"
+      ],
+      "phrases": [
+        "context management",
+        "remember this",
+        "from now on",
+        "stop forgetting",
+        "agent memory",
+        "memory folder",
+        "clean up memory",
+        "persistent memory",
+        "remember that",
+        "don't forget",
+        "save this preference",
+        "next time"
+      ]
+    },
+    "context-window-budget": {
+      "keywords": [
+        "transcript",
+        "trim",
+        "truncate",
+        "history",
+        "overflow",
+        "chatbot"
+      ],
+      "phrases": [
+        "context management",
+        "context window",
+        "context length",
+        "context length exceeded",
+        "prompt is too long",
+        "token budget",
+        "conversation history",
+        "sliding window",
+        "too many tokens"
+      ]
     }
   }
 }

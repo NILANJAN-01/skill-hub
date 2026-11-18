@@ -2,9 +2,9 @@
 
 <!-- Generated from examples/prompts.json by tools/build_catalog.py - do not edit by hand. -->
 
-367 things you can say to your AI coding agent, for all 110 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
+378 things you can say to your AI coding agent, for all 113 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
 
-**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [ADB: connect, control & debug Android devices](#adb-connect-control--debug-android-devices) · [Gradle: Android setup, diagnosis & tests](#gradle-android-setup-diagnosis--tests) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Shell: PowerShell on Windows](#shell-powershell-on-windows) · [Learning: Python tutor & interview notes](#learning-python-tutor--interview-notes) · [YouTube: lecture overviews (study & tech only)](#youtube-lecture-overviews-study--tech-only) · [AI efficiency: save tokens & cost](#ai-efficiency-save-tokens--cost) · [AI agents: MCP, tools, evals & RAG](#ai-agents-mcp-tools-evals--rag) · [Playwright: E2E tests, debugging, CI & browser agent](#playwright-e2e-tests-debugging-ci--browser-agent) · [Robot Framework: suites, libraries, results & CI](#robot-framework-suites-libraries-results--ci) · [UI Automator: Android UI tests in Kotlin & Java](#ui-automator-android-ui-tests-in-kotlin--java) · [JUnit 6: Java & Kotlin tests, migration & reports](#junit-6-java--kotlin-tests-migration--reports) · [API testing: REST APIs of web applications](#api-testing-rest-apis-of-web-applications) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
+**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [ADB: connect, control & debug Android devices](#adb-connect-control--debug-android-devices) · [Gradle: Android setup, diagnosis & tests](#gradle-android-setup-diagnosis--tests) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Shell: PowerShell on Windows](#shell-powershell-on-windows) · [Learning: Python tutor & interview notes](#learning-python-tutor--interview-notes) · [YouTube: lecture overviews (study & tech only)](#youtube-lecture-overviews-study--tech-only) · [AI efficiency: save tokens & cost](#ai-efficiency-save-tokens--cost) · [Context management: handoffs, memory & context windows](#context-management-handoffs-memory--context-windows) · [AI agents: MCP, tools, evals & RAG](#ai-agents-mcp-tools-evals--rag) · [Playwright: E2E tests, debugging, CI & browser agent](#playwright-e2e-tests-debugging-ci--browser-agent) · [Robot Framework: suites, libraries, results & CI](#robot-framework-suites-libraries-results--ci) · [UI Automator: Android UI tests in Kotlin & Java](#ui-automator-android-ui-tests-in-kotlin--java) · [JUnit 6: Java & Kotlin tests, migration & reports](#junit-6-java--kotlin-tests-migration--reports) · [API testing: REST APIs of web applications](#api-testing-rest-apis-of-web-applications) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
 
 ## Hub tools
 
@@ -320,6 +320,36 @@ Install the whole category: `--plugin ai-efficiency-tools`
 - “Track how many tokens every skill saves me in this session and show a report at the end.”
 - “Which of my installed skills cost the most tokens every session?”
 - “Compare these two session logs, one with the skill and one without, and record the savings.”
+
+## Context management: handoffs, memory & context windows
+
+Install the whole category: `--plugin context-management-tools`
+
+### Context handoff: checkpoint, compact, resume and delegate
+
+[`context-handoff`](../skills/generic/context-management/context-handoff/SKILL.md) · install: `--skill context-handoff`
+
+- “This session is getting long and you keep retrying the same fix. Write a handoff note so we can restart cleanly.”
+- “I'm stopping for today. Save where we are so tomorrow's session can pick up exactly here.”
+- “Resume the task from .handoff/2026-11-18-export.md and check the state still matches before continuing.”
+- “Write a short brief for a sub-agent to find why GET /reports is slow, read-only, with a 10-line answer.”
+
+### Context memory: durable, small and correct agent memory
+
+[`context-memory`](../skills/generic/context-management/context-memory/SKILL.md) · install: `--skill context-memory`
+
+- “Remember that I never want summaries at the end of your replies.”
+- “Set up a memory folder for this project so you stop forgetting our conventions between sessions.”
+- “Audit my agent memory folder: find duplicates, stale facts and anything that should not be stored.”
+
+### Context window budget: fit LLM conversations into the window
+
+[`context-window-budget`](../skills/generic/context-management/context-window-budget/SKILL.md) · install: `--skill context-window-budget`
+
+- “Our support chatbot fails with 'context length exceeded' after long conversations. Add a history strategy.”
+- “Here is a transcript of our agent loop as JSON. Where are the tokens going and how do we cut them?”
+- “Plan the context budget for a 200k window with a 3k system prompt, 6k of tools and 20k of retrieved docs.”
+- “Trim this conversation to 100k tokens without breaking tool call and tool result pairs.”
 
 ## AI agents: MCP, tools, evals & RAG
 
