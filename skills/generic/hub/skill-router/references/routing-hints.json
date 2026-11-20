@@ -171,7 +171,11 @@
         "job post",
         "resume",
         "my cv",
-        "readme"
+        "readme",
+        "bug report",
+        "write up",
+        "write-up",
+        "incident report"
       ],
       "needs": []
     },
