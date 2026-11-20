@@ -59,11 +59,16 @@ The dashboard is saved as `~/.skill-hub/token-dashboard.html`. It shows tokens p
 - To measure what one skill saves, with vs without it, use `skill-token-meter`. Its ledger shows up on this dashboard.
 - To trim the history of an LLM app you are building, use `context-window-budget`.
 
-## Make it automatic in a project
+## Make it always on
 
-Suggest the user add this line to their project's agent instruction file. Ask before writing it:
+- **Hooks (best, where the agent supports them):** `scripts/token_hook.py` runs on its own, outside the model:
+  - **Read guard:** a whole read of a file over ~2,000 tokens is blocked once per session, and the agent is pointed to `auto`. A second read goes through.
+  - **Session end:** the session's usage is imported, so the dashboard is always current.
 
-> Before reading a log, JSON, or a file over 500 lines, run `python <path>/token_optimizer.py auto <file>` and read its output instead.
+  From a skill-hub checkout, `python tools/install.py --agent <id> --skill token-optimizer --token-hooks --global` registers both hooks (it shows the plan and asks first). Turn the guard off with `TOKEN_GUARD=off` or a file `~/.skill-hub/token-guard.off`. Change the size limit with `TOKEN_GUARD_MIN_TOKENS`. Agent support and manual setup: [references/hooks.md](references/hooks.md).
+- **Instruction line (any agent):** suggest the user add this line to their project's agent instruction file, and ask before writing it:
+
+  > Before reading a log, JSON, or a file over 500 lines, run `python <path>/token_optimizer.py auto <file>` and read its output instead.
 
 ## More
 

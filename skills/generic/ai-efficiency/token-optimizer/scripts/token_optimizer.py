@@ -890,6 +890,9 @@ def summarize(events: list, meter_events=(), days: float = None) -> dict:
     totals["opt_before"] = sum(int(e.get("before") or 0) for e in opt)
     totals["opt_saved"] = sum(int(e.get("saved") or 0) for e in opt)
     totals["meter_saved"] = sum(int(e.get("saved") or 0) for e in meter_events)
+    guards = [e for e in events if e.get("kind") == "guard"]
+    totals["guarded_reads"] = len(guards)
+    totals["guarded_tokens"] = sum(int(e.get("before") or 0) for e in guards)
 
     per_day = defaultdict(lambda: {"input": 0, "output": 0, "cache_read": 0, "cache_write": 0, "total": 0,
                                    "opt_saved": 0, "meter_saved": 0, "sessions": 0})
@@ -1195,6 +1198,8 @@ def print_stats(s: dict) -> None:
     print(f"Sessions: {t['sessions']}, model replies: {t['messages']:,}, tool calls: {t['tool_calls']:,}")
     print(f"Optimizer: {t['opt_runs']} runs saved ~{t['opt_saved']:,} tokens; skill-token-meter savings: "
           f"~{t['meter_saved']:,}")
+    if t["guarded_reads"]:
+        print(f"Read guard: {t['guarded_reads']} whole reads of big files redirected (~{t['guarded_tokens']:,} tokens)")
     if s["days"]:
         print("\nPer day                  total      output   opt saved  sessions")
         for day, d in list(s["days"].items())[-14:]:

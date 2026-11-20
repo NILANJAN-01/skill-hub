@@ -224,6 +224,8 @@ def describe(e: dict) -> tuple:
         note = e.get("task") or models
         return "session" if not str(e.get("id", "")).startswith("manual") else "manual", skills or "-", \
             full(e.get("total")), "", note
+    if kind == "guard":
+        return "read guard", e.get("skill") or "", full(e.get("before")), "", e.get("source") or ""
     if kind == "optimize":
         return f"optimize: {e.get('tool')}", e.get("skill") or "", full(e.get("before")), full(e.get("saved")), \
             e.get("source") or e.get("note") or ""
@@ -252,7 +254,8 @@ def render(s: dict, title: str = "Token usage dashboard", generated: str = "", s
         tile("Cache reads", cache_share, "share of prompt tokens"),
         tile("Tool calls", fmt(t["tool_calls"]), f"{full(t['messages'])} model replies"),
         tile("Tokens saved", fmt(saved_total), f"optimizer {fmt(t['opt_saved'])}, skills {fmt(t['meter_saved'])}"),
-        tile("Skills used", str(len(skills_used)), f"{t['opt_runs']} optimizer runs"),
+        tile("Skills used", str(len(skills_used)), f"{t['opt_runs']} optimizer runs, "
+             f"{t.get('guarded_reads', 0)} big reads redirected"),
     ]) + "</div>")
 
     day_keys = day_range(s["days"])
