@@ -466,6 +466,12 @@
     "Only process 10:00 to 25:00 of this 2-hour course video and summarise what that part covers.",
     "Check whether my machine is ready to turn YouTube lecture audio into text, and tell me what to install."
   ],
+  "token-optimizer": [
+    "This build log is 3 MB. Shrink it to the errors before you read it.",
+    "Show me a dashboard of how many tokens I used each day this month and which skills I used.",
+    "Give me an outline of this 2,000-line file and then only the function that handles login.",
+    "Import my agent session logs and tell me where my tokens went this week."
+  ],
   "skill-token-meter": [
     "How many tokens did the yt-lecture-overview skill save on that last task?",
     "Track how many tokens every skill saves me in this session and show a report at the end.",

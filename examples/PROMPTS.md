@@ -2,7 +2,7 @@
 
 <!-- Generated from examples/prompts.json by tools/build_catalog.py - do not edit by hand. -->
 
-400 things you can say to your AI coding agent, for all 119 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
+404 things you can say to your AI coding agent, for all 120 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
 
 **Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [ADB: connect, control & debug Android devices](#adb-connect-control--debug-android-devices) · [Gradle: Android setup, diagnosis & tests](#gradle-android-setup-diagnosis--tests) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Shell: PowerShell on Windows](#shell-powershell-on-windows) · [Learning: Python tutor & interview notes](#learning-python-tutor--interview-notes) · [YouTube: lecture overviews (study & tech only)](#youtube-lecture-overviews-study--tech-only) · [AI efficiency: save tokens & cost](#ai-efficiency-save-tokens--cost) · [Context management: handoffs, memory & context windows](#context-management-handoffs-memory--context-windows) · [AI agents: MCP, tools, evals & RAG](#ai-agents-mcp-tools-evals--rag) · [Software design: deep modules, errors, comments & guardrails](#software-design-deep-modules-errors-comments--guardrails) · [Playwright: E2E tests, debugging, CI & browser agent](#playwright-e2e-tests-debugging-ci--browser-agent) · [Robot Framework: suites, libraries, results & CI](#robot-framework-suites-libraries-results--ci) · [UI Automator: Android UI tests in Kotlin & Java](#ui-automator-android-ui-tests-in-kotlin--java) · [JUnit 6: Java & Kotlin tests, migration & reports](#junit-6-java--kotlin-tests-migration--reports) · [API testing: REST APIs of web applications](#api-testing-rest-apis-of-web-applications) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
 
@@ -329,6 +329,15 @@ Install the whole category: `--plugin ai-efficiency-tools`
 - “Track how many tokens every skill saves me in this session and show a report at the end.”
 - “Which of my installed skills cost the most tokens every session?”
 - “Compare these two session logs, one with the skill and one without, and record the savings.”
+
+### Token optimizer: read less, track usage, see it on a dashboard
+
+[`token-optimizer`](../skills/generic/ai-efficiency/token-optimizer/SKILL.md) · install: `--skill token-optimizer`
+
+- “This build log is 3 MB. Shrink it to the errors before you read it.”
+- “Show me a dashboard of how many tokens I used each day this month and which skills I used.”
+- “Give me an outline of this 2,000-line file and then only the function that handles login.”
+- “Import my agent session logs and tell me where my tokens went this week.”
 
 ## Context management: handoffs, memory & context windows
 

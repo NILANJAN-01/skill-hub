@@ -309,12 +309,13 @@
     },
     {
       "name": "ai-efficiency-tools",
-      "description": "AI efficiency: audit a project for token waste, save tokens and cost, measure how many tokens each skill saves (central ledger and report), and centralize context across any AI IDE, agent or model",
+      "description": "AI efficiency: audit a project for token waste, shrink logs, files and JSON before an agent reads them, track token usage per day and per skill on an HTML dashboard, measure how many tokens each skill saves (central ledger and report), and centralize context across any AI IDE, agent or model",
       "category": "ai-efficiency-tools",
       "skills": [
         "ai-token-saver",
         "context-engineering",
-        "skill-token-meter"
+        "skill-token-meter",
+        "token-optimizer"
       ]
     },
     {
@@ -474,7 +475,7 @@
     {
       "name": "ai-efficiency-tools",
       "title": "AI efficiency: save tokens & cost",
-      "count": 3
+      "count": 4
     },
     {
       "name": "context-management-tools",
@@ -781,7 +782,8 @@
           "skills": [
             "ai-token-saver",
             "context-engineering",
-            "skill-token-meter"
+            "skill-token-meter",
+            "token-optimizer"
           ]
         },
         {
@@ -3961,6 +3963,29 @@
         "references/ci.md",
         "references/principles.md",
         "references/red-flags.md"
+      ]
+    },
+    {
+      "name": "token-optimizer",
+      "title": "Token optimizer: read less, track usage, see it on a dashboard",
+      "category": "ai-efficiency-tools",
+      "area": "generic",
+      "group": "ai-efficiency",
+      "description": "Cut the tokens an agent reads and track usage: scripts compress logs, outline or slice files, shrink JSON, pack folders under a budget, import session logs (timestamps, skills used) and build an HTML usage dashboard. Use when the user wants to save tokens or see token usage per day or per skill.",
+      "plugins": [
+        "ai-efficiency-tools"
+      ],
+      "path": "skills/generic/ai-efficiency/token-optimizer",
+      "license": "MIT",
+      "compatibility": "Python 3.8+ (standard library only). Works with any agent. File token counts are estimates (chars/4 prose, chars/3.3 code, about +-20%); usage imported from session logs is what the agent recorded. Importing needs an agent that writes JSON or JSONL session logs with usage records; otherwise record usage by hand.",
+      "examples": [
+        "This build log is 3 MB. Shrink it to the errors before you read it.",
+        "Show me a dashboard of how many tokens I used each day this month and which skills I used.",
+        "Give me an outline of this 2,000-line file and then only the function that handles login.",
+        "Import my agent session logs and tell me where my tokens went this week."
+      ],
+      "files": [
+        "references/session-logs.md"
       ]
     },
     {
