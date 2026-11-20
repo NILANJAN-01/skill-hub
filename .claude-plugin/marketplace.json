@@ -470,6 +470,16 @@
         "./skills/development/software-design/obvious-code",
         "./skills/development/software-design/design-it-twice"
       ]
+    },
+    {
+      "name": "code-quality-tools",
+      "description": "Code quality for any programming language: lint-checker detects a project's languages and the linters it configures or has installed (ruff, ESLint, Biome, golangci-lint, clippy, RuboCop, ShellCheck and more; for Java and Kotlin the Gradle or Maven build's Checkstyle, PMD, SpotBugs, ktlint, detekt, Spotless and Android Lint tasks), runs them in one report with safe auto-fix, and adds built-in checks for conflict markers, syntax errors, leftover debug code and whitespace that need no tools",
+      "source": "./",
+      "strict": false,
+      "category": "code-quality-tools",
+      "skills": [
+        "./skills/development/code-quality/lint-checker"
+      ]
     }
   ]
 }

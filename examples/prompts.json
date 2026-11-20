@@ -642,5 +642,12 @@
     "Plan the API for our notification service first, then implement it.",
     "I'm about to add another flag to work around this bug. Is there a better design?",
     "This endpoint is slow; how should I approach optimising it without making the code worse?"
+  ],
+  "lint-checker": [
+    "Lint this project and tell me what's wrong.",
+    "Run the linters on the files I changed before I commit.",
+    "CI's lint job is failing; find and fix the lint errors.",
+    "Check my Java and Kotlin code for lint issues with Checkstyle, detekt and ktlint.",
+    "Set up linting for this Go and TypeScript repo."
   ]
 }

@@ -404,6 +404,14 @@
         "obvious-code",
         "design-it-twice"
       ]
+    },
+    {
+      "name": "code-quality-tools",
+      "description": "Code quality for any programming language: lint-checker detects a project's languages and the linters it configures or has installed (ruff, ESLint, Biome, golangci-lint, clippy, RuboCop, ShellCheck and more; for Java and Kotlin the Gradle or Maven build's Checkstyle, PMD, SpotBugs, ktlint, detekt, Spotless and Android Lint tasks), runs them in one report with safe auto-fix, and adds built-in checks for conflict markers, syntax errors, leftover debug code and whitespace that need no tools",
+      "category": "code-quality-tools",
+      "skills": [
+        "lint-checker"
+      ]
     }
   ],
   "categories": [
@@ -491,6 +499,11 @@
       "name": "software-design-tools",
       "title": "Software design: deep modules, errors, comments & guardrails",
       "count": 5
+    },
+    {
+      "name": "code-quality-tools",
+      "title": "Code quality: linting for any language",
+      "count": 1
     },
     {
       "name": "playwright-tools",
@@ -638,6 +651,12 @@
             "llm-evals",
             "mcp-server-builder",
             "rag-pipeline"
+          ]
+        },
+        {
+          "name": "code-quality",
+          "skills": [
+            "lint-checker"
           ]
         },
         {
@@ -3394,6 +3413,30 @@
         "references/checks.md",
         "references/setup.md",
         "references/writing-tests.md"
+      ]
+    },
+    {
+      "name": "lint-checker",
+      "title": "Lint checker: find and run linters for any language",
+      "category": "code-quality-tools",
+      "area": "development",
+      "group": "code-quality",
+      "description": "Lint code in any programming language. A bundled script detects the project's languages, the linters it configures and the ones installed, runs them (ruff, ESLint, golangci-lint, clippy, Gradle/Maven Checkstyle, PMD, SpotBugs, ktlint, detekt, Android Lint and more) in one report, and adds built-in checks needing no tools. Use when the user asks to lint, check code quality or style, or fix lint errors.",
+      "plugins": [
+        "code-quality-tools"
+      ],
+      "path": "skills/development/code-quality/lint-checker",
+      "license": "MIT",
+      "compatibility": "",
+      "examples": [
+        "Lint this project and tell me what's wrong.",
+        "Run the linters on the files I changed before I commit.",
+        "CI's lint job is failing; find and fix the lint errors.",
+        "Check my Java and Kotlin code for lint issues with Checkstyle, detekt and ktlint.",
+        "Set up linting for this Go and TypeScript repo."
+      ],
+      "files": [
+        "references/linters.md"
       ]
     },
     {

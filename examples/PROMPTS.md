@@ -2,9 +2,9 @@
 
 <!-- Generated from examples/prompts.json by tools/build_catalog.py - do not edit by hand. -->
 
-404 things you can say to your AI coding agent, for all 120 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
+409 things you can say to your AI coding agent, for all 121 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
 
-**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [ADB: connect, control & debug Android devices](#adb-connect-control--debug-android-devices) · [Gradle: Android setup, diagnosis & tests](#gradle-android-setup-diagnosis--tests) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Shell: PowerShell on Windows](#shell-powershell-on-windows) · [Learning: Python tutor & interview notes](#learning-python-tutor--interview-notes) · [YouTube: lecture overviews (study & tech only)](#youtube-lecture-overviews-study--tech-only) · [AI efficiency: save tokens & cost](#ai-efficiency-save-tokens--cost) · [Context management: handoffs, memory & context windows](#context-management-handoffs-memory--context-windows) · [AI agents: MCP, tools, evals & RAG](#ai-agents-mcp-tools-evals--rag) · [Software design: deep modules, errors, comments & guardrails](#software-design-deep-modules-errors-comments--guardrails) · [Playwright: E2E tests, debugging, CI & browser agent](#playwright-e2e-tests-debugging-ci--browser-agent) · [Robot Framework: suites, libraries, results & CI](#robot-framework-suites-libraries-results--ci) · [UI Automator: Android UI tests in Kotlin & Java](#ui-automator-android-ui-tests-in-kotlin--java) · [JUnit 6: Java & Kotlin tests, migration & reports](#junit-6-java--kotlin-tests-migration--reports) · [API testing: REST APIs of web applications](#api-testing-rest-apis-of-web-applications) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
+**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [ADB: connect, control & debug Android devices](#adb-connect-control--debug-android-devices) · [Gradle: Android setup, diagnosis & tests](#gradle-android-setup-diagnosis--tests) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Shell: PowerShell on Windows](#shell-powershell-on-windows) · [Learning: Python tutor & interview notes](#learning-python-tutor--interview-notes) · [YouTube: lecture overviews (study & tech only)](#youtube-lecture-overviews-study--tech-only) · [AI efficiency: save tokens & cost](#ai-efficiency-save-tokens--cost) · [Context management: handoffs, memory & context windows](#context-management-handoffs-memory--context-windows) · [AI agents: MCP, tools, evals & RAG](#ai-agents-mcp-tools-evals--rag) · [Software design: deep modules, errors, comments & guardrails](#software-design-deep-modules-errors-comments--guardrails) · [Code quality: linting for any language](#code-quality-linting-for-any-language) · [Playwright: E2E tests, debugging, CI & browser agent](#playwright-e2e-tests-debugging-ci--browser-agent) · [Robot Framework: suites, libraries, results & CI](#robot-framework-suites-libraries-results--ci) · [UI Automator: Android UI tests in Kotlin & Java](#ui-automator-android-ui-tests-in-kotlin--java) · [JUnit 6: Java & Kotlin tests, migration & reports](#junit-6-java--kotlin-tests-migration--reports) · [API testing: REST APIs of web applications](#api-testing-rest-apis-of-web-applications) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
 
 ## Hub tools
 
@@ -451,6 +451,20 @@ Install the whole category: `--plugin software-design-tools`
 - “Review my changes for design red flags before I commit: pass-through methods, swallowed errors, duplicated code.”
 - “Add a pre-commit hook and a GitHub Actions check that block new design red flags, with a baseline for old code.”
 - “Write this feature, and keep the code simple and maintainable.”
+
+## Code quality: linting for any language
+
+Install the whole category: `--plugin code-quality-tools`
+
+### Lint checker: find and run linters for any language
+
+[`lint-checker`](../skills/development/code-quality/lint-checker/SKILL.md) · install: `--skill lint-checker`
+
+- “Lint this project and tell me what's wrong.”
+- “Run the linters on the files I changed before I commit.”
+- “CI's lint job is failing; find and fix the lint errors.”
+- “Check my Java and Kotlin code for lint issues with Checkstyle, detekt and ktlint.”
+- “Set up linting for this Go and TypeScript repo.”
 
 ## Playwright: E2E tests, debugging, CI & browser agent
 

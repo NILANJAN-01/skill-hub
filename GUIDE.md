@@ -228,6 +228,7 @@ Categories for `--plugin`:
 | `api-testing-tools` | 1 | REST API testing for web applications in any field (banking, healthcare, e-commerce, insurance, telecom, government, SaaS): rest-api-testing plans cases from an... |
 | `context-management-tools` | 4 | Context management for AI agents and LLM apps: context-handoff decides when to compact or restart a long session, drafts a handoff note from git state and checks... |
 | `software-design-tools` | 5 | Software design rules AI agents follow on every code change, from the ideas in A Philosophy of Software Design: software-design-guardrails installs always-on design... |
+| `code-quality-tools` | 1 | Code quality for any programming language: lint-checker detects a project's languages and the linters it configures or has installed (ruff, ESLint, Biome,... |
 <!-- plugins-simple:end -->
 
 `--all` installs every skill. `--skill a,b` installs specific skills by name.
