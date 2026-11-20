@@ -23,7 +23,7 @@ No Python? Install it from https://www.python.org/downloads/. On Windows, tick *
 
 ## Step 2: Run the installer. It finds your agents and asks you
 
-**Fastest: one command for everything.** `--setup` installs every skill and the skill-hub MCP server into every agent it finds, for your user. In Claude Code it also adds a prompt hook that routes each prompt to the right skills and plans independent parts to run in parallel (`--no-prompt-hook` skips it). It shows the plan first; **nothing is written until you say yes.**
+**Fastest: one command for everything.** `--setup` installs every skill and the skill-hub MCP server into every agent it finds, for your user. It also adds the skill-dispatcher hook, which routes what you ask to the right skills and plans independent parts to run in parallel: on every prompt in Claude Code, Codex and Antigravity, and once per session in GitHub Copilot (`--no-prompt-hook` skips it; Codex asks you to trust the hook once in `/hooks`). It shows the plan first; **nothing is written until you say yes.**
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py | python3 - --setup   # macOS / Linux
@@ -163,7 +163,7 @@ Use options when you already know what you want, or for scripts, dotfiles and CI
 ```bash
 ... --setup --yes                                    # everything: all skills + MCP server, every detected agent
 ... --agent detected --mcp --global                  # only the skill-hub MCP server
-... --agent claude-code --prompt-hook --global       # only the prompt hook (skill-dispatcher)
+... --agent detected --prompt-hook --global          # only the skill-dispatcher hooks
 ... --detect                                         # just show which agents are installed
 ... --list                                           # agents, categories and every skill
 ... --agent detected --all --global                  # every skill, every detected agent, for you

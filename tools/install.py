@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Set up skill-hub for the AI coding agents / IDEs on this machine: skills and the skill-hub MCP server.
 
-ONE COMMAND: detects your agents, installs every skill, registers the MCP server and the prompt hook
-(skill-dispatcher, where the agent supports it), shows the plan, and changes nothing until you confirm.
+ONE COMMAND: detects your agents, installs every skill, registers the MCP server and the skill-dispatcher
+hook (Claude Code, Codex, Antigravity, Copilot), shows the plan, and changes nothing until you confirm.
 
     python install.py --setup
     curl -fsSL https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py | python3 - --setup
@@ -15,7 +15,7 @@ SCRIPTED MODE (CI, dotfiles, power users):
     python install.py --setup --yes                                     # everything, no questions
     python install.py --agent cursor --plugin ai-agent-tools --mcp      # some skills + the MCP server
     python install.py --agent detected --mcp --global                   # only the MCP server
-    python install.py --agent claude-code --prompt-hook --global        # only the prompt hook
+    python install.py --agent detected --prompt-hook --global           # only the skill-dispatcher hooks
 
 OTHER MCP SERVERS, into every detected agent at once (user-level; merged, with backups):
     python install.py --list-mcp                                        # what each agent has + presets
@@ -73,9 +73,11 @@ MANIFEST = ".skill-hub.json"
 #   mcp                      where the agent reads MCP servers: project file, user file (a str, or
 #                            {"nt": ..., "posix": ...} when it differs by OS), "format" (json or
 #                            toml), the JSON "key" holding the servers, and the vendor "docs" page
-#   prompt_hook              only for agents whose prompt-submit hook adds the command's output to the
-#                            model's context: the JSON settings file (project / global), the hook
-#                            "event" name and the vendor "docs" page. Used to run skill-dispatcher.
+#   prompt_hook              how to register skill-dispatcher as a hook, from the vendor's hook docs:
+#                            "style" (nested / named / file, see the prompt hook section), the JSON
+#                            file ("project": a personal, uncommitted file, or None; "global"; optional
+#                            "home_env" + "home_rel" when an env var moves the user folder), the hook
+#                            "event", the dispatcher "args" (output format the agent expects), "docs"
 # --------------------------------------------------------------------------------------------
 AGENTS = {
     "claude-code": {
@@ -87,8 +89,9 @@ AGENTS = {
         "mcp": {"project": ".mcp.json", "global": "~/.claude.json", "format": "json", "key": "mcpServers",
                 "docs": "https://code.claude.com/docs/en/mcp"},
         # UserPromptSubmit: the command's stdout is added to the model's context for that prompt.
-        "prompt_hook": {"project": ".claude/settings.local.json", "global": "~/.claude/settings.json",
-                        "event": "UserPromptSubmit", "docs": "https://code.claude.com/docs/en/hooks"},
+        "prompt_hook": {"style": "nested", "project": ".claude/settings.local.json",
+                        "global": "~/.claude/settings.json", "event": "UserPromptSubmit",
+                        "args": ["--hook", "--no-briefs"], "docs": "https://code.claude.com/docs/en/hooks"},
     },
     "antigravity": {
         "name": "Google Antigravity", "project": ".agents/skills", "global": "~/.gemini/config/skills",
@@ -96,6 +99,12 @@ AGENTS = {
         "docs": "https://antigravity.google/docs/skills",
         "mcp": {"project": ".agents/mcp_config.json", "global": "~/.gemini/config/mcp_config.json",
                 "format": "json", "key": "mcpServers", "docs": "https://antigravity.google/docs/mcp"},
+        # No per-prompt event: PreInvocation runs before each model call (stdin lastUserInput), and
+        # {"injectSteps": [{"ephemeralMessage": ...}]} adds a transient message. The dispatcher sends
+        # the plan once per prompt. Same file for the App, CLI and IDE.
+        "prompt_hook": {"style": "named", "project": None, "global": "~/.gemini/config/hooks.json",
+                        "event": "PreInvocation", "args": ["--hook", "--hook-format", "injectsteps", "--no-briefs"],
+                        "docs": "https://antigravity.google/docs/hooks"},
         "detect": {"commands": ["antigravity", "agy"],
                    "paths": ["~/.gemini/antigravity", "~/.gemini/antigravity-cli",
                              "%LOCALAPPDATA%/Programs/Antigravity", "/Applications/Antigravity.app"]},
@@ -125,6 +134,14 @@ AGENTS = {
         # The portable Copilot format; the older .vscode/mcp.json ("servers" key) is deprecated.
         "mcp": {"project": ".mcp.json", "global": "~/.copilot/mcp-config.json", "format": "json",
                 "key": "mcpServers", "docs": "https://code.visualstudio.com/docs/agents/reference/mcp-configuration"},
+        # Output of a userPromptSubmitted command hook is ignored, so a sessionStart hook (top-level
+        # {"additionalContext": ...}) adds a standing instruction to run the dispatcher. Every *.json in
+        # the user hooks folder is loaded; VS Code, the Copilot app and the CLI share it.
+        "prompt_hook": {"style": "file", "project": None, "global": "~/.copilot/hooks/skill-hub.json",
+                        "home_env": "COPILOT_HOME", "home_rel": "hooks/skill-hub.json", "event": "sessionStart",
+                        "args": ["--hook", "--hook-format", "session"],
+                        "note": "once per session: tells the agent when to run the dispatcher",
+                        "docs": "https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-hooks-reference"},
     },
     "cursor": {
         "name": "Cursor", "project": ".cursor/skills", "global": "~/.cursor/skills",
@@ -156,6 +173,12 @@ AGENTS = {
         # Project-level .codex/config.toml is read only in projects the user marked as trusted.
         "mcp": {"project": ".codex/config.toml", "global": "~/.codex/config.toml", "format": "toml",
                 "key": "mcp_servers", "docs": "https://developers.openai.com/codex/mcp"},
+        # UserPromptSubmit with hookSpecificOutput.additionalContext. New hooks run only after the user
+        # trusts them once in /hooks. Project .codex/hooks.json is shared (committed), so user-level only.
+        "prompt_hook": {"style": "nested", "project": None, "global": "~/.codex/hooks.json",
+                        "home_env": "CODEX_HOME", "home_rel": "hooks.json", "event": "UserPromptSubmit",
+                        "args": ["--hook", "--hook-format", "json", "--no-briefs"],
+                        "note": "trust it once in Codex's /hooks", "docs": "https://developers.openai.com/codex/hooks"},
     },
     "gemini-cli": {
         "name": "Gemini CLI", "project": ".gemini/skills", "global": "~/.gemini/skills",
@@ -807,10 +830,15 @@ def apply_mcp_plan(root: Path, rows: list, entry: dict | None, snap: str | None,
 
 
 # ============================================================================ prompt hook
-# skill-dispatcher reads each prompt the user submits and adds a plan (which skills, what can run in
-# parallel) to the agent's context. Only agents with a "prompt_hook" entry in AGENTS support this.
+# skill-dispatcher reads what the user asks and tells the agent which skills fit and what can run in
+# parallel. Agents with a "prompt_hook" entry in AGENTS get it registered as a hook. Three config styles:
+#   nested  {"hooks": {EVENT: [{"hooks": [handler]}]}}   merged with the user's other hooks
+#   named   {NAME: {EVENT: [handler]}}                    our own named entry in a shared file
+#   file    a whole hook file of our own                  {"version": 1, "hooks": {EVENT: [handler]}}
 HOOK_SKILL = "skill-dispatcher"
 HOOK_NEEDS = ("skill-dispatcher", "skill-router")      # the dispatcher imports the router's matcher
+HOOK_NAME = "skill-hub-dispatcher"                      # our entry's name in "named" files
+HOOK_TIMEOUT = 15
 
 
 def hook_info(agent: str) -> dict | None:
@@ -818,16 +846,37 @@ def hook_info(agent: str) -> dict | None:
 
 
 def hook_config_path(agent: str, use_global: bool, project: Path) -> Path | None:
+    """The file the hook goes in; None when the agent has no such file at this scope."""
     info = hook_info(agent)
     if not info:
         return None
-    return _expand(info["global"]) if use_global else project / info["project"]
+    if not use_global:
+        return project / info["project"] if info.get("project") else None
+    home = os.environ.get(info["home_env"]) if info.get("home_env") else None
+    return Path(home) / info["home_rel"] if home else _expand(info["global"])
 
 
-def hook_command(skill_dir: Path) -> str:
-    """This Python running the installed dispatcher; forward slashes work in every shell agents use."""
+def _quoted(part: str) -> str:
+    return f'"{part}"' if re.search(r"\s", part) else part
+
+
+def hook_commands(info: dict, skill_dir: Path) -> tuple:
+    """(posix-shell command, PowerShell command) running this Python on the installed dispatcher. Paths without
+    spaces stay unquoted, so the same text also works in cmd and PowerShell."""
     py = Path(sys.executable).as_posix() if sys.executable else "python"
-    return f'"{py}" "{(skill_dir / "scripts" / "dispatch.py").as_posix()}" --hook --no-briefs'
+    parts = [py, (skill_dir / "scripts" / "dispatch.py").as_posix(), *info["args"]]
+    cmd = " ".join(_quoted(p) for p in parts)
+    return cmd, ("& " + cmd if cmd.startswith('"') else cmd)
+
+
+def hook_entry(info: dict, skill_dir: Path):
+    """What we write for this agent: a handler (nested), an event map (named) or a whole file (file)."""
+    cmd, ps = hook_commands(info, skill_dir)
+    if info["style"] == "file":
+        return {"version": 1, "hooks": {info["event"]: [{"type": "command", "bash": cmd, "powershell": ps,
+                                                         "timeoutSec": HOOK_TIMEOUT}]}}
+    handler = {"type": "command", "command": cmd, "timeout": HOOK_TIMEOUT}
+    return {info["event"]: [handler]} if info["style"] == "named" else handler
 
 
 def _is_our_hook(h) -> bool:
@@ -841,22 +890,40 @@ def _hook_groups(data: dict, event: str) -> list:
     return groups if isinstance(groups, list) else []
 
 
-def hook_status(path: Path, info: dict, command: str) -> str:
+def hook_status(path: Path, info: dict, entry) -> str:
     """missing / same / differs / unreadable: <why>."""
     try:
         data = read_json_config(path)
     except (OSError, ValueError) as exc:
         return f"unreadable: {exc}"
+    if info["style"] == "file":
+        return "missing" if not path.is_file() else ("same" if data == entry else "differs")
+    if info["style"] == "named":
+        return "missing" if HOOK_NAME not in data else ("same" if data[HOOK_NAME] == entry else "differs")
     ours = [h for g in _hook_groups(data, info["event"]) if isinstance(g, dict) and isinstance(g.get("hooks"), list)
             for h in g["hooks"] if _is_our_hook(h)]
     if not ours:
         return "missing"
-    return "same" if len(ours) == 1 and ours[0].get("command") == command else "differs"
+    return "same" if ours == [entry] else "differs"
 
 
-def write_hook(path: Path, info: dict, command: str | None) -> None:
-    """Add or replace our hook (command=None removes it), keeping every other hook and setting."""
+def write_hook(path: Path, info: dict, entry) -> None:
+    """Add or replace our hook (entry=None removes it), keeping every other hook and setting in the file."""
+    if info["style"] == "file":
+        if entry is None:
+            if path.is_file():
+                path.unlink()
+        else:
+            _write_atomic(path, json.dumps(entry, indent=2) + "\n")
+        return
     data = read_json_config(path)
+    if info["style"] == "named":
+        if entry is None:
+            data.pop(HOOK_NAME, None)
+        else:
+            data[HOOK_NAME] = entry
+        _write_atomic(path, json.dumps(data, indent=2) + "\n", backup_first=entry is not None)
+        return
     groups = []
     for g in _hook_groups(data, info["event"]):
         if isinstance(g, dict) and isinstance(g.get("hooks"), list) and any(_is_our_hook(h) for h in g["hooks"]):
@@ -865,8 +932,8 @@ def write_hook(path: Path, info: dict, command: str | None) -> None:
                 groups.append(dict(g, hooks=kept))
         else:
             groups.append(g)
-    if command:
-        groups.append({"hooks": [{"type": "command", "command": command, "timeout": 15}]})
+    if entry is not None:
+        groups.append({"hooks": [entry]})
     hooks = data.get("hooks") if isinstance(data.get("hooks"), dict) else {}
     if groups:
         hooks[info["event"]] = groups
@@ -876,37 +943,48 @@ def write_hook(path: Path, info: dict, command: str | None) -> None:
         data["hooks"] = hooks
     else:
         data.pop("hooks", None)
-    _write_atomic(path, json.dumps(data, indent=2) + "\n", backup_first=command is not None)
+    _write_atomic(path, json.dumps(data, indent=2) + "\n", backup_first=entry is not None)
+
+
+def hook_skills_folder(agent: str, use_global: bool, project: Path) -> Path | None:
+    """Where this agent finds skill-dispatcher: the first folder it reads that has it, else its own folder
+    (where the installer puts it). Agents that read another agent's folder get no second copy."""
+    for folder in reads(agent, use_global, project):
+        if (folder / HOOK_SKILL / "SKILL.md").is_file():
+            return folder
+    return own_dir(agent, use_global, project)
 
 
 def make_hook_plan(agents: list, use_global: bool, project: Path, names: list, removing: bool = False) -> list:
-    """One row per settings file. When adding, only for agents that will have both needed skills."""
+    """One row per hook file. When adding, only for agents that will have both needed skills."""
     rows = {}
     for a in agents:
-        path, folder = hook_config_path(a, use_global, project), own_dir(a, use_global, project)
+        path, folder = hook_config_path(a, use_global, project), hook_skills_folder(a, use_global, project)
         if path is None or folder is None or path in rows:
             continue
         if not removing and not all(n in names or (folder / n / "SKILL.md").is_file() for n in HOOK_NEEDS):
             continue
-        info, command = hook_info(a), hook_command(folder / HOOK_SKILL)
-        rows[path] = {"path": path, "agent": a, "info": info, "command": command,
-                      "status": hook_status(path, info, command)}
+        info = hook_info(a)
+        entry = hook_entry(info, folder / HOOK_SKILL)
+        rows[path] = {"path": path, "agent": a, "info": info, "entry": entry,
+                      "status": hook_status(path, info, entry)}
     return list(rows.values())
 
 
 def show_hook_plan(rows: list, removing: bool = False) -> int:
-    """Print the prompt-hook part of the plan; return how many settings files would change."""
+    """Print the prompt-hook part of the plan; return how many files would change."""
     if not rows or (removing and all(r["status"] == "missing" for r in rows)):
         return 0
     work = 0
-    print(f"\nPrompt hook ({HOOK_SKILL}: routes each prompt to skills, plans parallel work):")
+    print(f"\nPrompt hook ({HOOK_SKILL}: routes requests to skills, plans parallel work):")
     for r in rows:
-        st, where, who = r["status"], fmt(r["path"]), AGENTS[r["agent"]]["name"]
+        st, where = r["status"], fmt(r["path"])
+        who = AGENTS[r["agent"]]["name"] + (f"; {r['info']['note']}" if r["info"].get("note") else "")
         if st.startswith("unreadable"):
-            print(f"  ! {where} ({who}) can't be read safely ({st[12:]}); it will be left alone")
+            print(f"  ! {where} ({AGENTS[r['agent']]['name']}) can't be read safely ({st[12:]}); it will be left alone")
         elif removing:
             if st != "missing":
-                print(f"  - remove the hook from {where}   ({who})")
+                print(f"  - remove the hook from {where}   ({AGENTS[r['agent']]['name']})")
                 work += 1
         elif st == "missing":
             print(f"  + add the hook to {where}   ({who})")
@@ -915,7 +993,7 @@ def show_hook_plan(rows: list, removing: bool = False) -> int:
             print(f"  ~ update the hook in {where}   ({who})")
             work += 1
         else:
-            print(f"  = already set up in {where}   ({who})")
+            print(f"  = already set up in {where}   ({AGENTS[r['agent']]['name']})")
     return work
 
 
@@ -925,15 +1003,15 @@ def apply_hook_plan(rows: list, removing: bool, dry: bool) -> int:
         st = r["status"]
         if st.startswith("unreadable"):
             if not removing:
-                print(f"  skip  {fmt(r['path'])}: add this {r['info']['event']} hook by hand "
-                      f"({r['info']['docs']}):\n        {r['command']}")
+                print(f"  skip  {fmt(r['path'])}: add this {r['info']['event']} hook by hand ({r['info']['docs']}):\n"
+                      + "\n".join("        " + line for line in json.dumps(r["entry"], indent=2).splitlines()))
             continue
         if (removing and st == "missing") or (not removing and st == "same"):
             continue
         verb = "remove" if removing else ("add" if st == "missing" else "update")
         print(f"  {pre}{verb} hook  {HOOK_SKILL}  in  {fmt(r['path'])}")
         if not dry:
-            write_hook(r["path"], r["info"], None if removing else r["command"])
+            write_hook(r["path"], r["info"], None if removing else r["entry"])
         n += 1
     return n
 
@@ -1321,9 +1399,9 @@ def doctor(root: Path, agents: list, project: Path) -> int:
                 if mcp == "not set up" and user_mcp.get(a):
                     mcp = "not needed (user-level covers it)"
             hook_txt, hook_path = "", hook_config_path(a, use_global, project)
-            folder = own_dir(a, use_global, project)
+            folder = hook_skills_folder(a, use_global, project)
             if hook_path is not None and folder is not None:
-                st = hook_status(hook_path, hook_info(a), hook_command(folder / HOOK_SKILL))
+                st = hook_status(hook_path, hook_info(a), hook_entry(hook_info(a), folder / HOOK_SKILL))
                 hook_txt = "  hook: " + {"same": "set up", "missing": "off",
                                          "differs": "set up, but out of date"}.get(st, st)
             print(f"  {AGENTS[a]['name']:<26} skills: {skills:<29} MCP: {mcp}{hook_txt}")
@@ -1376,6 +1454,8 @@ def execute(root: Path, agents: list, names: list, use_global: bool, project: Pa
     print()
     n = apply_plan(root, plan, force, tidy, dry) if plan else 0
     m = apply_mcp_plan(root, rows, entry, snap, dry) if mcp else 0
+    if hook and not dry:                         # skills are in place now: point each hook at the real copy
+        hook_rows = make_hook_plan(agents, use_global, project, names)
     h = apply_hook_plan(hook_rows, False, dry)
     hooks = f" and {h} prompt hook(s)" if hook_rows else ""
     if dry:

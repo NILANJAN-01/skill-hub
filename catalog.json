@@ -878,9 +878,14 @@
         "docs": "https://code.claude.com/docs/en/mcp"
       },
       "prompt_hook": {
+        "style": "nested",
         "project": ".claude/settings.local.json",
         "global": "~/.claude/settings.json",
         "event": "UserPromptSubmit",
+        "args": [
+          "--hook",
+          "--no-briefs"
+        ],
         "docs": "https://code.claude.com/docs/en/hooks"
       }
     },
@@ -900,6 +905,19 @@
         "format": "json",
         "key": "mcpServers",
         "docs": "https://antigravity.google/docs/mcp"
+      },
+      "prompt_hook": {
+        "style": "named",
+        "project": null,
+        "global": "~/.gemini/config/hooks.json",
+        "event": "PreInvocation",
+        "args": [
+          "--hook",
+          "--hook-format",
+          "injectsteps",
+          "--no-briefs"
+        ],
+        "docs": "https://antigravity.google/docs/hooks"
       },
       "detect": {
         "commands": [
@@ -989,6 +1007,21 @@
         "format": "json",
         "key": "mcpServers",
         "docs": "https://code.visualstudio.com/docs/agents/reference/mcp-configuration"
+      },
+      "prompt_hook": {
+        "style": "file",
+        "project": null,
+        "global": "~/.copilot/hooks/skill-hub.json",
+        "home_env": "COPILOT_HOME",
+        "home_rel": "hooks/skill-hub.json",
+        "event": "sessionStart",
+        "args": [
+          "--hook",
+          "--hook-format",
+          "session"
+        ],
+        "note": "once per session: tells the agent when to run the dispatcher",
+        "docs": "https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-hooks-reference"
       }
     },
     {
@@ -1081,6 +1114,22 @@
         "format": "toml",
         "key": "mcp_servers",
         "docs": "https://developers.openai.com/codex/mcp"
+      },
+      "prompt_hook": {
+        "style": "nested",
+        "project": null,
+        "global": "~/.codex/hooks.json",
+        "home_env": "CODEX_HOME",
+        "home_rel": "hooks.json",
+        "event": "UserPromptSubmit",
+        "args": [
+          "--hook",
+          "--hook-format",
+          "json",
+          "--no-briefs"
+        ],
+        "note": "trust it once in Codex's /hooks",
+        "docs": "https://developers.openai.com/codex/hooks"
       }
     },
     {

@@ -78,7 +78,7 @@ See the full list in [`skills/README.md`](skills/README.md). The machine-readabl
 
 ### Option 1: the hub installer: one command sets up everything
 
-`tools/install.py` needs only Python 3.8+, with no clone and no Node. **`--setup` does everything in one go:** it detects which AI agents and IDEs are installed, installs every skill for them, and registers the **skill-hub MCP server** in each agent's MCP config, so agents can also search the whole hub and load any skill on demand. In agents whose prompt hook can add context (Claude Code), it also registers the **skill-dispatcher** prompt hook: every prompt you type is routed to the right skills, with independent parts planned to run in parallel (`--no-prompt-hook` skips it). It shows the exact plan and changes nothing until you say yes.
+`tools/install.py` needs only Python 3.8+, with no clone and no Node. **`--setup` does everything in one go:** it detects which AI agents and IDEs are installed, installs every skill for them, and registers the **skill-hub MCP server** in each agent's MCP config, so agents can also search the whole hub and load any skill on demand. It also registers the **skill-dispatcher** hook, so what you type is routed to the right skills, with independent parts planned to run in parallel: on every prompt in Claude Code, Codex and Antigravity, and as a once-per-session instruction in GitHub Copilot, whose prompt hook can't add context (`--no-prompt-hook` skips it; Codex asks you to trust the new hook once in `/hooks`). It shows the exact plan and changes nothing until you say yes.
 
 ```bash
 # macOS / Linux
@@ -153,7 +153,7 @@ python install.py --list                                          # agents, plug
 python install.py --setup --yes                                   # everything + MCP server, no questions
 python install.py --setup --agent cursor --project .              # everything, one agent, this project
 python install.py --agent detected --mcp --global                 # only the MCP server
-python install.py --agent claude-code --prompt-hook --global      # only the prompt hook (skill-dispatcher)
+python install.py --agent detected --prompt-hook --global         # only the skill-dispatcher hooks
 python install.py --agent claude-code --plugin ai-agent-tools --mcp --global
 python install.py --agent detected --all --global --yes           # every skill, no MCP server
 python install.py --agent cursor --skill git-rebasing             # one skill, this project

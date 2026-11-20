@@ -163,6 +163,37 @@ class Hook(unittest.TestCase):
             self.assertEqual(out.returncode, 0)
             self.assertTrue(json.loads(out.stdout)["parallel"])
 
+    def test_payload_fields_from_other_agents(self):
+        p = d.hook_payload(json.dumps({"lastUserInput": "fix it now", "workspacePaths": ["/w"], "conversationId": "c"}))
+        self.assertEqual((p["prompt"], p["cwd"], p["session"]), ("fix it now", "/w", "c"))
+
+    def test_output_shapes(self):
+        self.assertEqual(json.loads(d.hook_output("x", "json")),
+                         {"hookSpecificOutput": {"hookEventName": "UserPromptSubmit", "additionalContext": "x"}})
+        self.assertEqual(json.loads(d.hook_output("x", "injectsteps")), {"injectSteps": [{"ephemeralMessage": "x"}]})
+        self.assertEqual(json.loads(d.hook_output("x", "session")), {"additionalContext": "x"})
+        self.assertEqual(d.hook_output("x", "text"), "x")
+
+    def test_injectsteps_sends_a_plan_once_per_prompt(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            os.environ["SKILL_DISPATCH_STATE"] = str(Path(tmp) / "seen.json")
+            self.addCleanup(os.environ.pop, "SKILL_DISPATCH_STATE", None)
+            self.assertTrue(d.first_time_seen("c1", "rebase my branch"))
+            self.assertFalse(d.first_time_seen("c1", "rebase my branch"))     # the next model call, same prompt
+            self.assertTrue(d.first_time_seen("c2", "rebase my branch"))      # another conversation
+            self.assertTrue(d.first_time_seen("c1", "now tag the release"))   # a new prompt
+
+    def test_json_only_formats_print_an_empty_object_when_quiet(self):
+        for fmt in ("injectsteps", "session"):
+            env = dict(os.environ, SKILL_DISPATCH="off")
+            out = subprocess.run([sys.executable, str(SCRIPT), "--hook", "--hook-format", fmt], input="{}",
+                                 text=True, capture_output=True, env=env, timeout=60)
+            self.assertEqual((out.returncode, out.stdout.strip()), (0, "{}"))
+
+    def test_session_guidance_names_this_script(self):
+        out = self.hook("{}", "--hook-format", "session")
+        self.assertIn("dispatch.py", json.loads(out.stdout)["additionalContext"])
+
     def test_off_switch(self):
         env = dict(os.environ, SKILL_DISPATCH="off")
         out = subprocess.run([sys.executable, str(SCRIPT), "--hook"], input='{"prompt": "rebase my branch onto main"}',

@@ -54,13 +54,22 @@ metadata:
 
 ## Run on every prompt
 
-Many agents can run a command when the user submits a prompt (a prompt-submit hook) and add its output to the agent's context. In `--hook` mode the script reads the hook's payload from stdin: JSON with a `prompt` field, plus `cwd` if present, or plain text. It prints the plan only when at least one part matches a skill with medium or high confidence, so trivial prompts and slash commands add nothing. It always exits 0, so it never blocks a prompt.
+Many agents can run a command at set points (hooks) and add its output to the agent's context. In `--hook` mode the script reads the hook's payload from stdin: JSON with the prompt (`prompt` or `lastUserInput`) and the folder (`cwd` or `workspacePaths`), or plain text. It prints the plan only when at least one part matches a skill with medium or high confidence, so trivial prompts and slash commands add nothing. It always exits 0, so it never blocks a prompt.
 
 ```bash
 python <skills-folder>/skill-dispatcher/scripts/dispatch.py --hook --no-briefs
 ```
 
-The skill-hub installer registers this for you: `python tools/install.py --setup` adds the hook for every detected agent whose prompt hook can add context, and `--uninstall` removes it. For other agents, register the command as the prompt-submit hook by hand, following the agent's own hook documentation. Use `--no-briefs` to keep the added context small; the agent can run the script without it when it decides to dispatch. Set the environment variable `SKILL_DISPATCH=off` to switch the hook off without removing it.
+Pick the output with `--hook-format`, to match what the agent's hook documentation says it reads:
+
+| Format | Output | For a hook that |
+|---|---|---|
+| `text` (default) | the plan as plain text | runs on each prompt and adds its stdout to the context |
+| `json` | `{"hookSpecificOutput": {"hookEventName": "UserPromptSubmit", "additionalContext": ...}}` | runs on each prompt and reads that JSON |
+| `injectsteps` | `{"injectSteps": [{"ephemeralMessage": ...}]}` | runs before every model call; the plan is sent once per prompt |
+| `session` | `{"additionalContext": ...}` | runs once per session; it adds a standing instruction to run this script for multi-part requests |
+
+The skill-hub installer registers this for you: `python tools/install.py --setup` adds the right hook and format for every detected agent that has hooks, and `--uninstall` removes it. Some agents ask you to review and trust a new hook once before it runs. For other agents, register the command as the prompt-submit hook by hand, following the agent's own hook documentation. Use `--no-briefs` to keep the added context small; the agent can run the script without it when it decides to dispatch. Set the environment variable `SKILL_DISPATCH=off` to switch the hook off without removing it.
 
 ## Troubleshooting
 

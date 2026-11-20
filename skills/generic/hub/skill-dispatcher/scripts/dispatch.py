@@ -4,6 +4,7 @@
     python dispatch.py "request text" [--root DIR]... [--run-dir DIR] [--json]
     python dispatch.py --file request.txt
     python dispatch.py --hook            # read the prompt an agent's prompt-submit hook sends on stdin
+    python dispatch.py --hook --hook-format json|injectsteps|session   # output shapes other agents expect
 
 It splits the request into parts and matches each part to an installed skill (using the skill-router skill's
 matcher), works out which parts depend on others, and groups the parts into waves. Every task in a wave can run
@@ -11,19 +12,28 @@ at the same time as its own sub-agent; a wave starts when the one before it is d
 self-contained brief to hand to a sub-agent.
 
 --hook mode never fails the prompt: it prints nothing for trivial prompts, slash commands or when no skill fits,
-and always exits 0. Set SKILL_DISPATCH=off to silence it.
+and always exits 0. Set SKILL_DISPATCH=off to silence it. Hook output formats:
+  text         plain text on stdout (agents that add a prompt hook's stdout to the context)
+  json         {"hookSpecificOutput": {"hookEventName": "UserPromptSubmit", "additionalContext": ...}}
+  injectsteps  {"injectSteps": [{"ephemeralMessage": ...}]}, for a hook that runs before every model call:
+               the plan is sent once per prompt (the last prompt seen per conversation is kept in a small file
+               in the temp folder)
+  session      {"additionalContext": ...}, for a once-per-session hook: a standing instruction to run this
+               script for multi-part requests (agents whose prompt hook cannot add context)
 
-Standard library only (Python 3.8+). Read-only: it never installs, runs or writes anything.
+Standard library only (Python 3.8+). It never installs or runs anything; it writes only the injectsteps state file.
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib.util
 import json
 import os
 import re
 import sys
+import tempfile
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -42,7 +52,9 @@ USES_EARLIER = re.compile(r"\b(the (?:results?|outputs?|findings|report|summary|
                           r"based on (?:it|that|this|those|these|them|the)|using (?:that|those|these|them|the results?|"
                           r"the outputs?|the findings)|from (?:that|those|the) (?:step|results?|outputs?|analysis)|"
                           r"the above|with (?:the|those|these) (?:results|findings))\b", re.I)
-HOOK_PROMPT_KEYS = ("prompt", "user_prompt", "userPrompt", "input", "message", "text")
+HOOK_PROMPT_KEYS = ("prompt", "user_prompt", "userPrompt", "lastUserInput", "input", "message", "text")
+HOOK_SESSION_KEYS = ("conversationId", "session_id", "sessionId")
+HOOK_FORMATS = ("text", "json", "injectsteps", "session")
 
 
 # ----------------------------------------------------------------------------- loading
@@ -201,20 +213,73 @@ def worth_showing(result: dict) -> bool:
     return any(t["skill"] and t["confidence"] in ("high", "medium") for t in result["tasks"])
 
 
-def prompt_from_hook(raw: str):
-    """(prompt, cwd) from a hook payload: JSON with a prompt field, or the raw text."""
+def hook_payload(raw: str) -> dict:
+    """{"prompt", "cwd", "session"} from a hook payload: JSON with a prompt field, or the raw text."""
     try:
         data = json.loads(raw)
     except ValueError:
-        return raw.strip(), None
+        return {"prompt": raw.strip(), "cwd": None, "session": None}
     if isinstance(data, str):
-        return data.strip(), None
+        return {"prompt": data.strip(), "cwd": None, "session": None}
     if not isinstance(data, dict):
-        return "", None
-    for k in HOOK_PROMPT_KEYS:
-        if isinstance(data.get(k), str):
-            return data[k].strip(), data.get("cwd") if isinstance(data.get("cwd"), str) else None
-    return "", None
+        return {"prompt": "", "cwd": None, "session": None}
+    prompt = next((data[k].strip() for k in HOOK_PROMPT_KEYS if isinstance(data.get(k), str)), "")
+    cwd = data.get("cwd")
+    paths = data.get("workspacePaths")
+    if not isinstance(cwd, str) and isinstance(paths, list) and paths and isinstance(paths[0], str):
+        cwd = paths[0]
+    session = next((str(data[k]) for k in HOOK_SESSION_KEYS if data.get(k)), None)
+    return {"prompt": prompt, "cwd": cwd if isinstance(cwd, str) else None, "session": session}
+
+
+def prompt_from_hook(raw: str):
+    """(prompt, cwd) from a hook payload."""
+    p = hook_payload(raw)
+    return p["prompt"], p["cwd"]
+
+
+def state_file() -> Path:
+    return Path(os.environ.get("SKILL_DISPATCH_STATE") or Path(tempfile.gettempdir()) / "skill-dispatcher-seen.json")
+
+
+def first_time_seen(session, prompt: str) -> bool:
+    """True the first time this prompt is seen in this conversation (hooks that fire before every model call)."""
+    path, key = state_file(), session or "default"
+    digest = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
+    try:
+        seen = json.loads(path.read_text(encoding="utf-8"))
+        seen = seen if isinstance(seen, dict) else {}
+    except (OSError, ValueError):
+        seen = {}
+    if seen.get(key) == digest:
+        return False
+    seen.pop(key, None)
+    seen[key] = digest
+    try:
+        path.write_text(json.dumps(dict(list(seen.items())[-50:])), encoding="utf-8")
+    except OSError:
+        pass
+    return True
+
+
+def session_guidance() -> str:
+    """The standing instruction a once-per-session hook adds (agents whose prompt hook cannot add context)."""
+    py = Path(sys.executable).as_posix() if sys.executable else "python"
+    script = (HERE / "dispatch.py").as_posix()
+    return ("skill-hub skill-dispatcher is installed. When a request has several parts, or the user wants it done "
+            f'faster or in parallel, first run: "{py}" "{script}" "<the request>". It splits the request into tasks, '
+            "picks the installed skill for each and groups independent tasks into waves that run at the same time "
+            "as sub-agents, with a brief for each. Skip it for a single, simple request.")
+
+
+def hook_output(text: str, fmt: str) -> str:
+    if fmt == "json":
+        return json.dumps({"hookSpecificOutput": {"hookEventName": "UserPromptSubmit", "additionalContext": text}})
+    if fmt == "injectsteps":
+        return json.dumps({"injectSteps": [{"ephemeralMessage": text}]})
+    if fmt == "session":
+        return json.dumps({"additionalContext": text})
+    return text
 
 
 # ----------------------------------------------------------------------------- main
@@ -251,19 +316,29 @@ def skill_paths(router, roots=(), defaults: bool = True) -> dict:
 
 
 def run_hook(args, router) -> int:
-    if os.environ.get("SKILL_DISPATCH", "").lower() in ("off", "0", "false"):
-        return 0
+    fmt = args.hook_format
+    quiet = "{}" if fmt in ("injectsteps", "session") else ""    # JSON-only agents get an empty object
+    out = quiet
     try:
-        text, cwd = prompt_from_hook(sys.stdin.read())
-        if not text or text.startswith("/") or len(text.split()) < 3 or router is None:
-            return 0
-        if cwd and Path(cwd).is_dir():
-            os.chdir(cwd)
-        result = dispatch(text, router, args.root, not args.no_default_roots, args.run_dir)
-        if worth_showing(result):
-            print(json.dumps(result, indent=2) if args.json else render(result, not args.no_briefs))
+        if os.environ.get("SKILL_DISPATCH", "").lower() in ("off", "0", "false"):
+            pass
+        elif fmt == "session":
+            out = hook_output(session_guidance(), fmt)
+        else:
+            p = hook_payload(sys.stdin.read())
+            text = p["prompt"]
+            if text and not text.startswith("/") and len(text.split()) >= 3 and router is not None \
+                    and (fmt != "injectsteps" or first_time_seen(p["session"], text)):
+                if p["cwd"] and Path(p["cwd"]).is_dir():
+                    os.chdir(p["cwd"])
+                result = dispatch(text, router, args.root, not args.no_default_roots, args.run_dir)
+                if worth_showing(result):
+                    body = json.dumps(result, indent=2) if args.json else render(result, not args.no_briefs)
+                    out = hook_output(body, fmt)
     except Exception:                                # a hook must never block the user's prompt
-        pass
+        out = quiet
+    if out:
+        print(out)
     return 0
 
 
@@ -272,6 +347,8 @@ def main() -> int:
     ap.add_argument("request", nargs="?", help="the user's request text")
     ap.add_argument("--file", type=Path, help="read the request from a file")
     ap.add_argument("--hook", action="store_true", help="read a hook payload (JSON or text) from stdin; quiet, exit 0")
+    ap.add_argument("--hook-format", choices=HOOK_FORMATS, default="text",
+                    help="hook output shape the agent expects (default: text)")
     ap.add_argument("--root", action="append", default=[], help="extra skills folder to scan (repeatable)")
     ap.add_argument("--no-default-roots", action="store_true", help="scan only the --root folders")
     ap.add_argument("--run-dir", default="", help="folder the briefs tell each task to write its result to")

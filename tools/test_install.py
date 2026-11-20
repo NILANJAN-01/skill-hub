@@ -331,7 +331,7 @@ class PromptHookTests(Sandbox):
                       self.our_hooks(local)[0]["command"])
 
     def test_agents_without_a_prompt_hook_and_unreadable_files_are_left_alone(self):
-        self.assertEqual(install.make_hook_plan(["cursor", "codex"], True, self.project, self.names), [])
+        self.assertEqual(install.make_hook_plan(["cursor", "devin"], True, self.project, self.names), [])
         self.settings.parent.mkdir(parents=True)
         self.settings.write_text('{ // comment\n}', encoding="utf-8")
         rows = install.make_hook_plan(["claude-code"], True, self.project, self.names)
@@ -344,6 +344,93 @@ class PromptHookTests(Sandbox):
         self.assertFalse(self.settings.exists())
         install.execute(self.root, ["claude-code"], self.names, True, self.project, yes=True, hook=False)
         self.assertFalse(self.settings.exists())
+
+
+class OtherAgentHookTests(PromptHookTests):
+    AGENTS = ["claude-code", "codex", "antigravity", "copilot"]
+
+    def setUp(self):
+        super().setUp()
+        self.codex = self.home / ".codex" / "hooks.json"
+        self.antigravity = self.home / ".gemini" / "config" / "hooks.json"
+        self.copilot = self.home / ".copilot" / "hooks" / "skill-hub.json"
+        for var in ("CODEX_HOME", "COPILOT_HOME", "SKILL_DISPATCH_STATE"):
+            saved = os.environ.pop(var, None)
+            if saved is not None:
+                self.addCleanup(os.environ.__setitem__, var, saved)
+        os.environ["SKILL_DISPATCH_STATE"] = str(self.home / "seen.json")
+        self.addCleanup(os.environ.pop, "SKILL_DISPATCH_STATE", None)
+
+    def read(self, path: Path) -> dict:
+        return json.loads(path.read_text(encoding="utf-8"))
+
+    def test_setup_writes_each_agents_format_and_uninstall_removes_only_ours(self):
+        self.antigravity.parent.mkdir(parents=True)
+        reminder = {"PreInvocation": [{"type": "command", "command": "./scripts/reminder.sh"}]}
+        self.antigravity.write_text(json.dumps({"reminder": reminder}), encoding="utf-8")
+        install.execute(self.root, self.AGENTS, self.names, True, self.project, yes=True, hook=True)
+
+        codex = self.our_hooks(self.codex)
+        self.assertEqual(len(codex), 1)
+        self.assertIn("--hook-format json", codex[0]["command"])
+        self.assertIn((self.home / ".agents" / "skills" / "skill-dispatcher").as_posix(), codex[0]["command"])
+
+        ag = self.read(self.antigravity)
+        self.assertEqual(ag["reminder"], reminder)
+        handler = ag[install.HOOK_NAME]["PreInvocation"][0]
+        self.assertIn("--hook-format injectsteps", handler["command"])
+        self.assertIn((self.home / ".gemini" / "config" / "skills").as_posix(), handler["command"])
+
+        cp = self.read(self.copilot)
+        self.assertEqual(cp["version"], 1)
+        handler = cp["hooks"]["sessionStart"][0]
+        self.assertIn("--hook-format session", handler["bash"])
+        self.assertIn("--hook-format session", handler["powershell"])
+
+        rows = install.make_hook_plan(self.AGENTS, True, self.project, self.names)
+        self.assertEqual({r["status"] for r in rows}, {"same"})          # a second run changes nothing
+
+        install.execute(self.root, self.AGENTS, self.names, True, self.project, yes=True, hook=True,
+                        remove=True, uninstall=True)
+        self.assertEqual(self.read(self.codex), {})
+        self.assertEqual(self.read(self.antigravity), {"reminder": reminder})
+        self.assertFalse(self.copilot.exists())
+
+    def test_installed_commands_print_what_each_agent_expects(self):
+        install.execute(self.root, self.AGENTS, self.names, True, self.project, yes=True, hook=True)
+        payloads = {
+            "codex": (self.our_hooks(self.codex)[0]["command"], {"prompt": "rebase my branch onto main please"}),
+            "antigravity": (self.read(self.antigravity)[install.HOOK_NAME]["PreInvocation"][0]["command"],
+                            {"conversationId": "c1", "invocationNum": 0, "lastUserInput": "rebase my branch onto main"}),
+            "copilot": (self.read(self.copilot)["hooks"]["sessionStart"][0]["bash"], {"sessionId": "s1"}),
+        }
+        for agent, (cmd, payload) in payloads.items():
+            out = subprocess.run(cmd, shell=True, input=json.dumps(payload), capture_output=True, text=True,
+                                 timeout=60)
+            self.assertEqual(out.returncode, 0, (agent, out.stderr))
+            if agent == "codex":
+                self.assertTrue(out.stdout.strip() == "" or "hookSpecificOutput" in json.loads(out.stdout))
+            elif agent == "antigravity":
+                self.assertIsInstance(json.loads(out.stdout), dict)
+            else:
+                self.assertIn("skill-dispatcher", json.loads(out.stdout)["additionalContext"])
+
+    def test_shared_project_files_are_never_used(self):
+        self.assertEqual(install.make_hook_plan(["codex", "antigravity", "copilot"], False, self.project,
+                                                self.names), [])
+
+    def test_home_env_moves_the_user_file(self):
+        os.environ["CODEX_HOME"] = str(self.home / "elsewhere")
+        self.addCleanup(os.environ.pop, "CODEX_HOME", None)
+        self.assertEqual(install.hook_config_path("codex", True, self.project), self.home / "elsewhere" / "hooks.json")
+
+    def test_paths_with_spaces_are_quoted_for_each_shell(self):
+        info = install.hook_info("copilot")
+        cmd, ps = install.hook_commands(info, Path("C:/My Skills/skill-dispatcher"))
+        self.assertIn('"C:/My Skills/skill-dispatcher/scripts/dispatch.py"', cmd)
+        self.assertTrue(ps.startswith('& ') or not cmd.startswith('"'))
+        plain, _ = install.hook_commands(info, Path("C:/skills/skill-dispatcher"))
+        self.assertIn(" C:/skills/skill-dispatcher/scripts/dispatch.py ", plain)
 
 
 if __name__ == "__main__":
