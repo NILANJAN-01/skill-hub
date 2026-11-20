@@ -3985,6 +3985,7 @@
         "Import my agent session logs and tell me where my tokens went this week."
       ],
       "files": [
+        "references/commands.md",
         "references/session-logs.md"
       ]
     },

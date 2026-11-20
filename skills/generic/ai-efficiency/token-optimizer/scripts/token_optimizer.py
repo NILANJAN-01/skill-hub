@@ -3,7 +3,8 @@
 Standard library only.
 
 Reduce tokens (each prints the smaller text and records the before/after token counts in the ledger):
-  log FILE                       keep errors with their context, the head and the tail; fold repeated lines
+  auto PATH...                   start here: picks one of the methods below for the input (small files unchanged)
+  log FILE                      keep errors with their context, the head and the tail; fold repeated lines
   outline FILE                   classes, functions and headings with line ranges, without their bodies
   slice FILE (--symbol NAME | --lines A-B)
                                  print only the function, class or line range you need
@@ -15,7 +16,8 @@ Track usage:
                                  add one usage entry by hand (numbers from the agent's usage display)
   import [LOG...] [--auto]       read agent session logs: tokens per session and day, models, skills used
   stats [--days N]               totals, per day, per skill, and advice
-  dashboard [-o FILE]            self-contained HTML dashboard (charts and tables, no internet needed)
+  dashboard [--import] [-o FILE] self-contained HTML dashboard (charts and tables, no internet needed);
+                                 --import refreshes from the known session-log folders first
 
 Ledger: ~/.skill-hub/token-usage.jsonl, or $TOKEN_OPTIMIZER_LEDGER, or --ledger FILE. It holds numbers, skill,
 tool and model names, file base names and short notes you type: never file or conversation content.
@@ -1055,6 +1057,14 @@ def build_parser() -> argparse.ArgumentParser:
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = p.add_subparsers(dest="cmd", required=True)
 
+    s = sub.add_parser("auto", parents=[common, rec],
+                       help="pick the right reduction for a file or folder (start here)")
+    s.add_argument("paths", nargs="+", help="a file, a folder, or several files")
+    s.add_argument("--min-tokens", type=int, default=1500, help="files up to this size are printed unchanged")
+    s.add_argument("--budget", type=int, default=8000, help="token budget for folders and very large JSON")
+    s.add_argument("--focus", action="append", default=[], help="folders: files containing this term first")
+    s.add_argument("--no-git", action="store_true", help="folders: walk instead of asking git for the file list")
+
     s = sub.add_parser("log", parents=[common, rec], help="compress a log to its problems")
     s.add_argument("file")
     s.add_argument("--head", type=int, default=5)
@@ -1107,10 +1117,67 @@ def build_parser() -> argparse.ArgumentParser:
         s.add_argument("--meter-ledger", help="skill-token-meter ledger (default ~/.skill-hub/token-ledger.jsonl)")
         s.add_argument("--no-meter", action="store_true", help="ignore the skill-token-meter ledger")
         if name == "dashboard":
+            s.add_argument("--import", dest="do_import", action="store_true",
+                           help="first import the known session-log folders (changed in the last --days, or 30)")
             s.add_argument("-o", "--out", help="HTML file (default ~/.skill-hub/token-dashboard.html)")
             s.add_argument("--open", action="store_true", help="open it in the default browser")
             s.add_argument("--title", default="Token usage dashboard")
     return p
+
+
+LOG_HINT = re.compile(r"^\s*(?:\[?\d{4}-\d\d-\d\d|\[?\d\d:\d\d:\d\d|\[?(?:TRACE|DEBUG|INFO|WARN|WARNING|ERROR|FATAL|"
+                      r"CRITICAL)\b|[VDIWEF]/\w|\d{2}-\d{2} \d\d:\d\d)", re.I)
+DOC_EXT = {".md", ".markdown", ".rst", ".adoc"}
+
+
+def looks_like_log(path: Path, text: str) -> bool:
+    if path.suffix.lower() in (".log", ".out", ".err") or "log" in path.stem.lower():
+        return True
+    lines = [ln for ln in text.splitlines()[:300] if ln.strip()]
+    return bool(lines) and sum(1 for ln in lines if LOG_HINT.match(ln)) >= 0.3 * len(lines)
+
+
+def auto_reduce(paths, min_tokens: int = 1500, budget: int = 8000, focus=(), use_git: bool = True) -> dict:
+    """Pick the right reduction for the input so the agent only has to remember one command.
+
+    folder or several files -> pack; small file -> unchanged; JSON -> shrunk (shape if still over budget);
+    log-like text -> log; source or Markdown -> outline; any other text -> log (head, tail, problem lines).
+    """
+    paths = [Path(p).expanduser() for p in paths]
+    if len(paths) > 1 or paths[0].is_dir():
+        r = build_pack([str(p) for p in paths], budget, focus, use_git)
+        return {"method": "pack", "text": r["text"], "before": r["original"], "after": r["tokens"],
+                "source": paths[0].resolve().name if len(paths) == 1 else ""}
+    path = paths[0]
+    if not path.is_file():
+        raise SystemExit(f"error: {path} not found")
+    if looks_binary(path):
+        raise SystemExit(f"error: {path.name} is binary; use a tool made for that file type")
+    text = read_text(path)
+    before = est_tokens(text, is_code(path))
+    result = {"source": path.name, "before": before}
+    if before <= min_tokens:
+        return {**result, "method": "none", "text": text, "after": before}
+    ext = path.suffix.lower()
+    if ext in (".json", ".jsonl", ".ndjson", ".geojson") or (ext not in CODE_EXT and text.lstrip()[:1] in "{["
+                                                            and not looks_like_log(path, text)):
+        try:
+            r = compact_json(text)
+            method = "json"
+            if est_tokens(r["text"], True) > budget:
+                r, method = compact_json(text, shape=True), "json-shape"
+            return {**result, "method": method, "text": r["text"], "after": est_tokens(r["text"], True)}
+        except SystemExit:
+            pass                                    # not JSON after all: fall through to the text rules
+    if looks_like_log(path, text):
+        r = compress_log(text)
+        return {**result, "method": "log", "text": r["text"], "after": est_tokens(r["text"])}
+    if ext in CODE_EXT or ext in DOC_EXT:
+        r = outline(path, text)
+        if r["items"]:
+            return {**result, "method": "outline", "text": r["text"], "after": est_tokens(r["text"], is_code(path))}
+    r = compress_log(text)
+    return {**result, "method": "log", "text": r["text"], "after": est_tokens(r["text"])}
 
 
 def _summary_from_args(a) -> dict:
@@ -1154,7 +1221,17 @@ def main(argv=None) -> int:
             pass
     a = build_parser().parse_args(argv)
 
-    if a.cmd == "log":
+    if a.cmd == "auto":
+        r = auto_reduce(a.paths, a.min_tokens, a.budget, a.focus, not a.no_git)
+        if a.json:
+            _emit(json.dumps({k: v for k, v in r.items() if k != "text"}, indent=2) + "\n", a.out)
+        else:
+            _emit(r["text"], a.out)
+        if r["method"] == "none":
+            print(f"[auto] small input (~{r['before']:,} tokens): printed unchanged", file=sys.stderr)
+        else:
+            _report_saving(r["method"], r["before"], r["after"], a, r["source"], "auto")
+    elif a.cmd == "log":
         text = read_text(a.file)
         r = compress_log(text, a.head, a.tail, a.context, a.max_repeats)
         before, after = est_tokens(text), est_tokens(r["text"])
@@ -1237,6 +1314,9 @@ def main(argv=None) -> int:
     elif a.cmd == "dashboard":
         sys.path.insert(0, str(HERE))
         from token_dashboard import render
+        if a.do_import:
+            r = import_logs(find_logs((), True, a.days or 30), ledger_path(a.ledger))
+            print(f"Imported {r['events']} session-day entries from {r['files']} log files", file=sys.stderr)
         s = _summary_from_args(a)
         sources = [str(ledger_path(a.ledger))]
         if not a.no_meter and meter_ledger_path(a.meter_ledger).is_file():

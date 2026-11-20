@@ -166,6 +166,55 @@ class PackTests(unittest.TestCase):
         self.assertEqual(r["listed"], 2)
 
 
+class AutoTests(TempLedger):
+    def write(self, name, text):
+        p = self.dir / name
+        p.write_text(text, encoding="utf-8")
+        return p
+
+    def test_picks_the_method_by_input(self):
+        big_py = "".join(f"def f{i}(x):\n" + "    x = x * 2  # a long body line\n" * 8 + "    return x\n\n"
+                         for i in range(80))
+        rows = [{"id": i, "blob": "y" * 300} for i in range(300)]
+        cases = {
+            "build.log": (big_log(), "log"),
+            "output.txt": (big_log(), "log"),                       # log-like content, no .log suffix
+            "data.json": (json.dumps(rows[:30]), "json"),
+            "rows.json": (json.dumps(rows), "json"),                # long list: 3 samples fit the budget
+            "events.jsonl": ("\n".join(json.dumps(r) for r in rows), "json"),
+            "wide.json": (json.dumps({f"key{i}": "v" * 40 for i in range(3000)}), "json-shape"),  # still too big
+            "module.py": (big_py, "outline"),
+            "notes.md": ("# Title\n" + "".join(f"## Part {i}\n" + "text " * 300 + "\n" for i in range(10)),
+                         "outline"),
+        }
+        for name, (text, method) in cases.items():
+            with self.subTest(file=name):
+                r = to.auto_reduce([self.write(name, text)], budget=2000)
+                self.assertEqual(r["method"], method)
+                self.assertLess(r["after"], r["before"])
+
+    def test_small_file_is_unchanged_and_not_recorded(self):
+        p = self.write("tiny.py", "print('hi')\n")
+        out = self.run_cli("auto", str(p))
+        self.assertEqual(out, "print('hi')\n")
+        self.assertEqual(to.read_events(self.ledger), [])
+
+    def test_folder_becomes_a_pack_and_is_recorded(self):
+        d = self.dir / "proj"
+        d.mkdir()
+        (d / "a.py").write_text("def a():\n    return 1\n", encoding="utf-8")
+        out = self.run_cli("auto", str(d), "--no-git", "--skill", "python-unit-test")
+        self.assertIn("# context pack", out)
+        e = to.read_events(self.ledger)[0]
+        self.assertEqual((e["tool"], e["skill"], e["note"]), ("pack", "python-unit-test", "auto"))
+
+    def test_binary_is_refused(self):
+        p = self.dir / "x.bin"
+        p.write_bytes(b"\0\1\2" * 10)
+        with self.assertRaises(SystemExit):
+            to.auto_reduce([p])
+
+
 class ImportTests(TempLedger):
     def test_session_log_import(self):
         events = to.scan_session(FIX / "session.jsonl", "demo")
@@ -262,6 +311,23 @@ class LedgerStatsDashboardTests(TempLedger):
         self.assertNotIn("<script>alert(1)", html)
         self.assertIn("&lt;script&gt;alert(1)", html)
         self.assertNotIn("http://", html.replace("http://www.w3.org", ""))   # no external resources
+
+    def test_dashboard_import_refreshes_first(self):
+        logs = self.dir / "agent-logs"
+        logs.mkdir()
+        (logs / "s.jsonl").write_text((FIX / "session.jsonl").read_text(encoding="utf-8"), encoding="utf-8")
+        saved = dict(to.KNOWN_LOG_DIRS)
+        to.KNOWN_LOG_DIRS.clear()
+        to.KNOWN_LOG_DIRS["test-agent"] = str(logs)
+        try:
+            self.run_cli("dashboard", "--import", "-o", str(self.dir / "d.html"))
+        finally:
+            to.KNOWN_LOG_DIRS.clear()
+            to.KNOWN_LOG_DIRS.update(saved)
+        events = to.read_events(self.ledger)
+        self.assertEqual(len(events), 2)
+        self.assertEqual(events[0]["agent"], "test-agent")
+        self.assertIn("context-handoff", (self.dir / "d.html").read_text(encoding="utf-8"))
 
     def test_empty_dashboard(self):
         html = td.render(to.summarize([]), generated=to.now_iso(), sources=["none"])
