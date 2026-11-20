@@ -23,7 +23,7 @@ No Python? Install it from https://www.python.org/downloads/. On Windows, tick *
 
 ## Step 2: Run the installer. It finds your agents and asks you
 
-**Fastest: one command for everything.** `--setup` installs every skill and the skill-hub MCP server into every agent it finds, for your user. It shows the plan first; **nothing is written until you say yes.**
+**Fastest: one command for everything.** `--setup` installs every skill and the skill-hub MCP server into every agent it finds, for your user. In Claude Code it also adds a prompt hook that routes each prompt to the right skills and plans independent parts to run in parallel (`--no-prompt-hook` skips it). It shows the plan first; **nothing is written until you say yes.**
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py | python3 - --setup   # macOS / Linux
@@ -146,7 +146,7 @@ Everyone who clones the repo now gets the skills in their agent automatically.
 
 ## Step 7: Update or remove skills
 
-- **Check everything:** `python install.py --doctor` lists, per agent, how many hub skills it has (and which differ from the hub), whether the MCP server is registered, and runs a self-check of the server.
+- **Check everything:** `python install.py --doctor` lists, per agent, how many hub skills it has (and which differ from the hub), whether the MCP server and the prompt hook are registered, and runs a self-check of the server.
 - **See what is installed:** `python install.py --installed --global` lists every hub skill, the hub version it came from, and whether it still matches the hub. (Drop `--global` for the current project.)
 - **Add other MCP servers to every agent:** `python install.py --list-mcp` shows the presets; `python install.py --add-mcp playwright --mcp-test` tests the server, then adds it to every detected agent. Use `--mcp-command "<command> <args>"` for any other server, `--mcp-env NAME` to copy a secret from your environment, and `--remove-mcp <name>` to take it out again.
 - **Remove everything:** `python install.py --uninstall` removes the hub skills, the `skill-hub` MCP entries and the hub copy in `~/.skill-hub`. It lists everything and asks first.
@@ -163,6 +163,7 @@ Use options when you already know what you want, or for scripts, dotfiles and CI
 ```bash
 ... --setup --yes                                    # everything: all skills + MCP server, every detected agent
 ... --agent detected --mcp --global                  # only the skill-hub MCP server
+... --agent claude-code --prompt-hook --global       # only the prompt hook (skill-dispatcher)
 ... --detect                                         # just show which agents are installed
 ... --list                                           # agents, categories and every skill
 ... --agent detected --all --global                  # every skill, every detected agent, for you

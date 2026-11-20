@@ -60,7 +60,7 @@ Many agents can run a command when the user submits a prompt (a prompt-submit ho
 python <skills-folder>/skill-dispatcher/scripts/dispatch.py --hook --no-briefs
 ```
 
-Register that command as the agent's prompt-submit hook, following the agent's own hook documentation. Use `--no-briefs` to keep the added context small; the agent can run the script without it when it decides to dispatch. Set the environment variable `SKILL_DISPATCH=off` to switch the hook off without removing it.
+The skill-hub installer registers this for you: `python tools/install.py --setup` adds the hook for every detected agent whose prompt hook can add context, and `--uninstall` removes it. For other agents, register the command as the prompt-submit hook by hand, following the agent's own hook documentation. Use `--no-briefs` to keep the added context small; the agent can run the script without it when it decides to dispatch. Set the environment variable `SKILL_DISPATCH=off` to switch the hook off without removing it.
 
 ## Troubleshooting
 

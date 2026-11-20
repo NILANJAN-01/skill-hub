@@ -876,6 +876,12 @@
         "format": "json",
         "key": "mcpServers",
         "docs": "https://code.claude.com/docs/en/mcp"
+      },
+      "prompt_hook": {
+        "project": ".claude/settings.local.json",
+        "global": "~/.claude/settings.json",
+        "event": "UserPromptSubmit",
+        "docs": "https://code.claude.com/docs/en/hooks"
       }
     },
     {

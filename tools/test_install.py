@@ -5,6 +5,8 @@
 import hashlib
 import json
 import os
+import shutil
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -262,6 +264,86 @@ class OtherServerTests(Sandbox):
         self.assertEqual(install.manage_server(self.root, "tool-x", agents, True, self.project, None, yes=True), 2)
         self.assertEqual(install.configured_servers(cursor, install.mcp_info("cursor")), ["skill-hub"])
         self.assertEqual(install.configured_servers(codex, install.mcp_info("codex")), ["skill-hub"])
+
+
+REPO_HUB = Path(__file__).resolve().parent.parent / "skills" / "generic" / "hub"
+
+
+class PromptHookTests(Sandbox):
+    def setUp(self):
+        super().setUp()
+        for name in install.HOOK_NEEDS:                      # the real skills, so the hook can really run
+            shutil.copytree(str(REPO_HUB / name), str(self.root / "skills" / name),
+                            ignore=shutil.ignore_patterns("__pycache__"))
+        self.names = ["demo", *install.HOOK_NEEDS]
+        self.settings = self.home / ".claude" / "settings.json"
+
+    def our_hooks(self, path: Path) -> list:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        return [h for g in data.get("hooks", {}).get("UserPromptSubmit", []) for h in g["hooks"]
+                if install._is_our_hook(h)]
+
+    def test_setup_merges_the_hook_and_uninstall_removes_only_it(self):
+        self.settings.parent.mkdir(parents=True)
+        other = {"type": "command", "command": "echo mine"}
+        self.settings.write_text(json.dumps({"model": "opus", "hooks": {
+            "UserPromptSubmit": [{"hooks": [other]}], "PreToolUse": [{"matcher": "Bash", "hooks": [other]}]}}),
+            encoding="utf-8")
+        install.execute(self.root, ["claude-code", "cursor"], self.names, True, self.project, yes=True, hook=True)
+        ours = self.our_hooks(self.settings)
+        self.assertEqual(len(ours), 1)
+        self.assertIn((self.home / ".claude" / "skills" / "skill-dispatcher").as_posix(), ours[0]["command"])
+        data = json.loads(self.settings.read_text(encoding="utf-8"))
+        self.assertEqual(data["model"], "opus")
+        self.assertIn(other, data["hooks"]["UserPromptSubmit"][0]["hooks"])
+        self.assertIn("PreToolUse", data["hooks"])
+        self.assertTrue((self.settings.parent / ("settings.json" + install.BACKUP_SUFFIX)).is_file())
+
+        install.execute(self.root, ["claude-code"], self.names, True, self.project, yes=True, hook=True)
+        self.assertEqual(len(self.our_hooks(self.settings)), 1)          # running setup again adds no copy
+
+        install.execute(self.root, ["claude-code"], self.names, True, self.project, yes=True, hook=True,
+                        remove=True, uninstall=True)
+        data = json.loads(self.settings.read_text(encoding="utf-8"))
+        self.assertEqual(self.our_hooks(self.settings), [])
+        self.assertEqual(data["hooks"]["UserPromptSubmit"], [{"hooks": [other]}])
+        self.assertEqual(data["model"], "opus")
+
+    def test_installed_hook_command_runs_and_never_blocks(self):
+        install.execute(self.root, ["claude-code"], self.names, True, self.project, yes=True, hook=True)
+        cmd = self.our_hooks(self.settings)[0]["command"]
+        for prompt in ("rebase my feature branch onto main", "/clear", ""):
+            out = subprocess.run(cmd, shell=True, input=json.dumps({"prompt": prompt, "cwd": str(self.project)}),
+                                 capture_output=True, text=True, timeout=60)
+            self.assertEqual(out.returncode, 0, out.stderr)
+            self.assertNotIn("Traceback", out.stderr)
+
+    def test_no_hook_unless_both_skills_are_installed(self):
+        install.execute(self.root, ["claude-code"], ["demo"], True, self.project, yes=True, hook=True)
+        self.assertFalse(self.settings.exists())
+
+    def test_project_install_uses_the_personal_settings_file(self):
+        install.execute(self.root, ["claude-code"], self.names, False, self.project, yes=True, hook=True)
+        local = self.project / ".claude" / "settings.local.json"
+        self.assertEqual(len(self.our_hooks(local)), 1)
+        self.assertFalse((self.project / ".claude" / "settings.json").exists())
+        self.assertIn((self.project / ".claude" / "skills" / "skill-dispatcher").as_posix(),
+                      self.our_hooks(local)[0]["command"])
+
+    def test_agents_without_a_prompt_hook_and_unreadable_files_are_left_alone(self):
+        self.assertEqual(install.make_hook_plan(["cursor", "codex"], True, self.project, self.names), [])
+        self.settings.parent.mkdir(parents=True)
+        self.settings.write_text('{ // comment\n}', encoding="utf-8")
+        rows = install.make_hook_plan(["claude-code"], True, self.project, self.names)
+        self.assertTrue(rows[0]["status"].startswith("unreadable"))
+        self.assertEqual(install.apply_hook_plan(rows, False, dry=False), 0)
+        self.assertIn("// comment", self.settings.read_text(encoding="utf-8"))
+
+    def test_dry_run_and_opt_out_write_nothing(self):
+        install.execute(self.root, ["claude-code"], self.names, True, self.project, dry=True, hook=True)
+        self.assertFalse(self.settings.exists())
+        install.execute(self.root, ["claude-code"], self.names, True, self.project, yes=True, hook=False)
+        self.assertFalse(self.settings.exists())
 
 
 if __name__ == "__main__":

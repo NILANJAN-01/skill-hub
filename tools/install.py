@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Set up skill-hub for the AI coding agents / IDEs on this machine: skills and the skill-hub MCP server.
 
-ONE COMMAND: detects your agents, installs every skill, registers the MCP server, shows the plan,
-and changes nothing until you confirm.
+ONE COMMAND: detects your agents, installs every skill, registers the MCP server and the prompt hook
+(skill-dispatcher, where the agent supports it), shows the plan, and changes nothing until you confirm.
 
     python install.py --setup
     curl -fsSL https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py | python3 - --setup
@@ -15,6 +15,7 @@ SCRIPTED MODE (CI, dotfiles, power users):
     python install.py --setup --yes                                     # everything, no questions
     python install.py --agent cursor --plugin ai-agent-tools --mcp      # some skills + the MCP server
     python install.py --agent detected --mcp --global                   # only the MCP server
+    python install.py --agent claude-code --prompt-hook --global        # only the prompt hook
 
 OTHER MCP SERVERS, into every detected agent at once (user-level; merged, with backups):
     python install.py --list-mcp                                        # what each agent has + presets
@@ -72,6 +73,9 @@ MANIFEST = ".skill-hub.json"
 #   mcp                      where the agent reads MCP servers: project file, user file (a str, or
 #                            {"nt": ..., "posix": ...} when it differs by OS), "format" (json or
 #                            toml), the JSON "key" holding the servers, and the vendor "docs" page
+#   prompt_hook              only for agents whose prompt-submit hook adds the command's output to the
+#                            model's context: the JSON settings file (project / global), the hook
+#                            "event" name and the vendor "docs" page. Used to run skill-dispatcher.
 # --------------------------------------------------------------------------------------------
 AGENTS = {
     "claude-code": {
@@ -82,6 +86,9 @@ AGENTS = {
         "detect": {"commands": ["claude"], "paths": ["~/.claude"]},
         "mcp": {"project": ".mcp.json", "global": "~/.claude.json", "format": "json", "key": "mcpServers",
                 "docs": "https://code.claude.com/docs/en/mcp"},
+        # UserPromptSubmit: the command's stdout is added to the model's context for that prompt.
+        "prompt_hook": {"project": ".claude/settings.local.json", "global": "~/.claude/settings.json",
+                        "event": "UserPromptSubmit", "docs": "https://code.claude.com/docs/en/hooks"},
     },
     "antigravity": {
         "name": "Google Antigravity", "project": ".agents/skills", "global": "~/.gemini/config/skills",
@@ -799,6 +806,138 @@ def apply_mcp_plan(root: Path, rows: list, entry: dict | None, snap: str | None,
     return n
 
 
+# ============================================================================ prompt hook
+# skill-dispatcher reads each prompt the user submits and adds a plan (which skills, what can run in
+# parallel) to the agent's context. Only agents with a "prompt_hook" entry in AGENTS support this.
+HOOK_SKILL = "skill-dispatcher"
+HOOK_NEEDS = ("skill-dispatcher", "skill-router")      # the dispatcher imports the router's matcher
+
+
+def hook_info(agent: str) -> dict | None:
+    return AGENTS[agent].get("prompt_hook")
+
+
+def hook_config_path(agent: str, use_global: bool, project: Path) -> Path | None:
+    info = hook_info(agent)
+    if not info:
+        return None
+    return _expand(info["global"]) if use_global else project / info["project"]
+
+
+def hook_command(skill_dir: Path) -> str:
+    """This Python running the installed dispatcher; forward slashes work in every shell agents use."""
+    py = Path(sys.executable).as_posix() if sys.executable else "python"
+    return f'"{py}" "{(skill_dir / "scripts" / "dispatch.py").as_posix()}" --hook --no-briefs'
+
+
+def _is_our_hook(h) -> bool:
+    cmd = h.get("command", "") if isinstance(h, dict) else ""
+    return isinstance(cmd, str) and HOOK_SKILL in cmd and "dispatch.py" in cmd
+
+
+def _hook_groups(data: dict, event: str) -> list:
+    hooks = data.get("hooks")
+    groups = hooks.get(event) if isinstance(hooks, dict) else None
+    return groups if isinstance(groups, list) else []
+
+
+def hook_status(path: Path, info: dict, command: str) -> str:
+    """missing / same / differs / unreadable: <why>."""
+    try:
+        data = read_json_config(path)
+    except (OSError, ValueError) as exc:
+        return f"unreadable: {exc}"
+    ours = [h for g in _hook_groups(data, info["event"]) if isinstance(g, dict) and isinstance(g.get("hooks"), list)
+            for h in g["hooks"] if _is_our_hook(h)]
+    if not ours:
+        return "missing"
+    return "same" if len(ours) == 1 and ours[0].get("command") == command else "differs"
+
+
+def write_hook(path: Path, info: dict, command: str | None) -> None:
+    """Add or replace our hook (command=None removes it), keeping every other hook and setting."""
+    data = read_json_config(path)
+    groups = []
+    for g in _hook_groups(data, info["event"]):
+        if isinstance(g, dict) and isinstance(g.get("hooks"), list) and any(_is_our_hook(h) for h in g["hooks"]):
+            kept = [h for h in g["hooks"] if not _is_our_hook(h)]
+            if kept:
+                groups.append(dict(g, hooks=kept))
+        else:
+            groups.append(g)
+    if command:
+        groups.append({"hooks": [{"type": "command", "command": command, "timeout": 15}]})
+    hooks = data.get("hooks") if isinstance(data.get("hooks"), dict) else {}
+    if groups:
+        hooks[info["event"]] = groups
+    else:
+        hooks.pop(info["event"], None)
+    if hooks:
+        data["hooks"] = hooks
+    else:
+        data.pop("hooks", None)
+    _write_atomic(path, json.dumps(data, indent=2) + "\n", backup_first=command is not None)
+
+
+def make_hook_plan(agents: list, use_global: bool, project: Path, names: list, removing: bool = False) -> list:
+    """One row per settings file. When adding, only for agents that will have both needed skills."""
+    rows = {}
+    for a in agents:
+        path, folder = hook_config_path(a, use_global, project), own_dir(a, use_global, project)
+        if path is None or folder is None or path in rows:
+            continue
+        if not removing and not all(n in names or (folder / n / "SKILL.md").is_file() for n in HOOK_NEEDS):
+            continue
+        info, command = hook_info(a), hook_command(folder / HOOK_SKILL)
+        rows[path] = {"path": path, "agent": a, "info": info, "command": command,
+                      "status": hook_status(path, info, command)}
+    return list(rows.values())
+
+
+def show_hook_plan(rows: list, removing: bool = False) -> int:
+    """Print the prompt-hook part of the plan; return how many settings files would change."""
+    if not rows or (removing and all(r["status"] == "missing" for r in rows)):
+        return 0
+    work = 0
+    print(f"\nPrompt hook ({HOOK_SKILL}: routes each prompt to skills, plans parallel work):")
+    for r in rows:
+        st, where, who = r["status"], fmt(r["path"]), AGENTS[r["agent"]]["name"]
+        if st.startswith("unreadable"):
+            print(f"  ! {where} ({who}) can't be read safely ({st[12:]}); it will be left alone")
+        elif removing:
+            if st != "missing":
+                print(f"  - remove the hook from {where}   ({who})")
+                work += 1
+        elif st == "missing":
+            print(f"  + add the hook to {where}   ({who})")
+            work += 1
+        elif st == "differs":
+            print(f"  ~ update the hook in {where}   ({who})")
+            work += 1
+        else:
+            print(f"  = already set up in {where}   ({who})")
+    return work
+
+
+def apply_hook_plan(rows: list, removing: bool, dry: bool) -> int:
+    pre, n = "would " if dry else "", 0
+    for r in rows:
+        st = r["status"]
+        if st.startswith("unreadable"):
+            if not removing:
+                print(f"  skip  {fmt(r['path'])}: add this {r['info']['event']} hook by hand "
+                      f"({r['info']['docs']}):\n        {r['command']}")
+            continue
+        if (removing and st == "missing") or (not removing and st == "same"):
+            continue
+        verb = "remove" if removing else ("add" if st == "missing" else "update")
+        print(f"  {pre}{verb} hook  {HOOK_SKILL}  in  {fmt(r['path'])}")
+        if not dry:
+            write_hook(r["path"], r["info"], None if removing else r["command"])
+        n += 1
+    return n
+
+
 def check_server(timeout: int = 60) -> str:
     """Start the snapshot's server with --check. Returns its one-line summary or an error."""
     import subprocess
@@ -1098,7 +1237,7 @@ def guided(root: Path, args) -> None:
             return
         agents = [a for a in found if AGENTS[a]["global"]]
         execute(root, agents, all_skills(root), True, project, mcp=True, remove=choice == "4",
-                uninstall=choice == "4", tidy=True)
+                uninstall=choice == "4", tidy=True, hook=True)
         return
     if choice == "3":
         doctor(root, list(found) or [k for k in AGENTS if k != "universal"], project)
@@ -1123,7 +1262,12 @@ def guided(root: Path, args) -> None:
     print("\nAlso set up the skill-hub MCP server? It lets the agents search the whole hub and load any skill\n"
           "on demand, even ones you did not install.")
     mcp = yes_no("Set up the MCP server?", True)
-    if not names and not mcp:
+    hook = False
+    if any(hook_info(a) for a in agents) and all(n in names for n in HOOK_NEEDS):
+        print(f"\nAlso route every prompt to skills automatically? A prompt hook runs {HOOK_SKILL} on each\n"
+              "prompt and tells the agent which skills fit and what can run in parallel.")
+        hook = yes_no("Set up the prompt hook?", True)
+    if not names and not mcp and not hook:
         print("Nothing chosen. Nothing was changed.")
         return
 
@@ -1135,7 +1279,7 @@ def guided(root: Path, args) -> None:
         if nohome:
             print("  Skipping (no user-level folder): " + ", ".join(AGENTS[k]["name"] for k in nohome))
             agents = [a for a in agents if a not in nohome]
-    execute(root, agents, names, use_global, project, mcp=mcp, ask_options=True)
+    execute(root, agents, names, use_global, project, mcp=mcp, ask_options=True, hook=hook)
 
 
 def doctor(root: Path, agents: list, project: Path) -> int:
@@ -1176,7 +1320,13 @@ def doctor(root: Path, agents: list, project: Path) -> int:
                     skills = "0 (user-level covers it)"
                 if mcp == "not set up" and user_mcp.get(a):
                     mcp = "not needed (user-level covers it)"
-            print(f"  {AGENTS[a]['name']:<26} skills: {skills:<29} MCP: {mcp}")
+            hook_txt, hook_path = "", hook_config_path(a, use_global, project)
+            folder = own_dir(a, use_global, project)
+            if hook_path is not None and folder is not None:
+                st = hook_status(hook_path, hook_info(a), hook_command(folder / HOOK_SKILL))
+                hook_txt = "  hook: " + {"same": "set up", "missing": "off",
+                                         "differs": "set up, but out of date"}.get(st, st)
+            print(f"  {AGENTS[a]['name']:<26} skills: {skills:<29} MCP: {mcp}{hook_txt}")
     if stale_total:
         print(f"\nSkills that differ from the hub (an older hub version, or edited locally): "
               f"{', '.join(sorted(stale_total))}.\n"
@@ -1191,10 +1341,10 @@ def doctor(root: Path, agents: list, project: Path) -> int:
 def execute(root: Path, agents: list, names: list, use_global: bool, project: Path, mcp: bool = False,
             allow_install: bool = False, force: bool = False, tidy: bool = False, each: bool = False,
             yes: bool = False, dry: bool = False, remove: bool = False, uninstall: bool = False,
-            ask_options: bool = False) -> None:
-    """Plan everything (skills + MCP server), show it, confirm once, then apply."""
+            ask_options: bool = False, hook: bool = False) -> None:
+    """Plan everything (skills + MCP server + prompt hook), show it, confirm once, then apply."""
     if remove:
-        remove_all(names, agents, use_global, project, mcp, uninstall, yes, dry)
+        remove_all(names, agents, use_global, project, mcp, uninstall, yes, dry, hook=hook)
         return
     plan = make_plan(root, names, agents, use_global, project, each=each) if names else None
     skill_work = 0
@@ -1215,7 +1365,9 @@ def execute(root: Path, agents: list, names: list, use_global: bool, project: Pa
         snap = snapshot_state(root)
         rows = make_mcp_plan(agents, use_global, project, entry)
         mcp_work = show_mcp_plan(rows, snap) + (snap != "current")
-    if not skill_work and not mcp_work:
+    hook_rows = make_hook_plan(agents, use_global, project, names) if hook else []
+    hook_work = show_hook_plan(hook_rows)
+    if not skill_work and not mcp_work and not hook_work:
         print("\nNothing to change. Everything selected is already set up.")
         return
     if not dry and not yes and not yes_no("\nGo ahead?", True):
@@ -1224,17 +1376,19 @@ def execute(root: Path, agents: list, names: list, use_global: bool, project: Pa
     print()
     n = apply_plan(root, plan, force, tidy, dry) if plan else 0
     m = apply_mcp_plan(root, rows, entry, snap, dry) if mcp else 0
+    h = apply_hook_plan(hook_rows, False, dry)
+    hooks = f" and {h} prompt hook(s)" if hook_rows else ""
     if dry:
-        print(f"\nWould write {n} skill folder(s) and {m} MCP config file(s).")
+        print(f"\nWould write {n} skill folder(s), {m} MCP config file(s){hooks}.")
         return
-    print(f"\nDone: {n} skill folder(s) and {m} MCP config file(s) written. "
+    print(f"\nDone: {n} skill folder(s), {m} MCP config file(s){hooks} written. "
           "Restart or reload your agents, then just describe your task.")
     if mcp:
         print("Check the setup any time with:  python install.py --doctor")
 
 
 def remove_all(names: list, agents: list, use_global: bool, project: Path, mcp: bool, uninstall: bool,
-               yes: bool, dry: bool) -> None:
+               yes: bool, dry: bool, hook: bool = False) -> None:
     """Delete installed copies of the named hub skills, and (mcp) our MCP entries, after one confirmation."""
     folders = list(dict.fromkeys(f for a in agents for f in reads(a, use_global, project)))
     found = [(f, s) for f in folders for s in names if (f / s / "SKILL.md").is_file()]
@@ -1245,13 +1399,16 @@ def remove_all(names: list, agents: list, use_global: bool, project: Path, mcp: 
         for f, s in found:
             print(f"  - {fmt(f / s)}")
     mcp_work = show_mcp_plan(rows, "current", removing=True) if mcp else 0
+    hook_rows = make_hook_plan(agents, use_global, project, names, removing=True) if hook else []
+    hook_work = show_hook_plan(hook_rows, removing=True)
     if drop_snapshot:
         print(f"  - delete the hub copy {fmt(snapshot_dir())}")
-    if not found and not mcp_work and not drop_snapshot:
+    if not found and not mcp_work and not hook_work and not drop_snapshot:
         print("Nothing to remove. None of the selected items are set up for these agents.")
         return
     if dry:
-        print(f"\nWould remove {len(found)} skill folder(s) and {mcp_work} MCP server entries.")
+        print(f"\nWould remove {len(found)} skill folder(s), {mcp_work} MCP server entries and "
+              f"{hook_work} prompt hook(s).")
         return
     if not yes and not yes_no("\nRemove these?", False):
         print("Cancelled. Nothing was changed.")
@@ -1260,9 +1417,10 @@ def remove_all(names: list, agents: list, use_global: bool, project: Path, mcp: 
         shutil.rmtree(f / s)
         record(f, s, None)
     m = apply_mcp_plan(Path("."), rows, None, "current", False) if mcp else 0
+    h = apply_hook_plan(hook_rows, True, False)
     if drop_snapshot:
         shutil.rmtree(snapshot_dir())
-    print(f"\nRemoved {len(found)} skill folder(s) and {m} MCP server entries."
+    print(f"\nRemoved {len(found)} skill folder(s), {m} MCP server entries and {h} prompt hook(s)."
           + (f" Deleted {fmt(snapshot_dir())}." if drop_snapshot else ""))
 
 
@@ -1352,7 +1510,8 @@ def build_parser() -> argparse.ArgumentParser:
     g.add_argument("--setup", action="store_true",
                    help="set up everything in one go: every skill plus the MCP server, for every detected agent, "
                         "user-level (narrow it with --agent, --plugin, --skill or --project)")
-    g.add_argument("--doctor", action="store_true", help="check what is set up: skills, MCP config, server self-check")
+    g.add_argument("--doctor", action="store_true",
+                   help="check what is set up: skills, MCP config, prompt hook, server self-check")
     g.add_argument("--uninstall", action="store_true",
                    help="remove everything skill-hub set up: skills, MCP entries and the hub copy")
 
@@ -1394,6 +1553,13 @@ def build_parser() -> argparse.ArgumentParser:
     g.add_argument("--mcp-test", action="store_true",
                    help="with --add-mcp: start the server and check it answers before writing anything")
 
+    g = ap.add_argument_group("Prompt hook", "Route every prompt to the right skills automatically "
+                              f"({HOOK_SKILL}), in agents whose prompt hook can add context")
+    g.add_argument("--prompt-hook", action="store_true",
+                   help=f"register {HOOK_SKILL} as the agent's prompt-submit hook (part of --setup and --uninstall)")
+    g.add_argument("--no-prompt-hook", action="store_true",
+                   help="with --setup or --uninstall: leave the prompt hook alone")
+
     g = ap.add_argument_group("Information and safety","Look before you change anything")
     g.add_argument("--detect", action="store_true", help="only show which agents are installed")
     g.add_argument("--list", action="store_true", help="list agents, plugins and skills")
@@ -1434,6 +1600,7 @@ def main() -> None:
         if args.project is None:
             args.use_global = True
         args.remove = args.remove or args.uninstall
+        args.prompt_hook = not args.no_prompt_hook
     if args.doctor:
         if args.agent and args.agent.strip() != "detected":
             agents = [a.strip() for a in args.agent.split(",") if a.strip()]
@@ -1476,13 +1643,14 @@ def main() -> None:
 
     plugins_arg = [x.strip() for v in args.plugin for x in v.split(",") if x.strip()]
     skills_arg = [x.strip() for v in args.skill for x in v.split(",") if x.strip()]
-    nothing_chosen = not (args.agent or args.dest or args.zip or plugins_arg or skills_arg or args.all or args.mcp)
+    nothing_chosen = not (args.agent or args.dest or args.zip or plugins_arg or skills_arg or args.all or args.mcp
+                          or args.prompt_hook)
     if nothing_chosen:
         guided(root, args)
         return
 
-    if not plugins_arg and not skills_arg and not args.all and not args.mcp:
-        ap.error("choose what to install with --plugin, --skill, --all or --mcp "
+    if not plugins_arg and not skills_arg and not args.all and not args.mcp and not args.prompt_hook:
+        ap.error("choose what to install with --plugin, --skill, --all, --mcp or --prompt-hook "
                  "(or use --setup for everything, or run with no options for guided mode)")
     names = all_skills(root) if args.all else resolve(root, plugins_arg, skills_arg)
     if (args.zip or args.dest) and not names:
@@ -1514,7 +1682,7 @@ def main() -> None:
 
     execute(root, agents, names, args.use_global, project, mcp=args.mcp, allow_install=args.mcp_allow_install,
             force=args.force or args.update, tidy=args.tidy, each=args.each, yes=args.yes, dry=args.dry_run,
-            remove=args.remove, uninstall=args.uninstall)
+            remove=args.remove, uninstall=args.uninstall, hook=args.prompt_hook)
 
 
 if __name__ == "__main__":
