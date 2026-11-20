@@ -42,11 +42,11 @@ metadata:
    ```
    Options: `--root DIR` for an extra skills folder, `--run-dir DIR` to tell each task where to save its result, `--no-briefs` for the waves only, `--json` for machine-readable output.
 2. **Read the waves.** Tasks in the same wave are independent. A task waits for an earlier one when:
-   - a sequencing word joins them ("then", "after that", "finally");
-   - it uses an earlier result ("the findings", "based on that", "the report");
+   - a sequencing word joins it to the task before ("A then B");
+   - it starts a new step ("Then ...", "Finally ...") or uses earlier results ("the findings", "based on that"): it waits for every task before it;
    - it uses the same skill as an earlier task (so they do not clash);
    - a known workflow puts the earlier skill first (from `skill-orchestrator`'s `workflows.json`, if installed).
-   A task shown as `no skill, do directly (maybe X)` matched only weakly. Check X's description before using it.
+   A task shown as `no skill, do directly (maybe X)` matched only weakly. Check X's description before using it. When the top match won on one weak word and a stronger alternative exists (for example a matched phrase), the alternative is used. Each brief gives the path of the skill's `SKILL.md`, so a sub-agent can open it directly.
 3. **Check for conflicts the script cannot see**, such as two tasks editing the same file. Move one of them to a later wave.
 4. **Tell the user** the plan in two or three lines: which skills, what runs in parallel, and anything you need from them.
 5. **Run wave by wave.** Start every task of the wave at the same time, each as its own sub-agent with its brief. Wait for all of them to finish, then give the next wave the earlier results. If sub-agents are not available, run the tasks in order.

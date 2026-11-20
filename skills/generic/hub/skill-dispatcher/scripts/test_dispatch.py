@@ -61,6 +61,15 @@ class Waves(unittest.TestCase):
             r = run("analyse the crash log app.log; write a report from the findings", fixture_skills(tmp))
             self.assertEqual(by_skill(r)["report-writer"]["wave"], 2)
 
+    def test_then_after_a_parallel_wave_waits_for_all_of_it(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            r = run("analyse the crash log app.log; also rebase my feature branch onto main. "
+                    "Then write a report from the findings.", fixture_skills(tmp))
+            tasks = by_skill(r)
+            self.assertEqual(tasks["report-writer"]["depends_on"],
+                             sorted([tasks["log-analyzer"]["id"], tasks["branch-rebaser"]["id"]]))
+            self.assertEqual(tasks["report-writer"]["wave"], 2)
+
     def test_mixed_request_has_parallel_first_wave_and_a_follow_up(self):
         with tempfile.TemporaryDirectory() as tmp:
             r = run("analyse the crash log app.log and then write a report from the findings. "
@@ -68,6 +77,11 @@ class Waves(unittest.TestCase):
             tasks = by_skill(r)
             self.assertEqual(sorted(r["waves"][0]), sorted([tasks["log-analyzer"]["id"], tasks["branch-rebaser"]["id"]]))
             self.assertEqual(tasks["report-writer"]["wave"], 2)
+
+    def test_briefs_point_at_the_skill_instructions(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            r = run("rebase my feature branch onto main", fixture_skills(tmp))
+            self.assertIn(str(Path("branch-rebaser") / "SKILL.md"), r["tasks"][0]["brief"])
 
     def test_meta_skills_are_never_dispatched(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -98,12 +112,29 @@ class Planning(unittest.TestCase):
         self.assertEqual(r["tasks"][1]["possible_skill"], "x")
         self.assertEqual(r["tasks"][1]["wave"], 1)
 
+    def test_demoted_guess_drops_its_tool_and_input_warnings(self):
+        routed = self.routed(("do a", "x", "low"))
+        routed["parts"][0].update(missing_tools=["gradle"], missing_inputs=["a file"])
+        t = d.plan("do a", routed)["tasks"][0]
+        self.assertEqual((t["missing_tools"], t["missing_inputs"]), ([], []))
+
     def test_briefs_are_self_contained(self):
         text = "do a then do b"
         r = d.attach_briefs(d.plan(text, self.routed(("do a", "x", "high"), ("do b", "y", "high"))), "runs/demo")
         b = r["tasks"][1]["brief"]
         for needle in ("Goal: do b", "`y` skill", "results of task 1", "runs/demo/02-y.md", "Whole request"):
             self.assertIn(needle, b)
+
+
+@unittest.skipIf(ROUTER is None, "skill-router is not installed next to skill-dispatcher")
+class Promotion(unittest.TestCase):
+    def test_weak_top_pick_gives_way_to_a_stronger_alternative(self):
+        reg = {"weak": {"compatibility": ""}, "strong": {"compatibility": ""}}
+        routed = {"request": "write a bug report", "parts": [
+            {"part": "write a bug report", "skill": "weak", "confidence": "low", "alternatives": ["strong"],
+             "missing_inputs": [], "missing_tools": ["gradle"]}]}
+        p = d.promote_alternatives(routed, ROUTER, reg, {})["parts"][0]
+        self.assertEqual((p["skill"], p["confidence"], p["missing_tools"]), ("strong", "medium", []))
 
 
 class Hook(unittest.TestCase):

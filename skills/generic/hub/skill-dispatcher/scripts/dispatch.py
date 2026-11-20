@@ -90,19 +90,21 @@ def plan(text: str, routed: dict, order_pairs: set = frozenset()) -> dict:
     tasks, dispatched = [], []
     for p in parts:                                  # a low-confidence guess is a hint, not an assignment
         if p["skill"] and p["confidence"] == "low":
-            p = dict(p, skill=None, possible=p["skill"])
+            p = dict(p, skill=None, possible=p["skill"], missing_inputs=[], missing_tools=[])
         dispatched.append(p)
     parts = dispatched
     for i, p in enumerate(parts):
         deps, why = set(), []
         if i > 0:
-            if SEQUENTIAL.search(before[i]):
+            lead = re.match(r"\s*(?:and\s+)?(" + SEQUENTIAL.pattern + r")", p["part"], re.I)
+            m = USES_EARLIER.search(p["part"])
+            if lead or m:                            # "Then ..." / "from the findings": waits for everything so far
+                deps.update(range(i))
+                why.append(f'"{lead.group(1)}" starts a new step' if lead
+                           else f'uses earlier results ("{m.group(0)}")')
+            elif SEQUENTIAL.search(before[i]):       # "A then B" inside one sentence: B waits for A
                 deps.add(i - 1)
                 why.append(f'"{SEQUENTIAL.search(before[i]).group(0).strip()}" links it to task {i}')
-            m = USES_EARLIER.search(p["part"])
-            if m:
-                deps.add(i - 1)
-                why.append(f'uses an earlier result ("{m.group(0)}")')
         for j in range(i):
             other = parts[j]["skill"]
             if p["skill"] and other == p["skill"]:
@@ -112,8 +114,8 @@ def plan(text: str, routed: dict, order_pairs: set = frozenset()) -> dict:
                 deps.add(j)
                 why.append(f"{other} usually feeds {p['skill']}")
         tasks.append({"id": i + 1, "part": p["part"], "skill": p["skill"], "confidence": p["confidence"],
-                      "level": p["level"], "possible_skill": p.get("possible"), "alternatives": p["alternatives"], "missing_inputs": p["missing_inputs"],
-                      "missing_tools": p["missing_tools"], "depends_on": sorted(d + 1 for d in deps),
+                      "level": p["level"], "possible_skill": p.get("possible"), "alternatives": p["alternatives"],
+                      "missing_inputs": p["missing_inputs"], "missing_tools": p["missing_tools"], "depends_on": sorted(d + 1 for d in deps),
                       "why": list(dict.fromkeys(why))})
     for t in tasks:                                  # deps always point backwards, so one pass is enough
         t["wave"] = 1 + max((tasks[d - 1]["wave"] for d in t["depends_on"]), default=0)
@@ -134,7 +136,8 @@ def brief(task: dict, result: dict, run_dir: str = "") -> str:
              f"Goal: {task['part']}",
              f"Whole request, for context only: {result['request']}"]
     if task["skill"]:
-        lines.append(f"Skill: load the `{task['skill']}` skill and follow its procedure and safety rules.")
+        where = f" (instructions: {task['skill_path']})" if task.get("skill_path") else ""
+        lines.append(f"Skill: load the `{task['skill']}` skill{where} and follow its procedure and safety rules.")
     else:
         lines.append("Skill: none fits well; do this part directly"
                      + (f" (the `{task['possible_skill']}` skill might help)." if task["possible_skill"] else "."))
@@ -152,8 +155,9 @@ def brief(task: dict, result: dict, run_dir: str = "") -> str:
     return "\n".join(lines)
 
 
-def attach_briefs(result: dict, run_dir: str = "") -> dict:
+def attach_briefs(result: dict, run_dir: str = "", paths: dict = None) -> dict:
     for t in result["tasks"]:
+        t["skill_path"] = (paths or {}).get(t["skill"])
         t["brief"] = brief(t, result, run_dir)
     return result
 
@@ -214,10 +218,36 @@ def prompt_from_hook(raw: str):
 
 
 # ----------------------------------------------------------------------------- main
+def promote_alternatives(routed: dict, router, reg: dict, hints: dict) -> dict:
+    """When the top pick won on one weak word but the router also offers a medium/high alternative
+    (for example a matched phrase), use the alternative."""
+    for p in routed["parts"]:
+        if not (p["skill"] and p["confidence"] == "low" and p["alternatives"]):
+            continue
+        alt = p["alternatives"][0]
+        needs = hints.get(alt, {}).get("needs", [])
+        p.update(skill=alt, confidence="medium", alternatives=p["alternatives"][1:],
+                 missing_inputs=router.missing_inputs(p["part"], routed["request"], needs),
+                 missing_tools=[t for t in router.requirements_of(reg[alt].get("compatibility", ""))
+                                if not router.have(t)])
+    return routed
+
+
 def dispatch(text: str, router, roots=(), defaults: bool = True, run_dir: str = "") -> dict:
     reg = {k: v for k, v in router.scan(list(roots), defaults).items() if k not in META_SKILLS}
-    routed = router.route(text, reg, router.load_hints())
-    return attach_briefs(plan(text, routed, workflow_order()), run_dir)
+    hints = router.load_hints()
+    routed = promote_alternatives(router.route(text, reg, hints), router, reg, hints)
+    return attach_briefs(plan(text, routed, workflow_order()), run_dir, skill_paths(router, roots, defaults))
+
+
+def skill_paths(router, roots=(), defaults: bool = True) -> dict:
+    """name -> path of its SKILL.md, first root wins (the same order the router scans in)."""
+    out = {}
+    for root in router.roots_to_scan(list(roots), defaults):
+        if root.is_dir():
+            for folder in router.skill_folders(root):
+                out.setdefault(folder.name, str(folder / "SKILL.md"))
+    return out
 
 
 def run_hook(args, router) -> int:
