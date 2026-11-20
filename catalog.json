@@ -1515,7 +1515,7 @@
       "category": "hub-tools",
       "area": "generic",
       "group": "hub",
-      "description": "Add or update a skill in the skill-hub repository so that it validates, appears in the catalog and installs into every supported agent. Use when the user wants to write, add, publish, register or rename a skill in skill-hub, create a plugin bundle, or fix errors from validate_skills.py or build_catalog.py.",
+      "description": "Add or update a skill in the skill-hub repository so that it validates, appears in the catalog and installs into every supported agent. Use when the user wants to write, add, publish, register or rename a skill in skill-hub, create a plugin bundle, or fix errors from validate_skills.py, build_catalog.py or hub.py check.",
       "plugins": [
         "hub-tools"
       ],
