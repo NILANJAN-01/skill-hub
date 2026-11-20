@@ -844,6 +844,114 @@
         "work around",
         "critical path"
       ]
+    },
+    "token-optimizer": {
+      "keywords": [
+        "dashboard",
+        "usage",
+        "compress",
+        "shrink",
+        "outline",
+        "slice",
+        "huge",
+        "log",
+        "logs",
+        "json",
+        "pack",
+        "budget",
+        "timestamp",
+        "timestamps",
+        "trend",
+        "optimizer",
+        "optimise",
+        "optimize",
+        "week",
+        "month",
+        "daily"
+      ],
+      "phrases": [
+        "token usage",
+        "tokens did i use",
+        "tokens i used",
+        "tokens have i used",
+        "token dashboard",
+        "usage dashboard",
+        "reduce token",
+        "reduce my token",
+        "token optimizer",
+        "optimize tokens",
+        "optimise tokens",
+        "optimize token",
+        "optimise token",
+        "huge log",
+        "big log",
+        "large log",
+        "long log",
+        "build log",
+        "shrink this",
+        "outline of",
+        "only the function",
+        "read less",
+        "too much context",
+        "which skills do i use",
+        "skills i use",
+        "skill usage",
+        "how i use skills",
+        "tokens per day",
+        "token report",
+        "usage report",
+        "where my tokens went",
+        "where did my tokens go",
+        "skills do i use",
+        "skills did i use",
+        "most used skill",
+        "skills used most",
+        "skills i used"
+      ],
+      "needs": []
+    },
+    "ai-token-saver": {
+      "keywords": [
+        "audit",
+        "waste",
+        "bill",
+        "cost",
+        "limit",
+        "cheaper",
+        "ignore",
+        "lockfile"
+      ],
+      "phrases": [
+        "usage limit",
+        "rate limit",
+        "token waste",
+        "context waste",
+        "cut cost",
+        "ai cost",
+        "make ai cheaper",
+        "audit my project",
+        "ignore file"
+      ],
+      "needs": []
+    },
+    "skill-token-meter": {
+      "keywords": [
+        "worth",
+        "installing",
+        "ledger"
+      ],
+      "phrases": [
+        "skill save",
+        "skills save",
+        "tokens saved by",
+        "worth installing",
+        "with and without the skill",
+        "with vs without",
+        "without the skill",
+        "each skill save",
+        "does this skill cost"
+      ],
+      "needs": []
     }
   }
 }

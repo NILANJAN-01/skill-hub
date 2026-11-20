@@ -52,6 +52,39 @@ def registry(tmp: str) -> dict:
     return r.scan([str(root)], defaults=False)
 
 
+HUB_SKILLS = HERE.parents[3]
+
+
+@unittest.skipUnless((HUB_SKILLS / "generic" / "ai-efficiency" / "token-optimizer" / "SKILL.md").is_file(),
+                     "needs the skill-hub checkout")
+class TokenSkillsRouting(unittest.TestCase):
+    """The three token skills overlap; each prompt must reach the one that does the job."""
+
+    CASES = {
+        "reduce my token usage": "token-optimizer",
+        "show me a token usage dashboard": "token-optimizer",
+        "how many tokens did I use this week": "token-optimizer",
+        "what skills did I use this week": "token-optimizer",
+        "which skills do I use most": "token-optimizer",
+        "this build log is huge, find the error": "token-optimizer",
+        "shrink this json response": "token-optimizer",
+        "give me an outline of this big file": "token-optimizer",
+        "where did my tokens go": "token-optimizer",
+        "I keep hitting the usage limit": "ai-token-saver",
+        "how many tokens did the yt-lecture-overview skill save": "skill-token-meter",
+        "find a skill for docker": "find-skills",
+    }
+
+    def test_token_prompts(self):
+        reg = r.scan([str(HUB_SKILLS)], defaults=False)
+        hints = r.load_hints()
+        for prompt, skill in self.CASES.items():
+            with self.subTest(prompt=prompt):
+                part = r.route(prompt, reg, hints)["parts"][0]
+                self.assertEqual(part["skill"], skill)
+                self.assertNotEqual(part["confidence"], "low")
+
+
 class Split(unittest.TestCase):
     def test_splits_sentences_bullets_and_actions(self):
         parts = r.split_request("Analyse this logcat and write a report.\n- tailor my cv\n2) check the screenshot")
