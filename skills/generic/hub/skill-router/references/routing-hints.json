@@ -727,6 +727,119 @@
         "sliding window",
         "too many tokens"
       ]
+    },
+    "software-design-guardrails": {
+      "keywords": [
+        "maintainable",
+        "clean",
+        "guardrails",
+        "guardrail",
+        "refactor",
+        "readable",
+        "complexity",
+        "redflag"
+      ],
+      "phrases": [
+        "good code",
+        "clean code",
+        "write good code",
+        "software design",
+        "design rules",
+        "code quality",
+        "red flags",
+        "always follow",
+        "best practices for code",
+        "keep the code simple",
+        "philosophy of software design",
+        "design review"
+      ]
+    },
+    "deep-modules": {
+      "keywords": [
+        "interface",
+        "abstraction",
+        "wrapper",
+        "wrappers",
+        "layer",
+        "layers",
+        "encapsulation",
+        "modular"
+      ],
+      "phrases": [
+        "deep module",
+        "shallow",
+        "information hiding",
+        "pass-through",
+        "pass through",
+        "class design",
+        "api design",
+        "split this function",
+        "too many classes",
+        "god class"
+      ]
+    },
+    "error-handling-design": {
+      "keywords": [
+        "exception",
+        "exceptions",
+        "try",
+        "catch",
+        "except",
+        "errors",
+        "edge"
+      ],
+      "phrases": [
+        "error handling",
+        "exception handling",
+        "define errors out",
+        "swallowed error",
+        "special case",
+        "edge cases",
+        "should it throw"
+      ]
+    },
+    "obvious-code": {
+      "keywords": [
+        "comment",
+        "comments",
+        "docstring",
+        "docstrings",
+        "javadoc",
+        "jsdoc",
+        "naming",
+        "names",
+        "readability"
+      ],
+      "phrases": [
+        "better names",
+        "variable names",
+        "useless comments",
+        "hard to read",
+        "code is confusing",
+        "self-documenting",
+        "interface comment"
+      ]
+    },
+    "design-it-twice": {
+      "keywords": [
+        "alternatives",
+        "plan",
+        "tactical",
+        "strategic",
+        "performance",
+        "optimise",
+        "optimize"
+      ],
+      "phrases": [
+        "design it twice",
+        "compare designs",
+        "before you write",
+        "design first",
+        "design note",
+        "technical debt",
+        "work around",
+        "critical path"
+      ]
     }
   }
 }

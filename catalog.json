@@ -390,6 +390,18 @@
         "context-window-budget",
         "context-engineering"
       ]
+    },
+    {
+      "name": "software-design-tools",
+      "description": "Software design rules AI agents follow on every code change, from the ideas in A Philosophy of Software Design: software-design-guardrails installs always-on design rules into a project's agent instruction files with a pre-commit hook and CI, and runs a red-flag checker (pass-through methods and variables, shallow functions, swallowed errors, duplicated code, vague names, comments that repeat code) on changed lines; deep-modules designs simple interfaces that hide a lot; error-handling-design defines errors out of existence; obvious-code covers comments, names and consistency; design-it-twice compares designs before coding and checks the design note",
+      "category": "software-design-tools",
+      "skills": [
+        "software-design-guardrails",
+        "deep-modules",
+        "error-handling-design",
+        "obvious-code",
+        "design-it-twice"
+      ]
     }
   ],
   "categories": [
@@ -472,6 +484,11 @@
       "name": "ai-agent-tools",
       "title": "AI agents: MCP, tools, evals & RAG",
       "count": 4
+    },
+    {
+      "name": "software-design-tools",
+      "title": "Software design: deep modules, errors, comments & guardrails",
+      "count": 5
     },
     {
       "name": "playwright-tools",
@@ -735,6 +752,16 @@
           "skills": [
             "repo-architecture",
             "repo-learnings"
+          ]
+        },
+        {
+          "name": "software-design",
+          "skills": [
+            "deep-modules",
+            "design-it-twice",
+            "error-handling-design",
+            "obvious-code",
+            "software-design-guardrails"
           ]
         }
       ]
@@ -1401,6 +1428,82 @@
         "Create a new plugin category in skill-hub for Kubernetes skills."
       ],
       "files": []
+    },
+    {
+      "name": "deep-modules",
+      "title": "Deep modules: interfaces, information hiding, layers",
+      "category": "software-design-tools",
+      "area": "development",
+      "group": "software-design",
+      "description": "Design deep modules, classes, functions and APIs: simple interfaces that hide a lot. Covers information hiding and leakage, temporal decomposition, general vs special-purpose code, pass-through methods and variables, defaults vs config knobs, and when to split or merge. Use when designing or refactoring a class, module, service or API, or when code is over-abstracted, tangled or full of tiny wrappers.",
+      "plugins": [
+        "software-design-tools"
+      ],
+      "path": "skills/development/software-design/deep-modules",
+      "license": "MIT. Original summary of ideas from A Philosophy of Software Design by John Ousterhout (2018); no text from the book is reproduced. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
+      "source": "A Philosophy of Software Design, John Ousterhout, 2018",
+      "pages": "Chapters 4-9",
+      "examples": [
+        "Design the interface for a payment client class; keep it simple for callers.",
+        "This service has a dozen tiny wrapper classes that just forward calls. Refactor it.",
+        "Should I split this 200-line function into smaller ones?",
+        "Our reader, transformer and writer classes all know the file format. How should this be structured?"
+      ],
+      "files": [
+        "references/examples.md"
+      ]
+    },
+    {
+      "name": "design-it-twice",
+      "title": "Design it twice: plan, comment first, stay strategic",
+      "category": "software-design-tools",
+      "area": "development",
+      "group": "software-design",
+      "description": "Plan code before writing it: compare two or more genuinely different designs, write the interface comments first, then implement. Also covers strategic vs tactical programming, keeping the design clean while changing existing code, and designing for performance (measure first, critical path). A script scaffolds and checks the design note. Use when about to build a new module, class, API or feature, or when tempted to patch around a design problem.",
+      "plugins": [
+        "software-design-tools"
+      ],
+      "path": "skills/development/software-design/design-it-twice",
+      "license": "MIT. Original summary of ideas from A Philosophy of Software Design by John Ousterhout (2018); no text from the book is reproduced. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "Needs Python 3.8+ (standard library only) for scripts/design_note.py. Works with any agent and language.",
+      "source": "A Philosophy of Software Design, John Ousterhout, 2018",
+      "pages": "Chapters 3, 11, 15, 16, 19, 20",
+      "examples": [
+        "Before you write the caching layer, compare a couple of designs and pick one.",
+        "Plan the API for our notification service first, then implement it.",
+        "I'm about to add another flag to work around this bug. Is there a better design?",
+        "This endpoint is slow; how should I approach optimising it without making the code worse?"
+      ],
+      "files": [
+        "references/process.md",
+        "scripts/fixtures/bad_note.md",
+        "scripts/fixtures/good_note.md"
+      ]
+    },
+    {
+      "name": "error-handling-design",
+      "title": "Error handling design: define errors out of existence",
+      "category": "software-design-tools",
+      "area": "development",
+      "group": "software-design",
+      "description": "Design error handling that adds little complexity: define errors out of existence, mask them low, aggregate them into one handler, crash on the unrecoverable, and remove special cases, without hiding errors callers need. Use when writing try/catch, error returns, validation or edge cases, when exception handling spreads through the code, or when an API throws or returns errors too often.",
+      "plugins": [
+        "software-design-tools"
+      ],
+      "path": "skills/development/software-design/error-handling-design",
+      "license": "MIT. Original summary of ideas from A Philosophy of Software Design by John Ousterhout (2018); no text from the book is reproduced. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
+      "source": "A Philosophy of Software Design, John Ousterhout, 2018",
+      "pages": "Chapter 10",
+      "examples": [
+        "There are try/except blocks everywhere in this module. Simplify the error handling.",
+        "Should delete() throw if the record does not exist?",
+        "Review the error handling in this Go package; some errors are being ignored."
+      ],
+      "files": [
+        "references/patterns.md"
+      ]
     },
     {
       "name": "find-skills",
@@ -3257,6 +3360,31 @@
       ]
     },
     {
+      "name": "obvious-code",
+      "title": "Obvious code: comments, names and consistency",
+      "category": "software-design-tools",
+      "area": "development",
+      "group": "software-design",
+      "description": "Write code a first-time reader understands: interface comments and docstrings that add what the code cannot say, implementation comments that explain what and why, precise and consistent names, following the project's conventions, and avoiding nonobvious constructs. Use when writing or reviewing comments, docstrings, Javadoc, JSDoc or KDoc, naming things, or when code is hard to read or comments are useless or stale.",
+      "plugins": [
+        "software-design-tools"
+      ],
+      "path": "skills/development/software-design/obvious-code",
+      "license": "MIT. Original summary of ideas from A Philosophy of Software Design by John Ousterhout (2018); no text from the book is reproduced. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
+      "source": "A Philosophy of Software Design, John Ousterhout, 2018",
+      "pages": "Chapters 12-14, 16-18",
+      "examples": [
+        "Write good docstrings for the public functions in this module.",
+        "These comments just repeat the code. Rewrite them to be useful.",
+        "Suggest better names for the variables and functions in this file."
+      ],
+      "files": [
+        "references/comment-templates.md",
+        "references/naming.md"
+      ]
+    },
+    {
       "name": "playwright-ci",
       "title": "Playwright in CI: pipelines, sharding and reports",
       "category": "playwright-tools",
@@ -3728,6 +3856,34 @@
         "Show me the plan of skills skillforge would create from book.pdf before writing anything."
       ],
       "files": []
+    },
+    {
+      "name": "software-design-guardrails",
+      "title": "Software design guardrails: rules, checker, hook and CI",
+      "category": "software-design-tools",
+      "area": "development",
+      "group": "software-design",
+      "description": "Make AI coding agents follow good software design on every change: always-on design rules for a project's agent instruction files, a pre-commit hook and CI, and a checker that flags red flags (pass-through methods, shallow functions, swallowed errors, duplicated code, vague names, comments that repeat code) in changed lines. Use when writing, refactoring or reviewing code, or when the user wants simple, maintainable code enforced.",
+      "plugins": [
+        "software-design-tools"
+      ],
+      "path": "skills/development/software-design/software-design-guardrails",
+      "license": "MIT. Original summary of ideas from A Philosophy of Software Design by John Ousterhout (2018); no text from the book is reproduced. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "Needs Python 3.8+ (standard library only) for the scripts and git for --diff, --staged and the hook. Works with any agent. The checker parses Python fully and Java, Kotlin, C#, Go, JS/TS, C/C++, Rust, Swift, Dart, Scala and PHP with heuristics.",
+      "source": "A Philosophy of Software Design, John Ousterhout, 2018",
+      "pages": "Whole book; Summary of Design Principles; Summary of Red Flags",
+      "examples": [
+        "Make sure every AI agent working in this repo follows good software design rules when it writes code.",
+        "Review my changes for design red flags before I commit: pass-through methods, swallowed errors, duplicated code.",
+        "Add a pre-commit hook and a GitHub Actions check that block new design red flags, with a baseline for old code.",
+        "Write this feature, and keep the code simple and maintainable."
+      ],
+      "files": [
+        "assets/guardrails-block.md",
+        "references/ci.md",
+        "references/principles.md",
+        "references/red-flags.md"
+      ]
     },
     {
       "name": "uiautomator-migration",

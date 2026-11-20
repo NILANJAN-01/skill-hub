@@ -454,6 +454,20 @@
         "./skills/generic/context-management/context-window-budget",
         "./skills/generic/ai-efficiency/context-engineering"
       ]
+    },
+    {
+      "name": "software-design-tools",
+      "description": "Software design rules AI agents follow on every code change, from the ideas in A Philosophy of Software Design: software-design-guardrails installs always-on design rules into a project's agent instruction files with a pre-commit hook and CI, and runs a red-flag checker (pass-through methods and variables, shallow functions, swallowed errors, duplicated code, vague names, comments that repeat code) on changed lines; deep-modules designs simple interfaces that hide a lot; error-handling-design defines errors out of existence; obvious-code covers comments, names and consistency; design-it-twice compares designs before coding and checks the design note",
+      "source": "./",
+      "strict": false,
+      "category": "software-design-tools",
+      "skills": [
+        "./skills/development/software-design/software-design-guardrails",
+        "./skills/development/software-design/deep-modules",
+        "./skills/development/software-design/error-handling-design",
+        "./skills/development/software-design/obvious-code",
+        "./skills/development/software-design/design-it-twice"
+      ]
     }
   ]
 }

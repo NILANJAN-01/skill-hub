@@ -602,5 +602,33 @@
     "Here is a transcript of our agent loop as JSON. Where are the tokens going and how do we cut them?",
     "Plan the context budget for a 200k window with a 3k system prompt, 6k of tools and 20k of retrieved docs.",
     "Trim this conversation to 100k tokens without breaking tool call and tool result pairs."
+  ],
+  "software-design-guardrails": [
+    "Make sure every AI agent working in this repo follows good software design rules when it writes code.",
+    "Review my changes for design red flags before I commit: pass-through methods, swallowed errors, duplicated code.",
+    "Add a pre-commit hook and a GitHub Actions check that block new design red flags, with a baseline for old code.",
+    "Write this feature, and keep the code simple and maintainable."
+  ],
+  "deep-modules": [
+    "Design the interface for a payment client class; keep it simple for callers.",
+    "This service has a dozen tiny wrapper classes that just forward calls. Refactor it.",
+    "Should I split this 200-line function into smaller ones?",
+    "Our reader, transformer and writer classes all know the file format. How should this be structured?"
+  ],
+  "error-handling-design": [
+    "There are try/except blocks everywhere in this module. Simplify the error handling.",
+    "Should delete() throw if the record does not exist?",
+    "Review the error handling in this Go package; some errors are being ignored."
+  ],
+  "obvious-code": [
+    "Write good docstrings for the public functions in this module.",
+    "These comments just repeat the code. Rewrite them to be useful.",
+    "Suggest better names for the variables and functions in this file."
+  ],
+  "design-it-twice": [
+    "Before you write the caching layer, compare a couple of designs and pick one.",
+    "Plan the API for our notification service first, then implement it.",
+    "I'm about to add another flag to work around this bug. Is there a better design?",
+    "This endpoint is slow; how should I approach optimising it without making the code worse?"
   ]
 }

@@ -2,9 +2,9 @@
 
 <!-- Generated from examples/prompts.json by tools/build_catalog.py - do not edit by hand. -->
 
-378 things you can say to your AI coding agent, for all 113 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
+396 things you can say to your AI coding agent, for all 118 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
 
-**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [ADB: connect, control & debug Android devices](#adb-connect-control--debug-android-devices) · [Gradle: Android setup, diagnosis & tests](#gradle-android-setup-diagnosis--tests) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Shell: PowerShell on Windows](#shell-powershell-on-windows) · [Learning: Python tutor & interview notes](#learning-python-tutor--interview-notes) · [YouTube: lecture overviews (study & tech only)](#youtube-lecture-overviews-study--tech-only) · [AI efficiency: save tokens & cost](#ai-efficiency-save-tokens--cost) · [Context management: handoffs, memory & context windows](#context-management-handoffs-memory--context-windows) · [AI agents: MCP, tools, evals & RAG](#ai-agents-mcp-tools-evals--rag) · [Playwright: E2E tests, debugging, CI & browser agent](#playwright-e2e-tests-debugging-ci--browser-agent) · [Robot Framework: suites, libraries, results & CI](#robot-framework-suites-libraries-results--ci) · [UI Automator: Android UI tests in Kotlin & Java](#ui-automator-android-ui-tests-in-kotlin--java) · [JUnit 6: Java & Kotlin tests, migration & reports](#junit-6-java--kotlin-tests-migration--reports) · [API testing: REST APIs of web applications](#api-testing-rest-apis-of-web-applications) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
+**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [ADB: connect, control & debug Android devices](#adb-connect-control--debug-android-devices) · [Gradle: Android setup, diagnosis & tests](#gradle-android-setup-diagnosis--tests) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Shell: PowerShell on Windows](#shell-powershell-on-windows) · [Learning: Python tutor & interview notes](#learning-python-tutor--interview-notes) · [YouTube: lecture overviews (study & tech only)](#youtube-lecture-overviews-study--tech-only) · [AI efficiency: save tokens & cost](#ai-efficiency-save-tokens--cost) · [Context management: handoffs, memory & context windows](#context-management-handoffs-memory--context-windows) · [AI agents: MCP, tools, evals & RAG](#ai-agents-mcp-tools-evals--rag) · [Software design: deep modules, errors, comments & guardrails](#software-design-deep-modules-errors-comments--guardrails) · [Playwright: E2E tests, debugging, CI & browser agent](#playwright-e2e-tests-debugging-ci--browser-agent) · [Robot Framework: suites, libraries, results & CI](#robot-framework-suites-libraries-results--ci) · [UI Automator: Android UI tests in Kotlin & Java](#ui-automator-android-ui-tests-in-kotlin--java) · [JUnit 6: Java & Kotlin tests, migration & reports](#junit-6-java--kotlin-tests-migration--reports) · [API testing: REST APIs of web applications](#api-testing-rest-apis-of-web-applications) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
 
 ## Hub tools
 
@@ -386,6 +386,53 @@ Install the whole category: `--plugin ai-agent-tools`
 - “Build a RAG pipeline so users can chat with our Markdown docs.”
 - “Our RAG bot answers without using the docs. Find out if retrieval is the problem.”
 - “Chunk the docs folder and measure recall@5 for these labelled questions.”
+
+## Software design: deep modules, errors, comments & guardrails
+
+Install the whole category: `--plugin software-design-tools`
+
+### Deep modules: interfaces, information hiding, layers
+
+[`deep-modules`](../skills/development/software-design/deep-modules/SKILL.md) · install: `--skill deep-modules`
+
+- “Design the interface for a payment client class; keep it simple for callers.”
+- “This service has a dozen tiny wrapper classes that just forward calls. Refactor it.”
+- “Should I split this 200-line function into smaller ones?”
+- “Our reader, transformer and writer classes all know the file format. How should this be structured?”
+
+### Design it twice: plan, comment first, stay strategic
+
+[`design-it-twice`](../skills/development/software-design/design-it-twice/SKILL.md) · install: `--skill design-it-twice`
+
+- “Before you write the caching layer, compare a couple of designs and pick one.”
+- “Plan the API for our notification service first, then implement it.”
+- “I'm about to add another flag to work around this bug. Is there a better design?”
+- “This endpoint is slow; how should I approach optimising it without making the code worse?”
+
+### Error handling design: define errors out of existence
+
+[`error-handling-design`](../skills/development/software-design/error-handling-design/SKILL.md) · install: `--skill error-handling-design`
+
+- “There are try/except blocks everywhere in this module. Simplify the error handling.”
+- “Should delete() throw if the record does not exist?”
+- “Review the error handling in this Go package; some errors are being ignored.”
+
+### Obvious code: comments, names and consistency
+
+[`obvious-code`](../skills/development/software-design/obvious-code/SKILL.md) · install: `--skill obvious-code`
+
+- “Write good docstrings for the public functions in this module.”
+- “These comments just repeat the code. Rewrite them to be useful.”
+- “Suggest better names for the variables and functions in this file.”
+
+### Software design guardrails: rules, checker, hook and CI
+
+[`software-design-guardrails`](../skills/development/software-design/software-design-guardrails/SKILL.md) · install: `--skill software-design-guardrails`
+
+- “Make sure every AI agent working in this repo follows good software design rules when it writes code.”
+- “Review my changes for design red flags before I commit: pass-through methods, swallowed errors, duplicated code.”
+- “Add a pre-commit hook and a GitHub Actions check that block new design red flags, with a baseline for old code.”
+- “Write this feature, and keep the code simple and maintainable.”
 
 ## Playwright: E2E tests, debugging, CI & browser agent
 

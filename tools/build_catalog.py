@@ -160,6 +160,7 @@ CATEGORY_TITLES = {
     "ai-efficiency-tools": "AI efficiency: save tokens & cost",
     "context-management-tools": "Context management: handoffs, memory & context windows",
     "ai-agent-tools": "AI agents: MCP, tools, evals & RAG",
+    "software-design-tools": "Software design: deep modules, errors, comments & guardrails",
     "playwright-tools": "Playwright: E2E tests, debugging, CI & browser agent",
     "robotframework-tools": "Robot Framework: suites, libraries, results & CI",
     "uiautomator-tools": "UI Automator: Android UI tests in Kotlin & Java",

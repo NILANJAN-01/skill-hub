@@ -32,3 +32,12 @@ The User Guide content is made available under the [Eclipse Public License v2.0 
 
 Changes made: the material was paraphrased and reorganised into task-focused skills, Java examples were checked by compiling them against the JUnit 6.1.3 artifacts, and original scripts, examples and troubleshooting were added.
 
+## A Philosophy of Software Design (software design skills)
+
+The skills under `skills/development/software-design/` (`software-design-guardrails`, `deep-modules`, `error-handling-design`, `obvious-code`, `design-it-twice`) are based on the ideas in:
+
+> *A Philosophy of Software Design* by John Ousterhout. Yaknyam Press, 2018. ISBN 978-1-7321022-0-0.
+
+The book is copyrighted (all rights reserved) and is **not** included in this repository. These skills do not reproduce its text: the principles and red flags are summarised in original words, the examples are original, and each skill cites the chapters it draws on so readers can consult the book for the full reasoning. The scripts (`design_check.py`, `install_guardrails.py`, `design_note.py`) are original work. All of this material is distributed under the repository's MIT license.
+
+Changes made: the book's ideas were reorganised into five task-focused skills with procedures, checklists and decision guides, and extended with original tooling that checks code and design notes for the red flags the book describes.

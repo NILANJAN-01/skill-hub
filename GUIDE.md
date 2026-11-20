@@ -225,6 +225,7 @@ Categories for `--plugin`:
 | `junit-tools` | 4 | JUnit 6 skill set from the official JUnit User Guide (Java and Kotlin, JUnit 6.1.3): junit-test-authoring sets up Gradle/Maven and writes Jupiter tests (assertions,... |
 | `api-testing-tools` | 1 | REST API testing for web applications in any field (banking, healthcare, e-commerce, insurance, telecom, government, SaaS): rest-api-testing plans cases from an... |
 | `context-management-tools` | 4 | Context management for AI agents and LLM apps: context-handoff decides when to compact or restart a long session, drafts a handoff note from git state and checks... |
+| `software-design-tools` | 5 | Software design rules AI agents follow on every code change, from the ideas in A Philosophy of Software Design: software-design-guardrails installs always-on design... |
 <!-- plugins-simple:end -->
 
 `--all` installs every skill. `--skill a,b` installs specific skills by name.
