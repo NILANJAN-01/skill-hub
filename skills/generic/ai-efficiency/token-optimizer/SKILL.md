@@ -1,6 +1,6 @@
 ---
 name: token-optimizer
-description: "Cut the tokens an agent reads and track usage: scripts compress logs, outline or slice files, shrink JSON, pack folders under a budget, import session logs (timestamps, skills used) and build an HTML usage dashboard. Use when the user wants to save tokens or see token usage per day or per skill."
+description: "Cut the tokens an agent reads and track usage: compress logs, outline or slice files, shrink JSON, pack folders under a budget, import session logs (timestamps, skills used), build an HTML dashboard. Use when the user wants to reduce tokens, read a huge log, file or JSON, or see tokens or skills used per day."
 license: MIT
 compatibility: "Python 3.8+ (standard library only). Works with any agent. File token counts are estimates (chars/4 prose, chars/3.3 code, about +-20%); usage imported from session logs is what the agent recorded. Importing needs an agent that writes JSON or JSONL session logs with usage records; otherwise record usage by hand."
 metadata:

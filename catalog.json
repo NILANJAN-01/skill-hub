@@ -3971,7 +3971,7 @@
       "category": "ai-efficiency-tools",
       "area": "generic",
       "group": "ai-efficiency",
-      "description": "Cut the tokens an agent reads and track usage: scripts compress logs, outline or slice files, shrink JSON, pack folders under a budget, import session logs (timestamps, skills used) and build an HTML usage dashboard. Use when the user wants to save tokens or see token usage per day or per skill.",
+      "description": "Cut the tokens an agent reads and track usage: compress logs, outline or slice files, shrink JSON, pack folders under a budget, import session logs (timestamps, skills used), build an HTML dashboard. Use when the user wants to reduce tokens, read a huge log, file or JSON, or see tokens or skills used per day.",
       "plugins": [
         "ai-efficiency-tools"
       ],
