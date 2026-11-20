@@ -6,6 +6,8 @@ If you use an AI agent to contribute, it follows [AGENTS.md](AGENTS.md).
 
 ## Checklist for a new skill
 
+Start with `python tools/hub.py new-skill <area>/<group>/<name> --plugin <plugin>`. It creates the folder from `template/`, writes the frontmatter and registers the skill in `marketplace.json` and `examples/prompts.json`, leaving `TODO` placeholders that the validator rejects until you replace them. Finish with `python tools/hub.py check`.
+
 - [ ] The folder is `skills/<area>/<group>/<name>/`. `<area>` is one of `testing`, `development`, `design`, `generic`, `external-tools`; `<group>` is an existing group folder or a new kebab-case one; `<name>` is kebab-case, at most 64 chars, and unique across the whole hub (skills are installed by name alone).
 - [ ] `SKILL.md` frontmatter has `name` (equal to the folder name) and `description` (≤1024 chars, says **what** the skill does and **when** to use it, and names the words users type).
 - [ ] `metadata.title` and `metadata.category` are set. The category is the focused plugin the skill belongs to.
@@ -15,8 +17,7 @@ If you use an AI agent to contribute, it follows [AGENTS.md](AGENTS.md).
 - [ ] `SKILL.md` is under about 500 lines. Long material goes in `references/`, code in `scripts/`, and templates or data in `assets/`. All links are relative.
 - [ ] The skill is listed in at least one plugin in `.claude-plugin/marketplace.json`.
 - [ ] `examples/prompts.json` has at least 2 realistic prompts for the skill, written the way a user would ask. Each one should make Claude load the skill.
-- [ ] You ran `python tools/build_catalog.py` and committed all the generated files it changed.
-- [ ] `python tools/validate_skills.py` reports 0 errors.
+- [ ] `python tools/hub.py check` passes (it runs `build_catalog.py` and `validate_skills.py` among the rest), and you committed all the generated files it changed.
 - [ ] You tested it in at least one agent: install it with `python tools/install.py --agent <agent> --skill <name>`, then check that the agent picks it up for a matching request and does **not** pick it up for an unrelated one.
 
 ## Pull requests (same convention as anthropics/skills)

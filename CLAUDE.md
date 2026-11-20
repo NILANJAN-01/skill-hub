@@ -20,24 +20,21 @@ At the start of every non-trivial task, use the `skill-router` skill first (`pyt
 
 ## Commands
 
-Everything is Python standard library only; there is no build step or package install.
+Everything is Python standard library only; there is no build step or package install. Use `tools/hub.py` for repository chores instead of doing them by hand: it applies the rules for you and prints only what needs attention.
 
 ```bash
-# The three checks CI runs for every change (run all before finishing)
-python tools/build_catalog.py            # regenerate catalog.json, READMEs, prompts.html, etc.
-python tools/validate_skills.py
-python tools/build_catalog.py --check    # fails if generated files are stale
+# Before finishing any change: rebuild generated files, then run everything CI runs, in parallel.
+# Prints one line per step group, the output of failed steps only, and the command to rerun each.
+python tools/hub.py check --changed      # while iterating: only tests affected by changes since HEAD
+python tools/hub.py check                # everything (what CI runs)
 
-# Byte-compile (CI does this too)
-python -m compileall -q tools skills mcp-server
+# Add a skill: copies template/, writes frontmatter, registers it in marketplace.json
+# (+ CATEGORY_TITLES for a new plugin) and examples/prompts.json, rebuilds. Then fill the TODOs.
+python tools/hub.py new-skill <area>/<group>/<name> --plugin <plugin> --description "..." --prompt "..." --prompt "..."
+python tools/hub.py new-skill <area>/<group>/<name> --plugin <new-plugin> --plugin-title "Title" --plugin-description "..."
 
-# MCP server tests
-python -m unittest discover -s mcp-server/tests -v
-
-# Tests for one skill's bundled scripts (each skill with tests has skills/<area>/<group>/<name>/scripts/test_*.py)
-python -m unittest discover -s skills/<area>/<group>/<name>/scripts -p "test_*.py" -v
-# single test file / case
-python -m unittest skills/<area>/<group>/<name>/scripts/test_foo.py
+# Rerun a single failing suite or case (hub.py check prints the exact command)
+python -m unittest discover -s skills/<area>/<group>/<name>/scripts -p "test_*.py"
 python -m unittest discover -s mcp-server/tests -k <substring>
 
 # Installer (never run without a sandboxed HOME/USERPROFILE when testing writes)

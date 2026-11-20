@@ -21,6 +21,10 @@ NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 KNOWN_FIELDS = {"name", "description", "license", "compatibility", "metadata", "allowed-tools"}
 LINK_RE = re.compile(r"\[[^\]]*\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
 MAX_LINES = 500
+# Text that `tools/hub.py new-skill` and template/ leave behind; a finished skill has none of it.
+PLACEHOLDER = "TODO:"
+TEMPLATE_TEXT = ("One or two sentences on what this skill helps the agent accomplish",
+                 "Replace with what this skill does", "- Trigger situation 1")
 # Skills must work in every agent. Agent-specific wording needs a `compatibility` note.
 AGENT_SPECIFIC = re.compile(
     r"\bClaude Code\b|\bClaude\.ai\b|~/\.claude\b|\.claude/skills|/plugin install|\bCLAUDE\.md\b|"
@@ -53,6 +57,8 @@ def check_skill(d: Path, plugin_names: set[str], listed: set[str]) -> tuple[list
     desc = fm.get("description", "")
     if not isinstance(desc, str) or not desc.strip():
         errors.append("frontmatter: 'description' is required")
+    elif desc.lstrip().startswith(PLACEHOLDER):
+        errors.append("description is still the TODO placeholder; write what the skill does and when to use it")
     elif len(desc) > 1024:
         errors.append(f"description is longer than 1024 characters ({len(desc)})")
     elif "use when" not in desc.lower() and "use this" not in desc.lower():
@@ -85,6 +91,10 @@ def check_skill(d: Path, plugin_names: set[str], listed: set[str]) -> tuple[list
         if hits:
             warns.append(f"agent-specific wording ({', '.join(hits)}); make the body agent-neutral or "
                          "declare it in a 'compatibility' field")
+
+    leftovers = [t for t in TEMPLATE_TEXT if t in body]
+    if leftovers:
+        errors.append(f"still contains template text ({leftovers[0]!r}); replace it with the skill's content")
 
     n_lines = text.count("\n") + 1
     if n_lines > MAX_LINES:
@@ -198,6 +208,8 @@ def main() -> None:
         prompts = examples.get(d.name, [])
         if not isinstance(prompts, list) or not all(isinstance(p, str) and p.strip() for p in prompts):
             report("ERROR", ex_where, f"{d.name}: prompts must be a list of non-empty strings")
+        elif any(p.lstrip().startswith(PLACEHOLDER) for p in prompts):
+            report("ERROR", ex_where, f"{d.name}: replace the TODO placeholder prompts with realistic requests")
         elif len(prompts) < MIN_EXAMPLES:
             report("ERROR", ex_where, f"{d.name}: needs at least {MIN_EXAMPLES} example prompts (has {len(prompts)})")
     for d in dirs:

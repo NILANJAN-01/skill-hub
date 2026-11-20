@@ -2,8 +2,8 @@
 
 | Task | Steps |
 |---|---|
-| Add a skill | `cp -r template skills/<area>/<group>/<name>`, write `SKILL.md`, add to a plugin in `marketplace.json`, add prompts, rebuild and validate |
-| Add a category | New plugin entry in `marketplace.json` + title in `CATEGORY_TITLES` |
+| Add a skill | `python tools/hub.py new-skill <area>/<group>/<name> --plugin <plugin>` (registers it and adds prompts), replace the TODOs and the template text, then `python tools/hub.py check --changed` |
+| Add a category | `hub.py new-skill ... --plugin <new> --plugin-title "Title" --plugin-description "..."` for its first skill, or by hand: a plugin entry in `marketplace.json` and a title in `CATEGORY_TITLES` |
 | Support a new agent | Add an entry to `AGENTS` in `tools/install.py` from official docs (`project`, `global`, `also_reads`, `global_also_reads`, and `detect`), rebuild, check with `python tools/install.py --detect` |
 | Generate skills from a PDF | Follow `skills/generic/hub/skillforge/SKILL.md` |
 | Add a group | Create the folder `skills/<area>/<group>/`; nothing to register |

@@ -6,6 +6,11 @@ These instructions are for AI coding agents (Claude Code, Antigravity, Devin, Co
 
 A hub of **agent-neutral** Agent Skills (`skills/<area>/<group>/<name>/SKILL.md`, open format from agentskills.io), distributed to many AI coding agents. One source folder per skill is installed into each agent's own skills folder by `tools/install.py`, `npx skills`, or the Claude Code plugin marketplace.
 
+## Commands
+
+- `python tools/hub.py check` runs every CI check in parallel and prints only the failures. Run it before finishing; use `--changed` while iterating.
+- `python tools/hub.py new-skill <area>/<group>/<name> --plugin <plugin>` scaffolds a skill and registers it everywhere.
+
 ## Rules
 
 The rules live in the [`rule/`](rule/README.md) folder. **Read them before editing anything.** Do not copy them back into this file.

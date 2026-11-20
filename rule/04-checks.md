@@ -1,6 +1,12 @@
 # 04. Checks before finishing any change
 
-Run all three and fix every error:
+Run this and fix every failure:
+
+```bash
+python tools/hub.py check            # or --changed while iterating
+```
+
+It runs, in parallel, everything listed below and prints only the failures. Separately:
 
 ```bash
 python tools/build_catalog.py
