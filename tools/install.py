@@ -78,6 +78,9 @@ MANIFEST = ".skill-hub.json"
 #                            file ("project": a personal, uncommitted file, or None; "global"; optional
 #                            "home_env" + "home_rel" when an env var moves the user folder), the hook
 #                            "event", the dispatcher "args" (output format the agent expects), "docs"
+#   token_hooks              how to register token-optimizer's hooks (--token-hooks), from the vendor's
+#                            hook docs: the JSON file ("project", "global"), and "hooks", a list of
+#                            {"event", optional "matcher", "args" for token_hook.py}, plus "docs"
 # --------------------------------------------------------------------------------------------
 AGENTS = {
     "claude-code": {
@@ -92,6 +95,11 @@ AGENTS = {
         "prompt_hook": {"style": "nested", "project": ".claude/settings.local.json",
                         "global": "~/.claude/settings.json", "event": "UserPromptSubmit",
                         "args": ["--hook", "--no-briefs"], "docs": "https://code.claude.com/docs/en/hooks"},
+        # PreToolUse can deny a tool call with a reason the model reads; SessionEnd gets transcript_path.
+        "token_hooks": {"project": ".claude/settings.local.json", "global": "~/.claude/settings.json",
+                        "hooks": [{"event": "PreToolUse", "matcher": "Read", "args": ["read-guard"]},
+                                  {"event": "SessionEnd", "args": ["session-end", "--agent", "claude-code"]}],
+                        "docs": "https://code.claude.com/docs/en/hooks"},
     },
     "antigravity": {
         "name": "Google Antigravity", "project": ".agents/skills", "global": "~/.gemini/config/skills",
@@ -1016,6 +1024,146 @@ def apply_hook_plan(rows: list, removing: bool, dry: bool) -> int:
     return n
 
 
+# ============================================================================ token hooks
+# --token-hooks registers token-optimizer's hook script, for agents with a "token_hooks" entry in AGENTS:
+# a read guard before file reads (blocks a whole read of a big file once, pointing the agent to a short
+# version) and a usage import at session end. Opt-in: not part of --setup; --uninstall removes it.
+TOKEN_SKILL = "token-optimizer"
+TOKEN_SCRIPT = "token_hook.py"
+TOKEN_HOOK_TIMEOUT = 30
+
+
+def token_hook_path(agent: str, use_global: bool, project: Path) -> Path | None:
+    info = AGENTS[agent].get("token_hooks")
+    if not info:
+        return None
+    if not use_global:
+        return project / info["project"] if info.get("project") else None
+    return _expand(info["global"])
+
+
+def token_handlers(info: dict, skill_dir: Path) -> list:
+    """[(event, matcher or None, handler)] running this Python on the installed token_hook.py."""
+    py = Path(sys.executable).as_posix() if sys.executable else "python"
+    out = []
+    for h in info["hooks"]:
+        parts = [py, (skill_dir / "scripts" / TOKEN_SCRIPT).as_posix(), *h["args"]]
+        out.append((h["event"], h.get("matcher"),
+                    {"type": "command", "command": " ".join(_quoted(p) for p in parts), "timeout": TOKEN_HOOK_TIMEOUT}))
+    return out
+
+
+def _is_token_hook(h) -> bool:
+    cmd = h.get("command", "") if isinstance(h, dict) else ""
+    return isinstance(cmd, str) and TOKEN_SKILL in cmd and TOKEN_SCRIPT in cmd
+
+
+def _our_token_hooks(data: dict) -> list:
+    """[(event, matcher, handler)] of our hooks already in a nested hooks file."""
+    hooks = data.get("hooks") if isinstance(data.get("hooks"), dict) else {}
+    return [(event, g.get("matcher"), h) for event in hooks for g in _hook_groups(data, event)
+            if isinstance(g, dict) and isinstance(g.get("hooks"), list) for h in g["hooks"] if _is_token_hook(h)]
+
+
+def token_hook_status(path: Path, handlers: list) -> str:
+    """missing / same / differs / unreadable: <why>."""
+    try:
+        data = read_json_config(path)
+    except (OSError, ValueError) as exc:
+        return f"unreadable: {exc}"
+    ours = _our_token_hooks(data)
+    if not ours:
+        return "missing"
+    def key(x):
+        return json.dumps(x, sort_keys=True)
+    return "same" if sorted(map(key, ours)) == sorted(map(key, handlers)) else "differs"
+
+
+def write_token_hooks(path: Path, handlers) -> None:
+    """Replace our hooks with `handlers` (None removes them), keeping every other hook and setting."""
+    data = read_json_config(path)
+    hooks = data.get("hooks") if isinstance(data.get("hooks"), dict) else {}
+    for event in list(dict.fromkeys(list(hooks) + [e for e, _, _ in handlers or []])):
+        groups = []
+        for g in _hook_groups(data, event):
+            if isinstance(g, dict) and isinstance(g.get("hooks"), list) and any(_is_token_hook(h) for h in g["hooks"]):
+                kept = [h for h in g["hooks"] if not _is_token_hook(h)]
+                if kept:
+                    groups.append(dict(g, hooks=kept))
+            else:
+                groups.append(g)
+        for e, matcher, handler in handlers or []:
+            if e == event:
+                groups.append(dict({"matcher": matcher} if matcher else {}, hooks=[handler]))
+        if groups:
+            hooks[event] = groups
+        else:
+            hooks.pop(event, None)
+    if hooks:
+        data["hooks"] = hooks
+    else:
+        data.pop("hooks", None)
+    _write_atomic(path, json.dumps(data, indent=2) + "\n", backup_first=handlers is not None)
+
+
+def make_token_hook_plan(agents: list, use_global: bool, project: Path, names: list, removing: bool = False) -> list:
+    """One row per hook file. When adding, only for agents that will have token-optimizer."""
+    rows = {}
+    for a in agents:
+        path = token_hook_path(a, use_global, project)
+        if path is None or path in rows:
+            continue
+        folder = next((f for f in reads(a, use_global, project) if (f / TOKEN_SKILL / "SKILL.md").is_file()),
+                      own_dir(a, use_global, project))
+        if folder is None or (not removing and TOKEN_SKILL not in names
+                              and not (folder / TOKEN_SKILL / "SKILL.md").is_file()):
+            continue
+        handlers = token_handlers(AGENTS[a]["token_hooks"], folder / TOKEN_SKILL)
+        rows[path] = {"path": path, "agent": a, "handlers": handlers, "status": token_hook_status(path, handlers)}
+    return list(rows.values())
+
+
+def show_token_hook_plan(rows: list, removing: bool = False) -> int:
+    """Print the token-hook part of the plan; return how many files would change."""
+    if not rows or (removing and all(r["status"] == "missing" for r in rows)):
+        return 0
+    work = 0
+    print(f"\nToken hooks ({TOKEN_SKILL}: read guard for big files, usage import at session end):")
+    for r in rows:
+        st, where, who = r["status"], fmt(r["path"]), AGENTS[r["agent"]]["name"]
+        if st.startswith("unreadable"):
+            print(f"  ! {where} ({who}) can't be read safely ({st[12:]}); it will be left alone")
+        elif removing:
+            print(f"  - remove the token hooks from {where}   ({who})")
+            work += 1
+        elif st == "same":
+            print(f"  = already set up in {where}   ({who})")
+        else:
+            print(f"  {'+ add' if st == 'missing' else '~ update'} the token hooks in {where}   ({who})")
+            work += 1
+    return work
+
+
+def apply_token_hook_plan(rows: list, removing: bool, dry: bool) -> int:
+    pre, n = "would " if dry else "", 0
+    for r in rows:
+        st = r["status"]
+        if st.startswith("unreadable"):
+            if not removing:
+                print(f"  skip  {fmt(r['path'])}: add these hooks by hand "
+                      f"({AGENTS[r['agent']]['token_hooks']['docs']}):")
+                for event, matcher, handler in r["handlers"]:
+                    print(f"        {event}" + (f" (matcher {matcher})" if matcher else "") + f": {handler['command']}")
+            continue
+        if (removing and st == "missing") or (not removing and st == "same"):
+            continue
+        print(f"  {pre}{'remove' if removing else 'set'} token hooks  in  {fmt(r['path'])}")
+        if not dry:
+            write_token_hooks(r["path"], None if removing else r["handlers"])
+        n += 1
+    return n
+
+
 def check_server(timeout: int = 60) -> str:
     """Start the snapshot's server with --check. Returns its one-line summary or an error."""
     import subprocess
@@ -1419,10 +1567,10 @@ def doctor(root: Path, agents: list, project: Path) -> int:
 def execute(root: Path, agents: list, names: list, use_global: bool, project: Path, mcp: bool = False,
             allow_install: bool = False, force: bool = False, tidy: bool = False, each: bool = False,
             yes: bool = False, dry: bool = False, remove: bool = False, uninstall: bool = False,
-            ask_options: bool = False, hook: bool = False) -> None:
-    """Plan everything (skills + MCP server + prompt hook), show it, confirm once, then apply."""
+            ask_options: bool = False, hook: bool = False, token_hook: bool = False) -> None:
+    """Plan everything (skills + MCP server + prompt hook + token hooks), show it, confirm once, then apply."""
     if remove:
-        remove_all(names, agents, use_global, project, mcp, uninstall, yes, dry, hook=hook)
+        remove_all(names, agents, use_global, project, mcp, uninstall, yes, dry, hook=hook, token_hook=token_hook)
         return
     plan = make_plan(root, names, agents, use_global, project, each=each) if names else None
     skill_work = 0
@@ -1445,6 +1593,8 @@ def execute(root: Path, agents: list, names: list, use_global: bool, project: Pa
         mcp_work = show_mcp_plan(rows, snap) + (snap != "current")
     hook_rows = make_hook_plan(agents, use_global, project, names) if hook else []
     hook_work = show_hook_plan(hook_rows)
+    token_rows = make_token_hook_plan(agents, use_global, project, names) if token_hook else []
+    hook_work += show_token_hook_plan(token_rows)
     if not skill_work and not mcp_work and not hook_work:
         print("\nNothing to change. Everything selected is already set up.")
         return
@@ -1457,7 +1607,10 @@ def execute(root: Path, agents: list, names: list, use_global: bool, project: Pa
     if hook and not dry:                         # skills are in place now: point each hook at the real copy
         hook_rows = make_hook_plan(agents, use_global, project, names)
     h = apply_hook_plan(hook_rows, False, dry)
-    hooks = f" and {h} prompt hook(s)" if hook_rows else ""
+    if token_hook and not dry:
+        token_rows = make_token_hook_plan(agents, use_global, project, names)
+    t = apply_token_hook_plan(token_rows, False, dry)
+    hooks = (f" and {h} prompt hook(s)" if hook_rows else "") + (f", {t} token hook file(s)" if token_rows else "")
     if dry:
         print(f"\nWould write {n} skill folder(s), {m} MCP config file(s){hooks}.")
         return
@@ -1468,7 +1621,7 @@ def execute(root: Path, agents: list, names: list, use_global: bool, project: Pa
 
 
 def remove_all(names: list, agents: list, use_global: bool, project: Path, mcp: bool, uninstall: bool,
-               yes: bool, dry: bool, hook: bool = False) -> None:
+               yes: bool, dry: bool, hook: bool = False, token_hook: bool = False) -> None:
     """Delete installed copies of the named hub skills, and (mcp) our MCP entries, after one confirmation."""
     folders = list(dict.fromkeys(f for a in agents for f in reads(a, use_global, project)))
     found = [(f, s) for f in folders for s in names if (f / s / "SKILL.md").is_file()]
@@ -1481,6 +1634,8 @@ def remove_all(names: list, agents: list, use_global: bool, project: Path, mcp: 
     mcp_work = show_mcp_plan(rows, "current", removing=True) if mcp else 0
     hook_rows = make_hook_plan(agents, use_global, project, names, removing=True) if hook else []
     hook_work = show_hook_plan(hook_rows, removing=True)
+    token_rows = make_token_hook_plan(agents, use_global, project, names, removing=True) if token_hook else []
+    hook_work += show_token_hook_plan(token_rows, removing=True)
     if drop_snapshot:
         print(f"  - delete the hub copy {fmt(snapshot_dir())}")
     if not found and not mcp_work and not hook_work and not drop_snapshot:
@@ -1488,7 +1643,7 @@ def remove_all(names: list, agents: list, use_global: bool, project: Path, mcp: 
         return
     if dry:
         print(f"\nWould remove {len(found)} skill folder(s), {mcp_work} MCP server entries and "
-              f"{hook_work} prompt hook(s).")
+              f"{hook_work} hook file(s).")
         return
     if not yes and not yes_no("\nRemove these?", False):
         print("Cancelled. Nothing was changed.")
@@ -1497,10 +1652,10 @@ def remove_all(names: list, agents: list, use_global: bool, project: Path, mcp: 
         shutil.rmtree(f / s)
         record(f, s, None)
     m = apply_mcp_plan(Path("."), rows, None, "current", False) if mcp else 0
-    h = apply_hook_plan(hook_rows, True, False)
+    h = apply_hook_plan(hook_rows, True, False) + apply_token_hook_plan(token_rows, True, False)
     if drop_snapshot:
         shutil.rmtree(snapshot_dir())
-    print(f"\nRemoved {len(found)} skill folder(s), {m} MCP server entries and {h} prompt hook(s)."
+    print(f"\nRemoved {len(found)} skill folder(s), {m} MCP server entries and {h} hook file(s)."
           + (f" Deleted {fmt(snapshot_dir())}." if drop_snapshot else ""))
 
 
@@ -1639,6 +1794,9 @@ def build_parser() -> argparse.ArgumentParser:
                    help=f"register {HOOK_SKILL} as the agent's prompt-submit hook (part of --setup and --uninstall)")
     g.add_argument("--no-prompt-hook", action="store_true",
                    help="with --setup or --uninstall: leave the prompt hook alone")
+    g.add_argument("--token-hooks", action="store_true",
+                   help=f"register {TOKEN_SKILL}'s hooks: a read guard that sends whole reads of big files to a "
+                        "short version, and a usage import at session end (opt-in; --uninstall removes them)")
 
     g = ap.add_argument_group("Information and safety","Look before you change anything")
     g.add_argument("--detect", action="store_true", help="only show which agents are installed")
@@ -1681,6 +1839,7 @@ def main() -> None:
             args.use_global = True
         args.remove = args.remove or args.uninstall
         args.prompt_hook = not args.no_prompt_hook
+        args.token_hooks = args.token_hooks or args.uninstall
     if args.doctor:
         if args.agent and args.agent.strip() != "detected":
             agents = [a.strip() for a in args.agent.split(",") if a.strip()]
@@ -1724,13 +1883,13 @@ def main() -> None:
     plugins_arg = [x.strip() for v in args.plugin for x in v.split(",") if x.strip()]
     skills_arg = [x.strip() for v in args.skill for x in v.split(",") if x.strip()]
     nothing_chosen = not (args.agent or args.dest or args.zip or plugins_arg or skills_arg or args.all or args.mcp
-                          or args.prompt_hook)
+                          or args.prompt_hook or args.token_hooks)
     if nothing_chosen:
         guided(root, args)
         return
 
-    if not plugins_arg and not skills_arg and not args.all and not args.mcp and not args.prompt_hook:
-        ap.error("choose what to install with --plugin, --skill, --all, --mcp or --prompt-hook "
+    if not (plugins_arg or skills_arg or args.all or args.mcp or args.prompt_hook or args.token_hooks):
+        ap.error("choose what to install with --plugin, --skill, --all, --mcp, --prompt-hook or --token-hooks "
                  "(or use --setup for everything, or run with no options for guided mode)")
     names = all_skills(root) if args.all else resolve(root, plugins_arg, skills_arg)
     if (args.zip or args.dest) and not names:
@@ -1762,7 +1921,7 @@ def main() -> None:
 
     execute(root, agents, names, args.use_global, project, mcp=args.mcp, allow_install=args.mcp_allow_install,
             force=args.force or args.update, tidy=args.tidy, each=args.each, yes=args.yes, dry=args.dry_run,
-            remove=args.remove, uninstall=args.uninstall, hook=args.prompt_hook)
+            remove=args.remove, uninstall=args.uninstall, hook=args.prompt_hook, token_hook=args.token_hooks)
 
 
 if __name__ == "__main__":

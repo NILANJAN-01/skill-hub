@@ -433,5 +433,79 @@ class OtherAgentHookTests(PromptHookTests):
         self.assertIn(" C:/skills/skill-dispatcher/scripts/dispatch.py ", plain)
 
 
+REPO_TOKEN = Path(__file__).resolve().parent.parent / "skills" / "generic" / "ai-efficiency" / install.TOKEN_SKILL
+
+
+class TokenHookTests(Sandbox):
+    def setUp(self):
+        super().setUp()
+        shutil.copytree(str(REPO_TOKEN), str(self.root / "skills" / install.TOKEN_SKILL),
+                        ignore=shutil.ignore_patterns("__pycache__"))
+        self.names = ["demo", install.TOKEN_SKILL]
+        self.settings = self.home / ".claude" / "settings.json"
+
+    def ours(self, path: Path) -> list:
+        return install._our_token_hooks(json.loads(path.read_text(encoding="utf-8")))
+
+    def test_install_merges_and_uninstall_removes_only_ours(self):
+        self.settings.parent.mkdir(parents=True)
+        other = {"type": "command", "command": "echo mine"}
+        self.settings.write_text(json.dumps({"model": "opus", "hooks": {
+            "PreToolUse": [{"matcher": "Bash", "hooks": [other]}], "UserPromptSubmit": [{"hooks": [other]}]}}),
+            encoding="utf-8")
+        install.execute(self.root, ["claude-code", "cursor"], self.names, True, self.project, yes=True,
+                        token_hook=True)
+        ours = self.ours(self.settings)
+        self.assertEqual(sorted((e, m) for e, m, _ in ours), [("PreToolUse", "Read"), ("SessionEnd", None)])
+        skill = (self.home / ".claude" / "skills" / install.TOKEN_SKILL).as_posix()
+        self.assertTrue(all(skill + "/scripts/token_hook.py" in h["command"] for _, _, h in ours))
+        data = json.loads(self.settings.read_text(encoding="utf-8"))
+        self.assertEqual(data["model"], "opus")
+        self.assertIn({"matcher": "Bash", "hooks": [other]}, data["hooks"]["PreToolUse"])
+        self.assertEqual(data["hooks"]["UserPromptSubmit"], [{"hooks": [other]}])
+
+        install.execute(self.root, ["claude-code"], self.names, True, self.project, yes=True, token_hook=True)
+        self.assertEqual(len(self.ours(self.settings)), 2)              # running again adds no copy
+        rows = install.make_token_hook_plan(["claude-code"], True, self.project, self.names)
+        self.assertEqual(rows[0]["status"], "same")
+
+        install.execute(self.root, ["claude-code"], self.names, True, self.project, yes=True, token_hook=True,
+                        remove=True)
+        data = json.loads(self.settings.read_text(encoding="utf-8"))
+        self.assertEqual(self.ours(self.settings), [])
+        self.assertEqual(data["hooks"], {"PreToolUse": [{"matcher": "Bash", "hooks": [other]}],
+                                         "UserPromptSubmit": [{"hooks": [other]}]})
+
+    def test_installed_read_guard_runs(self):
+        install.execute(self.root, ["claude-code"], self.names, True, self.project, yes=True, token_hook=True)
+        guard = next(h["command"] for e, _, h in self.ours(self.settings) if e == "PreToolUse")
+        big = self.project / "big.py"
+        big.write_text("x = 1  # filler line for size\n" * 2000, encoding="utf-8")
+        event = {"session_id": "t", "tool_name": "Read", "tool_input": {"file_path": str(big)}}
+        out = subprocess.run(guard, shell=True, input=json.dumps(event), capture_output=True, text=True, timeout=60)
+        self.assertEqual(out.returncode, 0, out.stderr)
+        self.assertEqual(json.loads(out.stdout)["hookSpecificOutput"]["permissionDecision"], "deny")
+
+    def test_needs_the_skill_and_a_supporting_agent(self):
+        install.execute(self.root, ["claude-code"], ["demo"], True, self.project, yes=True, token_hook=True)
+        self.assertFalse(self.settings.exists())
+        self.assertEqual(install.make_token_hook_plan(["cursor", "codex"], True, self.project, self.names), [])
+
+    def test_project_scope_uses_the_personal_settings_file(self):
+        install.execute(self.root, ["claude-code"], self.names, False, self.project, yes=True, token_hook=True)
+        self.assertEqual(len(self.ours(self.project / ".claude" / "settings.local.json")), 2)
+        self.assertFalse((self.project / ".claude" / "settings.json").exists())
+
+    def test_dry_run_and_unreadable_file_write_nothing(self):
+        install.execute(self.root, ["claude-code"], self.names, True, self.project, dry=True, token_hook=True)
+        self.assertFalse(self.settings.exists())
+        self.settings.parent.mkdir(parents=True)
+        self.settings.write_text('{ // comment\n}', encoding="utf-8")
+        rows = install.make_token_hook_plan(["claude-code"], True, self.project, self.names)
+        self.assertTrue(rows[0]["status"].startswith("unreadable"))
+        self.assertEqual(install.apply_token_hook_plan(rows, False, dry=False), 0)
+        self.assertIn("// comment", self.settings.read_text(encoding="utf-8"))
+
+
 if __name__ == "__main__":
     unittest.main()

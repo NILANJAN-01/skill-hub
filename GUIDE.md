@@ -164,6 +164,7 @@ Use options when you already know what you want, or for scripts, dotfiles and CI
 ... --setup --yes                                    # everything: all skills + MCP server, every detected agent
 ... --agent detected --mcp --global                  # only the skill-hub MCP server
 ... --agent detected --prompt-hook --global          # only the skill-dispatcher hooks
+... --agent claude-code --skill token-optimizer --token-hooks --global   # read guard + usage tracking (opt-in)
 ... --detect                                         # just show which agents are installed
 ... --list                                           # agents, categories and every skill
 ... --agent detected --all --global                  # every skill, every detected agent, for you

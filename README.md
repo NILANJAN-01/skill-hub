@@ -154,6 +154,7 @@ python install.py --setup --yes                                   # everything +
 python install.py --setup --agent cursor --project .              # everything, one agent, this project
 python install.py --agent detected --mcp --global                 # only the MCP server
 python install.py --agent detected --prompt-hook --global         # only the skill-dispatcher hooks
+python install.py --agent claude-code --skill token-optimizer --token-hooks --global   # read guard + usage tracking
 python install.py --agent claude-code --plugin ai-agent-tools --mcp --global
 python install.py --agent detected --all --global --yes           # every skill, no MCP server
 python install.py --agent cursor --skill git-rebasing             # one skill, this project
