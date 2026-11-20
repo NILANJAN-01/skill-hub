@@ -319,7 +319,7 @@ def tools_reference() -> list:
 def user_guide_html(catalog: dict) -> str:
     skills = catalog["skills"]
     guide_skills = [{"name": s["name"], "title": s["title"], "category": s["category"], "plugins": s["plugins"],
-                     "description": s["description"], "needs": s["compatibility"], "path": s["path"],
+                     "area": s["area"], "group": s["group"], "description": s["description"], "needs": s["compatibility"], "path": s["path"],
                      "examples": s["examples"], "scripts": skill_scripts(s["path"])} for s in skills]
     server = mcp_server_reference()
     data = {
@@ -331,6 +331,8 @@ def user_guide_html(catalog: dict) -> str:
                   "prompts": sum(len(s["examples"]) for s in skills),
                   "mcp_tools": len(server["tools"]) if server else 0, "mcp_presets": len(install.MCP_PRESETS)},
         "categories": catalog["categories"],
+        "areas": [{"name": a["name"], "title": a["title"], "groups": [g["name"] for g in a["groups"]]}
+                  for a in catalog["areas"]],
         "plugins": [{"name": p["name"], "description": p["description"], "count": len(p["skills"])}
                     for p in catalog["plugins"]],
         "skills": guide_skills,

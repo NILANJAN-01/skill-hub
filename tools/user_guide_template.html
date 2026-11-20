@@ -166,6 +166,13 @@ details.skill summary .meta { display: flex; gap: 6px; align-items: start; flex-
 .script .h { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; font-size: 14px; }
 .script .h .s { color: var(--muted); }
 .links { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13.5px; margin-top: 12px; }
+.views { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin: 0 0 10px; font-size: 13px; color: var(--muted); }
+h5.grp { font: 600 12px "JetBrains Mono", monospace; color: var(--muted); margin: 14px 0 8px; }
+.compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin: 8px 0 14px; }
+.compare .card h4 .badge { margin-left: auto; }
+.compare .card p { font-size: 14px; }
+.checklist { margin: 0; padding-left: 20px; font-size: 14.5px; }
+.checklist li { margin-bottom: 6px; }
 .empty { color: var(--muted); padding: 18px; text-align: center; border: 1px dashed var(--border); border-radius: var(--radius); }
 mark { background: var(--accent-soft); color: inherit; border-radius: 3px; padding: 0 1px; }
 
@@ -291,7 +298,7 @@ section("quick-start", "Quick start", null, `
     <div class="tabs" data-tabs="qs">${Object.keys(QS).map((k, i) => `<button class="tab${i ? "" : " on"}" type="button" data-k="${esc(k)}">${esc(k)}</button>`).join("")}</div>
     <div data-panel="qs">${code(QS[Object.keys(QS)[0]])}</div></div>
   <div class="stepcard"><h4>Restart your agents</h4><p>Agents read skills and MCP servers at start-up. Then check everything is in place:</p>${code("python install.py --doctor")}</div>
-  <div class="stepcard"><h4>Just ask</h4><p>Describe the task; the agent loads the matching skill. Examples: “Write Playwright tests for our login page”, “Migrate our JUnit 4 tests to JUnit 6”, “Write a UI Automator test in Kotlin that signs in”, “Write API tests for our orders endpoints from openapi.json”, “Our Robot run failed, here is output.xml”, “This session is getting long: write a handoff note so we can restart”, “Make every AI agent in this repo follow good software design rules”.</p></div>
+  <div class="stepcard"><h4>Just ask</h4><p>Describe the task; the agent loads the matching skill. Examples: “Write Playwright tests for our login page”, “Migrate our JUnit 4 tests to JUnit 6”, “Write a UI Automator test in Kotlin that signs in”, “Write API tests for our orders endpoints from openapi.json”, “Our Robot run failed, here is output.xml”, “This session is getting long: write a handoff note so we can restart”, “Make every AI agent in this repo follow good software design rules”, “adb says unauthorized, fix the connection to my phone”, “Audit this repo for token waste”. For results you can ship, see <a href="#professional">Professional use</a>.</p></div>
 </div>
 <div class="callout ok"><b>Prefer to choose?</b> Run the installer with no options for a menu: everything, choose agents and skills, doctor, or remove. Narrow <code>--setup</code> with <code>--agent</code>, <code>--plugin</code>, <code>--skill</code> or <code>--project</code>.</div>`);
 
@@ -317,15 +324,95 @@ section("using-skills", "Using skills", null, `
 <tr><td>Vague or multi-part request</td><td>Ask as usual; the <code>skill-router</code> skill (or the MCP tool <code>route_request</code>) splits it and picks skills per part; <code>skill-orchestrator</code> chains them.</td></tr>
 <tr><td>Find a skill</td><td>“<i>Is there a skill for …?</i>” (<code>find-skills</code>), the search on this page, or the <a href="index.html">catalog browser</a>.</td></tr>
 <tr><td>See ideas</td><td><a href="prompts.html">${S.prompts} example prompts</a>, grouped by category.</td></tr>
+<tr><td>Work you can ship</td><td>Give a goal, context, constraints and a “done when” check: see <a href="#professional">Professional use</a> for the brief, the workflow and playbooks by role.</td></tr>
 </tbody></table></div>
 <h3>Running a skill's script yourself</h3>
 <p>Every script is plain Python 3.8+ with no dependencies (two inspector skills note their extras). Run it from the installed skill folder or from the clone; <code>--help</code> lists its options. All scripts are listed in <a href="#scripts">Bundled scripts</a>.</p>
 ${code("python skills/testing/playwright/playwright-test-authoring/scripts/pw_audit.py path/to/project\npython skills/testing/junit/junit-migration/scripts/junit_audit.py path/to/project\npython skills/testing/api/rest-api-testing/scripts/api_check.py run tests/api/orders.json --env .env.test --junit build/api-junit.xml\npython skills/development/software-design/software-design-guardrails/scripts/design_check.py --diff\npython <skill-folder>/scripts/<script>.py --help")}`);
 
+// Professional use
+const hasSkill = Object.fromEntries(DATA.skills.map(s => [s.name, true]));
+const skillLinks = names => names.filter(n => hasSkill[n]).map(n => `<a href="#skill-${esc(n)}" data-open="${esc(n)}"><code>${esc(n)}</code></a>`).join(" ");
+const ROLES = [
+  ["QA and test automation", ["playwright-test-authoring", "playwright-debugging", "robotframework-results", "junit-run-reports", "rest-api-testing"],
+   "Our checkout E2E tests are flaky in CI, here is results.json. Find the cause and fix the tests, not the timeouts."],
+  ["Android engineer", ["adb-connect", "adb-debug", "android-logcat-analyzer", "uiautomator-test-authoring", "gradle-android"],
+   "The app crashes on start on my phone. Pull logcat, find the cause, and add a UI Automator test that reproduces it."],
+  ["Backend and API developer", ["rest-api-testing", "python-unit-test", "error-handling-design", "deep-modules"],
+   "Plan API tests for the orders endpoints from openapi.json, including auth and access-control cases, then run them read-only against staging."],
+  ["Tech lead and reviewer", ["software-design-guardrails", "design-it-twice", "repo-architecture", "git-rewriting-history"],
+   "Review my branch for design red flags before I open the PR. List must-fix items first, then nice-to-haves."],
+  ["DevOps and CI", ["gitlab-ci-optimization", "gitlab-ci-debugging", "playwright-ci", "robotframework-ci"],
+   "Our GitLab pipeline takes 40 minutes. Find the three biggest wins and show the YAML change for each."],
+  ["AI and LLM engineer", ["mcp-server-builder", "agent-tool-design", "llm-evals", "rag-pipeline", "context-window-budget"],
+   "Lint our tool definitions, then set up an eval suite for the support bot that can run in CI."],
+  ["Docs and communication", ["professional-writing", "repo-learnings", "repo-architecture"],
+   "Write a README for new contributors from this repository's actual structure, then run the writing checker on it."],
+  ["Long agent sessions", ["context-handoff", "context-memory", "token-optimizer", "ai-token-saver"],
+   "We are close to the context limit. Write a handoff note from git state and a short brief for a sub-agent."],
+];
+section("professional", "Professional use", null, `
+<p class="lead">Skills give the agent a tested playbook. To get results you can review, merge and ship, give it a clear brief, let the scripts produce evidence and check the work like a colleague's.</p>
+<h3>Write a brief, not a wish</h3>
+<p>A professional request has five parts. Leave out the ones that are obvious, but never the goal or how you will know it is done.</p>
+${table(["Part", "What to include", "Example"], [
+  ["Goal", "One outcome, in your own words", "E2E tests for the login page"],
+  ["Context", "Where the code or artefacts are, versions, environment", "<code>apps/web</code>, Playwright 1.65, TypeScript, test users in <code>.env.test</code>"],
+  ["Constraints", "What must not change, the rules to follow", "role-based locators only, no sleeps, don't touch app code"],
+  ["Done when", "A check that proves it, ideally a command", "tests pass three runs in a row and <code>pw_audit.py</code> reports no issues"],
+  ["Output", "What you want back", "the spec files, plus what is covered and what is not"],
+].map(r => `<tr><td class="nowrap"><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td></tr>`))}
+<div class="compare">
+  <div class="card"><h4>Vague <span class="badge w">guesswork</span></h4><p>“<i>write tests for login</i>”</p></div>
+  <div class="card"><h4>Professional <span class="badge r">reviewable</span></h4><p>“<i>Use playwright-test-authoring. Write E2E tests for the login page in apps/web (Playwright 1.65, TypeScript; test users are in .env.test). Use role-based locators only, no sleeps, and don't change app code. Done when the tests pass three runs in a row and pw_audit.py reports no issues. Give me the spec files and a short note on what is not covered.</i>”</p></div>
+</div>
+<h3>A dependable workflow</h3>
+<div class="flow">
+  <div class="step"><b>Scope</b><span>one outcome per request; split big work into steps</span></div><div class="arrow">→</div>
+  <div class="step"><b>Route</b><span>name the skill, or let <code>skill-router</code> pick and <code>skill-orchestrator</code> chain</span></div><div class="arrow">→</div>
+  <div class="step"><b>Execute</b><span>let the skill's scripts do exact work: audits, reports, generators</span></div><div class="arrow">→</div>
+  <div class="step"><b>Verify</b><span>tests and checker output, a diff you have read</span></div><div class="arrow">→</div>
+  <div class="step"><b>Record</b><span>commit, handoff note or memory for the next session</span></div>
+</div>
+<h3>Playbooks by role</h3>
+<p>Where to start for common jobs. Open a skill for its scripts and more prompts.</p>
+${table(["Role", "Skills to install", "A request that works well"], ROLES.map(([role, names, ask]) => `<tr><td class="nowrap"><b>${esc(role)}</b></td><td>${skillLinks(names)}</td><td>“<i>${esc(ask)}</i>”</td></tr>`))}
+<h3>Set up a team</h3>
+<p>Treat skills like code: choose them on purpose, commit them to the repository, pin a release and review changes to them in pull requests.</p>
+${code(`# 1. Install only the categories the team uses, into the repository (preview first)
+python install.py --agent detected --plugin playwright-tools --project . --dry-run
+python install.py --agent detected --plugin playwright-tools --project .
+# 2. Pin a release so every machine gets the same skills (applies when not run from a clone)
+python install.py --setup --ref v${H.version}
+# 3. Make every agent follow the same design rules, with a pre-commit check (dry run; add --yes to write)
+python skills/development/software-design/software-design-guardrails/scripts/install_guardrails.py install --project . --hook
+# 4. After an upgrade, check each machine and refresh skills that changed
+python install.py --doctor
+python install.py --installed
+python install.py --setup --update`)}
+<div class="callout"><b>Project or user level?</b> Use <code>--project .</code> for skills the whole team must share, so they are versioned with the code. Keep personal helpers (token tools, learning skills) user-level with <code>--global</code>.</div>
+<h3>Quality and safety checklist</h3>
+<ul class="checklist">
+  <li><b>Preview before you write.</b> <code>--dry-run</code> on the installer, guardrails without <code>--yes</code>, <code>api_check.py run --read-only</code> against shared environments.</li>
+  <li><b>Ask for evidence.</b> Have the agent run the tests or the skill's script and show the output, rather than say the work is done.</li>
+  <li><b>Review like a pull request.</b> Read the diff, and ask what was left out or assumed.</li>
+  <li><b>Keep secrets out.</b> Not in prompts, handoff notes or committed suites. <code>--mcp-env NAME</code> copies a secret from your environment; <code>handoff.py check</code> flags secrets in notes.</li>
+  <li><b>Grant write access on purpose.</b> The skill-hub MCP server is read-only unless you add <code>--mcp-allow-install</code>, and each install still needs a plan you approve.</li>
+  <li><b>Read a script before running it on sensitive data.</b> Every one is short, standard-library Python.</li>
+  <li><b>Respect licences.</b> Skills derived from books carry a <code>license</code> field; see <a href="THIRD_PARTY_NOTICES.md">THIRD_PARTY_NOTICES.md</a>.</li>
+</ul>
+<h3>Keep cost and context under control</h3>
+<p>Every installed skill's description is read when the agent starts, and long sessions get slower and less accurate. A few habits keep both in check:</p>
+${code(`python skills/generic/ai-efficiency/skill-token-meter/scripts/token_meter.py scan     # what each installed skill costs
+python skills/generic/ai-efficiency/ai-token-saver/scripts/token_audit.py .           # context waste in this repository
+python skills/generic/ai-efficiency/token-optimizer/scripts/token_optimizer.py auto big.log   # a short version of a big file
+python skills/generic/context-management/context-handoff/scripts/handoff.py draft --goal "finish the API tests"   # restart cleanly`)}`);
+
 // Skill catalog
 section("skills", "Skill catalog", null, `
-<p class="lead">All ${S.skills} skills by category. Open a skill for its description, requirements, install command, scripts and example prompts.</p>
+<p class="lead">All ${S.skills} skills, by category (what you install together), by area (where they live in the repository) or as one A–Z list. Open a skill for its description, requirements, install command, scripts and example prompts.</p>
 <div class="toolbar"><label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" placeholder="Filter skills by name, description, script or prompt…" autocomplete="off"></label><span class="count" id="qcount"></span></div>
+<div class="views" id="views">View: <button class="chip on" type="button" data-view="category">By category</button><button class="chip" type="button" data-view="area">By area</button><button class="chip" type="button" data-view="list">A–Z list</button></div>
 <div class="chips" id="chips"></div>
 <div id="skilllist"></div>`, S.skills);
 
@@ -412,6 +499,7 @@ section("whats-new", "What's new", null, `
 
 // Help
 const FAQ = [
+  ["Should I install every skill?", "For trying the hub, yes: <code>--setup</code> is the quickest start. For daily or team use, install the categories you need (<code>--plugin</code>): every installed skill's description is read at start-up, and fewer, relevant skills are picked more reliably. The skill-hub MCP server still finds the rest on demand. See <a href=\"#professional\">Professional use</a>."],
   ["The agent does not use a skill I installed", "Restart the agent (skills are read at start-up), check with <code>python install.py --doctor</code>, then name the skill: “Use the &lt;name&gt; skill: …”. Very simple questions may be answered without a skill."],
   ["How do I update skills after the hub changed?", "<code>python install.py --setup --update</code>. The installer compares every file of each skill and asks before replacing copies that differ (they may be your own edits)."],
   ["The doctor says skills “differ from the hub”", "They are older hub versions or local edits. <code>--setup --update</code> replaces them after you confirm; <code>--dry-run</code> shows exactly what would change."],
@@ -431,7 +519,8 @@ $("#repo").href = H.repository;
 $("#foot").innerHTML = `Generated from the repository by <code>tools/build_catalog.py</code> · skill-hub ${esc(H.version)} · <a href="${esc(H.repository)}">${esc(H.repository.replace("https://", ""))}</a>`;
 
 /* ---------- skill catalog ---------- */
-let activeCat = "", query = "";
+let activeCat = "", query = "", view = "category";
+const areaTitle = Object.fromEntries(DATA.areas.map(a => [a.name, a.title]));
 const skillText = s => [s.name, s.title, s.description, s.needs, catTitle[s.category], ...s.examples, ...s.scripts.map(x => x.file + " " + x.summary)].join(" ").toLowerCase();
 DATA.skills.forEach(s => s._t = skillText(s));
 const counts = {};
@@ -456,7 +545,7 @@ ${s.needs ? `<h5>Needs</h5><p>${esc(s.needs)}</p>` : ""}
 <h5>Install</h5>${code(`python install.py --setup --skill ${s.name}\npython install.py --agent detected --plugin ${plugin} --global   # the whole category`)}
 ${s.scripts.length ? `<h5>Scripts</h5>${s.scripts.map(sc => `<div class="script"><div class="h"><a href="${esc(sc.path)}"><code>${esc(sc.file)}</code></a><span class="s">${esc(sc.summary)}</span></div>${sc.usage.length ? code(sc.usage.map(u => u.replace(/^python\s+/, "python " + sc.path.replace(/[^/]+$/, ""))).join("\n")) : ""}</div>`).join("")}` : ""}
 ${s.examples.length ? `<h5>Try saying</h5><ul class="prompts">${s.examples.map(e => `<li>“${hl(e)}”</li>`).join("")}</ul>` : ""}
-<div class="links"><a href="${esc(s.path)}/SKILL.md">Read SKILL.md</a><a href="${esc(s.path)}/">Skill folder</a><span class="sub" style="color:var(--muted)">plugin <code>${esc(plugin)}</code></span></div>
+<div class="links"><a href="${esc(s.path)}/SKILL.md">Read SKILL.md</a><a href="${esc(s.path)}/">Skill folder</a><span class="sub" style="color:var(--muted)">plugin <code>${esc(plugin)}</code> · area <code>${esc(areaTitle[s.area] || s.area)} / ${esc(s.group)}</code></span></div>
 </div></details>`;
 }
 function renderSkills() {
@@ -465,14 +554,35 @@ function renderSkills() {
   $("#qcount").textContent = `${list.length} of ${S.skills} skills`;
   if (!list.length) { $("#skilllist").innerHTML = `<div class="empty">No skill matches “${esc(query)}”. Try fewer words, or ask your agent: the skill-router matches by meaning.</div>`; return; }
   const out = [];
-  DATA.categories.forEach(c => {
-    const items = list.filter(s => s.category === c.name);
-    if (items.length) out.push(`<h4 class="cat">${esc(c.title)} <code>--plugin ${esc(c.name)}</code></h4><div class="skills">${items.map(skillCard).join("")}</div>`);
-  });
+  if (view === "list") {
+    const rows = [...list].sort((a, b) => a.name.localeCompare(b.name)).map(s => `<tr>
+<td class="nowrap"><a href="#skill-${esc(s.name)}" data-open="${esc(s.name)}"><code>${hl(s.name)}</code></a></td>
+<td>${hl(s.description)}</td>
+<td class="nowrap"><code>${esc(s.plugins[0] || s.category)}</code><div class="sub">${esc(areaTitle[s.area] || s.area)} / ${esc(s.group)}</div></td>
+<td class="nowrap">${s.scripts.length || '<span class="sub">-</span>'}</td></tr>`);
+    out.push(table(["Skill", "What it does", "Plugin / area", "Scripts"], rows));
+  } else if (view === "area") {
+    DATA.areas.forEach(a => {
+      const groups = a.groups.map(g => [g, list.filter(s => s.area === a.name && s.group === g)]).filter(([, items]) => items.length);
+      if (groups.length) out.push(`<h4 class="cat">${esc(a.title)} <code>skills/${esc(a.name)}/</code></h4>` +
+        groups.map(([g, items]) => `<h5 class="grp">${esc(g)}/ · ${items.length}</h5><div class="skills">${items.map(skillCard).join("")}</div>`).join(""));
+    });
+  } else {
+    DATA.categories.forEach(c => {
+      const items = list.filter(s => s.category === c.name);
+      if (items.length) out.push(`<h4 class="cat">${esc(c.title)} <code>--plugin ${esc(c.name)}</code></h4><div class="skills">${items.map(skillCard).join("")}</div>`);
+    });
+  }
   $("#skilllist").innerHTML = out.join("");
   if (q && list.length <= 3) document.querySelectorAll("#skilllist details.skill").forEach(d => d.open = true);
 }
+function setView(v) {
+  view = v;
+  document.querySelectorAll("#views .chip").forEach(c => c.classList.toggle("on", c.dataset.view === v));
+  renderSkills();
+}
 renderSkills();
+$("#views").addEventListener("click", e => { const b = e.target.closest(".chip"); if (b) setView(b.dataset.view); });
 $("#chips").addEventListener("click", e => {
   const b = e.target.closest(".chip"); if (!b) return;
   activeCat = b.dataset.cat;
@@ -499,6 +609,7 @@ document.addEventListener("keydown", e => {
 /* ---------- open a skill from links and the URL ---------- */
 function openSkill(name) {
   if (activeCat || query) { activeCat = ""; query = ""; $("#q").value = $("#gq").value = ""; document.querySelectorAll("#chips .chip").forEach((c, i) => c.classList.toggle("on", i === 0)); renderSkills(); filterRows(); }
+  if (view === "list") setView("category");
   const d = document.getElementById("skill-" + name);
   if (d) { d.open = true; d.scrollIntoView({block: "start"}); }
 }
