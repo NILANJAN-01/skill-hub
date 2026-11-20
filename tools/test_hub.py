@@ -145,7 +145,9 @@ class CheckPlanning(unittest.TestCase):
     def test_everything(self):
         labels, first = self.labels(None)
         self.assertEqual(first.args, ["tools/build_catalog.py"])
-        self.assertIn("tools tests", labels)
+        self.assertIn("tools tests: test_hub.py", labels)
+        self.assertEqual(len([l for l in labels if l.startswith("tools tests: ")]),
+                         len(list((REPO / "tools").glob("test_*.py"))))
         self.assertIn("mcp-server tests", labels)
         self.assertIn("tests: lint-checker", labels)
         self.assertEqual(len([l for l in labels if l.startswith("tests: ")]), len(hub.skill_test_dirs(REPO)))
@@ -153,7 +155,7 @@ class CheckPlanning(unittest.TestCase):
     def test_one_skill_changed(self):
         labels, _ = self.labels(["skills/development/code-quality/lint-checker/SKILL.md"])
         self.assertEqual([l for l in labels if l.startswith("tests: ")], ["tests: lint-checker"])
-        self.assertIn("tools tests", labels)
+        self.assertIn("tools tests: test_install.py", labels)
         self.assertNotIn("mcp-server tests", labels)
 
     def test_docs_only_change_runs_only_validation(self):
@@ -210,6 +212,204 @@ class CheckOutput(unittest.TestCase):
     def test_command_quotes_globs(self):
         step = hub.Step("t", ["-m", "unittest", "discover", "-s", "tools", "-p", "test_*.py"])
         self.assertTrue(step.command.endswith('-p "test_*.py"'))
+
+
+def git(root, *args):
+    import subprocess
+    subprocess.run(["git", "-c", "user.name=t", "-c", "user.email=t@t", "-c", "core.autocrlf=false", *args],
+                   cwd=root, check=True, capture_output=True)
+
+
+class GitRepo(unittest.TestCase):
+    """Each test gets a copy of one committed repository, built once per class (git calls are slow on Windows)."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.template = Path(tempfile.mkdtemp())
+        git(cls.template, "init", "-q", "--template=")  # no sample hooks: smaller and faster to copy
+        (cls.template / "a.txt").write_text("one\n", encoding="utf-8")
+        git(cls.template, "add", "a.txt")
+        git(cls.template, "commit", "-qm", "base")
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.template, True)
+
+    def setUp(self):
+        self.root = Path(tempfile.mkdtemp()) / "repo"
+        self.addCleanup(shutil.rmtree, self.root.parent, True)
+        shutil.copytree(self.template, self.root)
+
+    def change(self, text):
+        (self.root / "a.txt").write_text(text, encoding="utf-8")
+
+
+class ChangedPaths(GitRepo):
+    def test_status_covers_edits_untracked_and_renames(self):
+        self.assertEqual(hub.changed_paths(self.root, "HEAD"), [])
+        (self.root / "dir").mkdir()
+        (self.root / "dir" / "new file.txt").write_text("x\n", encoding="utf-8")
+        git(self.root, "mv", "a.txt", "b.txt")
+        self.assertEqual(hub.changed_paths(self.root, "HEAD"), ["a.txt", "b.txt", "dir/new file.txt"])
+
+    def test_repo_info(self):
+        state, head = hub._repo_info(self.root)
+        self.assertEqual(state.name, "hub-hook-state.json")
+        self.assertEqual(len(head), 40)
+
+
+class PostEditHook(unittest.TestCase):
+    def hook(self, rel, build=(0, "")):
+        data = {"tool_input": {"file_path": str(REPO / rel)}}
+        with mock.patch.object(hub, "_run_build", return_value=build) as builder:
+            err = io.StringIO()
+            with contextlib.redirect_stderr(err):
+                code = hub.hook_post_edit(REPO, data)
+        return code, err.getvalue(), builder.called
+
+    def test_edited_path(self):
+        self.assertEqual(hub.edited_path(REPO, {"tool_input": {"file_path": str(REPO / "rule" / "x.md")}}), "rule/x.md")
+        self.assertEqual(hub.edited_path(REPO, {"tool_input": {"file_path": "tools/hub.py"}, "cwd": str(REPO)}),
+                         "tools/hub.py")
+        self.assertEqual(hub.edited_path(REPO, {"tool_response": {"filePath": str(REPO / "a.md")}}), "a.md")
+        self.assertIsNone(hub.edited_path(REPO, {"tool_input": {"file_path": str(REPO.parent / "elsewhere.md")}}))
+        self.assertIsNone(hub.edited_path(REPO, {}))
+        if sys.platform == "win32":
+            posix = "/" + REPO.drive[0].lower() + REPO.as_posix()[2:] + "/catalog.json"
+            self.assertEqual(hub.edited_path(REPO, {"tool_input": {"file_path": posix}}), "catalog.json")
+
+    def test_source_edit_rebuilds_silently(self):
+        self.assertEqual(self.hook("skills/development/code-quality/lint-checker/SKILL.md"), (0, "", True))
+        self.assertEqual(self.hook(".claude-plugin/marketplace.json"), (0, "", True))
+
+    def test_unrelated_edit_does_nothing(self):
+        self.assertEqual(self.hook("index.html"), (0, "", False))
+        self.assertEqual(self.hook("skills/x/y/z/scripts/__pycache__/a.pyc"), (0, "", False))
+
+    def test_generated_file_edit_is_reported(self):
+        code, err, built = self.hook("catalog.json")
+        self.assertEqual((code, built), (2, True))
+        self.assertIn("generated file", err)
+
+    def test_build_failure_is_reported(self):
+        code, err, _ = self.hook("examples/prompts.json", build=(1, "Traceback\nValueError: bad json"))
+        self.assertEqual(code, 2)
+        self.assertIn("build_catalog.py failed", err)
+
+
+class StopHook(GitRepo):
+    def stop(self, check=(1, "check FAILED: 1 of 5 steps."), session="s1"):
+        out = io.StringIO()
+        with mock.patch.object(hub, "run_check", return_value=check) as checker, contextlib.redirect_stdout(out):
+            code = hub.hook_stop(self.root, {"session_id": session})
+        self.assertEqual(code, 0)
+        text = out.getvalue().strip()
+        return (json.loads(text) if text else None), checker.called
+
+    def test_clean_tree_is_not_checked(self):
+        self.assertEqual(self.stop(), (None, False))
+
+    def test_failure_blocks_once_per_state(self):
+        self.change("two\n")
+        message, checked = self.stop()
+        self.assertTrue(checked)
+        self.assertEqual(message["decision"], "block")
+        self.assertIn("check FAILED", message["reason"])
+        self.assertEqual(self.stop(), (None, False))     # same state: the agent may stop now
+        self.change("three, longer\n")                     # new state: checked and blocked again
+        self.assertEqual(self.stop()[0]["decision"], "block")
+
+    def test_gives_up_after_max_blocks(self):
+        for i in range(hub.MAX_STOP_BLOCKS):
+            self.change("x" * (i + 2) + "\n")
+            self.assertEqual(self.stop()[0]["decision"], "block")
+        self.change("final state\n")
+        message, _ = self.stop()
+        self.assertIn("stopping anyway", message["systemMessage"])
+
+    def test_pass_is_remembered(self):
+        self.change("two\n")
+        self.assertEqual(self.stop(check=(0, "check OK.")), (None, True))
+        self.assertEqual(self.stop(), (None, False))       # unchanged since the pass: not rerun
+        self.assertEqual(self.stop(session="other"), (None, False))
+
+    def test_hooks_off(self):
+        self.change("two\n")
+        with mock.patch.dict("os.environ", {hub.HOOKS_OFF_ENV: "off"}), \
+                mock.patch.object(hub, "run_check") as checker:
+            self.assertEqual(run(["--root", str(self.root), "hook", "stop"])[0], 0)
+        checker.assert_not_called()
+
+    def test_internal_errors_never_block(self):
+        with mock.patch.object(hub, "hook_stop", side_effect=RuntimeError("boom")), \
+                mock.patch.object(hub, "_hook_input", return_value={}):
+            code, out = run(["--root", str(self.root), "hook", "stop"])
+        self.assertEqual(code, 0)
+        self.assertIn("internal error ignored", out)
+
+
+class PreCommit(GitRepo):
+    def hook_file(self):
+        return self.root / ".git" / "hooks" / "pre-commit"
+
+    def settings(self):
+        return self.root / ".claude" / "settings.json"
+
+    def test_setup_is_a_dry_run_without_yes(self):
+        code, out = run(["--root", str(self.root), "setup-hooks"])
+        self.assertEqual(code, 0)
+        self.assertIn("Nothing was written", out)
+        self.assertFalse(self.hook_file().exists())
+        self.assertFalse(self.settings().exists())
+
+    def test_install_and_remove_both(self):
+        self.assertEqual(run(["--root", str(self.root), "setup-hooks", "--yes"])[0], 0)
+        text = self.hook_file().read_text(encoding="utf-8")
+        self.assertIn(hub.PRE_COMMIT_MARK, text)
+        self.assertIn("tools/hub.py hook pre-commit", text)
+        hooks = json.loads(self.settings().read_text(encoding="utf-8"))["hooks"]
+        self.assertEqual(hooks["PostToolUse"][0]["matcher"], "Edit|Write|MultiEdit|NotebookEdit")
+        self.assertTrue(hooks["PostToolUse"][0]["hooks"][0]["command"].endswith("hook post-edit"))
+        self.assertTrue(hooks["Stop"][0]["hooks"][0]["command"].endswith("hook stop"))
+        self.assertIn("up to date", run(["--root", str(self.root), "setup-hooks", "--yes"])[1])
+        self.assertEqual(run(["--root", str(self.root), "setup-hooks", "--remove", "--yes"])[0], 0)
+        self.assertFalse(self.hook_file().exists())
+        self.assertFalse(self.settings().exists())
+
+    def test_agent_settings_merge_keeps_other_settings(self):
+        mine = {"permissions": {"allow": ["Bash(git *)"]}, "hooks": {
+            "PostToolUse": [{"matcher": "Bash", "hooks": [{"type": "command", "command": "log.sh"}]}],
+            "Stop": [{"hooks": [{"type": "command", "command": "notify.sh"}]}]}}
+        merged = hub.merged_agent_settings(mine)
+        self.assertEqual(merged["permissions"], mine["permissions"])
+        self.assertEqual(merged["hooks"]["PostToolUse"][0], mine["hooks"]["PostToolUse"][0])
+        self.assertEqual(len(merged["hooks"]["PostToolUse"]), 2)
+        self.assertEqual(merged["hooks"]["Stop"][0], mine["hooks"]["Stop"][0])
+        self.assertEqual(hub.merged_agent_settings(merged), merged)          # idempotent
+        self.assertEqual(hub.merged_agent_settings(merged, remove=True), mine)
+
+    def test_agent_settings_invalid_json_refused(self):
+        self.settings().parent.mkdir(parents=True)
+        self.settings().write_text("{not json", encoding="utf-8")
+        code, out = run(["--root", str(self.root), "setup-hooks", "--agent", "--yes"])
+        self.assertEqual(code, 1)
+        self.assertIn("not valid JSON", out)
+        self.assertEqual(self.settings().read_text(encoding="utf-8"), "{not json")
+
+    def test_foreign_hook_is_left_alone(self):
+        self.hook_file().parent.mkdir(parents=True, exist_ok=True)
+        self.hook_file().write_text("#!/bin/sh\necho mine\n", encoding="utf-8")
+        code, out = run(["--root", str(self.root), "setup-hooks", "--git", "--yes"])
+        self.assertEqual(code, 1)
+        self.assertIn("leaving it alone", out)
+        self.assertEqual(self.hook_file().read_text(encoding="utf-8"), "#!/bin/sh\necho mine\n")
+
+    def test_pre_commit_blocks_on_failure(self):
+        with mock.patch.object(hub, "run_check", return_value=(1, "check FAILED")) as checker:
+            code, out = run(["--root", str(self.root), "hook", "pre-commit"])
+        self.assertEqual(code, 1)
+        self.assertIn("Commit blocked", out)
+        self.assertEqual(checker.call_args.kwargs.get("build"), False)
 
 
 if __name__ == "__main__":

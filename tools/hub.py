@@ -30,6 +30,17 @@ fails until they are replaced.
   --no-build             do not run build_catalog.py afterwards
   --dry-run              print what would change, write nothing
 
+    python tools/hub.py hook post-edit|stop|pre-commit
+    python tools/hub.py setup-hooks [--git | --agent] [--remove] [--yes]
+
+hook is what agent hooks and git call (the event JSON comes on stdin). post-edit rebuilds the generated
+files after an edit to one of their sources and is silent unless the build fails or a generated file was
+edited by hand. stop runs `check --changed` when the agent is about to finish and, if it fails, blocks
+once per failing state with the short report (at most 3 times per session). pre-commit verifies the
+changes without writing. setup-hooks installs the git pre-commit hook (never replacing one it did not
+write) and merges the post-edit and stop hooks into the project's .claude/settings.json, keeping every
+other setting; it is a dry run unless --yes. HUB_HOOKS=off disables all of them.
+
 Standard library only.
 """
 from __future__ import annotations
@@ -37,6 +48,7 @@ from __future__ import annotations
 import argparse
 import concurrent.futures
 import difflib
+import hashlib
 import importlib.util
 import json
 import os
@@ -75,6 +87,20 @@ def _git(root: Path, *args: str) -> str | None:
 
 def changed_paths(root: Path, ref: str) -> list[str] | None:
     """Paths changed since ref (committed or not) plus untracked files; None if git or the ref fails."""
+    if ref == "HEAD":  # one `git status` call instead of two (hooks run this on every stop)
+        out = _git(root, "status", "--porcelain=v1", "-z", "--untracked-files=all")
+        if out is None:
+            return None
+        paths, tokens, i = set(), out.split("\0"), 0
+        while i < len(tokens):
+            entry, i = tokens[i], i + 1
+            if len(entry) < 4:
+                continue
+            paths.add(entry[3:])
+            if entry[0] in "RC" and i < len(tokens):  # rename/copy: the next token is the old path
+                paths.add(tokens[i])
+                i += 1
+        return sorted(paths)
     diff = _git(root, "diff", "--name-only", ref)
     if diff is None:
         return None
@@ -107,8 +133,10 @@ def plan_checks(root: Path, changed: list[str] | None, build: bool = True) -> tu
     def wanted(prefixes) -> bool:
         return changed is None or any(p.startswith(prefixes) for p in changed)
 
-    if wanted(SUITE_TRIGGERS["tools"]):
-        steps.append(Step("tools tests", ["-m", "unittest", "discover", "-s", "tools", "-p", "test_*.py"]))
+    if wanted(SUITE_TRIGGERS["tools"]):  # one step per file, so the files run in parallel
+        for test in sorted((root / "tools").glob("test_*.py")):
+            steps.append(Step(f"tools tests: {test.name}",
+                              ["-m", "unittest", "discover", "-s", "tools", "-p", test.name], group="tools tests"))
     for suite in ("mcp-server", "skill-hub-mcp"):
         if wanted(SUITE_TRIGGERS[suite]):
             steps.append(Step(f"{suite} tests", ["-m", "unittest", "discover", "-s", f"{suite}/tests"]))
@@ -161,60 +189,70 @@ def warnings_of(step: Step) -> list[str]:
     return [l for l in step.output.splitlines() if l.startswith("WARN")]
 
 
-def cmd_check(args) -> int:
-    root = Path(args.root)
+def run_check(root: Path, ref: str | None = None, build: bool = True, verbose: bool = False,
+              max_lines: int = 40, jobs: int = 0) -> tuple[int, str]:
+    """Run the checks and return (exit code, report). ref=None checks everything, else changes since ref."""
+    out: list[str] = []
     changed = None
-    if args.changed is not None:
-        changed = changed_paths(root, args.changed)
+    if ref is not None:
+        changed = changed_paths(root, ref)
         if changed is None:
-            print(f"check: --changed needs a git work tree and a valid ref ({args.changed})", file=sys.stderr)
-            return 2
-    first, steps = plan_checks(root, changed, build=not args.no_build)
+            return 2, f"check: --changed needs a git work tree and a valid ref ({ref})"
+    first, steps = plan_checks(root, changed, build=build)
     start = time.time()
     if first:
         run_step(first, root)
         if first.code:
-            print(f"FAIL  {first.label}  ->  {first.command}\n{_indent(failure_excerpt(first.output, args.max_lines))}")
-            print("check FAILED: the build step failed, so nothing else was run.")
-            return 1
-    jobs = max(1, args.jobs or min(8, os.cpu_count() or 2))
-    with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as pool:
+            out.append(f"FAIL  {first.label}  ->  {first.command}")
+            out.append(_indent(failure_excerpt(first.output, max_lines)))
+            out.append("check FAILED: the build step failed, so nothing else was run.")
+            return 1, "\n".join(out)
+    workers = max(1, jobs or min(8, os.cpu_count() or 2))
+    with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as pool:
         list(pool.map(lambda s: run_step(s, root), steps))
     every = ([first] if first else []) + steps
     wall = time.time() - start
 
-    scope = "everything" if changed is None else f"changes since {args.changed} ({len(changed)} paths)"
-    print(f"check: {scope}, {len([s for s in every if not s.skipped])} steps, {wall:.1f}s")
+    scope = "everything" if changed is None else f"changes since {ref} ({len(changed)} paths)"
+    out.append(f"check: {scope}, {len([s for s in every if not s.skipped])} steps, {wall:.1f}s")
     groups: dict[str, list[Step]] = {}
     for s in every:
-        groups.setdefault(s.label if args.verbose else s.group, []).append(s)
+        groups.setdefault(s.label if verbose else s.group, []).append(s)
     for name, members in groups.items():
         ran = [s for s in members if not s.skipped]
         bad = [s for s in ran if s.code]
         status = "FAIL" if bad else "ok" if ran else "skip"
         count = f" ({len(ran)} suites)" if len(members) > 1 else ""
         secs = max((s.seconds for s in ran), default=0.0)
-        print(f"  {status:5} {name}{count}  {secs:.1f}s")
+        out.append(f"  {status:5} {name}{count}  {secs:.1f}s")
     for s in every:
         if s.skipped:
-            print(f"  skip  {s.label}: {s.skipped}")
+            out.append(f"  skip  {s.label}: {s.skipped}")
     for s in steps:
         warns = warnings_of(s) if s.label == "validate skills" else []
         if warns:
-            shown = warns if args.verbose else warns[:10]
-            print(f"  {len(warns)} validator warning(s):\n" + _indent("\n".join(shown)))
+            shown = warns if verbose else warns[:10]
+            out.append(f"  {len(warns)} validator warning(s):")
+            out.append(_indent("\n".join(shown)))
     failed = [s for s in every if s.code and not s.skipped]
     for s in failed:
-        print(f"\nFAIL  {s.label}  (exit {s.code})  ->  {s.command}")
-        print(_indent(failure_excerpt(s.output, args.max_lines)))
+        out.append(f"\nFAIL  {s.label}  (exit {s.code})  ->  {s.command}")
+        out.append(_indent(failure_excerpt(s.output, max_lines)))
     if failed:
-        print(f"\ncheck FAILED: {len(failed)} of {len(every)} steps.")
-        return 1
+        out.append(f"\ncheck FAILED: {len(failed)} of {len(every)} steps.")
+        return 1, "\n".join(out)
     if changed is not None and len(steps) < len(plan_checks(root, None, build=False)[1]):
-        print("check OK for these changes. Run `python tools/hub.py check` (no --changed) before a release.")
+        out.append("check OK for these changes. Run `python tools/hub.py check` (no --changed) before a release.")
     else:
-        print("check OK.")
-    return 0
+        out.append("check OK.")
+    return 0, "\n".join(out)
+
+
+def cmd_check(args) -> int:
+    code, report = run_check(Path(args.root), args.changed, not args.no_build, args.verbose, args.max_lines,
+                             args.jobs)
+    print(report, file=sys.stderr if code == 2 else sys.stdout)
+    return code
 
 
 def _indent(text: str) -> str:
@@ -362,6 +400,300 @@ def _fail(msg: str) -> int:
     return 2
 
 
+# ============================================================================ hooks
+# Generated outputs (rule 01). The rebuild replaces any edit to them, so the agent is told.
+GENERATED_FILES = {"catalog.json", "skills/README.md", "examples/PROMPTS.md", "prompts.html", "user-guide.html"}
+# What build_catalog.py reads: editing any of these makes the generated files stale.
+BUILD_SOURCES = ("skills/", "template/", ".claude-plugin/", "examples/prompts.json", "tools/build_catalog.py",
+                 "tools/hublib.py", "tools/install.py", "tools/prompts_template.html",
+                 "tools/user_guide_template.html", "rule/", "CHANGELOG.md", "mcp-server/", "skill-hub-mcp/")
+MAX_STOP_BLOCKS = 3          # per session; each distinct failing state blocks at most once
+HOOKS_OFF_ENV = "HUB_HOOKS"  # HUB_HOOKS=off disables every hook
+PRE_COMMIT_MARK = "# skill-hub: tools/hub.py pre-commit hook"
+
+
+def hooks_off() -> bool:
+    return os.environ.get(HOOKS_OFF_ENV, "").strip().lower() in ("off", "0", "false", "no")
+
+
+def _hook_input() -> dict:
+    try:
+        data = json.loads(sys.stdin.read() or "{}")
+    except (ValueError, OSError, UnicodeDecodeError):
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def _run_build(root: Path) -> tuple[int, str]:
+    res = subprocess.run([sys.executable, "tools/build_catalog.py"], cwd=root, capture_output=True, text=True,
+                         encoding="utf-8", errors="replace", timeout=300)
+    return res.returncode, (res.stdout + res.stderr).strip()
+
+
+def edited_path(root: Path, data: dict) -> str | None:
+    """The edited file from a post-edit hook payload, relative to root ('/'-separated), or None."""
+    tool_input = data.get("tool_input") if isinstance(data.get("tool_input"), dict) else {}
+    response = data.get("tool_response") if isinstance(data.get("tool_response"), dict) else {}
+    raw = tool_input.get("file_path") or tool_input.get("notebook_path") or response.get("filePath")
+    if not raw or not isinstance(raw, str):
+        return None
+    msys = re.match(r"^/([a-zA-Z])/", raw)
+    if os.name == "nt" and msys:  # Git Bash / MSYS style: /c/Users/... is C:/Users/...
+        raw = f"{msys.group(1)}:/{raw[3:]}"
+    path = Path(raw)
+    if not path.is_absolute():
+        path = Path(data.get("cwd") or root) / path
+    try:
+        return path.resolve().relative_to(root.resolve()).as_posix()
+    except (ValueError, OSError):
+        return None
+
+
+def hook_post_edit(root: Path, data: dict) -> int:
+    """Rebuild the generated files after an edit to one of their sources. Silent unless something is wrong."""
+    rel = edited_path(root, data)
+    if rel is None or "__pycache__" in rel:
+        return 0
+    generated = rel in GENERATED_FILES
+    if not generated and not rel.startswith(BUILD_SOURCES):
+        return 0
+    code, output = _run_build(root)
+    if code:
+        print(f"tools/build_catalog.py failed after the edit to {rel}:\n{_indent(failure_excerpt(output, 30))}",
+              file=sys.stderr)
+        return 2
+    if generated:
+        print(f"{rel} is a generated file (rule/01-generated-files.md): the rebuild replaced your edit. "
+              "Change its sources instead (rule/02-sources-of-truth.md); the files are rebuilt automatically.",
+              file=sys.stderr)
+        return 2
+    return 0
+
+
+def _fingerprint(root: Path, changed: list[str], head: str) -> str:
+    """Identifies the current state of the changes: HEAD plus size and mtime of every changed path."""
+    digest = hashlib.sha256(head.encode())
+    for rel in changed:
+        try:
+            st = (root / rel).stat()
+            digest.update(f"{rel}:{st.st_size}:{st.st_mtime_ns}\n".encode())
+        except OSError:
+            digest.update(f"{rel}:gone\n".encode())
+    return digest.hexdigest()
+
+
+def _repo_info(root: Path) -> tuple[Path | None, str]:
+    """(hook state file inside .git, HEAD commit) with one git call ('' for HEAD in a repo with no commits)."""
+    out = _git(root, "rev-parse", "--absolute-git-dir", "HEAD")
+    if out is None:
+        out = (_git(root, "rev-parse", "--absolute-git-dir") or "") + "\n"
+    lines = out.splitlines()
+    state = Path(lines[0].strip()) / "hub-hook-state.json" if lines and lines[0].strip() else None
+    return state, (lines[1].strip() if len(lines) > 1 else "")
+
+
+def hook_stop(root: Path, data: dict) -> int:
+    """Before the agent finishes: run `check --changed`; if it fails, block once per failing state with the report.
+
+    A state that passed, or that already blocked once, is not checked again, so an agent that has
+    explained an intended failure (work in progress) can stop, and repeated stops cost nothing.
+    """
+    changed = changed_paths(root, "HEAD")
+    if not changed:
+        return 0
+    state_file, head = _repo_info(root)
+    try:
+        state = json.loads(state_file.read_text(encoding="utf-8")) if state_file and state_file.exists() else {}
+    except (ValueError, OSError):
+        state = {}
+    sessions = state.setdefault("sessions", {})
+    session = sessions.setdefault(str(data.get("session_id") or "default"), [])
+    before = _fingerprint(root, changed, head)
+    if before == state.get("passed") or before in session:
+        return 0
+    code, report = run_check(root, "HEAD", max_lines=25)
+    after = _fingerprint(root, changed_paths(root, "HEAD") or [], head)  # the build may have rewritten files
+    message = None
+    if code == 0:
+        state["passed"] = after
+    elif code == 1:
+        if len(session) >= MAX_STOP_BLOCKS:
+            message = {"systemMessage": f"hub.py check still fails after {MAX_STOP_BLOCKS} attempts in this "
+                                        "session; stopping anyway. Run: python tools/hub.py check --changed"}
+        else:
+            session.append(after)
+            message = {"decision": "block", "reason": (
+                "`python tools/hub.py check --changed` fails on the current changes. Fix the failures below "
+                "before finishing. If they are intended (for example work in progress), say so to the user "
+                "and stop again; the same state does not block twice.\n\n" + report)}
+    if state_file:
+        for old in list(sessions)[:-20]:
+            del sessions[old]
+        try:
+            state_file.write_text(json.dumps(state), encoding="utf-8")
+        except OSError:
+            pass
+    if message:
+        print(json.dumps(message))
+    return 0
+
+
+def hook_pre_commit(root: Path) -> int:
+    """git pre-commit: verify (without writing) that the working tree passes `check --changed`."""
+    code, report = run_check(root, "HEAD", build=False)
+    if code == 1:
+        print(report + "\n\nCommit blocked by the skill-hub pre-commit hook. Fix the failures (stale generated "
+              "files: run python tools/build_catalog.py and stage them). Skip once with HUB_HOOKS=off.",
+              file=sys.stderr)
+        return 1
+    return 0
+
+
+def cmd_hook(args) -> int:
+    if hooks_off():
+        return 0
+    root = Path(args.root)
+    try:
+        if args.event == "pre-commit":
+            return hook_pre_commit(root)
+        data = _hook_input()
+        return hook_post_edit(root, data) if args.event == "post-edit" else hook_stop(root, data)
+    except Exception as e:  # a hook must never break the agent or the commit because of a bug in the hook
+        print(f"hub.py hook {args.event}: internal error ignored ({type(e).__name__}: {e})", file=sys.stderr)
+        return 0
+
+
+def pre_commit_script(python: str) -> str:
+    return (f"#!/bin/sh\n{PRE_COMMIT_MARK}\n# Remove with: python tools/hub.py setup-hooks --remove --yes\n"
+            f'exec "{python}" tools/hub.py hook pre-commit\n')
+
+
+def setup_git_hook(root: Path, remove: bool, yes: bool) -> int:
+    """Install (or remove) the git pre-commit hook. Never replaces a hook it did not write."""
+    hooks_dir = _git(root, "rev-parse", "--git-path", "hooks")
+    if not hooks_dir:
+        print("git hook: not a git work tree", file=sys.stderr)
+        return 2
+    target = Path(hooks_dir.strip())
+    target = (target if target.is_absolute() else root / target) / "pre-commit"
+    ours = target.exists() and PRE_COMMIT_MARK in target.read_text(encoding="utf-8", errors="replace")
+    if target.exists() and not ours:
+        print(f"git hook: {target} exists and was not written by hub.py; leaving it alone. Add this line to it "
+              "instead:\n    python tools/hub.py hook pre-commit || exit 1")
+        return 1
+    if remove:
+        if not ours:
+            print("git hook: none from hub.py to remove.")
+        elif not yes:
+            print(f"git hook (dry run): would delete {target}.")
+        else:
+            target.unlink()
+            print(f"git hook: removed {target}")
+        return 0
+    script = pre_commit_script(Path(sys.executable).as_posix())
+    if ours and target.read_text(encoding="utf-8") == script:
+        print(f"git hook: {target} is up to date.")
+        return 0
+    if not yes:
+        print(f"git hook (dry run): would {'update' if ours else 'write'} {target}:\n{_indent(script)}")
+        return 0
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(script, encoding="utf-8", newline="\n")
+    target.chmod(0o755)
+    print(f"git hook: wrote {target}. Commits now run `hub.py check --changed --no-build` first.")
+    return 0
+
+
+# Project agent settings that wire the hooks in (the format agents with Claude-style hooks read).
+AGENT_SETTINGS = Path(".claude") / "settings.json"
+AGENT_HOOKS = {  # event: (matcher, hub.py hook event, timeout seconds, status message)
+    "PostToolUse": ("Edit|Write|MultiEdit|NotebookEdit", "post-edit", 120, None),
+    "Stop": (None, "stop", 600, "hub.py check --changed"),
+}
+OUR_COMMAND = re.compile(r"tools/hub\.py\"? hook ")
+
+
+def agent_hook_command(event: str) -> str:
+    # python3 where it works (macOS, Linux), else python (Windows); $CLAUDE_PROJECT_DIR is the repo root.
+    return f'PY=python3; "$PY" -c "" 2>/dev/null || PY=python; "$PY" "$CLAUDE_PROJECT_DIR/tools/hub.py" hook {event}'
+
+
+def merged_agent_settings(existing: dict, remove: bool = False) -> dict:
+    """existing settings with hub.py's hooks added (or removed); every other setting and hook is kept."""
+    data = json.loads(json.dumps(existing))
+    hooks = data.get("hooks") if isinstance(data.get("hooks"), dict) else {}
+    for event, (matcher, name, timeout, status) in AGENT_HOOKS.items():
+        groups = []
+        for group in hooks.get(event, []) if isinstance(hooks.get(event), list) else []:
+            if isinstance(group, dict) and isinstance(group.get("hooks"), list):
+                group = dict(group, hooks=[h for h in group["hooks"]
+                                           if not OUR_COMMAND.search(str(h.get("command", "")))])
+                if not group["hooks"]:
+                    continue
+            groups.append(group)
+        if not remove:
+            entry = {"type": "command", "command": agent_hook_command(name), "timeout": timeout}
+            if status:
+                entry["statusMessage"] = status
+            ours = {"matcher": matcher} if matcher else {}
+            ours["hooks"] = [entry]
+            groups.append(ours)
+        if groups:
+            hooks[event] = groups
+        else:
+            hooks.pop(event, None)
+    if hooks:
+        data["hooks"] = hooks
+    else:
+        data.pop("hooks", None)
+    return data
+
+
+def setup_agent_hooks(root: Path, remove: bool, yes: bool) -> int:
+    path = root / AGENT_SETTINGS
+    try:
+        existing = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+    except ValueError as e:
+        print(f"agent hooks: {AGENT_SETTINGS.as_posix()} is not valid JSON ({e}); fix it first.", file=sys.stderr)
+        return 1
+    if not isinstance(existing, dict):
+        print(f"agent hooks: {AGENT_SETTINGS.as_posix()} is not a JSON object; fix it first.", file=sys.stderr)
+        return 1
+    new = merged_agent_settings(existing, remove)
+    rel = AGENT_SETTINGS.as_posix()
+    if new == existing:
+        print(f"agent hooks: {rel} is up to date.")
+        return 0
+    text = json.dumps(new, indent=2, ensure_ascii=False) + "\n"
+    if not yes:
+        print(f"agent hooks (dry run): would {'update' if path.exists() else 'create'} {rel}, keeping its other "
+              f"settings:\n{_indent(json.dumps(new.get('hooks', {}), indent=2))}")
+        return 0
+    if remove and not new and path.exists():
+        path.unlink()
+        print(f"agent hooks: removed {rel} (it held only hub.py's hooks)")
+        return 0
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8", newline="\n")
+    print(f"agent hooks: {'removed hub.py hooks from' if remove else 'wrote'} {rel}. Restart the agent session "
+          "(or reload its hooks) to pick the change up.")
+    return 0
+
+
+def cmd_setup_hooks(args) -> int:
+    """Install or remove the git pre-commit hook and the agent hooks. Dry run unless --yes."""
+    root = Path(args.root)
+    both = not (args.git or args.agent)
+    codes = []
+    if args.git or both:
+        codes.append(setup_git_hook(root, args.remove, args.yes))
+    if args.agent or both:
+        codes.append(setup_agent_hooks(root, args.remove, args.yes))
+    if not args.yes:
+        print("Nothing was written. Add --yes to apply.")
+    return max(codes)
+
+
 # ============================================================================== CLI
 def build_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(prog="hub.py", description=__doc__.splitlines()[0])
@@ -388,12 +720,22 @@ def build_parser() -> argparse.ArgumentParser:
     n.add_argument("--plugin-description")
     n.add_argument("--no-build", action="store_true")
     n.add_argument("--dry-run", action="store_true")
+
+    h = sub.add_parser("hook", help="handlers called by agent hooks and git (read the event JSON on stdin)")
+    h.add_argument("event", choices=["post-edit", "stop", "pre-commit"])
+
+    s = sub.add_parser("setup-hooks", help="install the git pre-commit hook and the agent hooks (dry run unless --yes)")
+    s.add_argument("--git", action="store_true", help="only the git pre-commit hook")
+    s.add_argument("--agent", action="store_true", help=f"only the agent hooks in {AGENT_SETTINGS.as_posix()}")
+    s.add_argument("--remove", action="store_true")
+    s.add_argument("--yes", action="store_true")
     return ap
 
 
 def main(argv=None) -> int:
     args = build_parser().parse_args(argv)
-    return {"check": cmd_check, "new-skill": cmd_new_skill}[args.command](args)
+    return {"check": cmd_check, "new-skill": cmd_new_skill, "hook": cmd_hook,
+            "setup-hooks": cmd_setup_hooks}[args.command](args)
 
 
 if __name__ == "__main__":

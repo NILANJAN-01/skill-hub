@@ -33,6 +33,10 @@ python tools/hub.py check                # everything (what CI runs)
 python tools/hub.py new-skill <area>/<group>/<name> --plugin <plugin> --description "..." --prompt "..." --prompt "..."
 python tools/hub.py new-skill <area>/<group>/<name> --plugin <new-plugin> --plugin-title "Title" --plugin-description "..."
 
+# Hooks (once per checkout; dry run without --yes): rebuild generated files after every edit, run
+# `check --changed` before the agent finishes (blocks once per failing state) and before each commit.
+python tools/hub.py setup-hooks --yes    # HUB_HOOKS=off disables them
+
 # Rerun a single failing suite or case (hub.py check prints the exact command)
 python -m unittest discover -s skills/<area>/<group>/<name>/scripts -p "test_*.py"
 python -m unittest discover -s mcp-server/tests -k <substring>

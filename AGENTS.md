@@ -10,6 +10,7 @@ A hub of **agent-neutral** Agent Skills (`skills/<area>/<group>/<name>/SKILL.md`
 
 - `python tools/hub.py check` runs every CI check in parallel and prints only the failures. Run it before finishing; use `--changed` while iterating.
 - `python tools/hub.py new-skill <area>/<group>/<name> --plugin <plugin>` scaffolds a skill and registers it everywhere.
+- `python tools/hub.py setup-hooks --yes` (once per checkout) adds a git pre-commit check and, for agents that read `.claude/settings.json` hooks, rebuilds generated files after edits and runs the check before the agent finishes. Agents without hooks: run `hub.py check` yourself.
 
 ## Rules
 
