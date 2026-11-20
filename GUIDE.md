@@ -210,7 +210,7 @@ Categories for `--plugin`:
 | `repo-tools` | 2 | Repositories: read a whole codebase file by file and write a LEARNINGS.md, with a script that plans the read and checks nothing was missed; draw the architecture as... |
 | `image-tools` | 1 | Images: read any PNG/JPG/WebP/GIF/BMP with a Python script and report pixels (exact colours, regions, palette, pixel map, CSV) plus a plain-text description, EXIF and... |
 | `video-tools` | 1 | Video: analyse MP4/MOV/MKV/WebM with a Python script - metadata, frames extracted as images, per-frame colours, brightness and motion, scenes, black and frozen... |
-| `hub-tools` | 6 | Skills for working with the hub itself: find and install skills, contribute new skills, generate skills from technical PDFs (skillforge) and from web pages... |
+| `hub-tools` | 7 | Skills for working with the hub itself: find and install skills, contribute new skills, generate skills from technical PDFs (skillforge) and from web pages... |
 | `testing-tools` | 2 | Testing: write, run and verify Kotlin unit tests class by class and method by method with Python scripts - Gradle/Maven/kotlinc runs, test-to-method mapping, quality... |
 | `gitlab-ci-tools` | 3 | GitLab CI/CD: write .gitlab-ci.yml pipelines, debug failing or stuck pipelines, and make pipelines faster and cheaper |
 | `writing-tools` | 1 | Writing: prepare blog posts, CVs (tailor to a job post, review), cover letters and technical docs, with templates and a checker script |

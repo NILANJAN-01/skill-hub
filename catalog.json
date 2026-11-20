@@ -244,7 +244,7 @@
     },
     {
       "name": "hub-tools",
-      "description": "Skills for working with the hub itself: find and install skills, contribute new skills, generate skills from technical PDFs (skillforge) and from web pages (url-to-skill); chain several skills with skill-orchestrator; route any request to the right skills with skill-router",
+      "description": "Skills for working with the hub itself: find and install skills, contribute new skills, generate skills from technical PDFs (skillforge) and from web pages (url-to-skill); chain several skills with skill-orchestrator; route any request to the right skills with skill-router; run independent parts in parallel with skill-dispatcher",
       "category": "hub-tools",
       "skills": [
         "find-skills",
@@ -252,7 +252,8 @@
         "skillforge",
         "url-to-skill",
         "skill-orchestrator",
-        "skill-router"
+        "skill-router",
+        "skill-dispatcher"
       ]
     },
     {
@@ -408,7 +409,7 @@
     {
       "name": "hub-tools",
       "title": "Hub tools",
-      "count": 6
+      "count": 7
     },
     {
       "name": "android-automation",
@@ -796,6 +797,7 @@
           "skills": [
             "contribute-skill",
             "find-skills",
+            "skill-dispatcher",
             "skill-orchestrator",
             "skill-router",
             "skillforge",
@@ -3771,6 +3773,27 @@
         "references/syntax.md",
         "scripts/fixtures/project/tests/login.robot.md"
       ]
+    },
+    {
+      "name": "skill-dispatcher",
+      "title": "Skill dispatcher",
+      "category": "hub-tools",
+      "area": "generic",
+      "group": "hub",
+      "description": "Read the user's prompt, split it into tasks, assign each task the matching installed skill and group independent tasks into waves that run in parallel as sub-agents, each with a self-contained brief. Can run automatically on every prompt from an agent's prompt-submit hook. Use when a request has several parts, the user wants skills to work in parallel or the job done faster, or wants prompts routed to skills automatically.",
+      "plugins": [
+        "hub-tools"
+      ],
+      "path": "skills/generic/hub/skill-dispatcher",
+      "license": "Complete terms in the repository README",
+      "compatibility": "Needs Python 3.8+ (standard library only) and the skill-router skill installed next to it (it provides the matcher). Parallel runs need an agent that can start sub-agents; otherwise tasks run in order. Read-only.",
+      "examples": [
+        "Analyse this logcat for crashes, and also write Python unit tests for utils.py. Run them in parallel so it's faster.",
+        "Split this request into tasks, assign a skill to each and run the independent ones as parallel sub-agents.",
+        "Set up a prompt-submit hook so every prompt I type is routed to the right skills automatically.",
+        "Which parts of this job can run at the same time, and which have to wait for an earlier result?"
+      ],
+      "files": []
     },
     {
       "name": "skill-orchestrator",

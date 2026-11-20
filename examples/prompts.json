@@ -435,6 +435,12 @@
     "Before you start, check what you need from me and which installed skills apply to this task.",
     "I'm not sure which skill to use for this. Route it for me."
   ],
+  "skill-dispatcher": [
+    "Analyse this logcat for crashes, and also write Python unit tests for utils.py. Run them in parallel so it's faster.",
+    "Split this request into tasks, assign a skill to each and run the independent ones as parallel sub-agents.",
+    "Set up a prompt-submit hook so every prompt I type is routed to the right skills automatically.",
+    "Which parts of this job can run at the same time, and which have to wait for an earlier result?"
+  ],
   "powershell-commands": [
     "This `git add . && git commit` fails in PowerShell with a token '&&' error. How do I run it?",
     "Translate this bash one-liner to PowerShell: grep -rn TODO src | wc -l",
