@@ -8,3 +8,6 @@ __pycache__/
 generated-skills/
 **/.work/
 *.pdf
+
+# Personal Claude Code settings
+.claude/settings.local.json
