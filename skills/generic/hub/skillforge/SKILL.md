@@ -21,7 +21,7 @@ The 61 `git-*` skills in this hub were produced with it from *Pro Git*.
 
 ## When NOT to use
 
-- The source is not a PDF (web pages, Markdown docs). Write the skill by hand from `template/SKILL.md` instead.
+- The source is not a PDF (web pages, Markdown docs). Write the skill by hand from `template/SKILL.md.tmpl` (or run `python tools/hub.py new-skill` in skill-hub) instead.
 - The user wants a single hand-crafted skill with judgment or workflow. Use the `contribute-skill` skill instead.
 - The document is mostly prose without commands or procedures. Extraction gives thin skills; tell the user.
 
