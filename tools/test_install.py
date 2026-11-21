@@ -2,7 +2,9 @@
 
     python -m unittest discover -s tools -p "test_*.py" -v
 """
+import contextlib
 import hashlib
+import io
 import json
 import os
 import shutil
@@ -10,6 +12,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import urllib.error
 from unittest import mock
 from pathlib import Path
 
@@ -269,7 +272,7 @@ class SetupFlowTests(Sandbox):
         install.execute(self.root, agents, ["demo"], True, self.project, mcp=True, yes=True,
                         remove=True, uninstall=True)
         self.assertFalse((self.home / ".cursor" / "skills" / "demo").exists())
-        self.assertEqual(json.loads((self.home / ".cursor" / "mcp.json").read_text(encoding="utf-8"))["mcpServers"], {})
+        self.assertFalse((self.home / ".cursor" / "mcp.json").exists())    # created by setup, so removed again
         self.assertNotIn("skill-hub", (self.home / ".codex" / "config.toml").read_text(encoding="utf-8"))
         self.assertFalse(snap.exists())
         self.assertEqual(list(self.home.rglob("*" + install.BACKUP_SUFFIX)), [])   # files we created: no backups
@@ -278,6 +281,124 @@ class SetupFlowTests(Sandbox):
         install.execute(self.root, ["cursor"], ["demo"], True, self.project, mcp=True, dry=True)
         self.assertFalse((self.home / ".cursor").exists())
         self.assertFalse(install.snapshot_dir().exists())
+
+
+class ProfessionalFinishTests(Sandbox):
+    """Exit codes, the closing summary, quiet output, license note and leaving nothing behind."""
+
+    def run_quiet(self, *args, **kwargs):
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = install.execute(self.root, *args, **kwargs)
+        return code, out.getvalue()
+
+    def test_exit_codes_ok_nothing_to_do_and_dry_run(self):
+        code, out = self.run_quiet(["cursor"], ["demo"], True, self.project, yes=True)
+        self.assertEqual(code, install.EXIT_OK)
+        self.assertIn("Done: 1 skill folder(s)", out)
+        self.assertEqual(self.run_quiet(["cursor"], ["demo"], True, self.project, yes=True)[0], install.EXIT_OK)
+        self.assertEqual(self.run_quiet(["codex"], ["demo"], True, self.project, dry=True)[0], install.EXIT_OK)
+
+    def test_skipped_config_means_partly_done(self):
+        cfg = self.home / ".cursor" / "mcp.json"
+        cfg.parent.mkdir()
+        cfg.write_text('{ // comment\n', encoding="utf-8")
+        code, out = self.run_quiet(["cursor"], ["demo"], True, self.project, mcp=True, yes=True)
+        self.assertEqual(code, install.EXIT_PARTIAL)
+        self.assertIn("Partly done", out)
+        self.assertIn("1 item(s) need your attention", out)
+        self.assertIn("mcp.json: can't be read safely", out)
+        self.assertEqual(cfg.read_text(encoding="utf-8"), '{ // comment\n')     # left alone
+        code, _ = self.run_quiet(["codex"], ["demo"], True, self.project, yes=True)
+        self.assertEqual(code, install.EXIT_OK)                                  # items do not leak into the next run
+
+    def test_one_line_per_folder_unless_verbose(self):
+        _, out = self.run_quiet(["cursor"], ["demo"], True, self.project, dry=True)
+        self.assertIn("would install  1 skill(s)  ->", out)
+        self.assertNotIn("demo  ->", out)
+        with mock.patch.object(install, "VERBOSE", True):
+            _, out = self.run_quiet(["cursor"], ["demo"], True, self.project, dry=True)
+        self.assertIn("would install  demo  ->", out)
+
+    def test_license_note_for_non_commercial_skills(self):
+        nc = self.root / "skills" / "git-x"
+        nc.mkdir()
+        (nc / "SKILL.md").write_text('---\nname: git-x\ndescription: d\nlicense: CC BY-NC-SA 3.0. Derived from a '
+                                     'book\n---\n', encoding="utf-8")
+        install._INDEX.clear()
+        self.assertEqual(install.license_note(self.root, ["demo"]), "")
+        note = install.license_note(self.root, ["demo", "git-x"])
+        self.assertIn("1 git-* skills are licensed CC BY-NC-SA 3.0", note)
+        self.assertIn("--plugin", note)
+
+    def test_uninstall_restores_files_and_drops_backups(self):
+        cfg = self.home / ".cursor" / "mcp.json"
+        cfg.parent.mkdir()
+        cfg.write_text('{\n    "mcpServers": {\n        "mine": {"command": "x"}\n    },\n    "theme": "dark"\n}\n',
+                       encoding="utf-8")
+        self.run_quiet(["cursor"], ["demo"], True, self.project, mcp=True, yes=True)
+        self.assertIn('\n    "mcpServers"', cfg.read_text(encoding="utf-8"))           # 4-space indent kept
+        backup = cfg.with_name(cfg.name + install.BACKUP_SUFFIX)
+        self.assertTrue(backup.is_file())
+        code, out = self.run_quiet(["cursor"], ["demo"], True, self.project, mcp=True, yes=True, remove=True,
+                                   uninstall=True)
+        self.assertEqual(code, install.EXIT_OK)
+        self.assertIn("1 MCP server entry", out)
+        self.assertEqual(json.loads(cfg.read_text(encoding="utf-8")),
+                         {"mcpServers": {"mine": {"command": "x"}}, "theme": "dark"})
+        self.assertFalse(backup.exists())
+
+    def test_backup_is_kept_when_the_file_changed_since(self):
+        cfg = self.home / "a.json"
+        cfg.write_text('{"a": 1}', encoding="utf-8")
+        backup = cfg.with_name(cfg.name + install.BACKUP_SUFFIX)
+        backup.write_text('{"a": 0}', encoding="utf-8")
+        self.assertEqual(install.drop_backups([cfg]), [backup])
+        backup.write_text('{ "a" : 1 }', encoding="utf-8")
+        self.assertEqual(install.drop_backups([cfg]), [])
+        self.assertFalse(backup.exists())
+
+    def test_json_text_keeps_tabs_and_defaults_to_two_spaces(self):
+        cfg = self.home / "t.json"
+        cfg.write_text('{\n\t"a": 1\n}\n', encoding="utf-8")
+        self.assertEqual(install.json_text({"a": 1}, cfg), '{\n\t"a": 1\n}\n')
+        self.assertEqual(install.json_text({"a": 1}, self.home / "new.json"), '{\n  "a": 1\n}\n')
+
+
+class FriendlyErrorTests(unittest.TestCase):
+    def test_download_errors_are_one_short_message(self):
+        not_found = urllib.error.HTTPError("u", 404, "Not Found", {}, io.BytesIO())
+        self.addCleanup(not_found.close)
+        self.assertIn("was not found on GitHub", install.download_error(not_found, "nope"))
+        offline = urllib.error.URLError(OSError("getaddrinfo failed"))
+        self.assertIn("internet connection", install.download_error(offline, "main"))
+        cert = urllib.error.URLError("CERTIFICATE_VERIFY_FAILED")
+        self.assertIn("proxy", install.download_error(cert, "main"))
+        with mock.patch.object(install, "_fetch", side_effect=offline):
+            with self.assertRaises(SystemExit) as ctx:
+                install.download_hub("main")
+        self.assertIn("Could not download", str(ctx.exception.code))      # a message, not a traceback
+
+    def test_unknown_names_suggest_and_exit_2(self):
+        err = io.StringIO()
+        with contextlib.redirect_stderr(err), self.assertRaises(SystemExit) as ctx:
+            install.unknown("agent", "claud", list(install.AGENTS))
+        self.assertEqual(ctx.exception.code, install.EXIT_USAGE)
+        self.assertIn("Did you mean claude-code?", ctx.exception.message)
+        self.assertIn("Did you mean claude-code?", err.getvalue())
+
+    def test_version_and_exit_codes_in_help(self):
+        script = str(Path(install.__file__))
+        out = subprocess.run([sys.executable, script, "--version"], capture_output=True, text=True, timeout=60)
+        self.assertEqual(out.returncode, 0)
+        self.assertIn("skill-hub installer", out.stdout)
+        out = subprocess.run([sys.executable, script, "--agent", "claud", "--all"], capture_output=True, text=True,
+                             timeout=60)
+        self.assertEqual(out.returncode, 2)
+        self.assertIn("Did you mean claude-code?", out.stderr)
+        self.assertNotIn("usage:", out.stderr)                              # no wall of usage text
+        out = subprocess.run([sys.executable, script, "--help"], capture_output=True, text=True, timeout=60)
+        self.assertIn("Exit codes: 0 done", out.stdout)
 
 
 class OtherServerTests(Sandbox):
@@ -441,8 +562,8 @@ class OtherAgentHookTests(PromptHookTests):
 
         install.execute(self.root, self.AGENTS, self.names, True, self.project, yes=True, hook=True,
                         remove=True, uninstall=True)
-        self.assertEqual(self.read(self.codex), {})
-        self.assertEqual(self.read(self.antigravity), {"reminder": reminder})
+        self.assertFalse(self.codex.exists())                             # setup created it: removed again
+        self.assertEqual(self.read(self.antigravity), {"reminder": reminder})   # the user's file: kept
         self.assertFalse(self.copilot.exists())
 
     def test_installed_commands_print_what_each_agent_expects(self):

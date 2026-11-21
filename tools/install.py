@@ -5,7 +5,7 @@ ONE COMMAND: detects your agents, installs every skill, registers the MCP server
 hook (Claude Code, Codex, Antigravity, Copilot), shows the plan, and changes nothing until you confirm.
 
     python install.py --setup
-    curl -fsSL https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py | python3 - --setup
+    curl -fsSL https://github.com/NILANJAN-01/skill-hub/releases/latest/download/install.py | python3 - --setup
     python install.py --doctor                                          # what is set up, and is it healthy
     python install.py --uninstall                                       # remove everything it set up
 
@@ -40,6 +40,8 @@ merged: only the "skill-hub" entry changes, and the first edit of each file keep
 from __future__ import annotations
 
 import argparse
+import atexit
+import difflib
 import hashlib
 import io
 import json
@@ -58,6 +60,15 @@ DEFAULT_REPO = "NILANJAN-01/skill-hub"
 # the release tag, so an install.py downloaded from a release installs that same release.
 DEFAULT_REF = "main"
 REPO = os.environ.get("SKILLHUB_REPO") or DEFAULT_REPO
+
+# Exit codes (also listed in --help).
+EXIT_OK, EXIT_ERROR, EXIT_USAGE, EXIT_PARTIAL, EXIT_CANCELLED = 0, 1, 2, 3, 4
+EXIT_CODES = ("Exit codes: 0 done (or nothing to do), 1 error, 2 bad options, 3 done but some items need "
+              "your attention (listed at the end), 4 cancelled.")
+
+VERBOSE = False          # --verbose: one line per skill instead of one per folder
+SOURCE = ""              # where the hub came from, for the header line
+ATTENTION: list = []     # items left for the user to finish by hand; a non-empty list means exit code 3
 # Written into every folder the installer copies skills to: which hub skills are there, at which version.
 MANIFEST = ".skill-hub.json"
 
@@ -244,26 +255,69 @@ def release_zip(ref: str) -> bytes | None:
     if ok is None:
         return None
     if not ok:
-        sys.exit(f"Checksum mismatch for {name}: the download does not match the release's SHA256SUMS. "
-                 "Nothing was installed.")
-    print(f"Checksum verified ({name}).")
+        fail(f"Checksum mismatch for {name}: the download does not match the release's SHA256SUMS. "
+             "Nothing was installed.")
     return data
 
 
+def fail(msg: str, code: int = EXIT_ERROR) -> None:
+    """Stop with a short message on stderr instead of a traceback. For code 1 the message is the exit value
+    (SystemExit.code), so code that imports this module (the skill-hub MCP server) can show it."""
+    if code == EXIT_ERROR:
+        sys.exit(f"install.py: {msg}")
+    print(f"install.py: {msg}", file=sys.stderr)
+    exc = SystemExit(code)
+    exc.message = msg                      # for importers, which see only the number in .code
+    raise exc
+
+
+def download_error(exc: Exception, ref: str) -> str:
+    """A short, actionable explanation of a failed download."""
+    if isinstance(exc, urllib.error.HTTPError):
+        if exc.code == 404:
+            return (f"{REPO}@{ref} was not found on GitHub (HTTP 404). Check the branch or tag (--ref, "
+                    "$SKILLHUB_REF) and the repository (--repo, $SKILLHUB_REPO).")
+        return f"GitHub answered HTTP {exc.code} for {REPO}@{ref}. Try again in a minute."
+    reason = getattr(exc, "reason", exc)
+    if "CERTIFICATE" in str(reason).upper():
+        return (f"Could not verify GitHub's TLS certificate ({reason}). A corporate proxy may be intercepting "
+                "HTTPS: install its root certificate for Python, or clone the repository and run "
+                "tools/install.py from the clone.")
+    return (f"Could not download {REPO}@{ref} ({reason}). Check your internet connection, proxy "
+            "(HTTPS_PROXY) or VPN, or clone the repository and run tools/install.py from the clone.")
+
+
 def download_hub(ref: str) -> Path:
+    """Download and unpack the hub into a temp folder that is deleted when the installer exits."""
+    global SOURCE
     print(f"Downloading {REPO}@{ref} ...")
-    data = release_zip(ref) if re.fullmatch(r"v\d+(\.\d+)*", ref) else None
-    if data is None:
-        data = _fetch(f"https://codeload.github.com/{REPO}/zip/{ref}")      # works for branches and tags
+    try:
+        data = release_zip(ref) if re.fullmatch(r"v\d+(\.\d+)*", ref) else None
+        verified = data is not None
+        if data is None:
+            data = _fetch(f"https://codeload.github.com/{REPO}/zip/{ref}")      # works for branches and tags
+    except (urllib.error.URLError, OSError) as exc:
+        fail(download_error(exc, ref))
     tmp = Path(tempfile.mkdtemp(prefix="skill-hub-"))
-    with zipfile.ZipFile(io.BytesIO(data)) as z:
-        for m in z.namelist():                 # refuse path traversal
-            if m.startswith("/") or ".." in Path(m).parts:
-                sys.exit(f"Refusing suspicious archive member: {m}")
-        z.extractall(tmp)
+    atexit.register(shutil.rmtree, str(tmp), True)
+    try:
+        with zipfile.ZipFile(io.BytesIO(data)) as z:
+            for m in z.namelist():                 # refuse path traversal
+                if m.startswith("/") or ".." in Path(m).parts:
+                    fail(f"Refusing suspicious archive member: {m}")
+            z.extractall(tmp)
+    except zipfile.BadZipFile:
+        fail(f"The download of {REPO}@{ref} is not a valid archive. Try again, or clone the repository.")
     roots = [p for p in tmp.iterdir() if p.is_dir()]
     if len(roots) != 1 or not (roots[0] / "skills").is_dir():
-        sys.exit("Downloaded archive does not look like skill-hub.")
+        fail("Downloaded archive does not look like skill-hub.")
+    if verified:
+        SOURCE = f"release {ref} from github.com/{REPO} (checksum verified)"
+    elif re.fullmatch(r"v\d+(\.\d+)*", ref):
+        SOURCE = f"tag {ref} from github.com/{REPO} (no release checksums to verify)"
+    else:
+        SOURCE = (f"branch {ref} from github.com/{REPO} (latest development, not checksum-verified; for a "
+                  f"verified release use https://github.com/{REPO}/releases/latest/download/install.py)")
     return roots[0]
 
 
@@ -301,11 +355,19 @@ def skill_index(root: Path) -> dict:
     return _INDEX[key]
 
 
+def unknown(kind: str, name: str, choices: list) -> None:
+    """Stop on a mistyped agent, plugin or skill name, suggesting the closest matches (exit code 2)."""
+    close = difflib.get_close_matches(name, choices, n=3, cutoff=0.6)
+    hint = f" Did you mean {' or '.join(close)}?" if close else ""
+    shown = ", ".join(choices) if len(choices) <= 12 else "run with --list to see them all"
+    fail(f"unknown {kind} {name!r}.{hint} ({kind.capitalize()}s: {shown})", EXIT_USAGE)
+
+
 def skill_src(root: Path, name: str) -> Path:
     try:
         return skill_index(root)[name]
     except KeyError:
-        sys.exit(f"Unknown skill {name!r}. Run with --list to see skills.")
+        unknown("skill", name, all_skills(root))
 
 
 def all_skills(root: Path) -> list:
@@ -317,11 +379,11 @@ def resolve(root: Path, plugins_arg: list, skills_arg: list) -> list:
     chosen = []
     for p in plugins_arg:
         if p not in plugins:
-            sys.exit(f"Unknown plugin {p!r}. Run with --list to see plugins.")
+            unknown("plugin", p, list(plugins))
         chosen += plugins[p]["skills"]
     for s in skills_arg:
         if s not in known:
-            sys.exit(f"Unknown skill {s!r}. Run with --list to see skills.")
+            unknown("skill", s, sorted(known))
         chosen.append(s)
     return list(dict.fromkeys(chosen))          # de-duplicate, keep order
 
@@ -536,28 +598,33 @@ def show_plan(plan: dict, agents: list) -> int:
 
 
 def apply_plan(root: Path, plan: dict, update: bool, remove_redundant: bool, dry: bool) -> int:
+    """Copy, update or remove skill folders. Prints one line per folder (one per skill with --verbose)."""
     n = 0
     pre = "would " if dry else ""
-    for f, skills in plan["install"].items():
+
+    def each(label: str, f: Path, skills: list, action) -> None:
         for s in skills:
-            print(f"  {pre}install  {s}  ->  {fmt(f / s)}")
+            if VERBOSE:
+                print(f"  {pre}{label}  {s}  ->  {fmt(f / s)}")
             if not dry:
-                copy_skill(root, s, f)
-            n += 1
+                action(f, s)
+        if not VERBOSE:
+            print(f"  {pre}{label}  {len(skills)} skill(s)  ->  {fmt(f)}")
+
+    def drop(f: Path, s: str) -> None:
+        shutil.rmtree(f / s)
+        record(f, s, None)
+
+    for f, skills in plan["install"].items():
+        each("install", f, skills, lambda f, s: copy_skill(root, s, f))
+        n += len(skills)
     if update:
         for f, skills in plan["outdated"].items():
-            for s in skills:
-                print(f"  {pre}update   {s}  in  {fmt(f)}")
-                if not dry:
-                    copy_skill(root, s, f)
-                n += 1
+            each("update ", f, skills, lambda f, s: copy_skill(root, s, f))
+            n += len(skills)
     if remove_redundant:
         for f, skills in plan["redundant"].items():
-            for s in skills:
-                print(f"  {pre}remove   redundant copy  {fmt(f / s)}")
-                if not dry:
-                    shutil.rmtree(f / s)
-                    record(f, s, None)
+            each("remove redundant", f, skills, drop)
     return n
 
 
@@ -767,6 +834,35 @@ def make_mcp_plan(agents: list, use_global: bool, project: Path, entry: dict, na
     return list(rows.values())
 
 
+def json_text(data, path: Path) -> str:
+    """`data` as JSON, indented the way `path` already is (2 spaces for a new file), so a merge changes as
+    little of the user's file as possible. Short arrays and objects written on one line come back expanded."""
+    indent = 2
+    try:
+        m = re.search(r'\n([ \t]+)["}\]]', path.read_text(encoding="utf-8-sig")) if path.is_file() else None
+    except OSError:
+        m = None
+    if m:
+        indent = "\t" if m.group(1).startswith("\t") else len(m.group(1))
+    return json.dumps(data, indent=indent, ensure_ascii=False) + "\n"
+
+
+def write_json_config(path: Path, data: dict, adding: bool) -> None:
+    """Write a merged JSON config. When a removal leaves nothing but empty values in a file skill-hub created
+    (there is no backup, so the file did not exist before skill-hub's first edit), delete the file instead."""
+    leftover = {k: v for k, v in data.items() if v not in ({}, [], None)}
+    if not adding and not leftover and not path.with_name(path.name + BACKUP_SUFFIX).exists():
+        if path.is_file():
+            path.unlink()
+        return
+    _write_atomic(path, json_text(data, path), backup_first=adding)
+
+
+def needs_attention(item: str) -> None:
+    """Record something the installer left for the user to do by hand (shown at the end; exit code 3)."""
+    ATTENTION.append(item)
+
+
 def _write_atomic(path: Path, text: str, backup_first: bool = True) -> None:
     """Write via a temp file. Before the first change to an existing file, keep a .skillhub-backup copy."""
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -796,7 +892,7 @@ def write_mcp_entry(path: Path, info: dict, entry: dict | None, name: str = MCP_
     else:
         servers[name] = entry
     data[info["key"]] = servers
-    _write_atomic(path, json.dumps(data, indent=2) + "\n", backup_first=entry is not None)
+    write_json_config(path, data, adding=entry is not None)
 
 
 def manual_snippet(info: dict, entry: dict, name: str = MCP_NAME) -> str:
@@ -853,6 +949,9 @@ def apply_mcp_plan(root: Path, rows: list, entry: dict | None, snap: str | None,
             if entry is not None:
                 print(f"  skip  {fmt(r['path'])}: add this by hand ({r['info']['docs']}):\n"
                       + "\n".join("        " + line for line in manual_snippet(r["info"], entry, name).splitlines()))
+            needs_attention(f"{fmt(r['path'])}: can't be read safely ({st[12:]}), so the {name} MCP server "
+                            + ("was not added; add the snippet above by hand" if entry is not None
+                               else "entry was not checked; if it has one, remove it by hand"))
             continue
         if (entry is None and st == "missing") or (entry is not None and st == "same"):
             continue
@@ -957,7 +1056,7 @@ def write_hook(path: Path, info: dict, entry) -> None:
             data.pop(HOOK_NAME, None)
         else:
             data[HOOK_NAME] = entry
-        _write_atomic(path, json.dumps(data, indent=2) + "\n", backup_first=entry is not None)
+        write_json_config(path, data, adding=entry is not None)
         return
     groups = []
     for g in _hook_groups(data, info["event"]):
@@ -978,7 +1077,7 @@ def write_hook(path: Path, info: dict, entry) -> None:
         data["hooks"] = hooks
     else:
         data.pop("hooks", None)
-    _write_atomic(path, json.dumps(data, indent=2) + "\n", backup_first=entry is not None)
+    write_json_config(path, data, adding=entry is not None)
 
 
 def hook_skills_folder(agent: str, use_global: bool, project: Path) -> Path | None:
@@ -1040,6 +1139,9 @@ def apply_hook_plan(rows: list, removing: bool, dry: bool) -> int:
             if not removing:
                 print(f"  skip  {fmt(r['path'])}: add this {r['info']['event']} hook by hand ({r['info']['docs']}):\n"
                       + "\n".join("        " + line for line in json.dumps(r["entry"], indent=2).splitlines()))
+            needs_attention(f"{fmt(r['path'])}: can't be read safely ({st[12:]}), so the {HOOK_SKILL} hook was "
+                            + ("not checked; if it is there, remove it by hand" if removing
+                               else "not added; add the entry above by hand"))
             continue
         if (removing and st == "missing") or (not removing and st == "same"):
             continue
@@ -1130,7 +1232,7 @@ def write_token_hooks(path: Path, handlers) -> None:
         data["hooks"] = hooks
     else:
         data.pop("hooks", None)
-    _write_atomic(path, json.dumps(data, indent=2) + "\n", backup_first=handlers is not None)
+    write_json_config(path, data, adding=handlers is not None)
 
 
 def make_token_hook_plan(agents: list, use_global: bool, project: Path, names: list, removing: bool = False) -> list:
@@ -1181,6 +1283,9 @@ def apply_token_hook_plan(rows: list, removing: bool, dry: bool) -> int:
                       f"({AGENTS[r['agent']]['token_hooks']['docs']}):")
                 for event, matcher, handler in r["handlers"]:
                     print(f"        {event}" + (f" (matcher {matcher})" if matcher else "") + f": {handler['command']}")
+            needs_attention(f"{fmt(r['path'])}: can't be read safely ({st[12:]}), so the {TOKEN_SKILL} hooks were "
+                            + ("not checked; if they are there, remove them by hand" if removing
+                               else "not added; add them by hand"))
             continue
         if (removing and st == "missing") or (not removing and st == "same"):
             continue
@@ -1419,7 +1524,8 @@ def ask(prompt: str, default: str = "") -> str:
     sys.stdout.flush()
     line = con.readline()
     if not line:
-        sys.exit("\nCancelled. Nothing was changed.")
+        print("\nCancelled. Nothing was changed.")
+        sys.exit(EXIT_CANCELLED)
     if not con.isatty():                       # answers were piped in: echo them so the log reads well
         print(line.strip())
     return line.strip() or default
@@ -1464,7 +1570,8 @@ def pick(prompt: str, options: list, all_keys: list | None = None, all_label: st
         print("  Didn't understand that. Try again.")
 
 
-def guided(root: Path, args) -> None:
+def guided(root: Path, args) -> int:
+    """The interactive menu. Returns the exit code (EXIT_*)."""
     print("skill-hub installer: skills and the skill-hub MCP server for your AI coding agents.\n")
     found = detect_agents()
     print("Agents found on this machine:")
@@ -1489,12 +1596,10 @@ def guided(root: Path, args) -> None:
             print("No agents detected, so there is nothing to do. Use option 2 to pick agents by hand.")
             return
         agents = [a for a in found if AGENTS[a]["global"]]
-        execute(root, agents, all_skills(root), True, project, mcp=True, remove=choice == "4",
-                uninstall=choice == "4", tidy=True, hook=True)
-        return
+        return execute(root, agents, all_skills(root), True, project, mcp=True, remove=choice == "4",
+                       uninstall=choice == "4", tidy=True, hook=True)
     if choice == "3":
-        doctor(root, list(found) or [k for k in AGENTS if k != "universal"], project)
-        return
+        return EXIT_ERROR if doctor(root, list(found) or [k for k in AGENTS if k != "universal"], project) else EXIT_OK
 
     print("\nWhich agents?")
     opts = [(k, AGENTS[k]["name"] + ("" if k in found else "   (not detected)"))
@@ -1532,7 +1637,7 @@ def guided(root: Path, args) -> None:
         if nohome:
             print("  Skipping (no user-level folder): " + ", ".join(AGENTS[k]["name"] for k in nohome))
             agents = [a for a in agents if a not in nohome]
-    execute(root, agents, names, use_global, project, mcp=mcp, ask_options=True, hook=hook)
+    return execute(root, agents, names, use_global, project, mcp=mcp, ask_options=True, hook=hook)
 
 
 def doctor(root: Path, agents: list, project: Path) -> int:
@@ -1591,18 +1696,60 @@ def doctor(root: Path, agents: list, project: Path) -> int:
     return problems
 
 
+_LICENSE = re.compile(r"^license:[ \t]*[\"']?([^\"'\r\n]*)", re.M)
+
+
+def license_note(root: Path, names: list) -> str:
+    """A one-line notice when some of `names` are under a non-commercial license ('' when none are)."""
+    nc = {}                                   # skill -> its license text
+    for s in names:
+        try:
+            m = _LICENSE.search((skill_src(root, s) / "SKILL.md").read_text(encoding="utf-8")[:2000])
+        except OSError:
+            continue
+        if m and re.search(r"-NC\b|non-?commercial", m.group(1), re.I):
+            nc[s] = m.group(1)
+    if not nc:
+        return ""
+    lic = re.search(r"CC BY-NC[\w-]*(?: \d\.\d)?", next(iter(nc.values())))
+    which = "git-* skills" if all(s.startswith("git-") for s in nc) else "skills"
+    return (f"  note: {len(nc)} {which} are licensed {lic.group(0) if lic else 'for non-commercial use'} "
+            "(non-commercial use only). For work use, choose plugins with --plugin instead of everything.")
+
+
+def summary(done: str, dry: bool) -> int:
+    """Print the closing lines and return the exit code: 3 if anything was left for the user to do."""
+    if dry:
+        print(f"\n{done}")
+        if ATTENTION:
+            print(f"{len(ATTENTION)} item(s) would need your attention (see the '!' lines above).")
+        return EXIT_OK
+    if not ATTENTION:
+        print(f"\nDone: {done}")
+        return EXIT_OK
+    print(f"\nPartly done: {done}\n{len(ATTENTION)} item(s) need your attention:")
+    for item in ATTENTION:
+        print(f"  ! {item}")
+    return EXIT_PARTIAL
+
+
 def execute(root: Path, agents: list, names: list, use_global: bool, project: Path, mcp: bool = False,
             allow_install: bool = False, force: bool = False, tidy: bool = False, each: bool = False,
             yes: bool = False, dry: bool = False, remove: bool = False, uninstall: bool = False,
-            ask_options: bool = False, hook: bool = False, token_hook: bool = False) -> None:
-    """Plan everything (skills + MCP server + prompt hook + token hooks), show it, confirm once, then apply."""
+            ask_options: bool = False, hook: bool = False, token_hook: bool = False) -> int:
+    """Plan everything (skills + MCP server + prompt hook + token hooks), show it, confirm once, then apply.
+    Returns the exit code (EXIT_*)."""
+    ATTENTION.clear()                            # one run's items only (tests and importers call this repeatedly)
     if remove:
-        remove_all(names, agents, use_global, project, mcp, uninstall, yes, dry, hook=hook, token_hook=token_hook)
-        return
+        return remove_all(names, agents, use_global, project, mcp, uninstall, yes, dry, hook=hook,
+                          token_hook=token_hook)
     plan = make_plan(root, names, agents, use_global, project, each=each) if names else None
     skill_work = 0
     if plan:
         show_plan(plan, agents)
+        note = license_note(root, list(dict.fromkeys(s for skills in plan["install"].values() for s in skills)))
+        if note:
+            print(note)
         if ask_options:
             force = bool(plan["outdated"]) and yes_no("\nReplace the skills that differ with the hub version?", False)
             tidy = bool(plan["redundant"]) and yes_no("Remove the redundant identical copies?", True)
@@ -1624,10 +1771,10 @@ def execute(root: Path, agents: list, names: list, use_global: bool, project: Pa
     hook_work += show_token_hook_plan(token_rows)
     if not skill_work and not mcp_work and not hook_work:
         print("\nNothing to change. Everything selected is already set up.")
-        return
+        return EXIT_OK
     if not dry and not yes and not yes_no("\nGo ahead?", True):
         print("Cancelled. Nothing was changed.")
-        return
+        return EXIT_CANCELLED
     print()
     n = apply_plan(root, plan, force, tidy, dry) if plan else 0
     m = apply_mcp_plan(root, rows, entry, snap, dry) if mcp else 0
@@ -1639,25 +1786,35 @@ def execute(root: Path, agents: list, names: list, use_global: bool, project: Pa
     t = apply_token_hook_plan(token_rows, False, dry)
     hooks = (f" and {h} prompt hook(s)" if hook_rows else "") + (f", {t} token hook file(s)" if token_rows else "")
     if dry:
-        print(f"\nWould write {n} skill folder(s), {m} MCP config file(s){hooks}.")
-        return
-    print(f"\nDone: {n} skill folder(s), {m} MCP config file(s){hooks} written. "
-          "Restart or reload your agents, then just describe your task.")
+        return summary(f"Would write {n} skill folder(s), {m} MCP config file(s){hooks}.", True)
+    code = summary(f"{n} skill folder(s), {m} MCP config file(s){hooks} written.", False)
+    print("Restart or reload your agents, then just describe your task.")
+    if mcp and m:
+        print(f"The MCP server runs with {entry['command']}; if you remove or upgrade that Python, "
+              "run --setup again.")
     if mcp:
         print("Check the setup any time with:  python install.py --doctor")
+    return code
 
 
 def remove_all(names: list, agents: list, use_global: bool, project: Path, mcp: bool, uninstall: bool,
-               yes: bool, dry: bool, hook: bool = False, token_hook: bool = False) -> None:
-    """Delete installed copies of the named hub skills, and (mcp) our MCP entries, after one confirmation."""
+               yes: bool, dry: bool, hook: bool = False, token_hook: bool = False) -> int:
+    """Delete installed copies of the named hub skills, and (mcp) our MCP entries, after one confirmation.
+    Returns the exit code (EXIT_*)."""
     folders = list(dict.fromkeys(f for a in agents for f in reads(a, use_global, project)))
     found = [(f, s) for f in folders for s in names if (f / s / "SKILL.md").is_file()]
     rows = make_mcp_plan(agents, use_global, project, server_entry()) if mcp else []
     drop_snapshot = uninstall and snapshot_dir().exists()
     if found:
         print("\nInstalled skill copies:")
+        per_folder: dict = {}
         for f, s in found:
-            print(f"  - {fmt(f / s)}")
+            per_folder.setdefault(f, []).append(s)
+            if VERBOSE:
+                print(f"  - {fmt(f / s)}")
+        if not VERBOSE:
+            for f, skills in per_folder.items():
+                print(f"  - {len(skills)} skill(s) in {fmt(f)}")
     mcp_work = show_mcp_plan(rows, "current", removing=True) if mcp else 0
     hook_rows = make_hook_plan(agents, use_global, project, names, removing=True) if hook else []
     hook_work = show_hook_plan(hook_rows, removing=True)
@@ -1667,14 +1824,14 @@ def remove_all(names: list, agents: list, use_global: bool, project: Path, mcp: 
         print(f"  - delete the hub copy {fmt(snapshot_dir())}")
     if not found and not mcp_work and not hook_work and not drop_snapshot:
         print("Nothing to remove. None of the selected items are set up for these agents.")
-        return
+        return EXIT_OK
     if dry:
-        print(f"\nWould remove {len(found)} skill folder(s), {mcp_work} MCP server entries and "
-              f"{hook_work} hook file(s).")
-        return
+        print(f"\nWould remove {len(found)} skill folder(s), {plural(mcp_work, 'MCP server entry', 'MCP server entries')}"
+              f" and {hook_work} hook file(s).")
+        return EXIT_OK
     if not yes and not yes_no("\nRemove these?", False):
         print("Cancelled. Nothing was changed.")
-        return
+        return EXIT_CANCELLED
     for f, s in found:
         shutil.rmtree(f / s)
         record(f, s, None)
@@ -1682,8 +1839,43 @@ def remove_all(names: list, agents: list, use_global: bool, project: Path, mcp: 
     h = apply_hook_plan(hook_rows, True, False) + apply_token_hook_plan(token_rows, True, False)
     if drop_snapshot:
         shutil.rmtree(snapshot_dir())
-    print(f"\nRemoved {len(found)} skill folder(s), {m} MCP server entries and {h} hook file(s)."
-          + (f" Deleted {fmt(snapshot_dir())}." if drop_snapshot else ""))
+    kept = drop_backups([r["path"] for r in rows + hook_rows + token_rows]) if uninstall else []
+    code = summary(f"removed {len(found)} skill folder(s), {plural(m, 'MCP server entry', 'MCP server entries')} "
+                   f"and {h} hook file(s)." + (f" Deleted {fmt(snapshot_dir())}." if drop_snapshot else ""), False)
+    if kept:
+        print("Kept these backups because the files changed since skill-hub first edited them "
+              "(delete them when you no longer need them):")
+        for b in kept:
+            print(f"  {fmt(b)}")
+    return code
+
+
+def plural(n: int, one: str, many: str) -> str:
+    return f"{n} {one if n == 1 else many}"
+
+
+def drop_backups(paths: list) -> list:
+    """After an uninstall, delete each .skillhub-backup whose file is back to what the backup holds (same JSON
+    data, or the same text), since it is no longer needed. Returns the backups kept because the file differs."""
+    kept = []
+    for path in dict.fromkeys(paths):
+        backup = path.with_name(path.name + BACKUP_SUFFIX)
+        if not backup.is_file():
+            continue
+        try:
+            old = backup.read_text(encoding="utf-8-sig")
+            new = path.read_text(encoding="utf-8-sig") if path.is_file() else ""
+            try:
+                same = json.loads(old or "{}") == json.loads(new or "{}")
+            except ValueError:
+                same = old.strip() == new.strip()
+        except OSError:
+            same = False
+        if same:
+            backup.unlink()
+        else:
+            kept.append(backup)
+    return kept
 
 
 # ============================================================================ CLI
@@ -1758,7 +1950,7 @@ def choose_agents(ap, spec: str) -> list:
     agents = list(dict.fromkeys(a.strip() for a in spec.split(",") if a.strip()))
     for a in agents:
         if a not in AGENTS:
-            ap.error(f"unknown agent {a!r}. Agents: {', '.join(AGENTS)}, detected")
+            unknown("agent", a, list(AGENTS) + ["detected"])
     return agents
 
 
@@ -1767,7 +1959,7 @@ def build_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(description="Install skill-hub skills into AI coding agents. "
                                              "Run with no options for the guided mode.",
                                  formatter_class=argparse.RawDescriptionHelpFormatter,
-                                 epilog="Agents: " + ", ".join(AGENTS) + ", detected")
+                                 epilog="Agents: " + ", ".join(AGENTS) + ", detected\n" + EXIT_CODES)
     g = ap.add_argument_group("One command","Set up, check or remove everything at once")
     g.add_argument("--setup", action="store_true",
                    help="set up everything in one go: every skill plus the MCP server, for every detected agent, "
@@ -1830,6 +2022,8 @@ def build_parser() -> argparse.ArgumentParser:
     g.add_argument("--list", action="store_true", help="list agents, plugins and skills")
     g.add_argument("--dry-run", action="store_true", help="show what would happen, change nothing")
     g.add_argument("--yes", "-y", action="store_true", help="don't ask for confirmation")
+    g.add_argument("--verbose", "-v", action="store_true", help="one line per skill instead of one per folder")
+    g.add_argument("--version", action="store_true", help="show the installer and hub version, then exit")
 
     g = ap.add_argument_group("Source","Where the skills come from when not run from a clone")
     g.add_argument("--ref", default=os.environ.get("SKILLHUB_REF") or DEFAULT_REF,
@@ -1840,21 +2034,33 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main() -> None:
-    global REPO
+    global REPO, SOURCE, VERBOSE
     ap = build_parser()
     args = ap.parse_args()
     if args.repo:
         if not re.fullmatch(r"[\w.-]+/[\w.-]+", args.repo):
             ap.error("--repo must look like owner/name")
         REPO = args.repo
+    VERBOSE = args.verbose
+    local = find_local_root()
+    if args.version:
+        print(f"skill-hub installer (built for {DEFAULT_REF}, Python {sys.version.split()[0]})"
+              + (f"; hub {hub_version(local) or 'unknown'} at {local}" if local else
+                 f"; downloads {REPO}@{args.ref} when run"))
+        return
 
     if args.detect:
         print_detect()
         return
-    root = find_local_root() or download_hub(args.ref)
+    if local:
+        SOURCE = f"local clone at {local}"
+    root = local or download_hub(args.ref)
     if args.list:
         print_list(root)
         return
+    if not args.doctor:                          # doctor prints its own version line
+        print(f"skill-hub {hub_version(root) or '(unknown version)'}, {len(all_skills(root))} skills. "
+              f"Source: {SOURCE}")
     project = (args.project or Path.cwd()).expanduser().resolve()
     if args.setup or args.uninstall:             # one-shot modes: sensible defaults, all overridable
         args.agent = args.agent or "detected"
@@ -1912,8 +2118,7 @@ def main() -> None:
     nothing_chosen = not (args.agent or args.dest or args.zip or plugins_arg or skills_arg or args.all or args.mcp
                           or args.prompt_hook or args.token_hooks)
     if nothing_chosen:
-        guided(root, args)
-        return
+        sys.exit(guided(root, args) or EXIT_OK)
 
     if not (plugins_arg or skills_arg or args.all or args.mcp or args.prompt_hook or args.token_hooks):
         ap.error("choose what to install with --plugin, --skill, --all, --mcp, --prompt-hook or --token-hooks "
@@ -1948,9 +2153,10 @@ def main() -> None:
             sys.exit(", ".join(AGENTS[a]["name"] for a in nohome) + " has no user-level skills folder. "
                      "Install into the project instead (omit --global).")
 
-    execute(root, agents, names, args.use_global, project, mcp=args.mcp, allow_install=args.mcp_allow_install,
-            force=args.force or args.update, tidy=args.tidy, each=args.each, yes=args.yes, dry=args.dry_run,
-            remove=args.remove, uninstall=args.uninstall, hook=args.prompt_hook, token_hook=args.token_hooks)
+    sys.exit(execute(root, agents, names, args.use_global, project, mcp=args.mcp,
+                     allow_install=args.mcp_allow_install, force=args.force or args.update, tidy=args.tidy,
+                     each=args.each, yes=args.yes, dry=args.dry_run, remove=args.remove, uninstall=args.uninstall,
+                     hook=args.prompt_hook, token_hook=args.token_hooks))
 
 
 if __name__ == "__main__":

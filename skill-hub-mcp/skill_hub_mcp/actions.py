@@ -34,7 +34,8 @@ class Actions:
             with contextlib.redirect_stdout(log):
                 result = fn(*args, **kwargs)
         except SystemExit as exc:
-            raise HubError(str(exc.code) if exc.code not in (None, 0) else "the installer stopped") from None
+            msg = getattr(exc, "message", None) or (str(exc.code) if exc.code not in (None, 0) else "")
+            raise HubError(msg or "the installer stopped") from None
         except OSError as exc:
             raise HubError(f"file error: {exc}") from None
         return result, log.getvalue().strip()
@@ -128,6 +129,8 @@ class Actions:
         mod, root = self.module(), self.root()
         plugins, skills = self.hub.targets(target)
         names, _ = self._run(mod.resolve, root, plugins, skills)
+        if action != "remove" and hasattr(mod, "with_requirements"):    # skills they need (metadata.requires)
+            names, _ = self._run(mod.with_requirements, root, names)
         chosen = self._agents(agents)
         use_global, proj, chosen = self._where(scope, project, chosen)
         steps = []
