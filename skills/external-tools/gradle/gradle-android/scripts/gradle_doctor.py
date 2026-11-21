@@ -73,7 +73,8 @@ def backup_write(path, text):
     if p.exists():
         shutil.copy2(p, str(p) + ".bak")
     p.parent.mkdir(parents=True, exist_ok=True)
-    p.write_text(text, encoding="utf-8", newline="\n")
+    with open(p, "w", encoding="utf-8", newline="\n") as f:  # Path.write_text(newline=) needs Python 3.10
+        f.write(text)
 
 
 def parse_props(text):
