@@ -83,13 +83,13 @@ See the full list in [`skills/README.md`](skills/README.md). The machine-readabl
 
 ```bash
 # macOS / Linux
-curl -fsSL https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py | python3 - --setup
+curl -fsSL https://github.com/NILANJAN-01/skill-hub/releases/latest/download/install.py | python3 - --setup
 
 :: Windows Command Prompt (cmd)
-curl -fsSL https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py | python - --setup
+curl -fsSL https://github.com/NILANJAN-01/skill-hub/releases/latest/download/install.py | python - --setup
 
 # Windows PowerShell
-irm https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py -OutFile install.py
+irm https://github.com/NILANJAN-01/skill-hub/releases/latest/download/install.py -OutFile install.py
 python install.py --setup
 
 # afterwards
@@ -118,11 +118,11 @@ More ways to run it:
 
 ```bash
 # guided questions, nothing else to download
-curl -fsSL https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py | python3 -
+curl -fsSL https://github.com/NILANJAN-01/skill-hub/releases/latest/download/install.py | python3 -
 
 # Windows PowerShell
 # (to read the script before running it, open the URL in a browser or `curl -O` it first)
-irm https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py -OutFile install.py
+irm https://github.com/NILANJAN-01/skill-hub/releases/latest/download/install.py -OutFile install.py
 python install.py
 
 # from a clone
@@ -133,11 +133,13 @@ install.bat
 install.bat --check      :: only check the preconditions
 ```
 
-Those commands read the latest `main`. For a fixed, reproducible version, use the installer attached to a [release](https://github.com/NILANJAN-01/skill-hub/releases); it installs that same release:
+Those commands use the installer attached to the latest [release](https://github.com/NILANJAN-01/skill-hub/releases). It installs that same release and checks the download against the release's `SHA256SUMS`, so every run is reproducible. For the latest development version instead (skills added since the last release, not checksum-verified), read the script from `main`:
 
 ```bash
-curl -fsSL https://github.com/NILANJAN-01/skill-hub/releases/latest/download/install.py | python3 -
+curl -fsSL https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py | python3 - --setup
 ```
+
+The first line of every run says which version it installs and where from. Runs end with a summary; anything left for you to do by hand (for example a config file it could not parse) is listed there, and the exit code is 0 done, 1 error, 2 bad options, 3 partly done, 4 cancelled. `--verbose` lists every skill; `--version` shows the installer version.
 
 Each release also lists `SHA256SUMS`, one zip per skill (for upload UIs such as Claude.ai) and `catalog.json`. When the installer downloads a release (`--ref v1.3.0` or `SKILLHUB_REF`), it checks the archive against that release's `SHA256SUMS` and stops on a mismatch. Running a fork? Use `--repo owner/name` (or set `SKILLHUB_REPO`) and `--ref <branch-or-tag>`.
 

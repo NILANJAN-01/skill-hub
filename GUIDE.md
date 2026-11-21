@@ -26,24 +26,26 @@ No Python? Install it from https://www.python.org/downloads/. On Windows, tick *
 **Fastest: one command for everything.** `--setup` installs every skill and the skill-hub MCP server into every agent it finds, for your user. It also adds the skill-dispatcher hook, which routes what you ask to the right skills and plans independent parts to run in parallel: on every prompt in Claude Code, Codex and Antigravity, and once per session in GitHub Copilot (`--no-prompt-hook` skips it; Codex asks you to trust the hook once in `/hooks`). It shows the plan first; **nothing is written until you say yes.**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py | python3 - --setup   # macOS / Linux
+curl -fsSL https://github.com/NILANJAN-01/skill-hub/releases/latest/download/install.py | python3 - --setup   # macOS / Linux
 python install.py --setup                                                                                     # Windows, after the download below
 ```
 
-Later, `python install.py --doctor` shows what is set up for each agent and checks that the MCP server starts, and `python install.py --uninstall` removes everything the installer set up.
+This is the installer from the latest release: it installs that release and checks the download's checksum. The first line it prints says which version it installs and where from, and it ends with a summary. If it lists items that "need your attention" (for example a settings file it could not read safely), do those by hand; it prints exactly what to add.
+
+Later, `python install.py --doctor` shows what is set up for each agent and checks that the MCP server starts, and `python install.py --uninstall` removes everything the installer set up, including the backups of your settings files once they are back to how they were.
 
 **Prefer to choose?** Run the installer with **no options**. It works out which AI agents and IDEs are on your computer and offers a menu: set up everything, choose agents and skills, check, or remove. **Nothing is written until you say yes.**
 
 **macOS / Linux**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py | python3 -
+curl -fsSL https://github.com/NILANJAN-01/skill-hub/releases/latest/download/install.py | python3 -
 ```
 
 **Windows (PowerShell)**
 
 ```powershell
-irm https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py -OutFile install.py
+irm https://github.com/NILANJAN-01/skill-hub/releases/latest/download/install.py -OutFile install.py
 python install.py
 ```
 
@@ -243,12 +245,12 @@ The full flow for one common setup: every hub skill, available in every folder y
 
    ```powershell
    # Windows PowerShell
-   irm https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py -OutFile install.py
+   irm https://github.com/NILANJAN-01/skill-hub/releases/latest/download/install.py -OutFile install.py
    python install.py --agent copilot --plugin git-skills,hub-tools --global
    ```
    ```bash
    # macOS / Linux
-   curl -fsSL https://raw.githubusercontent.com/NILANJAN-01/skill-hub/main/tools/install.py | python3 - --agent copilot --plugin git-skills,hub-tools --global
+   curl -fsSL https://github.com/NILANJAN-01/skill-hub/releases/latest/download/install.py | python3 - --agent copilot --plugin git-skills,hub-tools --global
    ```
    This writes to `~/.copilot/skills/` (on Windows, `C:\Users\<you>\.copilot\skills\`). For one repo only, drop `--global` and run it from the repo root. The skills then go to `.github/skills/`, which you can commit for your team.
 
