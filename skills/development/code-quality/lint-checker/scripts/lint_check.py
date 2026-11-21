@@ -556,7 +556,7 @@ def check_text(rel: str, raw: bytes, max_line: int = 120) -> list[dict]:
             out.append(_finding(rel, e.lineno, "error", "syntax", f"invalid JSON: {e.msg}", e.colno))
     elif ext == ".toml":
         try:
-            import tomllib  # Python 3.11+
+            import tomllib  # novermin (Python 3.11+, guarded)
         except ImportError:
             tomllib = None
         if tomllib:
