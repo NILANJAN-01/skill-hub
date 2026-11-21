@@ -6,6 +6,7 @@ compatibility: Needs Python 3.8+ and the script from the adb-tool skill (install
 metadata:
   title: "adb device control: apps, files, screen, settings"
   category: adb-tools
+  requires: adb-tool
 ---
 
 # adb: apps, files, screen and settings

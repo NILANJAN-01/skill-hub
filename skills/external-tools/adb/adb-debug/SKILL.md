@@ -6,6 +6,7 @@ compatibility: Needs Python 3.8+ and the script from the adb-tool skill (install
 metadata:
   title: "adb debugging: logcat, dumpsys, bug reports, snapshots"
   category: adb-tools
+  requires: adb-tool
 ---
 
 # adb: logs, dumps and bug reports

@@ -6,6 +6,7 @@ compatibility: Needs Python 3.8+ and the script from the adb-tool skill (install
 metadata:
   title: "adb setup, USB and wireless connection, troubleshooting"
   category: adb-tools
+  requires: adb-tool
 ---
 
 # adb: setup and connection
