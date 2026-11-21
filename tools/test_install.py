@@ -10,6 +10,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -99,6 +100,54 @@ class ChecksumTests(unittest.TestCase):
         self.assertIs(install.checksum_ok(data, sums, "skill-hub-1.0.0.zip"), True)
         self.assertIs(install.checksum_ok(b"tampered", sums, "skill-hub-1.0.0.zip"), False)
         self.assertIsNone(install.checksum_ok(data, sums, "skill-hub-9.9.9.zip"))
+
+
+class RequiresTests(unittest.TestCase):
+    """metadata.requires: installing a skill also installs the skills it needs next to it."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.root = Path(self.tmp.name) / "hub"
+        for name, meta in (("dispatcher", '  requires: "router, missing-one"\n'), ("router", "  requires: core\n"),
+                           ("core", "  title: Core\n"), ("loner", "")):
+            d = self.root / "skills" / "generic" / "hub" / name
+            d.mkdir(parents=True)
+            (d / "SKILL.md").write_text(f"---\nname: {name}\ndescription: d\nmetadata:\n{meta}---\nrequires: no\n",
+                                        encoding="utf-8")
+
+    def test_reads_frontmatter_only(self):
+        self.assertEqual(install.skill_requires(self.root, "dispatcher"), ["router", "missing-one"])
+        self.assertEqual(install.skill_requires(self.root, "loner"), [])   # body text is not frontmatter
+
+    def test_adds_requirements_transitively_once(self):
+        with mock.patch("builtins.print") as said:
+            names = install.with_requirements(self.root, ["dispatcher", "loner", "core"])
+        self.assertEqual(names, ["dispatcher", "loner", "core", "router"])   # unknown names are skipped
+        self.assertIn("needed by dispatcher", said.call_args_list[0].args[0])
+        self.assertEqual(install.with_requirements(self.root, ["loner"]), ["loner"])
+
+
+class SkillFolderListsTests(unittest.TestCase):
+    """skill-router and skill-orchestrator scan the folders agents read skills from; they keep their own copy
+    of that list (they install on their own), so it must match AGENTS here."""
+
+    def test_lists_match_agents(self):
+        import ast
+        project, user = set(), set()
+        for a in install.AGENTS.values():
+            project.update([a["project"]] if a.get("project") else [])
+            project.update(a.get("also_reads") or [])
+            user.update([a["global"]] if a.get("global") else [])
+            user.update(a.get("global_also_reads") or [])
+        repo = Path(__file__).resolve().parent.parent / "skills" / "generic" / "hub"
+        for script in ("skill-router/scripts/route.py", "skill-orchestrator/scripts/orchestrate.py"):
+            tree = ast.parse((repo / script).read_text(encoding="utf-8"))
+            found = {t.id: set(ast.literal_eval(n.value)) for n in tree.body if isinstance(n, ast.Assign)
+                     for t in n.targets if isinstance(t, ast.Name) and t.id in ("PROJECT_DIRS", "USER_DIRS")}
+            with self.subTest(script=script):
+                self.assertEqual(found["PROJECT_DIRS"], project, "project folders differ from AGENTS in install.py")
+                self.assertEqual(found["USER_DIRS"], user, "user folders differ from AGENTS in install.py")
 
 
 class Sandbox(unittest.TestCase):

@@ -130,6 +130,13 @@ def skill_location(d: Path) -> tuple[str, str]:
     return (parts[0], parts[1]) if len(parts) == SKILL_DEPTH else ("", "")
 
 
+def requires_of(fm: dict) -> list[str]:
+    """Skills a skill needs installed next to it: `metadata.requires`, a comma-separated list of skill names."""
+    meta = fm.get("metadata")
+    raw = meta.get("requires", "") if isinstance(meta, dict) else ""
+    return [s.strip() for s in str(raw).split(",") if s.strip()]
+
+
 def plugin_skill_names(plugin: dict) -> list[str]:
     """Skill folder names referenced by a marketplace plugin entry."""
     return [Path(s).name for s in plugin.get("skills", [])]

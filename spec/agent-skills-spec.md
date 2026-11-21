@@ -34,6 +34,7 @@ This page summarizes the parts that `tools/validate_skills.py` enforces, plus th
 - `metadata.title`: human-readable title shown in the skill lists.
 - `metadata.category`: the focused plugin the skill belongs to (e.g. `git-branching`).
 - `metadata.source` / `metadata.pages`: provenance for skills derived from a document.
+- `metadata.requires`: comma-separated names of skills this one needs installed next to it (for example `skill-router`). `tools/install.py` installs them too, and `validate_skills.py` checks that they exist and that every plugin listing the skill also lists them. Channels that copy one skill at a time (such as `npx skills`) cannot do this, so also say it in `compatibility`.
 - `license` is required when the content is derived from third-party material.
 - Every skill must be listed in at least one plugin in `.claude-plugin/marketplace.json`.
 - Relative links in `SKILL.md` must resolve inside the skill folder.

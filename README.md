@@ -217,7 +217,7 @@ examples/prompts.json             example prompts for every skill (source)
 examples/PROMPTS.md               generated, readable list of every example prompt
 catalog.json, skills/README.md    generated index of every skill, plugins and agents
 index.html, prompts.html          optional local browser for the catalog (python -m http.server)
-template/SKILL.md                 starting point for a new skill
+template/SKILL.md.tmpl            starting point for a new skill (not named SKILL.md, so it is never installed)
 spec/agent-skills-spec.md         Agent Skills spec summary + hub conventions
 tools/install.py                  multi-agent installer (source of truth for agent folders); tests in tools/test_install.py
 tools/build_catalog.py            regenerates catalog.json, skills/README.md, examples/PROMPTS.md, prompts.html, agent tables

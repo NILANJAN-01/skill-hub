@@ -56,11 +56,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
-      - name: Installer stays compatible with Python 3.8
+      - name: Installer and skill scripts stay compatible with Python 3.8
         shell: bash
         run: |
           python -m pip install --quiet vermin
-          vermin --no-tips --violations -t=3.8- tools/install.py
+          # same files as the "python 3.8 compatibility" step of tools/hub.py check (VERMIN there)
+          vermin -q --no-tips --violations -t=3.8- --exclude-regex '(^|[\\/])(test_[^\\/]*\.py|fixtures[\\/].*)$' \
+            tools/install.py skills
       - name: Install into every agent's folder
         shell: bash
         run: |

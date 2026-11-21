@@ -79,6 +79,8 @@ class NewSkill(MiniRepo):
         self.assertEqual(fm["metadata"], {"title": "Type checker", "category": "hub-tools"})
         self.assertIn("# Type checker", body)
         self.assertTrue((md.parent / "references" / "details.md").is_file())
+        self.assertFalse((md.parent / hub.TEMPLATE_SKILL).exists())
+        self.assertNotIn("Claude", md.read_text(encoding="utf-8"))  # the template is agent-neutral
         plugins = {p["name"]: p["skills"] for p in self.market_now()["plugins"]}
         self.assertIn("./skills/development/code-quality/type-checker", plugins["hub-tools"])
         self.assertIn("./skills/development/code-quality/type-checker", plugins["git-skills"])
@@ -137,6 +139,40 @@ class NewSkill(MiniRepo):
         self.assertEqual(once, TITLES)
 
 
+class DistributionChecks(unittest.TestCase):
+    """validate_skills.py checks that keep every channel (installer, npx skills, plugins) shipping the right skills."""
+
+    def test_stray_skill_files(self):
+        root = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, root, True)
+        for rel in ("skills/generic/hub/ok-skill", "template", "skills/generic/hub/ok-skill/fixtures/nested",
+                    ".git/x", "node_modules/pkg", "generated-skills/draft"):
+            (root / rel).mkdir(parents=True)
+            (root / rel / "SKILL.md").write_text("---\nname: x\n---\n", encoding="utf-8")
+        (root / "template" / "SKILL.md.tmpl").write_text("", encoding="utf-8")
+        self.assertEqual(validate_skills.stray_skill_files(root),
+                         ["skills/generic/hub/ok-skill/fixtures/nested/SKILL.md", "template/SKILL.md"])
+
+    def test_repository_has_no_stray_skill_files(self):
+        self.assertEqual(validate_skills.stray_skill_files(REPO), [])
+        self.assertTrue((REPO / "template" / hub.TEMPLATE_SKILL).is_file())
+
+    def test_requirement_errors(self):
+        requires = {"dispatcher": ["router"], "router": [], "selfish": ["selfish"], "typo": ["ruoter"]}
+        plugins = [{"name": "full", "skills": ["./skills/a/b/dispatcher", "./skills/a/b/router"]},
+                   {"name": "partial", "skills": ["./skills/a/b/dispatcher"]}]
+        msgs = [m for _, m in validate_skills.requirement_errors(requires, plugins)]
+        self.assertEqual(len(msgs), 3, msgs)
+        self.assertIn("lists the skill itself", msgs[0])
+        self.assertIn("unknown skill 'ruoter'", msgs[1])
+        self.assertIn("plugin 'partial' lists dispatcher but not router", msgs[2])
+
+    def test_requires_of(self):
+        self.assertEqual(hublib.requires_of({"metadata": {"requires": "a, b ,"}}), ["a", "b"])
+        self.assertEqual(hublib.requires_of({"metadata": "bad"}), [])
+        self.assertEqual(hublib.requires_of({}), [])
+
+
 class CheckPlanning(unittest.TestCase):
     def labels(self, changed):
         first, steps = hub.plan_checks(REPO, changed)
@@ -166,6 +202,17 @@ class CheckPlanning(unittest.TestCase):
         labels, _ = self.labels(["skill-hub-mcp/skill_hub_mcp/hub.py"])
         self.assertIn("skill-hub-mcp tests", labels)
         self.assertNotIn("mcp-server tests", labels)
+        self.assertNotIn("python 3.8 compatibility", labels)
+
+    def test_python38_check_runs_for_skills_and_installer(self):
+        for path in ("skills/generic/hub/skill-router/scripts/route.py", "tools/install.py"):
+            with self.subTest(path=path):
+                labels, _ = self.labels([path])
+                self.assertIn("python 3.8 compatibility", labels)
+        with mock.patch.object(hub.importlib.util, "find_spec", return_value=None):
+            _, steps = hub.plan_checks(REPO, None)
+        py38 = [s for s in steps if s.label == "python 3.8 compatibility"][0]
+        self.assertIn("pip install vermin", py38.skipped)
 
     def test_no_build(self):
         self.assertIsNone(hub.plan_checks(REPO, None, build=False)[0])

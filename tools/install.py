@@ -326,6 +326,33 @@ def resolve(root: Path, plugins_arg: list, skills_arg: list) -> list:
     return list(dict.fromkeys(chosen))          # de-duplicate, keep order
 
 
+_REQUIRES = re.compile(r"^[ \t]+requires:[ \t]*[\"']?([^\"'\r\n]*)", re.M)
+
+
+def skill_requires(root: Path, name: str) -> list:
+    """Skills this one needs installed next to it: `metadata.requires` in its SKILL.md (comma-separated)."""
+    try:
+        text = (skill_src(root, name) / "SKILL.md").read_text(encoding="utf-8")
+    except OSError:
+        return []
+    fm = re.match(r"\A---\r?\n(.*?)\r?\n---", text, re.S)
+    m = _REQUIRES.search(fm.group(1)) if fm else None
+    return [s.strip() for s in m.group(1).split(",") if s.strip()] if m else []
+
+
+def with_requirements(root: Path, names: list) -> list:
+    """`names` plus every skill they require, directly or through another, each added once and announced."""
+    out, known = list(names), set(all_skills(root))
+    i = 0
+    while i < len(out):
+        for need in skill_requires(root, out[i]):
+            if need in known and need not in out:
+                print(f"  + {need}  (needed by {out[i]})")
+                out.append(need)
+        i += 1
+    return out
+
+
 # ============================================================================ detection
 def _expand(p: str) -> Path:
     return Path(os.path.expandvars(os.path.expanduser(p)))
@@ -1483,7 +1510,7 @@ def guided(root: Path, args) -> None:
     opts = [("__all__", f"Everything ({total} skills)")] + \
            [(p, f"{p:<22} {len(v['skills']):>3} skills  {v['description'][:60]}") for p, v in plugins.items()]
     chosen = pick("Your choice", opts, all_keys=["__all__"], all_label="everything")
-    names = all_skills(root) if "__all__" in chosen else resolve(root, chosen, [])
+    names = all_skills(root) if "__all__" in chosen else with_requirements(root, resolve(root, chosen, []))
 
     print("\nAlso set up the skill-hub MCP server? It lets the agents search the whole hub and load any skill\n"
           "on demand, even ones you did not install.")
@@ -1892,6 +1919,8 @@ def main() -> None:
         ap.error("choose what to install with --plugin, --skill, --all, --mcp, --prompt-hook or --token-hooks "
                  "(or use --setup for everything, or run with no options for guided mode)")
     names = all_skills(root) if args.all else resolve(root, plugins_arg, skills_arg)
+    if not args.remove:                         # removing a skill leaves the skills it needed in place
+        names = with_requirements(root, names)
     if (args.zip or args.dest) and not names:
         ap.error("--zip and --dest need --plugin, --skill or --all")
 

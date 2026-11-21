@@ -7,8 +7,9 @@
                                                    scaffold a skill and register it everywhere
 
 check runs `build_catalog.py` (regenerates the generated files) and then, in parallel:
-validate_skills.py, build_catalog.py --check, compileall, the tools and MCP server tests and every
-skill's scripts/test_*.py. It prints one line per step group, the output of failed steps only, and
+validate_skills.py, build_catalog.py --check, compileall, the tools and MCP server tests, every
+skill's scripts/test_*.py and (when vermin is installed) Python 3.8 compatibility of install.py and the
+skill scripts. It prints one line per step group, the output of failed steps only, and
 the command to rerun each failure. Exit code 1 if any step failed.
   --no-build        verify only, write nothing (what CI does)
   --verbose         one line per step, and validator warnings in full
@@ -63,6 +64,13 @@ ROOT = Path(__file__).resolve().parent.parent
 NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 # Skill test suites that need packages outside the standard library (module names to import).
 OPTIONAL_DEPS = {"image-inspector": ["PIL", "cv2"], "video-inspector": ["PIL", "cv2"]}
+# template/ holds SKILL.md.tmpl, not SKILL.md: skill scanners (npx skills and others) install every SKILL.md they
+# find, so a template named SKILL.md would ship as a placeholder skill. new-skill renames it in the copy.
+TEMPLATE_SKILL = "SKILL.md.tmpl"
+# Python 3.8 compatibility of tools/install.py and every skill script (tests excluded; CI runs them on 3.12).
+# vermin is not in the standard library, so this step is skipped when it is not installed; CI always runs it.
+VERMIN = ["-c", "import sys; from vermin.main import main; sys.exit(main())", "-q", "--no-tips", "--violations",
+          "-t=3.8-", "--exclude-regex", r"(^|[\\/])(test_[^\\/]*\.py|fixtures[\\/].*)$", "tools/install.py", "skills"]
 
 
 # ============================================================================ check
@@ -137,6 +145,11 @@ def plan_checks(root: Path, changed: list[str] | None, build: bool = True) -> tu
         for test in sorted((root / "tools").glob("test_*.py")):
             steps.append(Step(f"tools tests: {test.name}",
                               ["-m", "unittest", "discover", "-s", "tools", "-p", test.name], group="tools tests"))
+    if wanted(("skills/", "tools/install.py")):
+        py38 = Step("python 3.8 compatibility", VERMIN)
+        if importlib.util.find_spec("vermin") is None:
+            py38.skipped = "needs vermin (pip install vermin); CI always runs it"
+        steps.append(py38)
     for suite in ("mcp-server", "skill-hub-mcp"):
         if wanted(SUITE_TRIGGERS[suite]):
             steps.append(Step(f"{suite} tests", ["-m", "unittest", "discover", "-s", f"{suite}/tests"]))
@@ -355,6 +368,7 @@ def cmd_new_skill(args) -> int:
 
     shutil.copytree(root / "template", dest)
     md = dest / "SKILL.md"
+    (dest / TEMPLATE_SKILL).rename(md)
     body = re.sub(r"\A---\r?\n.*?\r?\n---\r?\n", "", md.read_text(encoding="utf-8"), count=1, flags=re.S)
     body = body.replace("# Template Skill", f"# {title}", 1)
     md.write_text(skill_frontmatter(name, description, args.license, title, args.plugin) + body,

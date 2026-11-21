@@ -10,12 +10,13 @@ Exit code 1 if any error is found.
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import sys
 from pathlib import Path
 
-from hublib import (AREAS, EXAMPLES, MARKETPLACE, MIN_EXAMPLES, ROOT, SKILLS_DIR, FrontmatterError, load_examples,
-                    load_marketplace, parse_frontmatter, plugin_skill_names, skill_dirs)
+from hublib import (AREAS, EXAMPLES, MARKETPLACE, MIN_EXAMPLES, ROOT, SKILL_DEPTH, SKILLS_DIR, FrontmatterError,
+                    load_examples, load_marketplace, parse_frontmatter, plugin_skill_names, requires_of, skill_dirs)
 
 NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 KNOWN_FIELDS = {"name", "description", "license", "compatibility", "metadata", "allowed-tools"}
@@ -154,6 +155,47 @@ def layout_errors() -> list[tuple[str, str]]:
     return out
 
 
+# Folders a repository scan skips: not shipped from GitHub (ignored or tool caches) or not ours.
+SCAN_SKIP = {"__pycache__", "node_modules", "generated-skills", "venv", "dist", "build"}
+
+
+def stray_skill_files(root: Path = ROOT) -> list[str]:
+    """SKILL.md files outside skills/<area>/<group>/<name>/ (relative paths). Skill scanners such as
+    `npx skills` install every SKILL.md they find in the repository, so one anywhere else ships as a skill.
+    Misplaced files inside skills/ above the skill level are reported by layout_errors()."""
+    out = []
+    for folder, subdirs, files in os.walk(root):
+        subdirs[:] = sorted(d for d in subdirs if not d.startswith(".") and d not in SCAN_SKIP)
+        if "SKILL.md" not in files:
+            continue
+        rel = Path(folder).relative_to(root)
+        if rel.parts[:1] != ("skills",) or len(rel.parts) > SKILL_DEPTH + 1:
+            out.append((rel / "SKILL.md").as_posix())
+    return out
+
+
+def requirement_errors(requires: dict[str, list[str]], plugins: list[dict]) -> list[tuple[str, str]]:
+    """Problems with metadata.requires, as (where, message). `requires` maps every skill name to the skills it
+    needs installed next to it. A plugin that lists a skill must also list what it requires, because a
+    plugin is installed as a unit (and the marketplace and npx channels cannot add skills on their own)."""
+    out = []
+    for name, needs in sorted(requires.items()):
+        for need in needs:
+            if need == name:
+                out.append((name, "metadata.requires lists the skill itself"))
+            elif need not in requires:
+                out.append((name, f"metadata.requires names unknown skill {need!r}"))
+    for p in plugins:
+        names = set(plugin_skill_names(p))
+        for name in sorted(names):
+            for need in requires.get(name, []):
+                if need in requires and need not in names:
+                    out.append((MARKETPLACE.relative_to(ROOT).as_posix(),
+                                f"plugin {p.get('name')!r} lists {name} but not {need}, which {name} requires "
+                                "(metadata.requires); add it to the plugin"))
+    return out
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--strict", action="store_true", help="treat warnings as errors")
@@ -195,7 +237,19 @@ def main() -> None:
 
     for where, msg in layout_errors():
         report("ERROR", where, msg)
+    for where in stray_skill_files():
+        report("ERROR", where, "SKILL.md outside skills/<area>/<group>/<name>/; skill scanners such as npx skills "
+                               "would install it as a skill. Rename it (the template is SKILL.md.tmpl) or move it")
     dirs = skill_dirs()
+    requires, paths = {}, {}
+    for d in dirs:
+        paths[d.name] = d.relative_to(ROOT).as_posix()
+        try:
+            requires[d.name] = requires_of(parse_frontmatter((d / "SKILL.md").read_text(encoding="utf-8"))[0])
+        except (FrontmatterError, OSError):
+            requires[d.name] = []           # reported by check_skill below
+    for where, msg in requirement_errors(requires, plugins):
+        report("ERROR", paths.get(where, where), msg)
     ex_where = EXAMPLES.relative_to(ROOT).as_posix()
     try:
         examples = load_examples()

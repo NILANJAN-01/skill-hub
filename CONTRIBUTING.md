@@ -15,6 +15,8 @@ Start with `python tools/hub.py new-skill <area>/<group>/<name> --plugin <plugin
 - [ ] The body is actionable: when to use, when not to use, numbered steps with exact commands, safety rules for destructive actions, and troubleshooting.
 - [ ] The body is agent-neutral: no single agent's tool names, slash commands or config paths. Scripts are cross-platform. Any real requirement is declared in the `compatibility` field.
 - [ ] `SKILL.md` is under about 500 lines. Long material goes in `references/`, code in `scripts/`, and templates or data in `assets/`. All links are relative.
+- [ ] The skill works when installed on its own: scripts and links stay inside its folder. If it truly needs another skill next to it, name that skill in `metadata.requires` (the installer then adds it) and in `compatibility`, and list both in the same plugins.
+- [ ] Scripts run on the Python version that `compatibility` states (CI checks 3.8 with `vermin`; guard newer features and mark the line `# novermin`).
 - [ ] The skill is listed in at least one plugin in `.claude-plugin/marketplace.json`.
 - [ ] `examples/prompts.json` has at least 2 realistic prompts for the skill, written the way a user would ask. Each one should make Claude load the skill.
 - [ ] `python tools/hub.py check` passes (it runs `build_catalog.py` and `validate_skills.py` among the rest), and you committed all the generated files it changed.
