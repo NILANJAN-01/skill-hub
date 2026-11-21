@@ -6,6 +6,7 @@ compatibility: Needs Python 3.8+ (standard library only) and the skill-router sk
 metadata:
   title: "Skill dispatcher"
   category: hub-tools
+  requires: skill-router
 ---
 
 # Skill dispatcher
