@@ -56,7 +56,7 @@ def _is_keyword(func, auto_keywords):
 
 def _annotation_text(node):
     try:
-        return ast.unparse(node) if node is not None else None      # Python 3.9+
+        return ast.unparse(node) if node is not None else None      # novermin (Python 3.9+, guarded)
     except AttributeError:
         return "?" if node is not None else None
 
