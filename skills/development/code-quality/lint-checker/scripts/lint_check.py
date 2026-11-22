@@ -35,7 +35,8 @@ Common:
   --format text|json    output format (default text)
 
 Exit codes: 0 clean, 1 a linter failed or a built-in finding reached --fail-on,
-2 usage error, 3 (run only) nothing failed but a planned linter is not installed.
+2 usage error, 3 (run only) nothing failed but a planned linter is not installed, or some files were
+not passed to it (on Windows, names cmd.exe would interpret are never given to a .cmd/.bat tool).
 Read-only unless --fix --yes. Python 3.8+, standard library only.
 """
 from __future__ import annotations
@@ -53,7 +54,7 @@ import warnings
 # ---------------------------------------------------------------- languages
 LANG_EXT = {
     "python": [".py", ".pyi"],
-    "javascript": [".js", ".jsx", ".mjs", ".cjs"],
+    "javascript": [".js", ".jsx", ".mjs", ".cjs", ".vue", ".svelte", ".astro"],   # components: ESLint/Biome
     "typescript": [".ts", ".tsx", ".mts", ".cts"],
     "go": [".go"],
     "rust": [".rs"],
@@ -138,10 +139,12 @@ def changed_files(root: str, ref: str) -> list[str] | None:
 
 
 def count_languages(files: list[str]) -> dict[str, int]:
+    """Source files per language. Gradle's Kotlin DSL scripts (build.gradle.kts, settings.gradle.kts) are build
+    configuration, not Kotlin sources, so a Java project built with them is not reported as Kotlin."""
     counts: dict[str, int] = {}
     for f in files:
         lang = lang_of(f)
-        if lang:
+        if lang and not f.endswith(".gradle.kts"):
             counts[lang] = counts.get(lang, 0) + 1
     return dict(sorted(counts.items(), key=lambda kv: (-kv[1], kv[0])))
 
@@ -304,12 +307,24 @@ def _read(path: str) -> str:
         return ""
 
 
+_BUILD_TEXT: dict = {}     # (root, build) -> the text of its build files; make_plan() clears it for each run
+
+
+def _build_text(root: str, build: str) -> str:
+    """All build files of one kind under root, read once per plan (planning and commands ask several times)."""
+    key = (os.path.abspath(root), build)
+    if key not in _BUILD_TEXT:
+        _BUILD_TEXT[key] = "\n".join(_read(os.path.join(root, f)) for f in list_files(root)
+                                     if _is_build_file(f, build))
+    return _BUILD_TEXT[key]
+
+
 def build_tasks(linter: Linter, root: str) -> tuple[list[str], list[str], list[str]]:
     """For a build linter: (plugins found, check tasks, fix tasks) from the project's build files."""
     plugins, check, fix = [], [], []
     if not linter.build:
         return plugins, check, fix
-    text = "\n".join(_read(os.path.join(root, f)) for f in list_files(root) if _is_build_file(f, linter.build))
+    text = _build_text(root, linter.build)
     for name, pattern, tasks, fixes in BUILD_PLUGINS[linter.build]:
         if re.search(pattern, text):
             plugins.append(name)
@@ -361,6 +376,7 @@ def resolve_exe(exe: str, node: bool, root: str) -> str | None:
 
 def make_plan(root: str, files: list[str], only: list[str] | None = None, use_all: bool = False) -> dict:
     """Decide which linters to run. Returns languages, per-linter rows, the selection and notes."""
+    _BUILD_TEXT.clear()                 # build files may have changed since an earlier plan
     langs = count_languages(files)
     rows, notes = {}, []
 
@@ -442,8 +458,19 @@ def _chunks(items: list[str], max_chars: int = 7000, max_items: int = 200):
         yield batch
 
 
-def build_commands(linter: Linter, root: str, files: list[str], changed: bool, fix: bool) -> list[list[str]]:
-    """Commands to run for one linter. files are the project (or changed) files, relative to root."""
+# cmd.exe interprets these even inside the arguments of a .cmd/.bat file (npm's node_modules/.bin shims are .cmd
+# files on Windows), so a file named "a&calc&.md" would run calc. Such names are never passed to a batch shim.
+BATCH_META = set('&|<>^%!"()')
+
+
+def _batch_shim(exe: str) -> bool:
+    return os.name == "nt" and exe.lower().endswith((".cmd", ".bat"))
+
+
+def build_commands(linter: Linter, root: str, files: list[str], changed: bool, fix: bool,
+                   skipped: list | None = None) -> list[list[str]]:
+    """Commands to run for one linter. files are the project (or changed) files, relative to root.
+    File names unsafe to pass to a Windows batch shim are left out and appended to `skipped`."""
     base = list(linter.fix if fix else linter.cmd)
     mine = [f for f in files if lang_of(f) in linter.langs]
     if changed and not mine:
@@ -455,6 +482,14 @@ def build_commands(linter: Linter, root: str, files: list[str], changed: bool, f
     exe = resolve_exe(base[0], linter.node, root)
     if exe:
         base[0] = exe
+    if _batch_shim(base[0]):
+        unsafe = [f for f in mine if BATCH_META & set(f)]
+        if unsafe:
+            mine = [f for f in mine if f not in unsafe]
+            if skipped is not None:
+                skipped.extend(unsafe)
+            if not mine and (linter.target == "files" or (changed and linter.takes_files)):
+                return []                       # every file it would have been given was unsafe
     if linter.config_flag and linter.config_flag in base:
         config = next((c for c in linter.configs if "::" not in c and os.path.isfile(os.path.join(root, c))), None)
         if config:
@@ -592,9 +627,10 @@ def check_text(rel: str, raw: bytes, max_line: int = 120) -> list[dict]:
         out.append(_finding(rel, 1, "warning", "line-endings",
                             f"mixed line endings ({crlf} CRLF, {text.count(chr(10)) - crlf} LF)"))
     if name not in NO_INDENT_NAMES and ext not in (".mk", ".tsv") and lang != "markdown":
-        tabs = [i for i, l in enumerate(lines, 1) if l.startswith("\t")]
+        text_lines = _block_lines(lines, lang)          # comment and docstring bodies: not indentation
+        tabs = [i for i, l in enumerate(lines, 1) if l.startswith("\t") and i not in text_lines]
         spaces = [i for i, l in enumerate(lines, 1) if l.startswith(" ") and l.strip()
-                  and not l.lstrip().startswith("*")]
+                  and not l.lstrip().startswith("*") and i not in text_lines]
         if tabs and spaces:
             first = min(tabs[0], spaces[0])
             out.append(_finding(rel, first, "warning", "mixed-indent",
@@ -602,6 +638,47 @@ def check_text(rel: str, raw: bytes, max_line: int = 120) -> list[dict]:
     if max_line and ext not in NO_LONG_LINE_EXT:
         summary("line-length", "info", [i for i, l in enumerate(lines, 1) if len(l) > max_line],
                 f"line longer than {max_line} characters")
+    return out
+
+
+BLOCK_COMMENT_LANGS = {"javascript", "typescript", "go", "rust", "java", "kotlin", "c-cpp", "csharp", "swift",
+                       "dart", "php", "css"}
+
+
+def _in_quotes(prefix: str) -> bool:
+    """Rough test: is the end of this text inside a string literal (an odd number of one kind of quote)?"""
+    return any(prefix.count(q) % 2 for q in ('"', "'", "`"))
+
+
+def _block_lines(lines: list[str], lang: str | None) -> set:
+    """1-based numbers of the lines that continue a /* block comment */ (C-family languages) or a Python
+    triple-quoted string. Their leading whitespace is text, not indentation. Openers inside string literals
+    ("src/**/*.js") and after // are ignored."""
+    if lang == "python":
+        openers = ('"""', "'''")
+    elif lang in BLOCK_COMMENT_LANGS:
+        openers = ("/*",)
+    else:
+        return set()
+    out, inside, close = set(), False, ""
+    for i, line in enumerate(lines, 1):
+        if inside:
+            out.add(i)
+        pos = 0
+        while True:
+            if inside:
+                j = line.find(close, pos)
+                if j < 0:
+                    break
+                inside, pos = False, j + len(close)
+                continue
+            hits = [(line.find(o, pos), o) for o in openers]
+            hits = [(j, o) for j, o in hits if j >= 0 and (lang == "python" or not _in_quotes(line[:j]))]
+            line_comment = line.find("//", pos) if lang != "python" else -1
+            if not hits or (0 <= line_comment < min(hits)[0]):
+                break
+            j, o = min(hits)
+            inside, close, pos = True, "*/" if o == "/*" else o, j + len(o)
     return out
 
 
@@ -734,12 +811,17 @@ def cmd_run(args) -> int:
             results.append({"id": lid, "status": "skipped", "commands": [],
                             "detail": f"needs {' or '.join(linter.markers)} at the project root"})
             continue
-        cmds = build_commands(linter, root, files, changed, args.fix)
+        unsafe: list = []
+        cmds = build_commands(linter, root, files, changed, args.fix, unsafe)
+        note = (f"left out {len(unsafe)} file(s) whose names cmd.exe would interpret (& | < > ^ % ! \" ( )), "
+                f"e.g. {unsafe[0]}; rename them or lint them by hand") if unsafe else ""
         if not cmds:
-            results.append({"id": lid, "status": "skipped", "detail": "no matching files", "commands": []})
+            results.append({"id": lid, "status": "skipped", "commands": [],
+                            "detail": note or "no matching files", **({"unlinted_files": unsafe} if unsafe else {})})
             continue
         if args.fix and not args.yes:
-            results.append({"id": lid, "status": "planned", "detail": "dry run", "commands": cmds})
+            results.append({"id": lid, "status": "planned", "detail": "; ".join(x for x in ("dry run", note) if x),
+                            "commands": cmds})
             continue
         code, outputs = 0, []
         for c in cmds:
@@ -747,14 +829,18 @@ def cmd_run(args) -> int:
             code = code or rc
             if out:
                 outputs.append(out)
-        results.append({"id": lid, "status": "passed" if code == 0 else "failed", "exit": code,
-                        "commands": cmds, "output": _trim("\n".join(outputs), args.max_output)})
+        result = {"id": lid, "status": "passed" if code == 0 else "failed", "exit": code,
+                  "commands": cmds, "output": _trim("\n".join(outputs), args.max_output)}
+        if note:
+            result["detail"], result["unlinted_files"] = note, unsafe
+        results.append(result)
 
     findings = [] if (args.no_basic or args.fix) else basic_check(root, files, args.max_line)
     failed = any(r["status"] == "failed" for r in results) or fails(findings, args.fail_on)
     missing = [r["id"] for r in results if r["status"] == "missing"]
-    verdict = "FAIL" if failed else "INCOMPLETE" if missing else "OK"
-    code = 1 if failed else 3 if missing else 0
+    partial = [r["id"] for r in results if r.get("unlinted_files")]
+    verdict = "FAIL" if failed else "INCOMPLETE" if missing or partial else "OK"
+    code = 1 if failed else 3 if missing or partial else 0
 
     if args.format == "json":
         print(json.dumps({"root": plan["root"], "languages": plan["languages"], "changed_only": changed,
@@ -765,7 +851,7 @@ def cmd_run(args) -> int:
         print(f"== {r['id']}: {r['status']}" + (f" (exit {r['exit']})" if r.get("exit") else "")
               + (f" - {r['detail']}" if r.get("detail") else ""))
         for c in r["commands"]:
-            print("$ " + " ".join(_short(c, root)))
+            print("$ " + " ".join(_short(c)))
         if r.get("output"):
             print(r["output"])
         print()
@@ -779,10 +865,12 @@ def cmd_run(args) -> int:
     print(f"\nsummary: {summary}; result: {verdict}")
     if missing:
         print(f"not installed: {', '.join(missing)}. Install them, or report that they did not run.")
+    if partial:
+        print(f"some files not linted by: {', '.join(partial)} (names unsafe for a Windows batch shim; see above).")
     return code
 
 
-def _short(cmd: list[str], root: str) -> list[str]:
+def _short(cmd: list[str]) -> list[str]:
     """Show the bare tool name instead of its absolute path, and abbreviate long file lists."""
     head = [os.path.splitext(os.path.basename(cmd[0]))[0]] + cmd[1:]
     return head if len(head) <= 12 else head[:10] + [f"... (+{len(head) - 10} args)"]

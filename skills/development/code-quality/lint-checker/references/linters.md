@@ -197,7 +197,7 @@ Install it with `pre-commit install`, and run everything with `pre-commit run --
 The bundled script also works as a CI step with no dependencies:
 
 ```bash
-python lint_check.py run --format json > lint-report.json   # exit 1 fails the job, 3 = a tool is missing
+python lint_check.py run --format json > lint-report.json   # exit 1 fails the job, 3 = a tool is missing or skipped files
 ```
 
 ## Suppressing a finding properly

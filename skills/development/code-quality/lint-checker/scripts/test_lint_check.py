@@ -272,6 +272,85 @@ class JavaKotlin(unittest.TestCase):
                          ["debugger"])
 
 
+class LanguagesAndIndent(unittest.TestCase):
+    def test_gradle_kotlin_dsl_is_not_kotlin_source(self):
+        files = ["build.gradle.kts", "settings.gradle.kts", "sub/build.gradle.kts", "src/main/java/A.java"]
+        self.assertEqual(lint_check.count_languages(files), {"java": 1})
+        self.assertEqual(lint_check.count_languages(files + ["src/main/kotlin/B.kt", "scripts/x.main.kts"]),
+                         {"kotlin": 2, "java": 1})
+
+    def test_component_files_are_javascript(self):
+        for name in ("App.vue", "Card.svelte", "index.astro"):
+            self.assertEqual(lint_check.lang_of(f"src/{name}"), "javascript")
+
+    def test_comment_and_docstring_bodies_are_not_indentation(self):
+        go = "package a\n\nfunc f() {\n\tx := 1\n\t_ = x\n}\n\n/*\n   aligned comment\n*/\n"
+        self.assertEqual(lint_check.check_text("a.go", go.encode()), [])
+        py = 'def f():\n\t"""Doc.\n\n    indented example\n\t"""\n\treturn 1\n'
+        self.assertEqual(lint_check.check_text("a.py", py.encode()), [])
+
+    def test_real_mixed_indent_still_found(self):
+        js = 'const g = "src/**/*.js";\nfunction f() {\n\treturn 1;\n}\nfunction h() {\n    return 2;\n}\n'
+        self.assertEqual(rules(lint_check.check_text("a.js", js.encode())), ["mixed-indent"])  # "/*" in a string
+        go = "func f() {\n\tx := 1 // see /* here\n    y := 2\n}\n"
+        self.assertEqual(rules(lint_check.check_text("a.go", go.encode())), ["mixed-indent"])  # "/*" after //
+
+    def test_build_files_read_once_per_plan(self):
+        calls = []
+        real = lint_check.list_files
+
+        def counting(root):
+            calls.append(root)
+            return real(root)
+        files = real(GRADLE)
+        with mock.patch.object(lint_check, "list_files", counting), \
+                mock.patch.object(lint_check, "resolve_build", return_value=["gradlew"]):
+            lint_check.make_plan(GRADLE, files)
+            lint_check.build_commands(lint_check.BY_ID["gradle-lint"], GRADLE, files, False, False)
+            lint_check.fix_available(lint_check.BY_ID["gradle-lint"], GRADLE)
+        self.assertEqual(len(calls), 2)                                  # once for Gradle, once for Maven
+
+
+class WindowsBatchShims(unittest.TestCase):
+    """npm's node_modules/.bin shims are .cmd files on Windows, and cmd.exe acts on & | < > ^ % ! in their
+    arguments, so file names with those characters must never reach them."""
+
+    def commands(self, linter_id, files, changed=False):
+        skipped = []
+        with mock.patch.object(lint_check, "resolve_exe", lambda exe, node, root: f"C:/p/node_modules/.bin/{exe}.cmd"), \
+                mock.patch.object(lint_check, "_batch_shim", return_value=True):
+            cmds = lint_check.build_commands(lint_check.BY_ID[linter_id], SAMPLE, files, changed, False, skipped)
+        return cmds, skipped
+
+    def test_unsafe_names_are_left_out_and_reported(self):
+        cmds, skipped = self.commands("markdownlint", ["ok.md", "a&calc&.md", "b%PATH%.md", "c(1).md"])
+        self.assertEqual(cmds, [["C:/p/node_modules/.bin/markdownlint-cli2.cmd", "ok.md"]])
+        self.assertEqual(skipped, ["a&calc&.md", "b%PATH%.md", "c(1).md"])
+
+    def test_nothing_left_means_no_command(self):
+        self.assertEqual(self.commands("markdownlint", ["a&b.md"]), ([], ["a&b.md"]))
+
+    def test_directory_targets_are_unaffected(self):
+        cmds, skipped = self.commands("eslint", ["a&b.js"])                # eslint gets "." when not --changed
+        self.assertEqual(cmds[0][-1], ".")
+
+    def test_only_batch_files_on_windows_count(self):
+        self.assertFalse(lint_check._batch_shim("/usr/bin/eslint"))
+        self.assertEqual(lint_check._batch_shim("C:/x/eslint.CMD"), os.name == "nt")
+
+    def test_run_reports_incomplete(self):
+        def fake_build(linter, root, files, changed, fix, skipped=None):
+            skipped.append("a&b.md")
+            return [["markdownlint-cli2", "ok.md"]]
+        with mock.patch.object(lint_check, "resolve_exe", fake_which({"markdownlint-cli2"})), \
+                mock.patch.object(lint_check, "build_commands", fake_build), \
+                mock.patch.object(lint_check, "run_command", return_value=(0, "")):
+            code, out = run_cli(["run", SAMPLE, "--only", "markdownlint", "--no-basic"])
+        self.assertEqual(code, 3)
+        self.assertIn("left out 1 file(s)", out)
+        self.assertIn("result: INCOMPLETE", out)
+
+
 class RunCommand(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.mkdtemp()

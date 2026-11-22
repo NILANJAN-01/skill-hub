@@ -1,7 +1,8 @@
 ---
 name: lint-checker
-description: Lint code in any programming language. A bundled script detects the project's languages, the linters it configures and the ones installed, runs them (ruff, ESLint, golangci-lint, clippy, Gradle/Maven Checkstyle, PMD, SpotBugs, ktlint, detekt, Android Lint and more) in one report, and adds built-in checks needing no tools. Use when the user asks to lint, check code quality or style, or fix lint errors.
+description: Lint code and check it against coding standards in any programming language. A bundled script detects the project's languages, the linters it configures and the ones installed, runs them (ruff, ESLint, golangci-lint, clippy, Gradle/Maven Checkstyle, PMD, SpotBugs, ktlint, detekt, Android Lint and more) in one report, and adds built-in checks needing no tools. Use when the user asks to lint, check code quality, style or coding standards, run static analysis, or fix lint errors.
 license: MIT
+compatibility: Needs Python 3.8+ (standard library only). Runs the linters the project pins or the machine has installed and never installs any; Java and Kotlin linting needs a JDK; the TOML syntax check needs Python 3.11+.
 metadata:
   title: "Lint checker: find and run linters for any language"
   category: code-quality-tools
@@ -39,6 +40,7 @@ Lint a project in whatever languages it uses. The project's own linter setup com
 - Never install a linter, add it to the project's dependencies, or create a lint config without asking. The `detect` output gives the install command so you can propose it.
 - Never change linter configs or add suppression comments (`# noqa`, `// eslint-disable`, `#[allow]`, `@Suppress`) just to make errors go away. Fix the code. Suppress only a confirmed false positive, with the narrowest scope and a reason.
 - Linters run with the project folder as the working directory and can execute project code (ESLint and Stylelint configs are JavaScript, and `cargo clippy` runs build scripts). Run them only on code you trust.
+- On Windows, Node linters start through `.cmd` shims, and `cmd.exe` acts on `& | < > ^ % ! " ( )` even inside file names. The script never passes such names to a `.cmd` or `.bat` tool: it lists them as not linted and reports `INCOMPLETE`. Rename the files, or lint them another way, instead of quoting them by hand.
 
 ## Procedure
 
@@ -58,7 +60,7 @@ Lint a project in whatever languages it uses. The project's own linter setup com
    python <skill-dir>/scripts/lint_check.py run --changed        # files changed since HEAD, plus untracked files
    python <skill-dir>/scripts/lint_check.py run --changed origin/main --format json
    ```
-   Each linter prints its command, status and output (trimmed to `--max-output` lines), followed by the built-in findings and a summary. Exit codes: `0` OK, `1` FAIL (a linter failed, or a built-in finding reached `--fail-on`, default `error`), `3` INCOMPLETE (nothing failed but a planned linter is not installed), `2` usage error.
+   Each linter prints its command, status and output (trimmed to `--max-output` lines), followed by the built-in findings and a summary. Exit codes: `0` OK, `1` FAIL (a linter failed, or a built-in finding reached `--fail-on`, default `error`), `3` INCOMPLETE (nothing failed, but a planned linter is not installed or some files could not be passed to it), `2` usage error.
 4. **Read the results before you change anything.** Group findings by rule and count them. Separate real bugs (unused or undefined names, unreachable code, unchecked errors, wrong comparisons) from style issues. If a linter fails on its own config or crashes (output about a missing config, plugin or module instead of file:line findings), fix the setup first. For a big legacy backlog, propose linting only changed lines (`--changed`) or a baseline instead of mass edits.
 5. **Fix.** Ask first, then apply the safe automatic fixes:
    ```bash
@@ -98,7 +100,7 @@ Propose one standard tool per language, with a minimal config, and ask before ad
 
 ## Monorepos
 
-Configs are looked up at the folder you pass. In a monorepo, run `detect` and `run` once per package (`python lint_check.py run packages/web`), or use the workspace's own lint command. `list_files` honours `.gitignore` and skips `node_modules`, virtualenvs, `build`, `dist`, `target`, `vendor` and similar folders.
+Configs are looked up at the folder you pass. In a monorepo, run `detect` and `run` once per package (`python lint_check.py run packages/web`), or use the workspace's own lint command. The file scan honours `.gitignore` and skips `node_modules`, virtualenvs, `build`, `dist`, `target`, `vendor` and similar folders. Gradle's `*.gradle.kts` build scripts are not counted as Kotlin sources, and `.vue`, `.svelte` and `.astro` components count as JavaScript, so ESLint or Biome picks them up.
 
 ## Troubleshooting
 

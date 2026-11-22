@@ -4,6 +4,11 @@ Notable changes to skill-hub. Newest first. Skills are listed by name; see `git 
 
 ## Unreleased
 
+- Updated: `lint-checker`.
+  - **Security (Windows):** file names containing characters `cmd.exe` acts on (`& | < > ^ % ! " ( )`) are no longer passed to `.cmd`/`.bat` tools such as npm's `node_modules/.bin` shims, where a name like `a&calc&.md` could run a command. They are listed as not linted, and the run reports INCOMPLETE (exit 3).
+  - **Fewer false languages and alarms:** Gradle's `*.gradle.kts` build scripts no longer make a Java project count as Kotlin. `.vue`, `.svelte` and `.astro` components count as JavaScript, so ESLint or Biome runs on them. The `mixed-indent` check ignores the bodies of block comments and Python docstrings.
+  - **Faster:** build files are scanned once per run instead of five times.
+  - The description mentions coding standards and static analysis, and a `compatibility` field states the requirements.
 - Installer: a professional finish for `--setup`, `--uninstall` and the rest.
   - **Clear source and exit codes.** The first line says which version is installed and where from (local clone, a checksum-verified release, or `main`, which is not verified). Every run ends with a summary, and items left to do by hand (a config file it could not parse) are listed as "need your attention". Exit codes are 0 done, 1 error, 2 bad options, 3 partly done, 4 cancelled (in `--help`).
   - **Shorter output.** One line per folder instead of one per skill, so a setup prints about 25 lines instead of 270; `--verbose` lists every skill. New `--version`.

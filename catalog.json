@@ -3421,13 +3421,13 @@
       "category": "code-quality-tools",
       "area": "development",
       "group": "code-quality",
-      "description": "Lint code in any programming language. A bundled script detects the project's languages, the linters it configures and the ones installed, runs them (ruff, ESLint, golangci-lint, clippy, Gradle/Maven Checkstyle, PMD, SpotBugs, ktlint, detekt, Android Lint and more) in one report, and adds built-in checks needing no tools. Use when the user asks to lint, check code quality or style, or fix lint errors.",
+      "description": "Lint code and check it against coding standards in any programming language. A bundled script detects the project's languages, the linters it configures and the ones installed, runs them (ruff, ESLint, golangci-lint, clippy, Gradle/Maven Checkstyle, PMD, SpotBugs, ktlint, detekt, Android Lint and more) in one report, and adds built-in checks needing no tools. Use when the user asks to lint, check code quality, style or coding standards, run static analysis, or fix lint errors.",
       "plugins": [
         "code-quality-tools"
       ],
       "path": "skills/development/code-quality/lint-checker",
       "license": "MIT",
-      "compatibility": "",
+      "compatibility": "Needs Python 3.8+ (standard library only). Runs the linters the project pins or the machine has installed and never installs any; Java and Kotlin linting needs a JDK; the TOML syntax check needs Python 3.11+.",
       "examples": [
         "Lint this project and tell me what's wrong.",
         "Run the linters on the files I changed before I commit.",

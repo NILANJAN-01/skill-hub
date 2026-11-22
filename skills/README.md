@@ -174,7 +174,7 @@ A skill lives in `skills/<area>/<group>/<skill>/`. The area and group only organ
 
 | Skill | Description | Needs |
 |---|---|---|
-| [`lint-checker`](development/code-quality/lint-checker/SKILL.md) | Lint code in any programming language. A bundled script detects the project's languages, the linters it configures and the ones installed, runs them (ruff,... | - |
+| [`lint-checker`](development/code-quality/lint-checker/SKILL.md) | Lint code and check it against coding standards in any programming language. A bundled script detects the project's languages, the linters it configures and... | Needs Python 3.8+ (standard library only). Runs the linters the project pins or the... |
 
 ## Playwright: E2E tests, debugging, CI & browser agent (`playwright-tools`)
 
