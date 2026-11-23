@@ -228,6 +228,7 @@ mcp-server/                       first MCP server (stdlib only): agents search 
 skill-hub-mcp/                    newer MCP server (stdlib only): search, route, read, and install skills after you agree
 GUIDE.md                          step-by-step guide for people using the skills
 AGENTS.md                         instructions for AI agents working on this repo
+ARCHITECTURE.md                   how the hub fits together, and the full command list
 ```
 
 ## Add a skill to the hub
