@@ -436,6 +436,75 @@ class OtherServerTests(Sandbox):
         self.assertEqual(install.configured_servers(codex, install.mcp_info("codex")), ["skill-hub"])
 
 
+class GuidedMenuTests(Sandbox):
+    """The guided menu's choose / update / remove / MCP steps, with the answers fed to ask()."""
+
+    def setUp(self):
+        super().setUp()
+        extra = self.root / "skills" / "extra"
+        extra.mkdir()
+        (extra / "SKILL.md").write_text("---\nname: extra\ndescription: e\n---\nbody\n", encoding="utf-8")
+        install._INDEX.pop(str(self.root), None)
+        self.folder = self.project / install.AGENTS["claude-code"]["project"]
+
+    def answer(self, func, answers, *args):
+        out = io.StringIO()
+        with mock.patch.object(install, "ask", side_effect=list(answers)), contextlib.redirect_stdout(out):
+            return func(*args)
+
+    def states(self):
+        return install.skill_states(self.root, ["claude-code"], False, self.project)
+
+    def make_stale(self):
+        (self.root / "skills" / "demo" / "scripts" / "run.py").write_text("print('v2')\n", encoding="utf-8")
+
+    def test_states_mark_installed_and_update(self):
+        self.assertEqual(self.states(), {})
+        install.copy_skill(self.root, "demo", self.folder)
+        self.assertEqual(self.states(), {"demo": "installed"})
+        self.make_stale()
+        self.assertEqual(self.states(), {"demo": "update"})
+
+    def test_update_refreshes_only_installed_copies_that_differ(self):
+        install.copy_skill(self.root, "demo", self.folder)
+        self.make_stale()
+        with contextlib.redirect_stdout(io.StringIO()):
+            code = install.update_skills(self.root, ["claude-code"], ["demo", "extra"], False, self.project, yes=True)
+        self.assertEqual(code, install.EXIT_OK)
+        self.assertEqual(self.states(), {"demo": "installed"})            # extra was not installed
+        self.assertFalse((self.folder / "extra").exists())
+
+    def test_choose_updates_plus_a_single_skill_found_by_name(self):
+        install.copy_skill(self.root, "demo", self.folder)
+        self.make_stale()
+        # options: 1 everything, 2 single skills, 3 the ones with an update, 4 demo-tools
+        names, update = self.answer(install.choose_skills, ["2,3", "ext", "1"],
+                                    self.root, ["claude-code"], False, self.project)
+        self.assertEqual((names, update), (["demo", "extra"], True))
+
+    def test_manage_installed_removes_only_the_picked_skill(self):
+        install.copy_skill(self.root, "demo", self.folder)
+        install.copy_skill(self.root, "extra", self.folder)
+        code = self.answer(install.manage_installed, ["extra", "2", "y"],
+                           self.root, ["claude-code"], False, self.project)
+        self.assertEqual(code, install.EXIT_OK)
+        self.assertEqual(self.states(), {"demo": "installed"})
+
+    def test_manage_mcp_adds_then_removes_a_preset(self):
+        cfg = self.home / ".cursor" / "mcp.json"
+        info = install.mcp_info("cursor")
+        self.answer(install.manage_mcp, ["memory", "1", "y"], self.root, ["cursor"], True, self.project)
+        self.assertEqual(install.configured_servers(cfg, info), ["memory"])
+        self.answer(install.manage_mcp, ["memory", "2", "y"], self.root, ["cursor"], True, self.project)
+        self.assertEqual(install.configured_servers(cfg, info), [])
+
+    def test_menu_asks_again_after_an_unknown_choice(self):
+        args = mock.Mock(project=self.project)
+        with mock.patch.object(install, "detect_agents", return_value={}):
+            code = self.answer(install.guided, ["9", "6"], self.root, args)
+        self.assertEqual(code, install.EXIT_OK)                          # 6 with no agents: nothing to do
+
+
 REPO_HUB = Path(__file__).resolve().parent.parent / "skills" / "generic" / "hub"
 
 

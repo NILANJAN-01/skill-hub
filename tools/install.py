@@ -1586,19 +1586,23 @@ def guided(root: Path, args) -> int:
     print("\nWhat would you like to do?\n"
           f"   1) Set up everything: all {len(all_skills(root))} skills + the MCP server, for the detected agents"
           "  [default]\n"
-          "   2) Choose agents, skills and options\n"
-          "   3) Check what is set up (doctor)\n"
-          "   4) Remove everything skill-hub set up")
-    choice = ask("Your choice [1-4]: ", "1").strip()
+          "   2) Install or update skills you choose\n"
+          "   3) Update or remove installed skills\n"
+          "   4) Add or remove MCP servers\n"
+          "   5) Check what is set up (doctor)\n"
+          "   6) Remove everything skill-hub set up")
+    choice = ""
+    while choice not in ("1", "2", "3", "4", "5", "6"):
+        choice = ask("Your choice [1-6]: ", "1").strip()
     project = (args.project or Path.cwd()).expanduser().resolve()
-    if choice in ("1", "4"):
+    if choice in ("1", "6"):
         if not found:
             print("No agents detected, so there is nothing to do. Use option 2 to pick agents by hand.")
-            return
+            return EXIT_OK
         agents = [a for a in found if AGENTS[a]["global"]]
-        return execute(root, agents, all_skills(root), True, project, mcp=True, remove=choice == "4",
-                       uninstall=choice == "4", tidy=True, hook=True)
-    if choice == "3":
+        return execute(root, agents, all_skills(root), True, project, mcp=True, remove=choice == "6",
+                       uninstall=choice == "6", tidy=True, hook=True)
+    if choice == "5":
         return EXIT_ERROR if doctor(root, list(found) or [k for k in AGENTS if k != "universal"], project) else EXIT_OK
 
     print("\nWhich agents?")
@@ -1607,16 +1611,17 @@ def guided(root: Path, args) -> int:
     agents = pick("Your choice", opts, all_keys=list(found), all_label=f"all {len(found)} detected")
     if not agents:
         print("No agents chosen. Nothing was changed.")
-        return
+        return EXIT_OK
+    use_global, agents = ask_where(agents, project)
+    if not agents:
+        print("None of these agents has a user-level folder. Nothing was changed.")
+        return EXIT_OK
+    if choice == "3":
+        return manage_installed(root, agents, use_global, project)
+    if choice == "4":
+        return manage_mcp(root, agents, use_global, project)
 
-    plugins = load_plugins(root)
-    total = len(all_skills(root))
-    print(f"\nWhich skills? ({total} available)")
-    opts = [("__all__", f"Everything ({total} skills)")] + \
-           [(p, f"{p:<22} {len(v['skills']):>3} skills  {v['description'][:60]}") for p, v in plugins.items()]
-    chosen = pick("Your choice", opts, all_keys=["__all__"], all_label="everything")
-    names = all_skills(root) if "__all__" in chosen else with_requirements(root, resolve(root, chosen, []))
-
+    names, update = choose_skills(root, agents, use_global, project)
     print("\nAlso set up the skill-hub MCP server? It lets the agents search the whole hub and load any skill\n"
           "on demand, even ones you did not install.")
     mcp = yes_no("Set up the MCP server?", True)
@@ -1627,8 +1632,12 @@ def guided(root: Path, args) -> int:
         hook = yes_no("Set up the prompt hook?", True)
     if not names and not mcp and not hook:
         print("Nothing chosen. Nothing was changed.")
-        return
+        return EXIT_OK
+    return execute(root, agents, names, use_global, project, mcp=mcp, force=update, ask_options=True, hook=hook)
 
+
+def ask_where(agents: list, project: Path) -> tuple:
+    """Ask user-level or this project. Returns (use_global, the agents that can be set up there)."""
     print("\nWhere?\n   1) For me, in every project (user-level)  [default]\n"
           "   2) Only this project: " + str(project))
     use_global = ask("Your choice [1/2]: ", "1").strip() != "2"
@@ -1637,7 +1646,186 @@ def guided(root: Path, args) -> int:
         if nohome:
             print("  Skipping (no user-level folder): " + ", ".join(AGENTS[k]["name"] for k in nohome))
             agents = [a for a in agents if a not in nohome]
-    return execute(root, agents, names, use_global, project, mcp=mcp, ask_options=True, hook=hook)
+    return use_global, agents
+
+
+MARKS = {"installed": "[x]", "update": "[!]", None: "[ ]"}
+MARKS_KEY = "[x] installed  [!] update available  [ ] not installed"
+
+
+def skill_states(root: Path, agents: list, use_global: bool, project: Path) -> dict:
+    """{skill: 'installed' or 'update'} for every hub skill in a folder these agents read.
+    'update' means at least one copy differs from the hub (an older hub version, or edited locally)."""
+    folders = list(dict.fromkeys(f for a in agents for f in reads(a, use_global, project)))
+    states = {}
+    for s in all_skills(root):
+        copies = [f / s for f in folders if (f / s / "SKILL.md").is_file()]
+        if copies:
+            src = skill_src(root, s)
+            states[s] = "installed" if all(same_skill(src, c) for c in copies) else "update"
+    return states
+
+
+def _tally(names: list, states: dict) -> str:
+    have = [s for s in names if s in states]
+    if not have:
+        return ""
+    upd = sum(states[s] == "update" for s in have)
+    return f"{len(have)} installed" + (f", {upd} to update" if upd else "")
+
+
+def choose_skills(root: Path, agents: list, use_global: bool, project: Path) -> tuple:
+    """Ask which skills: everything, whole plugins, the ones with an update, or single skills found by name.
+    Returns (skill names with their requirements, True if the user asked for updates)."""
+    every, plugins = all_skills(root), load_plugins(root)
+    states = skill_states(root, agents, use_global, project)
+    upd = [s for s in every if states.get(s) == "update"]
+    print(f"\nWhich skills? ({len(every)} available; {_tally(every, states) or 'none installed here yet'})")
+    opts = [("__all__", f"Everything ({len(every)} skills)"),
+            ("__one__", "Pick single skills (search by name)")]
+    if upd:
+        opts.append(("__upd__", f"Only the {len(upd)} installed skill(s) with an update"))
+    w = max((len(p) for p in plugins), default=0)
+    opts += [(p, f"{p:<{w}} {len(v['skills']):>3} skills  {_tally(v['skills'], states):<24} {v['description'][:45]}")
+             for p, v in plugins.items()]
+    chosen = pick("Your choice", opts, all_keys=["__all__"], all_label="everything")
+    if "__all__" in chosen:
+        return every, False
+    names = list(upd) if "__upd__" in chosen else []
+    names += resolve(root, [c for c in chosen if not c.startswith("__")], [])
+    if "__one__" in chosen:
+        names += pick_single_skills(every, states)
+    names = list(dict.fromkeys(names))
+    return (with_requirements(root, names) if names else []), "__upd__" in chosen
+
+
+def pick_single_skills(every: list, states: dict) -> list:
+    """Search skills by a word in the name and pick from the matches, each marked with its install state."""
+    while True:
+        word = ask("\nSearch skills (a word from the name; Enter = list all): ").strip().lower()
+        hits = [s for s in every if word in s.lower()]
+        if not hits:
+            print("  No skill name contains that. Try another word.")
+            continue
+        print(f"  {MARKS_KEY}")
+        chosen = pick("Your choice", [(s, f"{MARKS[states.get(s)]} {s}") for s in hits],
+                      all_keys=hits, all_label=f"all {len(hits)} shown")
+        if chosen or not yes_no("Nothing chosen. Search again?", True):
+            return chosen
+
+
+def manage_installed(root: Path, agents: list, use_global: bool, project: Path) -> int:
+    """List the hub skills installed for these agents, then update or remove the ones the user picks."""
+    states = skill_states(root, agents, use_global, project)
+    if not states:
+        print("\nNo hub skills are installed here yet. Choose option 2 to install some.")
+        return EXIT_OK
+    names = sorted(states)
+    upd = [s for s in names if states[s] == "update"]
+    print(f"\nInstalled hub skills: {len(names)}, {len(upd)} with an update.   {MARKS_KEY}")
+    opts = ([("__upd__", f"All {len(upd)} with an update")] if upd else []) + \
+           [(s, f"{MARKS[states[s]]} {s}") for s in names]
+    chosen = pick("Which ones", opts, all_keys=names, all_label=f"all {len(names)} installed")
+    chosen = list(dict.fromkeys((upd if "__upd__" in chosen else []) + [c for c in chosen if c != "__upd__"]))
+    if not chosen:
+        print("Nothing chosen. Nothing was changed.")
+        return EXIT_OK
+    print(f"\nWhat should happen to these {len(chosen)} skill(s)?\n"
+          "   1) Update them to the hub version  [default]\n   2) Remove them")
+    if ask("Your choice [1/2]: ", "1").strip() == "2":
+        return execute(root, agents, chosen, use_global, project, remove=True,
+                       hook=any(s in chosen for s in HOOK_NEEDS), token_hook=TOKEN_SKILL in chosen)
+    return update_skills(root, agents, chosen, use_global, project)
+
+
+def update_skills(root: Path, agents: list, names: list, use_global: bool, project: Path,
+                  yes: bool = False, dry: bool = False) -> int:
+    """Replace the installed copies of `names` that differ from the hub. Never installs new copies."""
+    ATTENTION.clear()
+    folders = list(dict.fromkeys(f for a in agents for f in reads(a, use_global, project)))
+    stale = [(f, s) for f in folders for s in names
+             if (f / s / "SKILL.md").is_file() and not same_skill(skill_src(root, s), f / s)]
+    if not stale:
+        print("\nAll of them are already up to date. Nothing to change.")
+        return EXIT_OK
+    per_folder: dict = {}
+    for f, s in stale:
+        per_folder.setdefault(f, []).append(s)
+    print("\nPlan (local edits in these copies are replaced):")
+    for f, skills in per_folder.items():
+        print(f"  ~ update {len(skills):>3} skill(s) in {fmt(f)}" + (f": {', '.join(skills)}" if VERBOSE else ""))
+    if not dry and not yes and not yes_no("\nGo ahead?", True):
+        print("Cancelled. Nothing was changed.")
+        return EXIT_CANCELLED
+    if not dry:
+        for f, s in stale:
+            copy_skill(root, s, f)
+    return summary(f"{'would update' if dry else 'updated'} {len(stale)} skill folder(s).", dry)
+
+
+def configured_by_agent(agents: list, use_global: bool, project: Path) -> dict:
+    """{server name: [agent, ...]} for the MCP servers already in these agents' config files."""
+    out: dict = {}
+    for a in agents:
+        path = mcp_config_path(a, use_global, project)
+        if path is not None:
+            for n in configured_servers(path, mcp_info(a)):
+                out.setdefault(n, []).append(a)
+    return out
+
+
+def manage_mcp(root: Path, agents: list, use_global: bool, project: Path) -> int:
+    """List the skill-hub server, the presets and the servers already configured; add or remove the picked ones."""
+    have = configured_by_agent(agents, use_global, project)
+    names = list(dict.fromkeys([MCP_NAME, *MCP_PRESETS, *sorted(have)]))
+
+    def label(n: str) -> str:
+        state = f"[x] in {len(have[n])}/{len(agents)} agent(s)" if n in have else "[ ] not set up"
+        desc = ("search and load any hub skill on demand" if n == MCP_NAME
+                else MCP_PRESETS[n]["description"] if n in MCP_PRESETS else "your own server")
+        return f"{n:<20} {state:<24} {desc}"
+
+    print(f"\nMCP servers for {', '.join(AGENTS[a]['name'] for a in agents)}:")
+    chosen = pick("Which servers", [(n, label(n)) for n in names], all_keys=names, all_label="all")
+    if not chosen:
+        print("Nothing chosen. Nothing was changed.")
+        return EXIT_OK
+    print("\nWhat should happen to them?\n   1) Add them, or bring them up to date  [default]\n   2) Remove them")
+    removing = ask("Your choice [1/2]: ", "1").strip() == "2"
+    if removing:
+        skipped = [n for n in chosen if n not in have]
+        chosen = [n for n in chosen if n in have]
+        if skipped:
+            print("  Not set up, so nothing to remove: " + ", ".join(skipped))
+    code = EXIT_OK
+    for n in chosen:
+        print(f"\n== {n}")
+        if n == MCP_NAME:
+            code = max(code, execute(root, agents, [], use_global, project, mcp=True, remove=removing))
+            continue
+        if removing:
+            manage_server(root, n, agents, use_global, project, None)
+            continue
+        if n not in MCP_PRESETS:
+            print(f"  {n} is your own server. Change it with:  --add-mcp {n} --mcp-command \"<command> <args>\"")
+            continue
+        extra = []
+        if MCP_PRESETS[n].get("needs_args"):
+            raw = ask(f"  {n} needs {MCP_PRESETS[n]['needs_args'].split(' (')[0]}.\n"
+                      "  Enter them separated by commas (Enter = skip this server): ")
+            extra = [x.strip() for x in raw.split(",") if x.strip()]
+            if not extra:
+                print("  Skipped.")
+                continue
+        try:
+            entry, notes = build_server(n, None, extra)
+        except McpError as exc:
+            print(f"  Skipped: {exc}")
+            continue
+        for note in notes:
+            print(f"  note: {note}")
+        manage_server(root, n, agents, use_global, project, entry)
+    return code
 
 
 def doctor(root: Path, agents: list, project: Path) -> int:
@@ -1751,7 +1939,8 @@ def execute(root: Path, agents: list, names: list, use_global: bool, project: Pa
         if note:
             print(note)
         if ask_options:
-            force = bool(plan["outdated"]) and yes_no("\nReplace the skills that differ with the hub version?", False)
+            force = bool(plan["outdated"]) and (
+                force or yes_no("\nReplace the skills that differ with the hub version?", False))
             tidy = bool(plan["redundant"]) and yes_no("Remove the redundant identical copies?", True)
         else:
             if plan["outdated"] and not force:

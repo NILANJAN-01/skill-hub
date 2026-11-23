@@ -97,7 +97,7 @@ python install.py --doctor       # what is set up per agent, and a self-check of
 python install.py --uninstall    # remove everything it set up
 ```
 
-Run it with **no options** for a menu instead: set up everything, choose agents and skills, check (doctor), or remove. The [guide](GUIDE.md) walks through it step by step.
+Run it with **no options** for a menu instead: set up everything, install or update the skills you choose, update or remove installed skills, add or remove MCP servers, check (doctor), or remove everything. The [guide](GUIDE.md) walks through it step by step.
 
 How the MCP server is set up: the installer copies the hub to `~/.skill-hub/hub` (or `$SKILLHUB_HOME/hub`) and adds one `skill-hub` entry to each agent's MCP config ([locations below](#where-each-agent-reads-skills)). It merges into existing files, changes only its own entry, keeps a `.skillhub-backup` of each file it first edits, and leaves files it can't parse safely (for example JSON with comments) alone and prints the entry to paste instead. The server is read-only; add `--mcp-allow-install` to let agents install skills after you approve each plan.
 

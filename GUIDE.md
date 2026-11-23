@@ -34,7 +34,7 @@ This is the installer from the latest release: it installs that release and chec
 
 Later, `python install.py --doctor` shows what is set up for each agent and checks that the MCP server starts, and `python install.py --uninstall` removes everything the installer set up, including the backups of your settings files once they are back to how they were.
 
-**Prefer to choose?** Run the installer with **no options**. It works out which AI agents and IDEs are on your computer and offers a menu: set up everything, choose agents and skills, check, or remove. **Nothing is written until you say yes.**
+**Prefer to choose?** Run the installer with **no options**. It works out which AI agents and IDEs are on your computer and offers a menu: set up everything, install or update the skills you choose (single skills too, each marked installed, update available or not installed), update or remove installed skills, add or remove MCP servers, check, or remove everything. **Nothing is written until you say yes.**
 
 **macOS / Linux**
 
