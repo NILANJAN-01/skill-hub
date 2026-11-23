@@ -186,33 +186,38 @@ class McpJsonTests(Sandbox):
         cfg = self.home / ".cursor" / "mcp.json"
         cfg.parent.mkdir()
         cfg.write_text(json.dumps({"mcpServers": {"other": {"command": "x"}}, "theme": "dark"}), encoding="utf-8")
-        info = install.mcp_info("cursor")
-        self.assertEqual(install.mcp_status(cfg, info, self.entry), "missing")
-        install.write_mcp_entry(cfg, info, self.entry)
+        server = install.McpServer(entry=self.entry)
+        self.assertEqual(server.check("cursor", True, self.project), "missing")
+        self.assertEqual(server.apply(server.plan(["cursor"], True, self.project)), 1)
         data = json.loads(cfg.read_text(encoding="utf-8"))
         self.assertEqual(data["theme"], "dark")
         self.assertEqual(set(data["mcpServers"]), {"other", "skill-hub"})
         self.assertTrue((cfg.parent / ("mcp.json" + install.BACKUP_SUFFIX)).is_file())
-        self.assertEqual(install.mcp_status(cfg, info, self.entry), "same")
-        self.assertEqual(install.mcp_status(cfg, info, install.server_entry(allow_install=True)), "differs")
-        install.write_mcp_entry(cfg, info, None)
+        self.assertEqual(server.check("cursor", True, self.project), "same")
+        newer = install.McpServer(entry=install.server_entry(allow_install=True))
+        self.assertEqual(newer.check("cursor", True, self.project), "differs")
+        self.assertEqual(server.apply(server.plan(["cursor"], True, self.project, removing=True)), 1)
         self.assertEqual(json.loads(cfg.read_text(encoding="utf-8"))["mcpServers"], {"other": {"command": "x"}})
 
     def test_type_stdio_added_by_agent_still_counts_as_same(self):
         cfg = self.project / ".mcp.json"
         cfg.write_text(json.dumps({"mcpServers": {"skill-hub": dict(self.entry, type="stdio")}}), encoding="utf-8")
-        self.assertEqual(install.mcp_status(cfg, install.mcp_info("claude-code"), self.entry), "same")
+        self.assertEqual(install.McpServer(entry=self.entry).check("claude-code", False, self.project), "same")
 
     def test_unreadable_file_is_left_alone(self):
         cfg = self.project / ".mcp.json"
         cfg.write_text('{ // a comment\n "mcpServers": {} }', encoding="utf-8")
-        rows = install.make_mcp_plan(["claude-code"], False, self.project, self.entry)
-        self.assertTrue(rows[0]["status"].startswith("unreadable"))
-        self.assertEqual(install.apply_mcp_plan(self.root, rows, self.entry, "current", dry=False), 0)
+        server = install.McpServer(entry=self.entry)
+        rows = server.plan(["claude-code"], False, self.project)
+        self.assertEqual(rows[0]["status"], "unreadable")
+        self.assertIn("unreadable: ", server.check("claude-code", False, self.project))
+        install.ATTENTION.clear()
+        self.assertEqual(server.apply(rows), 0)
+        self.assertEqual(len(install.ATTENTION), 1)
         self.assertIn("// a comment", cfg.read_text(encoding="utf-8"))
 
     def test_agents_sharing_a_file_share_one_row(self):
-        rows = install.make_mcp_plan(["claude-code", "copilot", "cursor"], False, self.project, self.entry)
+        rows = install.McpServer(entry=self.entry).plan(["claude-code", "copilot", "cursor"], False, self.project)
         by_path = {r["path"]: r["agents"] for r in rows}
         self.assertEqual(by_path[self.project / ".mcp.json"], ["claude-code", "copilot"])
         self.assertEqual(len(rows), 2)
@@ -231,17 +236,17 @@ class McpTomlTests(Sandbox):
         cfg.write_text('model = "x"\n\n[mcp_servers.other]\ncommand = "o"\n\n'
                        '[mcp_servers.skill-hub]\ncommand = "old"\n\n[mcp_servers.skill-hub.env]\nA = "1"\n\n'
                        '[profiles.fast]\nmodel = "y"\n', encoding="utf-8")
-        info = install.mcp_info("codex")
-        self.assertEqual(install.mcp_status(cfg, info, self.entry), "differs")
-        install.write_mcp_entry(cfg, info, self.entry)
+        server = install.McpServer(entry=self.entry)
+        self.assertEqual(server.check("codex", True, self.project), "differs")
+        self.assertEqual(server.apply(server.plan(["codex"], True, self.project)), 1)
         text = cfg.read_text(encoding="utf-8")
         self.assertNotIn('"old"', text)
         self.assertNotIn("[mcp_servers.skill-hub.env]", text)
         self.assertIn("[mcp_servers.other]", text)
         self.assertIn("[profiles.fast]", text)
         self.assertEqual(text.count("[mcp_servers.skill-hub]"), 1)
-        self.assertEqual(install.mcp_status(cfg, info, self.entry), "same")
-        install.write_mcp_entry(cfg, info, None)
+        self.assertEqual(server.check("codex", True, self.project), "same")
+        self.assertEqual(server.apply(server.plan(["codex"], True, self.project, removing=True)), 1)
         text = cfg.read_text(encoding="utf-8")
         self.assertNotIn("skill-hub", text)
         self.assertIn('model = "y"', text)
@@ -263,7 +268,7 @@ class SetupFlowTests(Sandbox):
         self.assertTrue((self.home / ".cursor" / "skills" / "demo" / "SKILL.md").is_file())
         self.assertIn("skill-hub", json.loads((self.home / ".cursor" / "mcp.json").read_text(encoding="utf-8"))["mcpServers"])
         self.assertIn("[mcp_servers.skill-hub]", (self.home / ".codex" / "config.toml").read_text(encoding="utf-8"))
-        rows = install.make_mcp_plan(agents, True, self.project, self.entry)
+        rows = install.McpServer(entry=self.entry).plan(agents, True, self.project)
         self.assertEqual({r["status"] for r in rows}, {"same"})
 
         (self.root / "skills" / "demo" / "SKILL.md").write_text("---\nname: demo\ndescription: d2\n---\n", encoding="utf-8")
@@ -505,6 +510,28 @@ class GuidedMenuTests(Sandbox):
         self.assertEqual(code, install.EXIT_OK)                          # 6 with no agents: nothing to do
 
 
+class MergeHooksTests(unittest.TestCase):
+    def test_merge_replaces_ours_and_keeps_the_rest(self):
+        mine = {"type": "command", "command": "mine.sh"}
+        old = {"type": "command", "command": "ours.sh --old"}
+        data = {"model": "x", "hooks": {"Stop": [{"hooks": [mine, old]}], "PreToolUse": [{"matcher": "Read",
+                                                                                     "hooks": [old]}],
+                                        "Broken": "not a list"}}
+        def is_ours(h):
+            return isinstance(h, dict) and str(h.get("command", "")).startswith("ours.sh")
+        new = {"type": "command", "command": "ours.sh"}
+        merged = install.merge_hooks(data, is_ours, [("Stop", None, new), ("PreToolUse", "Read", new)])
+        self.assertEqual(merged["hooks"]["Stop"], [{"hooks": [mine]}, {"hooks": [new]}])
+        self.assertEqual(merged["hooks"]["PreToolUse"], [{"matcher": "Read", "hooks": [new]}])
+        self.assertEqual(merged["hooks"]["Broken"], "not a list")                 # not ours to fix
+        self.assertEqual(install.merge_hooks(merged, is_ours, [("Stop", None, new), ("PreToolUse", "Read", new)]),
+                         merged)                                                   # idempotent
+        self.assertEqual(sorted(e for e, _, _ in install.hooks_matching(merged, is_ours)), ["PreToolUse", "Stop"])
+        removed = install.merge_hooks(merged, is_ours, [])
+        self.assertEqual(removed["hooks"], {"Stop": [{"hooks": [mine]}], "Broken": "not a list"})
+        self.assertIn("ours.sh --old", str(data))                                  # input left untouched
+
+
 REPO_HUB = Path(__file__).resolve().parent.parent / "skills" / "generic" / "hub"
 
 
@@ -570,12 +597,12 @@ class PromptHookTests(Sandbox):
                       self.our_hooks(local)[0]["command"])
 
     def test_agents_without_a_prompt_hook_and_unreadable_files_are_left_alone(self):
-        self.assertEqual(install.make_hook_plan(["cursor", "devin"], True, self.project, self.names), [])
+        self.assertEqual(install.PROMPT_HOOK.plan(["cursor", "devin"], True, self.project, self.names), [])
         self.settings.parent.mkdir(parents=True)
         self.settings.write_text('{ // comment\n}', encoding="utf-8")
-        rows = install.make_hook_plan(["claude-code"], True, self.project, self.names)
+        rows = install.PROMPT_HOOK.plan(["claude-code"], True, self.project, self.names)
         self.assertTrue(rows[0]["status"].startswith("unreadable"))
-        self.assertEqual(install.apply_hook_plan(rows, False, dry=False), 0)
+        self.assertEqual(install.PROMPT_HOOK.apply(rows), 0)
         self.assertIn("// comment", self.settings.read_text(encoding="utf-8"))
 
     def test_dry_run_and_opt_out_write_nothing(self):
@@ -626,7 +653,7 @@ class OtherAgentHookTests(PromptHookTests):
         self.assertIn("--hook-format session", handler["bash"])
         self.assertIn("--hook-format session", handler["powershell"])
 
-        rows = install.make_hook_plan(self.AGENTS, True, self.project, self.names)
+        rows = install.PROMPT_HOOK.plan(self.AGENTS, True, self.project, self.names)
         self.assertEqual({r["status"] for r in rows}, {"same"})          # a second run changes nothing
 
         install.execute(self.root, self.AGENTS, self.names, True, self.project, yes=True, hook=True,
@@ -655,7 +682,7 @@ class OtherAgentHookTests(PromptHookTests):
                 self.assertIn("skill-dispatcher", json.loads(out.stdout)["additionalContext"])
 
     def test_shared_project_files_are_never_used(self):
-        self.assertEqual(install.make_hook_plan(["codex", "antigravity", "copilot"], False, self.project,
+        self.assertEqual(install.PROMPT_HOOK.plan(["codex", "antigravity", "copilot"], False, self.project,
                                                 self.names), [])
 
     def test_home_env_moves_the_user_file(self):
@@ -684,7 +711,7 @@ class TokenHookTests(Sandbox):
         self.settings = self.home / ".claude" / "settings.json"
 
     def ours(self, path: Path) -> list:
-        return install._our_token_hooks(json.loads(path.read_text(encoding="utf-8")))
+        return install.hooks_matching(json.loads(path.read_text(encoding="utf-8")), install._is_token_hook)
 
     def test_install_merges_and_uninstall_removes_only_ours(self):
         self.settings.parent.mkdir(parents=True)
@@ -705,7 +732,7 @@ class TokenHookTests(Sandbox):
 
         install.execute(self.root, ["claude-code"], self.names, True, self.project, yes=True, token_hook=True)
         self.assertEqual(len(self.ours(self.settings)), 2)              # running again adds no copy
-        rows = install.make_token_hook_plan(["claude-code"], True, self.project, self.names)
+        rows = install.TOKEN_HOOKS.plan(["claude-code"], True, self.project, self.names)
         self.assertEqual(rows[0]["status"], "same")
 
         install.execute(self.root, ["claude-code"], self.names, True, self.project, yes=True, token_hook=True,
@@ -728,7 +755,7 @@ class TokenHookTests(Sandbox):
     def test_needs_the_skill_and_a_supporting_agent(self):
         install.execute(self.root, ["claude-code"], ["demo"], True, self.project, yes=True, token_hook=True)
         self.assertFalse(self.settings.exists())
-        self.assertEqual(install.make_token_hook_plan(["cursor", "codex"], True, self.project, self.names), [])
+        self.assertEqual(install.TOKEN_HOOKS.plan(["cursor", "codex"], True, self.project, self.names), [])
 
     def test_project_scope_uses_the_personal_settings_file(self):
         install.execute(self.root, ["claude-code"], self.names, False, self.project, yes=True, token_hook=True)
@@ -740,9 +767,9 @@ class TokenHookTests(Sandbox):
         self.assertFalse(self.settings.exists())
         self.settings.parent.mkdir(parents=True)
         self.settings.write_text('{ // comment\n}', encoding="utf-8")
-        rows = install.make_token_hook_plan(["claude-code"], True, self.project, self.names)
+        rows = install.TOKEN_HOOKS.plan(["claude-code"], True, self.project, self.names)
         self.assertTrue(rows[0]["status"].startswith("unreadable"))
-        self.assertEqual(install.apply_token_hook_plan(rows, False, dry=False), 0)
+        self.assertEqual(install.TOKEN_HOOKS.apply(rows), 0)
         self.assertIn("// comment", self.settings.read_text(encoding="utf-8"))
 
 

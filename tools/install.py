@@ -788,26 +788,7 @@ def toml_render(key: str, entry: dict, name: str = MCP_NAME) -> str:
     return "\n".join(lines) + "\n"
 
 
-# ---- planning and applying
-def mcp_status(path: Path, info: dict, entry: dict, name: str = MCP_NAME) -> str:
-    """'missing', 'same', 'differs' or 'unreadable: <why>' for one server entry in one config file."""
-    try:
-        if info["format"] == "toml":
-            text = path.read_text(encoding="utf-8-sig") if path.is_file() else ""
-            _, ours = toml_split(text, info["key"], name)
-            if ours is None:
-                return "missing"
-            return "same" if ours.strip() == toml_render(info["key"], entry, name).strip() else "differs"
-        servers = read_json_config(path).get(info["key"]) or {}
-        if not isinstance(servers, dict):
-            return f"unreadable: '{info['key']}' is not an object"
-        if name not in servers:
-            return "missing"
-        return "same" if _same_entry(servers[name], entry) else "differs"
-    except (OSError, ValueError) as exc:
-        return f"unreadable: {exc}"
-
-
+# ---- writing JSON configs
 def configured_servers(path: Path, info: dict) -> list:
     """Names of every MCP server in one config file ([] if missing or unreadable)."""
     try:
@@ -817,21 +798,6 @@ def configured_servers(path: Path, info: dict) -> list:
         return list(servers) if isinstance(servers, dict) else []
     except (OSError, ValueError):
         return []
-
-
-def make_mcp_plan(agents: list, use_global: bool, project: Path, entry: dict, name: str = MCP_NAME) -> list:
-    """One row per config file: {"path", "agents", "info", "status"}. Agents sharing a file share a row."""
-    rows: dict = {}
-    for a in agents:
-        path = mcp_config_path(a, use_global, project)
-        if path is None:
-            continue
-        if path in rows:
-            rows[path]["agents"].append(a)
-            continue
-        info = mcp_info(a)
-        rows[path] = {"path": path, "agents": [a], "info": info, "status": mcp_status(path, info, entry, name)}
-    return list(rows.values())
 
 
 def json_text(data, path: Path) -> str:
@@ -872,95 +838,6 @@ def _write_atomic(path: Path, text: str, backup_first: bool = True) -> None:
     tmp = path.with_name(path.name + ".skillhub-tmp")
     tmp.write_text(text, encoding="utf-8")
     os.replace(str(tmp), str(path))
-
-
-def write_mcp_entry(path: Path, info: dict, entry: dict | None, name: str = MCP_NAME) -> None:
-    """Add/replace one server entry (entry=None removes it), keeping everything else in the file."""
-    if info["format"] == "toml":
-        text = path.read_text(encoding="utf-8-sig") if path.is_file() else ""
-        rest, _ = toml_split(text, info["key"], name)
-        if entry is not None:
-            rest = rest.rstrip("\n") + ("\n\n" if rest.strip() else "") + toml_render(info["key"], entry, name)
-        _write_atomic(path, rest, backup_first=entry is not None)
-        return
-    data = read_json_config(path)
-    servers = data.get(info["key"])
-    if not isinstance(servers, dict):
-        servers = {}
-    if entry is None:
-        servers.pop(name, None)
-    else:
-        servers[name] = entry
-    data[info["key"]] = servers
-    write_json_config(path, data, adding=entry is not None)
-
-
-def manual_snippet(info: dict, entry: dict, name: str = MCP_NAME) -> str:
-    if info["format"] == "toml":
-        return toml_render(info["key"], entry, name)
-    return json.dumps({info["key"]: {name: entry}}, indent=2)
-
-
-def show_mcp_plan(rows: list, snap: str | None, removing: bool = False, name: str = MCP_NAME) -> int:
-    """Print the MCP part of the plan; return how many config files would change. snap=None: no hub copy."""
-    work = 0
-    print(f"\nMCP server ({name}):")
-    if not removing and snap is not None:
-        if snap == "missing":
-            print(f"  + copy the hub to {fmt(snapshot_dir())} (the server runs from there)")
-        elif snap == "outdated":
-            print(f"  ~ refresh the hub copy in {fmt(snapshot_dir())} (it differs from this hub)")
-        else:
-            print(f"  = hub copy in {fmt(snapshot_dir())} is up to date")
-    for r in rows:
-        who = ", ".join(AGENTS[a]["name"] for a in r["agents"])
-        st, where = r["status"], fmt(r["path"])
-        if st.startswith("unreadable"):
-            print(f"  ! {where} ({who}) can't be read safely ({st[12:]}); it will be left alone")
-        elif removing:
-            if st != "missing":
-                print(f"  - remove the entry from {where}   ({who})")
-                work += 1
-        elif st == "missing":
-            print(f"  + add the server to {where}   ({who})")
-            work += 1
-        elif st == "differs":
-            print(f"  ~ update the server entry in {where}   ({who})")
-            work += 1
-        else:
-            print(f"  = already set up in {where}   ({who})")
-    if not rows:
-        print("  (none of the chosen agents has a known MCP config location)")
-    return work
-
-
-def apply_mcp_plan(root: Path, rows: list, entry: dict | None, snap: str | None, dry: bool,
-                   name: str = MCP_NAME) -> int:
-    """entry=None removes. Returns files changed. Unreadable files get a manual snippet instead."""
-    pre = "would " if dry else ""
-    if entry is not None and snap not in (None, "current"):
-        print(f"  {pre}copy hub  ->  {fmt(snapshot_dir())}")
-        if not dry:
-            write_snapshot(root)
-    n = 0
-    for r in rows:
-        st = r["status"]
-        if st.startswith("unreadable"):
-            if entry is not None:
-                print(f"  skip  {fmt(r['path'])}: add this by hand ({r['info']['docs']}):\n"
-                      + "\n".join("        " + line for line in manual_snippet(r["info"], entry, name).splitlines()))
-            needs_attention(f"{fmt(r['path'])}: can't be read safely ({st[12:]}), so the {name} MCP server "
-                            + ("was not added; add the snippet above by hand" if entry is not None
-                               else "entry was not checked; if it has one, remove it by hand"))
-            continue
-        if (entry is None and st == "missing") or (entry is not None and st == "same"):
-            continue
-        verb = "remove" if entry is None else ("add" if st == "missing" else "update")
-        print(f"  {pre}{verb} mcp  {name}  in  {fmt(r['path'])}")
-        if not dry:
-            write_mcp_entry(r["path"], r["info"], entry, name)
-        n += 1
-    return n
 
 
 # ============================================================================ prompt hook
@@ -1018,68 +895,6 @@ def _is_our_hook(h) -> bool:
     return isinstance(cmd, str) and HOOK_SKILL in cmd and "dispatch.py" in cmd
 
 
-def _hook_groups(data: dict, event: str) -> list:
-    hooks = data.get("hooks")
-    groups = hooks.get(event) if isinstance(hooks, dict) else None
-    return groups if isinstance(groups, list) else []
-
-
-def hook_status(path: Path, info: dict, entry) -> str:
-    """missing / same / differs / unreadable: <why>."""
-    try:
-        data = read_json_config(path)
-    except (OSError, ValueError) as exc:
-        return f"unreadable: {exc}"
-    if info["style"] == "file":
-        return "missing" if not path.is_file() else ("same" if data == entry else "differs")
-    if info["style"] == "named":
-        return "missing" if HOOK_NAME not in data else ("same" if data[HOOK_NAME] == entry else "differs")
-    ours = [h for g in _hook_groups(data, info["event"]) if isinstance(g, dict) and isinstance(g.get("hooks"), list)
-            for h in g["hooks"] if _is_our_hook(h)]
-    if not ours:
-        return "missing"
-    return "same" if ours == [entry] else "differs"
-
-
-def write_hook(path: Path, info: dict, entry) -> None:
-    """Add or replace our hook (entry=None removes it), keeping every other hook and setting in the file."""
-    if info["style"] == "file":
-        if entry is None:
-            if path.is_file():
-                path.unlink()
-        else:
-            _write_atomic(path, json.dumps(entry, indent=2) + "\n")
-        return
-    data = read_json_config(path)
-    if info["style"] == "named":
-        if entry is None:
-            data.pop(HOOK_NAME, None)
-        else:
-            data[HOOK_NAME] = entry
-        write_json_config(path, data, adding=entry is not None)
-        return
-    groups = []
-    for g in _hook_groups(data, info["event"]):
-        if isinstance(g, dict) and isinstance(g.get("hooks"), list) and any(_is_our_hook(h) for h in g["hooks"]):
-            kept = [h for h in g["hooks"] if not _is_our_hook(h)]
-            if kept:
-                groups.append(dict(g, hooks=kept))
-        else:
-            groups.append(g)
-    if entry is not None:
-        groups.append({"hooks": [entry]})
-    hooks = data.get("hooks") if isinstance(data.get("hooks"), dict) else {}
-    if groups:
-        hooks[info["event"]] = groups
-    else:
-        hooks.pop(info["event"], None)
-    if hooks:
-        data["hooks"] = hooks
-    else:
-        data.pop("hooks", None)
-    write_json_config(path, data, adding=entry is not None)
-
-
 def hook_skills_folder(agent: str, use_global: bool, project: Path) -> Path | None:
     """Where this agent finds skill-dispatcher: the first folder it reads that has it, else its own folder
     (where the installer puts it). Agents that read another agent's folder get no second copy."""
@@ -1089,70 +904,6 @@ def hook_skills_folder(agent: str, use_global: bool, project: Path) -> Path | No
     return own_dir(agent, use_global, project)
 
 
-def make_hook_plan(agents: list, use_global: bool, project: Path, names: list, removing: bool = False) -> list:
-    """One row per hook file. When adding, only for agents that will have both needed skills."""
-    rows = {}
-    for a in agents:
-        path, folder = hook_config_path(a, use_global, project), hook_skills_folder(a, use_global, project)
-        if path is None or folder is None or path in rows:
-            continue
-        if not removing and not all(n in names or (folder / n / "SKILL.md").is_file() for n in HOOK_NEEDS):
-            continue
-        info = hook_info(a)
-        entry = hook_entry(info, folder / HOOK_SKILL)
-        rows[path] = {"path": path, "agent": a, "info": info, "entry": entry,
-                      "status": hook_status(path, info, entry)}
-    return list(rows.values())
-
-
-def show_hook_plan(rows: list, removing: bool = False) -> int:
-    """Print the prompt-hook part of the plan; return how many files would change."""
-    if not rows or (removing and all(r["status"] == "missing" for r in rows)):
-        return 0
-    work = 0
-    print(f"\nPrompt hook ({HOOK_SKILL}: routes requests to skills, plans parallel work):")
-    for r in rows:
-        st, where = r["status"], fmt(r["path"])
-        who = AGENTS[r["agent"]]["name"] + (f"; {r['info']['note']}" if r["info"].get("note") else "")
-        if st.startswith("unreadable"):
-            print(f"  ! {where} ({AGENTS[r['agent']]['name']}) can't be read safely ({st[12:]}); it will be left alone")
-        elif removing:
-            if st != "missing":
-                print(f"  - remove the hook from {where}   ({AGENTS[r['agent']]['name']})")
-                work += 1
-        elif st == "missing":
-            print(f"  + add the hook to {where}   ({who})")
-            work += 1
-        elif st == "differs":
-            print(f"  ~ update the hook in {where}   ({who})")
-            work += 1
-        else:
-            print(f"  = already set up in {where}   ({AGENTS[r['agent']]['name']})")
-    return work
-
-
-def apply_hook_plan(rows: list, removing: bool, dry: bool) -> int:
-    pre, n = "would " if dry else "", 0
-    for r in rows:
-        st = r["status"]
-        if st.startswith("unreadable"):
-            if not removing:
-                print(f"  skip  {fmt(r['path'])}: add this {r['info']['event']} hook by hand ({r['info']['docs']}):\n"
-                      + "\n".join("        " + line for line in json.dumps(r["entry"], indent=2).splitlines()))
-            needs_attention(f"{fmt(r['path'])}: can't be read safely ({st[12:]}), so the {HOOK_SKILL} hook was "
-                            + ("not checked; if it is there, remove it by hand" if removing
-                               else "not added; add the entry above by hand"))
-            continue
-        if (removing and st == "missing") or (not removing and st == "same"):
-            continue
-        verb = "remove" if removing else ("add" if st == "missing" else "update")
-        print(f"  {pre}{verb} hook  {HOOK_SKILL}  in  {fmt(r['path'])}")
-        if not dry:
-            write_hook(r["path"], r["info"], None if removing else r["entry"])
-        n += 1
-    return n
-
-
 # ============================================================================ token hooks
 # --token-hooks registers token-optimizer's hook script, for agents with a "token_hooks" entry in AGENTS:
 # a read guard before file reads (blocks a whole read of a big file once, pointing the agent to a short
@@ -1160,15 +911,6 @@ def apply_hook_plan(rows: list, removing: bool, dry: bool) -> int:
 TOKEN_SKILL = "token-optimizer"
 TOKEN_SCRIPT = "token_hook.py"
 TOKEN_HOOK_TIMEOUT = 30
-
-
-def token_hook_path(agent: str, use_global: bool, project: Path) -> Path | None:
-    info = AGENTS[agent].get("token_hooks")
-    if not info:
-        return None
-    if not use_global:
-        return project / info["project"] if info.get("project") else None
-    return _expand(info["global"])
 
 
 def token_handlers(info: dict, skill_dir: Path) -> list:
@@ -1187,113 +929,359 @@ def _is_token_hook(h) -> bool:
     return isinstance(cmd, str) and TOKEN_SKILL in cmd and TOKEN_SCRIPT in cmd
 
 
-def _our_token_hooks(data: dict) -> list:
-    """[(event, matcher, handler)] of our hooks already in a nested hooks file."""
+# ---- hooks files: {"hooks": {EVENT: [{"matcher"?: ..., "hooks": [handler, ...]}]}}, shared with the user's own hooks
+def hooks_matching(data: dict, is_ours) -> list:
+    """[(event, matcher or None, handler)] for every hook in a hooks file that `is_ours(handler)` picks."""
     hooks = data.get("hooks") if isinstance(data.get("hooks"), dict) else {}
-    return [(event, g.get("matcher"), h) for event in hooks for g in _hook_groups(data, event)
-            if isinstance(g, dict) and isinstance(g.get("hooks"), list) for h in g["hooks"] if _is_token_hook(h)]
+    return [(event, g.get("matcher"), h) for event, groups in hooks.items() if isinstance(groups, list)
+            for g in groups if isinstance(g, dict) and isinstance(g.get("hooks"), list)
+            for h in g["hooks"] if is_ours(h)]
 
 
-def token_hook_status(path: Path, handlers: list) -> str:
-    """missing / same / differs / unreadable: <why>."""
-    try:
-        data = read_json_config(path)
-    except (OSError, ValueError) as exc:
-        return f"unreadable: {exc}"
-    ours = _our_token_hooks(data)
-    if not ours:
-        return "missing"
-    def key(x):
-        return json.dumps(x, sort_keys=True)
-    return "same" if sorted(map(key, ours)) == sorted(map(key, handlers)) else "differs"
-
-
-def write_token_hooks(path: Path, handlers) -> None:
-    """Replace our hooks with `handlers` (None removes them), keeping every other hook and setting."""
-    data = read_json_config(path)
+def merge_hooks(data: dict, is_ours, handlers: list) -> dict:
+    """A copy of a hooks file with every hook `is_ours` picks taken out and `handlers` ([(event, matcher or None,
+    handler)]) added, each in a group of its own. Every other hook and setting is kept, in order; groups and
+    events left empty are dropped. Merging the same handlers twice gives the same file."""
+    data = json.loads(json.dumps(data))
     hooks = data.get("hooks") if isinstance(data.get("hooks"), dict) else {}
-    for event in list(dict.fromkeys(list(hooks) + [e for e, _, _ in handlers or []])):
-        groups = []
-        for g in _hook_groups(data, event):
-            if isinstance(g, dict) and isinstance(g.get("hooks"), list) and any(_is_token_hook(h) for h in g["hooks"]):
-                kept = [h for h in g["hooks"] if not _is_token_hook(h)]
-                if kept:
-                    groups.append(dict(g, hooks=kept))
-            else:
-                groups.append(g)
-        for e, matcher, handler in handlers or []:
-            if e == event:
-                groups.append(dict({"matcher": matcher} if matcher else {}, hooks=[handler]))
-        if groups:
-            hooks[event] = groups
+    for event in list(dict.fromkeys(list(hooks) + [e for e, _, _ in handlers])):
+        adds = [dict({"matcher": m} if m else {}, hooks=[h]) for e, m, h in handlers if e == event]
+        groups = hooks.get(event)
+        if not isinstance(groups, list):
+            if adds:
+                hooks[event] = adds
+            continue
+        kept = []
+        for g in groups:
+            if isinstance(g, dict) and isinstance(g.get("hooks"), list) and any(is_ours(h) for h in g["hooks"]):
+                g = dict(g, hooks=[h for h in g["hooks"] if not is_ours(h)])
+                if not g["hooks"]:
+                    continue
+            kept.append(g)
+        kept += adds
+        if kept:
+            hooks[event] = kept
         else:
             hooks.pop(event, None)
     if hooks:
         data["hooks"] = hooks
     else:
         data.pop("hooks", None)
-    write_json_config(path, data, adding=handlers is not None)
+    return data
 
 
-def make_token_hook_plan(agents: list, use_global: bool, project: Path, names: list, removing: bool = False) -> list:
-    """One row per hook file. When adding, only for agents that will have token-optimizer."""
-    rows = {}
-    for a in agents:
-        path = token_hook_path(a, use_global, project)
-        if path is None or path in rows:
-            continue
-        folder = next((f for f in reads(a, use_global, project) if (f / TOKEN_SKILL / "SKILL.md").is_file()),
-                      own_dir(a, use_global, project))
-        if folder is None or (not removing and TOKEN_SKILL not in names
-                              and not (folder / TOKEN_SKILL / "SKILL.md").is_file()):
-            continue
-        handlers = token_handlers(AGENTS[a]["token_hooks"], folder / TOKEN_SKILL)
-        rows[path] = {"path": path, "agent": a, "handlers": handlers, "status": token_hook_status(path, handlers)}
-    return list(rows.values())
+# ============================================================================ config entries
+# What install.py writes into agents' config files: an MCP server entry, the skill-dispatcher hook and the
+# token-optimizer hooks. Each is a ConfigEntry adapter that knows only its file and format; ConfigEntry does
+# the rest: one row per file (agents sharing a file share it), safe reading, the plan lines, dry runs, and
+# files that can't be read (never written; apply prints what to add by hand and records it). Callers do
+#     rows = part.plan(agents, use_global, project, names)    # or removing=True
+#     work = part.show(rows)                                  # prints this part of the plan; files to change
+#     part.apply(rows, dry)                                   # once the user agreed; returns files changed
+# A row is {"path", "agents", "want", "status", "reason"}. "want" is what goes in the file (None: remove ours).
+# "status" is "missing", "same" or "differs" (adding), "present" or "missing" (removing), or "unreadable"
+# with the "reason".
+class ConfigEntry:
+    key = ""            # this adapter's entry in AGENTS[agent]
+    title = ""          # plan header
+    thing = ""          # what the plan lines add, update or remove ("the hook")
+    tag = ""            # what the apply lines name ("hook  skill-dispatcher")
+    label = ""          # what the attention items name ("the skill-dispatcher hook")
+    empty_note = None   # set: the header always shows, with this line when no chosen agent has a file
+
+    # ---- the interface
+    def plan(self, agents: list, use_global: bool, project: Path, names: list | None = None,
+             removing: bool = False) -> list:
+        """Rows for the agents' config files. names: the skills being installed alongside (an adapter skips
+        agents that will not have the skill its entry runs); None checks every agent as it stands."""
+        rows: dict = {}
+        for a in agents:
+            path = self.path(a, use_global, project)
+            if path is None:
+                continue
+            if path in rows:
+                rows[path]["agents"].append(a)
+                continue
+            want = None if removing else self.wanted(a, use_global, project, names)
+            if want is None and not removing:
+                continue
+            row = {"path": path, "agents": [a], "want": want, "status": "", "reason": ""}
+            try:
+                row["status"] = self.state(a, path, want)
+            except (OSError, ValueError) as exc:
+                row["status"], row["reason"] = "unreadable", str(exc)
+            rows[path] = row
+        return list(rows.values())
+
+    def show(self, rows: list) -> int:
+        """Print this part of the plan; return how many changes it makes."""
+        lines, work = [], 0
+        for line, changes in self.preamble():
+            lines.append(line)
+            work += changes
+        for r in rows:
+            st, where = r["status"], fmt(r["path"])
+            who = ", ".join(AGENTS[a]["name"] for a in r["agents"])
+            if st == "unreadable":
+                lines.append(f"  ! {where} ({who}) can't be read safely ({r['reason']}); it will be left alone")
+            elif r["want"] is None:
+                if st != "missing":
+                    lines.append(f"  - remove {self.thing} from {where}   ({who})")
+                    work += 1
+            elif st == "same":
+                lines.append(f"  = already set up in {where}   ({who})")
+            else:
+                note = self.info(r["agents"][0]).get("note")
+                who += f"; {note}" if note else ""
+                lines.append(f"  + add {self.thing} to {where}   ({who})" if st == "missing"
+                             else f"  ~ update {self.thing} in {where}   ({who})")
+                work += 1
+        if not lines and self.empty_note is None:
+            return 0
+        print(f"\n{self.title}:")
+        for line in lines:
+            print(line)
+        if not rows and self.empty_note:
+            print(f"  {self.empty_note}")
+        return work
+
+    def apply(self, rows: list, dry: bool = False) -> int:
+        """Make the planned changes (dry: only say them). Returns how many config files changed."""
+        pre, n = "would " if dry else "", 0
+        self.prepare(dry)
+        for r in rows:
+            st, where, agent, removing = r["status"], fmt(r["path"]), r["agents"][0], r["want"] is None
+            if st == "unreadable":
+                if not removing:
+                    print(f"  skip  {where}: add this by hand ({self.info(agent)['docs']}):\n"
+                          + "\n".join("        " + line for line in self.by_hand(agent, r["want"]).splitlines()))
+                needs_attention(f"{where}: can't be read safely ({r['reason']}), so {self.label} "
+                                + ("was not checked; if it is there, remove it by hand" if removing
+                                   else "was not added; add it by hand as shown above"))
+                continue
+            if st == ("missing" if removing else "same"):
+                continue
+            verb = "remove" if removing else ("add" if st == "missing" else "update")
+            print(f"  {pre}{verb} {self.tag}  in  {where}")
+            if not dry:
+                self.write(agent, r["path"], r["want"])
+            n += 1
+        return n
+
+    def check(self, agent: str, use_global: bool, project: Path) -> str | None:
+        """One agent's state as it stands: "same", "differs", "missing" or "unreadable: <why>"; None when it has
+        no such file."""
+        rows = self.plan([agent], use_global, project)
+        if not rows:
+            return None
+        return f"unreadable: {rows[0]['reason']}" if rows[0]["status"] == "unreadable" else rows[0]["status"]
+
+    # ---- what an adapter provides
+    def info(self, agent: str) -> dict:
+        return AGENTS[agent].get(self.key) or {}
+
+    def path(self, agent: str, use_global: bool, project: Path) -> Path | None:
+        raise NotImplementedError
+
+    def wanted(self, agent: str, use_global: bool, project: Path, names: list | None):
+        """What this agent's file should hold; None when it gets nothing."""
+        raise NotImplementedError
+
+    def state(self, agent: str, path: Path, want) -> str:
+        """missing / same / differs (want=None: missing / present). OSError or ValueError when unreadable."""
+        raise NotImplementedError
+
+    def write(self, agent: str, path: Path, want) -> None:
+        """Put `want` in the file (None removes ours), keeping everything else in it."""
+        raise NotImplementedError
+
+    def by_hand(self, agent: str, want) -> str:
+        """What to add by hand when the file can't be read."""
+        raise NotImplementedError
+
+    def preamble(self) -> list:
+        """[(plan line, changes it makes)] shown before the files."""
+        return []
+
+    def prepare(self, dry: bool) -> None:
+        """Work done before the files are written."""
 
 
-def show_token_hook_plan(rows: list, removing: bool = False) -> int:
-    """Print the token-hook part of the plan; return how many files would change."""
-    if not rows or (removing and all(r["status"] == "missing" for r in rows)):
-        return 0
-    work = 0
-    print(f"\nToken hooks ({TOKEN_SKILL}: read guard for big files, usage import at session end):")
-    for r in rows:
-        st, where, who = r["status"], fmt(r["path"]), AGENTS[r["agent"]]["name"]
-        if st.startswith("unreadable"):
-            print(f"  ! {where} ({who}) can't be read safely ({st[12:]}); it will be left alone")
-        elif removing:
-            print(f"  - remove the token hooks from {where}   ({who})")
-            work += 1
-        elif st == "same":
-            print(f"  = already set up in {where}   ({who})")
+class McpServer(ConfigEntry):
+    """One MCP server entry (entry=None when only checking or removing), in JSON or TOML (Codex) configs."""
+    key = "mcp"
+    thing = "the server"
+    empty_note = "(none of the chosen agents has a known MCP config location)"
+
+    def __init__(self, name: str = MCP_NAME, entry: dict | None = None):
+        self.name, self.entry = name, entry
+        self.title, self.tag, self.label = f"MCP server ({name})", f"mcp  {name}", f"the {name} MCP server"
+
+    def path(self, agent, use_global, project):
+        return mcp_config_path(agent, use_global, project)
+
+    def wanted(self, agent, use_global, project, names):
+        return self.entry
+
+    def state(self, agent, path, want):
+        info = self.info(agent)
+        if info["format"] == "toml":
+            _, ours = toml_split(path.read_text(encoding="utf-8-sig") if path.is_file() else "", info["key"],
+                                 self.name)
+            if ours is None:
+                return "missing"
+            same = want is not None and ours.strip() == toml_render(info["key"], want, self.name).strip()
         else:
-            print(f"  {'+ add' if st == 'missing' else '~ update'} the token hooks in {where}   ({who})")
-            work += 1
-    return work
+            servers = read_json_config(path).get(info["key"]) or {}
+            if not isinstance(servers, dict):
+                raise ValueError(f"'{info['key']}' is not an object")
+            if self.name not in servers:
+                return "missing"
+            same = want is not None and _same_entry(servers[self.name], want)
+        return "present" if want is None else ("same" if same else "differs")
+
+    def write(self, agent, path, want):
+        info = self.info(agent)
+        if info["format"] == "toml":
+            text = path.read_text(encoding="utf-8-sig") if path.is_file() else ""
+            rest, _ = toml_split(text, info["key"], self.name)
+            if want is not None:
+                rest = rest.rstrip("\n") + ("\n\n" if rest.strip() else "") + toml_render(info["key"], want, self.name)
+            _write_atomic(path, rest, backup_first=want is not None)
+            return
+        data = read_json_config(path)
+        servers = data.get(info["key"])
+        if not isinstance(servers, dict):
+            servers = {}
+        if want is None:
+            servers.pop(self.name, None)
+        else:
+            servers[self.name] = want
+        data[info["key"]] = servers
+        write_json_config(path, data, adding=want is not None)
+
+    def by_hand(self, agent, want):
+        info = self.info(agent)
+        if info["format"] == "toml":
+            return toml_render(info["key"], want, self.name)
+        return json.dumps({info["key"]: {self.name: want}}, indent=2)
 
 
-def apply_token_hook_plan(rows: list, removing: bool, dry: bool) -> int:
-    pre, n = "would " if dry else "", 0
-    for r in rows:
-        st = r["status"]
-        if st.startswith("unreadable"):
-            if not removing:
-                print(f"  skip  {fmt(r['path'])}: add these hooks by hand "
-                      f"({AGENTS[r['agent']]['token_hooks']['docs']}):")
-                for event, matcher, handler in r["handlers"]:
-                    print(f"        {event}" + (f" (matcher {matcher})" if matcher else "") + f": {handler['command']}")
-            needs_attention(f"{fmt(r['path'])}: can't be read safely ({st[12:]}), so the {TOKEN_SKILL} hooks were "
-                            + ("not checked; if they are there, remove them by hand" if removing
-                               else "not added; add them by hand"))
-            continue
-        if (removing and st == "missing") or (not removing and st == "same"):
-            continue
-        print(f"  {pre}{'remove' if removing else 'set'} token hooks  in  {fmt(r['path'])}")
-        if not dry:
-            write_token_hooks(r["path"], None if removing else r["handlers"])
-        n += 1
-    return n
+class SkillHubServer(McpServer):
+    """The skill-hub server. It runs from a copy of the hub, so adding it also copies or refreshes that copy."""
+
+    def __init__(self, root: Path, allow_install: bool = False):
+        super().__init__(MCP_NAME, server_entry(allow_install))
+        self.root, self.snap = root, snapshot_state(root)
+
+    def preamble(self):
+        where = fmt(snapshot_dir())
+        if self.snap == "missing":
+            return [(f"  + copy the hub to {where} (the server runs from there)", 1)]
+        if self.snap == "outdated":
+            return [(f"  ~ refresh the hub copy in {where} (it differs from this hub)", 1)]
+        return [(f"  = hub copy in {where} is up to date", 0)]
+
+    def prepare(self, dry):
+        if self.snap != "current":
+            print(f"  {'would ' if dry else ''}copy hub  ->  {fmt(snapshot_dir())}")
+            if not dry:
+                write_snapshot(self.root)
+
+
+class PromptHook(ConfigEntry):
+    """The skill-dispatcher hook, in the agent's style: nested, named or a file of its own (see above)."""
+    key = "prompt_hook"
+    title = f"Prompt hook ({HOOK_SKILL}: routes requests to skills, plans parallel work)"
+    thing, tag, label = "the hook", f"hook  {HOOK_SKILL}", f"the {HOOK_SKILL} hook"
+
+    def path(self, agent, use_global, project):
+        return hook_config_path(agent, use_global, project)
+
+    def wanted(self, agent, use_global, project, names):
+        folder = hook_skills_folder(agent, use_global, project)
+        if folder is None or (names is not None and not all(n in names or (folder / n / "SKILL.md").is_file()
+                                                            for n in HOOK_NEEDS)):
+            return None
+        return hook_entry(self.info(agent), folder / HOOK_SKILL)
+
+    def state(self, agent, path, want):
+        info, data = self.info(agent), read_json_config(path)
+        if info["style"] == "file":
+            current = data if path.is_file() else None
+        elif info["style"] == "named":
+            current = data[HOOK_NAME] if HOOK_NAME in data else None
+        else:
+            current = [(e, h) for e, _, h in hooks_matching(data, _is_our_hook)] or None
+            want = None if want is None else [(info["event"], want)]
+        if current is None:
+            return "missing"
+        return "present" if want is None else ("same" if current == want else "differs")
+
+    def write(self, agent, path, want):
+        info = self.info(agent)
+        if info["style"] == "file":
+            if want is not None:
+                _write_atomic(path, json.dumps(want, indent=2) + "\n")
+            elif path.is_file():
+                path.unlink()
+            return
+        data = read_json_config(path)
+        if info["style"] == "named":
+            if want is None:
+                data.pop(HOOK_NAME, None)
+            else:
+                data[HOOK_NAME] = want
+        else:
+            data = merge_hooks(data, _is_our_hook, [] if want is None else [(info["event"], None, want)])
+        write_json_config(path, data, adding=want is not None)
+
+    def by_hand(self, agent, want):
+        return f"({self.info(agent)['event']} hook)\n" + json.dumps(want, indent=2)
+
+
+class TokenHooks(ConfigEntry):
+    """token-optimizer's hooks (a read guard and a usage import), merged into a nested hooks file."""
+    key = "token_hooks"
+    title = f"Token hooks ({TOKEN_SKILL}: read guard for big files, usage import at session end)"
+    thing, tag, label = "the token hooks", "token hooks", f"the {TOKEN_SKILL} hooks"
+
+    def path(self, agent, use_global, project):
+        info = self.info(agent)
+        if not info:
+            return None
+        if not use_global:
+            return project / info["project"] if info.get("project") else None
+        return _expand(info["global"])
+
+    def wanted(self, agent, use_global, project, names):
+        folder = next((f for f in reads(agent, use_global, project) if (f / TOKEN_SKILL / "SKILL.md").is_file()),
+                      own_dir(agent, use_global, project))
+        if folder is None or (names is not None and TOKEN_SKILL not in names
+                              and not (folder / TOKEN_SKILL / "SKILL.md").is_file()):
+            return None
+        return token_handlers(self.info(agent), folder / TOKEN_SKILL)
+
+    def state(self, agent, path, want):
+        ours = hooks_matching(read_json_config(path), _is_token_hook)
+        if not ours:
+            return "missing"
+        if want is None:
+            return "present"
+        def key(x):
+            return json.dumps(x, sort_keys=True)
+        return "same" if sorted(map(key, ours)) == sorted(map(key, want)) else "differs"
+
+    def write(self, agent, path, want):
+        write_json_config(path, merge_hooks(read_json_config(path), _is_token_hook, want or []),
+                          adding=want is not None)
+
+    def by_hand(self, agent, want):
+        return "\n".join(f"{e}" + (f" (matcher {m})" if m else "") + f": {h['command']}" for e, m, h in want)
+
+
+PROMPT_HOOK = PromptHook()
+TOKEN_HOOKS = TokenHooks()
 
 
 def check_server(timeout: int = 60) -> str:
@@ -1443,15 +1431,9 @@ def test_server(root: Path, entry: dict, timeout: float = 120) -> tuple:
 def manage_server(root: Path, name: str, agents: list, use_global: bool, project: Path, entry: dict | None,
                   yes: bool = False, dry: bool = False, test: bool = False) -> int:
     """Add/update (entry) or remove (entry=None) one server for the agents. Returns config files changed."""
-    probe_entry = entry
-    if entry is None:                            # removing: any entry with that name counts
-        probe_entry = {"command": "", "args": []}
-    rows = make_mcp_plan(agents, use_global, project, probe_entry, name)
-    if entry is None:
-        for r in rows:
-            if r["status"] == "differs":
-                r["status"] = "present"
-    work = show_mcp_plan(rows, None, removing=entry is None, name=name)
+    server = McpServer(name, entry)
+    rows = server.plan(agents, use_global, project, removing=entry is None)
+    work = server.show(rows)
     if not work:
         print("\nNothing to change." if entry is not None else f"\n{name} is not set up for these agents.")
         return 0
@@ -1466,7 +1448,7 @@ def manage_server(root: Path, name: str, agents: list, use_global: bool, project
         print("Cancelled. Nothing was changed.")
         return 0
     print()
-    n = apply_mcp_plan(root, rows, entry, None, dry, name)
+    n = server.apply(rows, dry)
     print(f"\n{'Would change' if dry else 'Changed'} {n} MCP config file(s)."
           + ("" if dry else " Restart or reload your agents to pick it up."))
     return n
@@ -1839,7 +1821,7 @@ def doctor(root: Path, agents: list, project: Path) -> int:
         result = check_server()
         print(f"MCP server self-check: {result}")
         problems += result.startswith("FAILED")
-    entry = server_entry()
+    server = McpServer(MCP_NAME, server_entry())
     stale_total, mcp_bad = set(), 0
     user_skills, user_mcp = {}, {}              # per agent, from the user-level pass, to explain project rows
     for use_global, label in ((True, "user-level (applies to every project)"),
@@ -1850,11 +1832,10 @@ def doctor(root: Path, agents: list, project: Path) -> int:
             pairs = [(f, s) for f in folders for s in known if (f / s / "SKILL.md").is_file()]
             names = {s for _, s in pairs}
             stale = {s for f, s in pairs if not same_skill(skill_src(root, s), f / s)}
-            path = mcp_config_path(a, use_global, project)
-            if path is None:
+            st = server.check(a, use_global, project)
+            if st is None:
                 mcp = "no known MCP config"
             else:
-                st = mcp_status(path, mcp_info(a), entry)
                 mcp = {"same": "set up", "missing": "not set up", "differs": "set up, but out of date"}.get(st, st)
                 mcp_bad += st == "differs" or st.startswith("unreadable")
             skills = f"{len(names)}" + (f" ({len(stale)} differ from the hub)" if stale else "")
@@ -1866,10 +1847,8 @@ def doctor(root: Path, agents: list, project: Path) -> int:
                     skills = "0 (user-level covers it)"
                 if mcp == "not set up" and user_mcp.get(a):
                     mcp = "not needed (user-level covers it)"
-            hook_txt, hook_path = "", hook_config_path(a, use_global, project)
-            folder = hook_skills_folder(a, use_global, project)
-            if hook_path is not None and folder is not None:
-                st = hook_status(hook_path, hook_info(a), hook_entry(hook_info(a), folder / HOOK_SKILL))
+            hook_txt, st = "", PROMPT_HOOK.check(a, use_global, project)
+            if st is not None:
                 hook_txt = "  hook: " + {"same": "set up", "missing": "off",
                                          "differs": "set up, but out of date"}.get(st, st)
             print(f"  {AGENTS[a]['name']:<26} skills: {skills:<29} MCP: {mcp}{hook_txt}")
@@ -1948,16 +1927,13 @@ def execute(root: Path, agents: list, names: list, use_global: bool, project: Pa
             if plan["redundant"] and not tidy:
                 print("  (use --tidy to remove the redundant copies)")
         skill_work = len(plan["install"]) + (force and len(plan["outdated"])) + (tidy and len(plan["redundant"]))
-    rows, entry, snap, mcp_work = [], None, "current", 0
-    if mcp:
-        entry = server_entry(allow_install)
-        snap = snapshot_state(root)
-        rows = make_mcp_plan(agents, use_global, project, entry)
-        mcp_work = show_mcp_plan(rows, snap) + (snap != "current")
-    hook_rows = make_hook_plan(agents, use_global, project, names) if hook else []
-    hook_work = show_hook_plan(hook_rows)
-    token_rows = make_token_hook_plan(agents, use_global, project, names) if token_hook else []
-    hook_work += show_token_hook_plan(token_rows)
+    server = SkillHubServer(root, allow_install) if mcp else None
+    rows = server.plan(agents, use_global, project) if server else []
+    mcp_work = server.show(rows) if server else 0
+    hook_rows = PROMPT_HOOK.plan(agents, use_global, project, names) if hook else []
+    hook_work = PROMPT_HOOK.show(hook_rows)
+    token_rows = TOKEN_HOOKS.plan(agents, use_global, project, names) if token_hook else []
+    hook_work += TOKEN_HOOKS.show(token_rows)
     if not skill_work and not mcp_work and not hook_work:
         print("\nNothing to change. Everything selected is already set up.")
         return EXIT_OK
@@ -1966,20 +1942,20 @@ def execute(root: Path, agents: list, names: list, use_global: bool, project: Pa
         return EXIT_CANCELLED
     print()
     n = apply_plan(root, plan, force, tidy, dry) if plan else 0
-    m = apply_mcp_plan(root, rows, entry, snap, dry) if mcp else 0
+    m = server.apply(rows, dry) if server else 0
     if hook and not dry:                         # skills are in place now: point each hook at the real copy
-        hook_rows = make_hook_plan(agents, use_global, project, names)
-    h = apply_hook_plan(hook_rows, False, dry)
+        hook_rows = PROMPT_HOOK.plan(agents, use_global, project, names)
+    h = PROMPT_HOOK.apply(hook_rows, dry)
     if token_hook and not dry:
-        token_rows = make_token_hook_plan(agents, use_global, project, names)
-    t = apply_token_hook_plan(token_rows, False, dry)
+        token_rows = TOKEN_HOOKS.plan(agents, use_global, project, names)
+    t = TOKEN_HOOKS.apply(token_rows, dry)
     hooks = (f" and {h} prompt hook(s)" if hook_rows else "") + (f", {t} token hook file(s)" if token_rows else "")
     if dry:
         return summary(f"Would write {n} skill folder(s), {m} MCP config file(s){hooks}.", True)
     code = summary(f"{n} skill folder(s), {m} MCP config file(s){hooks} written.", False)
     print("Restart or reload your agents, then just describe your task.")
-    if mcp and m:
-        print(f"The MCP server runs with {entry['command']}; if you remove or upgrade that Python, "
+    if server and m:
+        print(f"The MCP server runs with {server.entry['command']}; if you remove or upgrade that Python, "
               "run --setup again.")
     if mcp:
         print("Check the setup any time with:  python install.py --doctor")
@@ -1992,7 +1968,8 @@ def remove_all(names: list, agents: list, use_global: bool, project: Path, mcp: 
     Returns the exit code (EXIT_*)."""
     folders = list(dict.fromkeys(f for a in agents for f in reads(a, use_global, project)))
     found = [(f, s) for f in folders for s in names if (f / s / "SKILL.md").is_file()]
-    rows = make_mcp_plan(agents, use_global, project, server_entry()) if mcp else []
+    server = McpServer()
+    rows = server.plan(agents, use_global, project, removing=True) if mcp else []
     drop_snapshot = uninstall and snapshot_dir().exists()
     if found:
         print("\nInstalled skill copies:")
@@ -2004,11 +1981,11 @@ def remove_all(names: list, agents: list, use_global: bool, project: Path, mcp: 
         if not VERBOSE:
             for f, skills in per_folder.items():
                 print(f"  - {len(skills)} skill(s) in {fmt(f)}")
-    mcp_work = show_mcp_plan(rows, "current", removing=True) if mcp else 0
-    hook_rows = make_hook_plan(agents, use_global, project, names, removing=True) if hook else []
-    hook_work = show_hook_plan(hook_rows, removing=True)
-    token_rows = make_token_hook_plan(agents, use_global, project, names, removing=True) if token_hook else []
-    hook_work += show_token_hook_plan(token_rows, removing=True)
+    mcp_work = server.show(rows) if mcp else 0
+    hook_rows = PROMPT_HOOK.plan(agents, use_global, project, removing=True) if hook else []
+    hook_work = PROMPT_HOOK.show(hook_rows)
+    token_rows = TOKEN_HOOKS.plan(agents, use_global, project, removing=True) if token_hook else []
+    hook_work += TOKEN_HOOKS.show(token_rows)
     if drop_snapshot:
         print(f"  - delete the hub copy {fmt(snapshot_dir())}")
     if not found and not mcp_work and not hook_work and not drop_snapshot:
@@ -2024,8 +2001,8 @@ def remove_all(names: list, agents: list, use_global: bool, project: Path, mcp: 
     for f, s in found:
         shutil.rmtree(f / s)
         record(f, s, None)
-    m = apply_mcp_plan(Path("."), rows, None, "current", False) if mcp else 0
-    h = apply_hook_plan(hook_rows, True, False) + apply_token_hook_plan(token_rows, True, False)
+    m = server.apply(rows) if mcp else 0
+    h = PROMPT_HOOK.apply(hook_rows) + TOKEN_HOOKS.apply(token_rows)
     if drop_snapshot:
         shutil.rmtree(snapshot_dir())
     kept = drop_backups([r["path"] for r in rows + hook_rows + token_rows]) if uninstall else []

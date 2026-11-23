@@ -634,33 +634,15 @@ def agent_hook_command(event: str) -> str:
 
 def merged_agent_settings(existing: dict, remove: bool = False) -> dict:
     """existing settings with hub.py's hooks added (or removed); every other setting and hook is kept."""
-    data = json.loads(json.dumps(existing))
-    hooks = data.get("hooks") if isinstance(data.get("hooks"), dict) else {}
-    for event, (matcher, name, timeout, status) in AGENT_HOOKS.items():
-        groups = []
-        for group in hooks.get(event, []) if isinstance(hooks.get(event), list) else []:
-            if isinstance(group, dict) and isinstance(group.get("hooks"), list):
-                group = dict(group, hooks=[h for h in group["hooks"]
-                                           if not OUR_COMMAND.search(str(h.get("command", "")))])
-                if not group["hooks"]:
-                    continue
-            groups.append(group)
-        if not remove:
-            entry = {"type": "command", "command": agent_hook_command(name), "timeout": timeout}
-            if status:
-                entry["statusMessage"] = status
-            ours = {"matcher": matcher} if matcher else {}
-            ours["hooks"] = [entry]
-            groups.append(ours)
-        if groups:
-            hooks[event] = groups
-        else:
-            hooks.pop(event, None)
-    if hooks:
-        data["hooks"] = hooks
-    else:
-        data.pop("hooks", None)
-    return data
+    from install import merge_hooks          # the installer's hooks-file merge; imported only when needed
+    handlers = []
+    for event, (matcher, name, timeout, status) in ({} if remove else AGENT_HOOKS).items():
+        entry = {"type": "command", "command": agent_hook_command(name), "timeout": timeout}
+        if status:
+            entry["statusMessage"] = status
+        handlers.append((event, matcher, entry))
+    return merge_hooks(existing, lambda h: isinstance(h, dict) and bool(OUR_COMMAND.search(str(h.get("command", "")))),
+                       handlers)
 
 
 def setup_agent_hooks(root: Path, remove: bool, yes: bool) -> int:
