@@ -3,14 +3,15 @@
 
 This script is standard library only (links, guardrail, captions, notes, HTML). The audio stage runs
 yt_audio.py in the "audio Python" (--audio-python, $YT_LECTURE_AUDIO_PYTHON, or this Python), which needs:
-  yt-dlp                                   extract the audio track (no video)
-  av + numpy                               decode and analyse it (speech vs silence, pauses, loudness)
+  yt-dlp                                   extract the audio track (and a low-resolution video for the slides)
+  av + numpy                               decode and analyse it (speech vs silence, pauses, loudness); slides
   faster-whisper | openai-whisper | vosk   turn the speech into text
 
 Commands
   check  URL                 validate the link, read the real title, apply the study/tech guardrail
-  fetch  URL [--out DIR]     check, extract + analyse + transcribe the audio (captions only as a fallback),
-                             then write info.json, transcript.json/.txt, notes.json, overview.md, overview.html
+  fetch  URL [--out DIR]     check, extract + analyse + transcribe the audio (captions only as a fallback) and,
+                             in parallel, capture the slides; then write info.json, transcript.json/.txt,
+                             slides/, notes.json, overview.md, overview.html. One command does it all.
   render DIR                 rebuild overview.md and overview.html after editing notes.json
   doctor                     show which audio tools are ready and how to install the rest
 
@@ -20,6 +21,7 @@ get any transcript, 5 video not playable (private, removed, age or region locked
 from __future__ import annotations
 
 import argparse
+import base64
 import collections
 import datetime
 import html
@@ -356,8 +358,10 @@ def audio_python(explicit: str | None = None) -> str:
 
 def run_audio_stage(url: str, workdir: Path, clip: str = "", engine: str = "auto", model: str = "base",
                     lang: str = "en", keep_audio: Path | None = None, python: str | None = None,
-                    transcribe: bool = True, runner=subprocess.run) -> dict:
-    """Run yt_audio.py: extract the audio track, analyse it and turn the speech into text."""
+                    transcribe: bool = True, runner=subprocess.run, slides_dir: Path | None = None,
+                    slides_height: int = 720, audio: bool = True) -> dict:
+    """Run yt_audio.py: extract the audio track, analyse it and turn the speech into text. With slides_dir it
+    also captures the slides, in parallel; audio=False captures only the slides."""
     cmd = [audio_python(python), str(AUDIO_SCRIPT), "process", "--url", url, "--workdir", str(workdir),
            "--engine", engine, "--model", model, "--lang", lang]
     if clip:
@@ -366,7 +370,12 @@ def run_audio_stage(url: str, workdir: Path, clip: str = "", engine: str = "auto
         cmd += ["--keep-audio", str(keep_audio)]
     if not transcribe:
         cmd.append("--no-transcribe")
-    print("extracting the audio and turning it into text (a long lecture can take a while)...", file=sys.stderr)
+    if slides_dir:
+        cmd += ["--slides-dir", str(slides_dir), "--slides-height", str(slides_height)]
+    if not audio:
+        cmd.append("--no-audio")
+    doing = (["the audio"] if audio else []) + (["the slides"] if slides_dir else [])
+    print(f"extracting {' and '.join(doing)} (a long lecture can take a while)...", file=sys.stderr)
     try:
         proc = runner(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding="utf-8",
                       errors="replace", timeout=6 * 3600, check=False)
@@ -435,29 +444,53 @@ SOURCES = ("audio", "audio-only", "captions")
 
 def get_transcript(info: dict, lang: str = "en", source: str = "audio", transcript_file: str | None = None,
                    model: str = "base", engine: str = "auto", clip: str = "", keep_audio: Path | None = None,
-                   python: str | None = None, get=http_get, runner=subprocess.run) -> dict:
-    """Return {'segments', 'source', 'audio', 'warnings'}.
+                   python: str | None = None, get=http_get, runner=subprocess.run,
+                   slides_dir: Path | None = None, slides_height: int = 720) -> dict:
+    """Return {'segments', 'source', 'audio', 'slides', 'warnings'}.
 
     source=audio (default): extract the audio and turn speech into text; if that fails, use captions and
     say so in 'warnings'. audio-only: fail instead of using captions. captions: captions first, then audio.
     A transcript file always wins, but the audio is still extracted and analysed unless source=captions.
+    With slides_dir, the slides are captured once, in the same run as the audio (or alone, when no audio runs).
     """
     if source not in SOURCES:
         raise ValueError(f"source must be one of {', '.join(SOURCES)}")
     clip_range(clip)  # validate early
     warnings, audio_report, tried = [], None, []
+    slides = {"report": None, "pending": bool(slides_dir)}
 
-    def audio_stage(transcribe=True):
-        nonlocal audio_report
+    def stage(transcribe=True, audio=True):
+        """One run of yt_audio.py; takes the slides along the first time. Returns its report or None."""
+        with_slides = slides_dir if slides["pending"] else None
+        slides["pending"] = False
         with tempfile.TemporaryDirectory() as tmp:
             try:
                 rep = run_audio_stage(info["url"], Path(tmp), clip, engine, model,
-                                      lang if lang != "auto" else "auto", keep_audio, python, transcribe, runner)
+                                      lang if lang != "auto" else "auto", keep_audio, python, transcribe, runner,
+                                      with_slides, slides_height, audio)
             except FetchError as exc:
-                warnings.append(f"audio not processed: {exc}")
-                tried.append(f"audio ({exc})")
-                return []
+                what = "audio not processed" if audio else "slides not captured"
+                warnings.append(f"{what}: {exc}")
+                tried.append(f"{'audio' if audio else 'slides'} ({exc})")
+                return None
+        slides["report"] = rep.get("slides") or slides["report"]
         warnings.extend(rep.get("errors") or [])
+        return rep
+
+    def slides_only():
+        if slides["pending"]:
+            stage(transcribe=False, audio=False)
+
+    def result(segs, label):
+        slides_only()
+        return {"segments": segs, "source": label, "audio": audio_report, "slides": slides["report"],
+                "warnings": warnings}
+
+    def audio_stage(transcribe=True):
+        nonlocal audio_report
+        rep = stage(transcribe)
+        if rep is None:
+            return []
         tr = rep.get("transcript") or {}
         audio_report = {"audio": rep.get("audio") or {}, "analysis": rep.get("analysis") or {},
                         "speech_to_text": {k: v for k, v in tr.items() if k != "segments"}, "clip": clip}
@@ -472,15 +505,16 @@ def get_transcript(info: dict, lang: str = "en", source: str = "audio", transcri
             raise FetchError(f"no text found in {transcript_file}")
         if source != "captions":
             audio_stage(transcribe=False)
-        return {"segments": segs, "source": f"file:{Path(transcript_file).name}", "audio": audio_report,
-                "warnings": warnings}
+        return result(segs, f"file:{Path(transcript_file).name}")
+
+    def stt_label():
+        stt = audio_report["speech_to_text"]
+        return f"audio-speech-to-text ({stt.get('engine', '?')} {stt.get('model', '')})".replace(" )", ")")
 
     if source in ("audio", "audio-only"):
         segs = audio_stage()
         if segs:
-            stt = audio_report["speech_to_text"]
-            label = f"audio-speech-to-text ({stt.get('engine', '?')} {stt.get('model', '')})".replace(" )", ")")
-            return {"segments": segs, "source": label, "audio": audio_report, "warnings": warnings}
+            return result(segs, stt_label())
         if source == "audio-only":
             raise FetchError("the audio could not be turned into text: " + "; ".join(warnings or tried) +
                              ". Run `yt_lecture.py doctor` to see what is missing")
@@ -489,14 +523,11 @@ def get_transcript(info: dict, lang: str = "en", source: str = "audio", transcri
     if segs:
         if source == "audio":
             warnings.append("the text comes from captions because the audio could not be turned into text")
-        return {"segments": segs, "source": label, "audio": audio_report, "warnings": warnings}
+        return result(segs, label)
     if source == "captions":
         segs = audio_stage()
         if segs:
-            stt = audio_report["speech_to_text"]
-            return {"segments": segs, "source": f"audio-speech-to-text ({stt.get('engine', '?')} "
-                                                f"{stt.get('model', '')})".replace(" )", ")"),
-                    "audio": audio_report, "warnings": warnings}
+            return result(segs, stt_label())
     raise FetchError("no transcript could be made. Tried: " + "; ".join(tried) +
                      ". Run `yt_lecture.py doctor`, install what it lists, or pass --transcript <file>")
 
@@ -690,14 +721,23 @@ def overview_markdown(info: dict, notes: dict, meta: dict) -> str:
             end = s.get("end") or (sections[i + 1]["start"] if i + 1 < len(sections) else duration)
             out.append(f"| {i + 1} | {s.get('title', '')} | [{fmt_time(start)}]({link}&t={start}s) | "
                        f"{fmt_length(max(0, end - start))} |")
-        out += ["", "## Section notes", ""]
+        out.append("")
+    out += design_markdown(notes, meta.get("slides") or [], link)
+    if sections:
+        out += ["## Section notes", ""]
         for i, s in enumerate(sections):
             start = int(s.get("start", 0))
             out += [f"### {i + 1}. {s.get('title', '')} ([{fmt_time(start)}]({link}&t={start}s))", ""]
             out += [f"- {sentence(p, cut)}" for p in (s.get("points") or [])[:4]] + [""]
     terms = [t for t in notes.get("terms") or [] if t.get("term") and t.get("meaning")]
     if terms:
-        out += ["## Key terms", ""] + [f"- **{t['term']}**: {sentence(t['meaning'])}" for t in terms] + [""]
+        said = meta.get("first_said") or {}
+        out += ["## Key terms", ""]
+        for t in terms:
+            at = said.get(t["term"])
+            where = f" (first said at [{fmt_time(at)}]({link}&t={int(at)}s))" if at is not None else ""
+            out.append(f"- **{t['term']}**: {sentence(t['meaning'])}{where}")
+        out.append("")
     questions = [q for q in notes.get("review_questions") or [] if q.get("q")]
     if questions:
         out += ["## Check yourself", ""]
@@ -710,6 +750,29 @@ def overview_markdown(info: dict, notes: dict, meta: dict) -> str:
         out += ["## What to study next", ""] + [f"- {sentence(x)}" for x in notes["further_study"]] + [""]
     out += audio_markdown(meta.get("audio"), meta.get("words_per_minute", 0), link)
     return "\n".join(out)
+
+
+def design_markdown(notes: dict, slides: list, link: str) -> list:
+    """The high-level design and the slide list as Markdown (slide images are linked, not embedded)."""
+    from yt_html import sentence
+    hld = notes.get("hld") if isinstance(notes.get("hld"), dict) else {}
+    comps = [c for c in hld.get("components") or [] if isinstance(c, dict) and c.get("name")]
+    flow = [f for f in hld.get("flow") or [] if isinstance(f, dict) and f.get("from") and f.get("to")]
+    if not (hld.get("summary") or comps or flow or slides):
+        return []
+    out = ["## Design and slides", ""]
+    if hld.get("summary"):
+        out += [sentence(hld["summary"]), ""]
+    if comps:
+        out += ["**Components**", ""] + [f"- **{c['name']}**: {sentence(c.get('role') or '')}" for c in comps] + [""]
+    if flow:
+        out += ["**How it flows**", ""] + [f"{i}. {f['from']} → {f['to']}" + (f": {f['label']}" if f.get("label") else "")
+                                           for i, f in enumerate(flow, 1)] + [""]
+    if slides:
+        out += [f"**Slides** ({len(slides)}, in `slides/`)", ""]
+        out += [f"- [{fmt_time(s['start'])}]({link}&t={int(s['start'])}s) [{s['file']}](slides/{s['file']})" +
+                (f": {s['caption']}" if s.get("caption") else "") for s in slides] + [""]
+    return out
 
 
 def speaking_rate(segs: list, audio: dict | None) -> int:
@@ -748,8 +811,31 @@ def audio_markdown(audio: dict | None, wpm: int, link: str) -> list:
     return out + [""]
 
 
+SLIDE_NAME = re.compile(r"^slide-\d{3}\.jpg$")
+
+
+def load_slides(folder: Path, info: dict, notes: dict) -> list:
+    """The captured slides to show, in time order, with the agent's captions; hidden ones are left out.
+
+    notes.json may hold "slides": [{"file": "slide-003.jpg", "caption": "...", "hide": true}].
+    Each entry carries the image as base64 so overview.html stays one self-contained file.
+    """
+    said = {str(s.get("file")): s for s in notes.get("slides") or [] if isinstance(s, dict)}
+    out = []
+    for s in (info.get("slides") or {}).get("slides") or []:
+        name = str(s.get("file", ""))
+        note = said.get(name, {})
+        path = folder / "slides" / name
+        if not SLIDE_NAME.match(name) or note.get("hide") or not path.is_file():
+            continue
+        out.append({"file": name, "start": float(s.get("start", 0)), "end": float(s.get("end", 0)),
+                    "caption": str(note.get("caption") or ""),
+                    "data": base64.b64encode(path.read_bytes()).decode("ascii")})
+    return out
+
+
 def render(folder: Path) -> dict:
-    from yt_html import render_html
+    from yt_html import first_mention, render_html
     info = json.loads((folder / "info.json").read_text(encoding="utf-8"))
     if not (info.get("guardrail") or {}).get("allowed"):
         raise Blocked("this folder was not cleared by the study/tech guardrail; nothing rendered")
@@ -759,6 +845,8 @@ def render(folder: Path) -> dict:
             "generated": datetime.date.today().isoformat(), "audio": info.get("audio"),
             "warnings": info.get("warnings") or [], "clip": clip_range(info.get("clip") or "")}
     meta["words_per_minute"] = speaking_rate(segs, meta["audio"])
+    meta["first_said"] = {t["term"]: first_mention(t["term"], segs) for t in notes.get("terms") or [] if t.get("term")}
+    meta["slides"] = load_slides(folder, info, notes)
     keywords = top_keywords(" ".join(s["text"] for s in segs), 30)
     (folder / "overview.md").write_text(overview_markdown(info, notes, meta), encoding="utf-8")
     (folder / "overview.html").write_text(render_html(info, notes, segs, keywords, meta), encoding="utf-8")
@@ -766,9 +854,23 @@ def render(folder: Path) -> dict:
             "transcript": str(folder / "transcript.txt"), "notes": str(folder / "notes.json")}
 
 
+def _place_slides(report: dict | None, captured: Path, folder: Path, old: dict | None, wanted: bool):
+    """Move freshly captured slides into folder/slides; keep the previous ones when slides were not asked for."""
+    dest = folder / "slides"
+    if not wanted:
+        return old if old and dest.is_dir() else None
+    if dest.is_dir():
+        shutil.rmtree(dest)
+    if report and report.get("count"):
+        shutil.move(str(captured), str(dest))
+        return report
+    return None
+
+
 def fetch(url: str, out: Path, lang: str = "en", source: str = "audio", transcript_file: str | None = None,
           model: str = "base", force: bool = False, keep_audio: bool = False, engine: str = "auto",
-          clip: str = "", python: str | None = None, get=http_get, runner=subprocess.run) -> dict:
+          clip: str = "", python: str | None = None, get=http_get, runner=subprocess.run, slides: bool = True,
+          slides_height: int = 720) -> dict:
     info = check(url, get)
     if not info["guardrail"]["allowed"]:
         raise Blocked(f"not generated: \"{info['title']}\": {info['guardrail']['reason']}. This skill only "
@@ -776,9 +878,18 @@ def fetch(url: str, out: Path, lang: str = "en", source: str = "audio", transcri
     if info["playability"] not in ("OK", "UNKNOWN") and not transcript_file:
         raise NotPlayable(f"YouTube says the video is {info['playability']}: {info['playability_reason']}".strip(": "))
     folder = out / info["video_id"]
-    tr = get_transcript(info, lang, source, transcript_file, model, engine, clip,
-                        (folder / "audio") if keep_audio else None, python, get, runner)
-    folder.mkdir(parents=True, exist_ok=True)
+    old_info = {}
+    if (folder / "info.json").is_file():
+        old_info = json.loads((folder / "info.json").read_text(encoding="utf-8"))
+    captured = Path(tempfile.mkdtemp(prefix="yt-slides-"))    # moved into the folder only when all went well
+    try:
+        tr = get_transcript(info, lang, source, transcript_file, model, engine, clip,
+                            (folder / "audio") if keep_audio else None, python, get, runner,
+                            captured if slides else None, slides_height)
+        folder.mkdir(parents=True, exist_ok=True)
+        info["slides"] = _place_slides(tr["slides"], captured, folder, old_info.get("slides"), slides)
+    finally:
+        shutil.rmtree(captured, ignore_errors=True)
     segs = tr["segments"]
     for w in tr["warnings"]:
         print(f"warning: {w}", file=sys.stderr)
@@ -796,7 +907,14 @@ def fetch(url: str, out: Path, lang: str = "en", source: str = "audio", transcri
     result = render(folder)
     result.update(video_id=info["video_id"], title=info["title"], transcript_source=tr["source"],
                   segments=len(segs), words=sum(len(s["text"].split()) for s in segs),
-                  audio_processed=bool(tr["audio"]), warnings=tr["warnings"])
+                  audio_processed=bool(tr["audio"]), warnings=tr["warnings"],
+                  slides=(info["slides"] or {}).get("count", 0),
+                  slides_folder=str(folder / "slides") if info["slides"] else None)
+    if any(w.startswith(("audio not processed", "speech-to-text", "slides not captured")) for w in tr["warnings"]):
+        fix = doctor(python, runner)            # saves the agent a second command: what to install, ready to run
+        fix = fix.get("advice") or ([fix["error"]] if fix.get("error") else [])
+        if fix:
+            result["fix"] = fix
     if tr["audio"]:
         a = tr["audio"].get("analysis") or {}
         result["audio_summary"] = {k: a.get(k) for k in ("speech_ratio", "pause_count", "longest_pause")}
@@ -804,12 +922,12 @@ def fetch(url: str, out: Path, lang: str = "en", source: str = "audio", transcri
     return result
 
 
-def doctor(python: str | None = None) -> dict:
+def doctor(python: str | None = None, runner=subprocess.run) -> dict:
     """What the audio stage can do with the chosen Python, and how to fix what is missing."""
     py = audio_python(python)
     try:
-        proc = subprocess.run([py, str(AUDIO_SCRIPT), "doctor"], capture_output=True, text=True, timeout=120,
-                              check=False)
+        proc = runner([py, str(AUDIO_SCRIPT), "doctor"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+                      timeout=120, check=False)
         rep = json.loads((proc.stdout or "{}").strip().splitlines()[-1])
     except (OSError, ValueError, IndexError, subprocess.SubprocessError) as exc:
         return {"audio_python": py, "error": f"could not run the audio Python: {exc}"}
@@ -858,6 +976,10 @@ def main(argv=None) -> int:
     f.add_argument("--transcript", help="use this .vtt/.srt/.txt/.json transcript for the text")
     f.add_argument("--keep-audio", action="store_true", help="keep the extracted audio clip in <folder>/audio")
     f.add_argument("--force", action="store_true", help="overwrite notes.json with a new automatic draft")
+    f.add_argument("--no-slides", action="store_true",
+                   help="do not capture the slides (skips the video download; audio only)")
+    f.add_argument("--slides-height", type=int, default=720, choices=[360, 480, 720, 1080],
+                   help="video height used to capture the slides (default 720; 480 downloads less)")
     r = sub.add_parser("render", help="rebuild overview.md and overview.html from a fetched folder")
     r.add_argument("folder")
     d = sub.add_parser("doctor", help="show which audio tools are ready and how to install the rest")
@@ -879,7 +1001,8 @@ def main(argv=None) -> int:
             return 0 if g["allowed"] else 3
         if args.cmd == "fetch":
             res = fetch(args.url, Path(args.out), args.lang, args.source, args.transcript, args.model,
-                        args.force, args.keep_audio, args.engine, args.clip, args.audio_python)
+                        args.force, args.keep_audio, args.engine, args.clip, args.audio_python,
+                        slides=not args.no_slides, slides_height=args.slides_height)
         else:
             res = render(Path(args.folder))
         print(json.dumps(res, indent=2, ensure_ascii=False))

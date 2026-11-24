@@ -7,10 +7,11 @@ Runs in the "audio Python" (any interpreter that has the optional packages; yt_l
   python yt_audio.py doctor
   python yt_audio.py process --url URL --workdir DIR [--clip 10:00-25:00] [--engine auto] [--model base]
                              [--lang en] [--keep-audio DIR] [--no-transcribe]
+                             [--slides-dir DIR [--slides-height 720]] [--no-audio]
 
 Packages (all optional, each step reports what is missing):
-  yt-dlp                       download the audio track only (no video)
-  av (PyAV) + numpy            decode the audio and analyse it (speech vs silence, pauses, loudness)
+  yt-dlp                       download the audio track (and, for slides, a low-resolution video-only stream)
+  av (PyAV) + numpy            decode the audio and analyse it; find and save the slides (yt_slides.py)
   faster-whisper | openai-whisper | vosk     speech to text (tried in that order with --engine auto)
 """
 from __future__ import annotations
@@ -24,7 +25,11 @@ import re
 import shutil
 import subprocess
 import sys
+import threading
+import time
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 RATE = 16000          # speech-to-text engines want 16 kHz mono
 WINDOW = 0.5          # seconds per loudness window for the analysis
@@ -75,26 +80,57 @@ def ytdlp_base():
     return [exe] if exe else None
 
 
-def download_audio(url, workdir: Path, start=0.0, end=None) -> dict:
-    """Download only the audio track (m4a preferred, no ffmpeg needed). Returns file facts."""
+AUDIO_FORMAT = "bestaudio[ext=m4a][abr<=96]/bestaudio[ext=m4a]/bestaudio"   # speech needs no more than ~96 kbps
+
+
+def video_format(height: int) -> str:
+    """Video-only stream for slide capture; H.264 first because it decodes fastest."""
+    return (f"bestvideo[height<={height}][vcodec^=avc1]/bestvideo[height<={height}]/"
+            f"best[height<={height}]/worstvideo")
+
+
+def _ytdlp(url, workdir: Path, stem: str, fmt: str, what: str) -> Path:
     base = ytdlp_base()
     if not base:
         raise RuntimeError("yt-dlp is not installed in the audio Python (pip install yt-dlp)")
-    cmd = base + ["-f", "bestaudio[ext=m4a]/bestaudio", "--no-playlist", "--no-progress", "--quiet",
-                  "--no-warnings", "-o", str(workdir / "audio.%(ext)s"), "--print", "after_move:filepath"]
+    cmd = base + ["-f", fmt, "--no-playlist", "--no-progress", "--quiet", "--no-warnings",
+                  "--concurrent-fragments", "4", "--http-chunk-size", "10M",   # parallel parts, less throttling
+                  "-o", str(workdir / f"{stem}.%(ext)s"), "--print", "after_move:filepath"]
     if shutil.which("node"):
         cmd += ["--js-runtimes", "node"]   # lets yt-dlp solve YouTube's player challenges
     proc = subprocess.run(cmd + [url], capture_output=True, text=True, timeout=3600, check=False)
     lines = [ln.strip() for ln in (proc.stdout or "").splitlines() if ln.strip()]
     path = Path(lines[-1]) if lines else None
     if proc.returncode != 0 or not path or not path.is_file():
-        found = sorted(workdir.glob("audio.*"))
+        found = sorted(workdir.glob(f"{stem}.*"))
         if proc.returncode == 0 and found:
             path = found[0]
         else:
-            raise RuntimeError("yt-dlp could not download the audio: " + (proc.stderr or proc.stdout or "")[-500:])
+            raise RuntimeError(f"yt-dlp could not download the {what}: " + (proc.stderr or proc.stdout or "")[-500:])
+    return path
+
+
+def download_audio(url, workdir: Path, start=0.0, end=None) -> dict:
+    """Download only the audio track (m4a preferred, no ffmpeg needed). Returns file facts."""
+    path = _ytdlp(url, workdir, "audio", AUDIO_FORMAT, "audio")
     return {"file": str(path), "format": path.suffix.lstrip("."), "size_bytes": path.stat().st_size,
             "clip": [start, end]}
+
+
+def capture_slides(url, workdir: Path, slides_dir: Path, start=0.0, end=None, height=720) -> dict:
+    """Download a video-only stream, save one image per slide into slides_dir, then delete the video."""
+    _need("av", "av")
+    _need("numpy", "numpy")
+    from yt_slides import extract_slides  # noqa: PLC0415 - needs av + numpy
+    began = time.time()
+    video = _ytdlp(url, workdir, "video", video_format(height), "video for the slides")
+    downloaded = round(time.time() - began, 1)
+    try:
+        rep = extract_slides(video, slides_dir, start, end)
+    finally:
+        video.unlink(missing_ok=True)
+    rep["download_seconds"] = downloaded
+    return rep
 
 
 # ---------------------------------------------------------------- decode + analyse
@@ -234,7 +270,10 @@ def _faster_whisper(path, model, lang, start, end):
     m = fw.WhisperModel(model, device="auto", compute_type="int8")
     audio = str(path) if not start and end is None else pcm_float32(path, start, end)
     offset = start if not isinstance(audio, str) else 0.0
-    kwargs = {"language": None if lang == "auto" else lang, "vad_filter": True}
+    # greedy decoding (beam 1) is ~2x faster on a CPU with little loss on clear lecture speech; not feeding the
+    # previous text back in stops the repeated-phrase loops whisper can fall into on long recordings
+    kwargs = {"language": None if lang == "auto" else lang, "vad_filter": True, "beam_size": 1,
+              "condition_on_previous_text": False}
     try:
         segs, info = m.transcribe(audio, **kwargs)
         segs = list(segs)
@@ -252,7 +291,8 @@ def _openai_whisper(path, model, lang, start, end):
     whisper = _need("whisper", "openai-whisper")
     _need("av", "av")
     audio = pcm_float32(path, start, end)          # decoded here, so ffmpeg is not needed
-    res = whisper.load_model(model).transcribe(audio, language=None if lang == "auto" else lang, fp16=False)
+    res = whisper.load_model(model).transcribe(audio, language=None if lang == "auto" else lang, fp16=False,
+                                               condition_on_previous_text=False)
     return {"engine": "whisper", "model": model, "language": res.get("language", lang),
             "segments": [{"start": round(s["start"] + start, 2), "end": round(s["end"] + start, 2), "text": s["text"]}
                          for s in res.get("segments", [])]}
@@ -302,15 +342,40 @@ def doctor() -> dict:
             out["faster-whisper"] = f"ctranslate2 {why}"
     out["can_download"] = out["yt-dlp"] == "ok" or bool(shutil.which("yt-dlp"))
     out["can_analyse"] = out["av"] == "ok" and out["numpy"] == "ok"
+    out["can_capture_slides"] = out["can_download"] and out["can_analyse"]
     out["engines_ready"] = [e for e in ENGINES if out[e] == "ok"] if out["av"] == "ok" else []
     return out
 
 
 def process(args) -> dict:
+    """Audio (and, with --slides-dir, slides) for one video. The slide video downloads and is scanned in a
+    second thread while the audio is downloaded, analysed and transcribed, so slides add little time."""
     start, end = parse_clip(args.clip)
     work = Path(args.workdir)
     work.mkdir(parents=True, exist_ok=True)
     result = {"errors": []}
+    slides_job = None
+    if args.slides_dir:
+        def job():
+            try:
+                result["slides"] = capture_slides(args.url, work, Path(args.slides_dir), start, end,
+                                                  args.slides_height)
+            except (RuntimeError, ValueError, OSError, subprocess.SubprocessError, _Unavailable) as exc:
+                result["errors"].append(f"slides not captured: {exc}")
+            except Exception as exc:  # noqa: BLE001 - a decoder error must not lose the audio result
+                result["errors"].append(f"slides not captured: {type(exc).__name__}: {exc}")
+        slides_job = threading.Thread(target=job, daemon=True)
+        slides_job.start()
+    try:
+        if not args.no_audio:
+            _process_audio(args, work, start, end, result)
+    finally:
+        if slides_job:
+            slides_job.join()
+    return result
+
+
+def _process_audio(args, work: Path, start, end, result: dict) -> None:
     audio = download_audio(args.url, work, start, end)
     result["audio"] = audio
     result["audio"].update(stream_facts(audio["file"]))
@@ -330,7 +395,6 @@ def process(args) -> dict:
         shutil.copy2(audio["file"], target)
         result["audio"]["kept"] = str(target)
     result["audio"]["file"] = Path(audio["file"]).name
-    return result
 
 
 def main(argv=None) -> int:
@@ -348,6 +412,9 @@ def main(argv=None) -> int:
     p.add_argument("--lang", default="en")
     p.add_argument("--keep-audio", default="")
     p.add_argument("--no-transcribe", action="store_true")
+    p.add_argument("--no-audio", action="store_true", help="skip the audio (slides only)")
+    p.add_argument("--slides-dir", default="", help="also capture the slides into this folder")
+    p.add_argument("--slides-height", type=int, default=720, help="video height used for the slides")
     args = ap.parse_args(argv)
     try:
         out = doctor() if args.cmd == "doctor" else process(args)

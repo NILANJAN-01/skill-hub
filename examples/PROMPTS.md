@@ -291,7 +291,7 @@ Install the whole category: `--plugin learning-tools`
 
 Install the whole category: `--plugin youtube-tools`
 
-### YouTube lecture overview: link to audio, text and HTML (study and tech only)
+### YouTube lecture overview: link to text, slides, HLD and HTML (study and tech only)
 
 [`yt-lecture-overview`](../skills/generic/youtube/yt-lecture-overview/SKILL.md) · install: `--skill yt-lecture-overview`
 

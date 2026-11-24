@@ -1,7 +1,9 @@
 """Offline tests for yt-lecture-overview (no network: YouTube responses come from fixtures/)."""
 from __future__ import annotations
 
+import importlib.util
 import json
+import re
 import shutil
 import sys
 import tempfile
@@ -12,8 +14,10 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
 import yt_audio as ya  # noqa: E402
+import yt_html as yh  # noqa: E402
 import yt_lecture as yl  # noqa: E402
 import yt_lecture_mcp as mcp  # noqa: E402
+import yt_slides as ys  # noqa: E402
 from yt_guardrail import LinkError, classify_title, parse_youtube_url  # noqa: E402
 
 FIX = HERE / "fixtures"
@@ -46,18 +50,33 @@ AUDIO_REPORT = {
 }
 
 
+SLIDE_TIMES = [(2.0, 60.0), (130.0, 200.0), (310.0, 400.0)]
+
+
 class FakeRun:
-    """Stands in for subprocess.run of yt_audio.py; records the command."""
-    def __init__(self, report):
-        self.report, self.cmds = report, []
+    """Stands in for subprocess.run of yt_audio.py; records the command. With slides=True it also plays the
+    slide stage: writes one small file per slide into --slides-dir and reports them."""
+    def __init__(self, report, slides=False):
+        self.report, self.cmds, self.slides = report, [], slides
 
     def __call__(self, cmd, **kwargs):
         self.cmds.append(cmd)
+        report = dict(self.report)
+        if self.slides and "--slides-dir" in cmd and "fatal" not in report:
+            folder = Path(cmd[cmd.index("--slides-dir") + 1])
+            folder.mkdir(parents=True, exist_ok=True)
+            items = []
+            for i, (start, end) in enumerate(SLIDE_TIMES, 1):
+                (folder / f"slide-{i:03d}.jpg").write_bytes(b"\xff\xd8fake-jpeg-%d" % i)
+                items.append({"file": f"slide-{i:03d}.jpg", "start": start, "end": end, "shown_again": []})
+            report["slides"] = {"count": len(items), "slides": items, "camera_shots_skipped": 1}
+            if "--no-audio" in cmd:
+                report = {"errors": [], "slides": report["slides"]}
 
         class P:
             returncode = 0
             stderr = ""
-        P.stdout = json.dumps(self.report)
+        P.stdout = json.dumps(report)
         return P
 
 
@@ -90,7 +109,9 @@ class GuardrailTests(unittest.TestCase):
                            ("Git and GitHub for Beginners - Crash Course", ""),
                            ("Organic Chemistry one shot | NEET", ""), ("How does a CPU work?", ""),
                            ("Python in 100 Seconds", "Science & Technology"),
-                           ("Music theory lecture for beginners", "Music")]:
+                           ("Music theory lecture for beginners", "Music"),
+                           ("Design PasteBin | Systems Design Questions 3.0 With Ex-Google SWE", ""),
+                           ("HLD of a URL shortener", ""), ("Designing distributed systems: caching", "")]:
             self.assertTrue(classify_title(title, cat)["allowed"], title)
 
     def test_blocks_entertainment_and_unclear(self):
@@ -145,7 +166,7 @@ class PipelineTests(unittest.TestCase):
         shutil.rmtree(self.tmp, ignore_errors=True)
 
     def test_fetch_writes_text_and_html(self):
-        res = yl.fetch("https://youtu.be/abcDEF12345", self.tmp, get=fake_get, source="captions")
+        res = yl.fetch("https://youtu.be/abcDEF12345", self.tmp, get=fake_get, source="captions", slides=False)
         folder = Path(res["folder"])
         for name in ("info.json", "transcript.json", "transcript.txt", "notes.json", "overview.md", "overview.html"):
             self.assertTrue((folder / name).is_file(), name)
@@ -160,23 +181,24 @@ class PipelineTests(unittest.TestCase):
         self.assertIn("[0:05] Welcome", (folder / "transcript.txt").read_text(encoding="utf-8"))
 
     def test_agent_notes_kept_on_refetch_and_render(self):
-        res = yl.fetch("https://youtu.be/abcDEF12345", self.tmp, get=fake_get, source="captions")
+        res = yl.fetch("https://youtu.be/abcDEF12345", self.tmp, get=fake_get, source="captions", slides=False)
         folder = Path(res["folder"])
         notes = json.loads((folder / "notes.json").read_text(encoding="utf-8"))
         notes.update(written_by="agent", summary="BFS uses a queue; DFS uses a stack.")
         yl.write_json(folder / "notes.json", notes)
-        yl.fetch("https://youtu.be/abcDEF12345", self.tmp, get=fake_get, source="captions")
+        yl.fetch("https://youtu.be/abcDEF12345", self.tmp, get=fake_get, source="captions", slides=False)
         md = (folder / "overview.md").read_text(encoding="utf-8")
         self.assertIn("BFS uses a queue", md)
         self.assertNotIn("Automatic draft", md)
 
     def test_blocked_video_writes_nothing(self):
         with self.assertRaises(yl.Blocked):
-            yl.fetch("https://www.youtube.com/watch?v=musicVID001", self.tmp, get=fake_get, source="captions")
+            yl.fetch("https://www.youtube.com/watch?v=musicVID001", self.tmp, get=fake_get, source="captions",
+                     slides=False)
         self.assertEqual(list(self.tmp.iterdir()), [])
 
     def test_render_refuses_unchecked_folder(self):
-        res = yl.fetch("https://youtu.be/abcDEF12345", self.tmp, get=fake_get, source="captions")
+        res = yl.fetch("https://youtu.be/abcDEF12345", self.tmp, get=fake_get, source="captions", slides=False)
         folder = Path(res["folder"])
         info = json.loads((folder / "info.json").read_text(encoding="utf-8"))
         info["guardrail"]["allowed"] = False
@@ -185,7 +207,7 @@ class PipelineTests(unittest.TestCase):
             yl.render(folder)
 
     def test_transcript_file_used(self):
-        res = yl.fetch("https://youtu.be/abcDEF12345", self.tmp, get=fake_get, source="captions",
+        res = yl.fetch("https://youtu.be/abcDEF12345", self.tmp, get=fake_get, source="captions", slides=False,
                        transcript_file=str(FIX / "rolling.vtt"))
         self.assertEqual(res["transcript_source"], "file:rolling.vtt")
 
@@ -198,7 +220,8 @@ class PipelineTests(unittest.TestCase):
         yl.ytdlp_command = lambda: None
         try:
             with self.assertRaises(yl.FetchError) as ctx:
-                yl.fetch("https://youtu.be/abcDEF12345", self.tmp, get=no_captions, source="captions")
+                yl.fetch("https://youtu.be/abcDEF12345", self.tmp, get=no_captions, source="captions",
+                         slides=False)
         finally:
             yl.ytdlp_command = orig
         self.assertIn("--transcript", str(ctx.exception))
@@ -293,6 +316,168 @@ class AudioTests(unittest.TestCase):
         msg = str(ctx.exception)
         for engine in ("faster-whisper", "whisper", "vosk"):
             self.assertIn(engine, msg)
+
+
+class StudyPageTests(unittest.TestCase):
+    """The study aids on overview.html: term locations, progress, quiz, search and chart marks."""
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp())
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def test_first_mention(self):
+        segs = [{"start": 1, "text": "welcome to the lecture on gradient"}, {"start": 5, "text": "descent today"},
+                {"start": 9, "text": "Breadth-First Searches use a queue"}, {"start": 20, "text": "breadth first search"}]
+        self.assertEqual(yh.first_mention("gradient descent (GD)", segs), 1)      # split across two segments
+        self.assertEqual(yh.first_mention("breadth first search", segs), 9)       # hyphens, case, plural
+        self.assertEqual(yh.first_mention("descent", segs), 5)
+        self.assertIsNone(yh.first_mention("lecture three", segs))               # must not borrow the next segment
+        self.assertIsNone(yh.first_mention("heap", segs))
+        self.assertIsNone(yh.first_mention("", segs))
+
+    def test_study_aids_rendered(self):
+        res = yl.fetch("https://youtu.be/abcDEF12345", self.tmp, get=fake_get, runner=FakeRun(AUDIO_REPORT))
+        folder = Path(res["folder"])
+        notes = json.loads((folder / "notes.json").read_text(encoding="utf-8"))
+        notes.update(written_by="agent",
+                     terms=[{"term": "depth first search", "meaning": "go deep first"},
+                            {"term": "<b>heap</b>", "meaning": "not said in this lecture"}],
+                     review_questions=[{"q": "What does BFS use?", "a": "A queue."}])
+        yl.write_json(folder / "notes.json", notes)
+        yl.render(folder)
+        page = (folder / "overview.html").read_text(encoding="utf-8")
+        md = (folder / "overview.md").read_text(encoding="utf-8")
+        self.assertIn('data-vid="abcDEF12345"', page)
+        self.assertIn("first said at 5:05", page)                                 # 305 s in AUDIO_REPORT
+        self.assertIn("(first said at [5:05](https://www.youtube.com/watch?v=abcDEF12345&t=305s))", md)
+        self.assertEqual(page.count("first said at"), 1)                           # unknown term: no link
+        self.assertIn("&lt;b&gt;heap&lt;/b&gt;", page)
+        self.assertEqual(page.count('class="studied"'), 3)
+        self.assertIn('data-a="y"', page)
+        self.assertIn('id="allq"', page)
+        self.assertIn('data-find="graph"', page)                                   # common words search
+        self.assertIn('class="mk"', page)                                          # part starts on the chart
+        self.assertIn('class="tx"', page)
+        self.assertNotIn("data-t=", page)                                          # transcript no longer doubled
+        # every script-only control starts hidden, so the page reads fine without scripts
+        for tag in re.findall(r"<[^>]*class=\"js[ \"][^>]*>", page):
+            self.assertIn(" hidden", tag, tag)
+
+
+class SlidesAndDesignTests(unittest.TestCase):
+    """Slides captured while presenting, and the high-level design built from them."""
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp())
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def test_pick_scenes(self):
+        slide_a = [0] * 50 + [255] * 50                  # flat lists stand in for the 64x36 thumbnails
+        build_a = [0] * 46 + [255] * 54                  # a bullet appears: 4% changed, same slide
+        slide_b = [255] * 50 + [0] * 50
+        blank = [10] * 100
+        samples = [(0, slide_a, "a0"), (1, slide_a, "a1"), (2, build_a, "a2"), (3, build_a, "a3"), (4, build_a, "a4"),
+                   (5, slide_b, "b0"), (6, slide_b, "b1"),            # shown 1 s only: not a slide
+                   (7, blank, "x"), (8, blank, "x"), (9, blank, "x"), (10, blank, "x"), (11, blank, "x"),
+                   (12, slide_a, "again"), (13, slide_a, "again"), (14, slide_a, "again"), (15, slide_a, "again")]
+        scenes = ys.pick_scenes(samples)
+        self.assertEqual(len(scenes), 1)                                 # blank skipped, flash skipped
+        self.assertEqual(scenes[0]["payload"], "a4")                     # the complete build is kept
+        self.assertEqual((scenes[0]["start"], scenes[0]["end"]), (0, 4))
+        self.assertEqual(scenes[0]["shown_again"], [12])                 # going back is not a new slide
+        self.assertLess(scenes[0]["motion"], 0.01)                       # a slide stands still
+
+    @unittest.skipUnless(importlib.util.find_spec("numpy"), "numpy not installed")
+    def test_camera_shots_are_not_slides(self):
+        import numpy as np
+        rng = np.random.default_rng(1)
+        slide = np.full((90, 160), 245, dtype=np.uint8)
+        slide[20:24, 20:140] = 20                                        # flat page with lines of text
+        slide[40:44, 20:120] = 20
+        camera = (np.linspace(40, 160, 160)[None, :] + rng.normal(0, 4, (90, 160))).clip(0, 255).astype(np.uint8)
+        self.assertFalse(ys.looks_like_camera(slide))
+        self.assertFalse(ys.looks_like_camera(slide, motion=0.2))        # an animated slide stays a slide
+        self.assertTrue(ys.looks_like_camera(camera))                    # soft shading, no sharp edges
+
+    def test_hld_layout_and_svg(self):
+        pos, back = yh.hld_layout(["Client", "API", "DB", "Cache"],
+                                  [("Client", "API"), ("API", "DB"), ("API", "Cache"), ("Cache", "API")])
+        self.assertEqual(pos["Client"][0], 0)
+        self.assertEqual(pos["API"][0], 1)
+        self.assertEqual({pos["DB"][0], pos["Cache"][0]}, {2})
+        self.assertEqual(back, {("Cache", "API")})                       # the loop does not push columns
+        svg = yh.hld_svg({"components": [{"name": "<Client>", "role": "browser"}],
+                          "flow": [{"from": "<Client>", "to": "API", "label": "HTTPS"}, {"from": "API", "to": "API"}]})
+        self.assertIn("&lt;Client&gt;", svg)
+        self.assertNotIn("<Client>", svg)
+        self.assertEqual(svg.count("<rect"), 2)
+        self.assertEqual(svg.count('marker-end="url(#ah)"'), 1)          # the self-loop is dropped
+        self.assertIn(">HTTPS</text>", svg)
+        self.assertEqual(yh.hld_svg({}), "")
+
+    def test_slides_captured_in_the_same_run_and_shown(self):
+        run = FakeRun(AUDIO_REPORT, slides=True)
+        res = yl.fetch("https://youtu.be/abcDEF12345", self.tmp, get=fake_get, runner=run)
+        self.assertEqual(len(run.cmds), 1)                               # one run: audio and slides together
+        self.assertIn("--slides-dir", run.cmds[0])
+        self.assertEqual(res["slides"], 3)
+        folder = Path(res["folder"])
+        self.assertEqual(sorted(p.name for p in (folder / "slides").iterdir()),
+                         ["slide-001.jpg", "slide-002.jpg", "slide-003.jpg"])
+        page = (folder / "overview.html").read_text(encoding="utf-8")
+        for text in ('id="design"', "Slides (3)", ".im-3{background-image:url(data:image/jpeg;base64,",
+                     'id="lb"', 'class="strip"', 'class="nav-group"', 'id="learn"', 'id="reference"'):
+            self.assertIn(text, page)
+        self.assertNotIn('id="practise"', page)                          # a draft has nothing to practise yet
+        self.assertIn("draw the lecture", page)                          # draft: asks for the design
+
+        notes = json.loads((folder / "notes.json").read_text(encoding="utf-8"))
+        notes.update(written_by="agent", slides=[{"file": "slide-002.jpg", "caption": "BFS <queue>"},
+                                                 {"file": "slide-003.jpg", "hide": True},
+                                                 {"file": "../info.json", "caption": "ignored"}],
+                     hld={"summary": "Graph search.", "components": [{"name": "Queue", "role": "holds the frontier",
+                                                                      "slide": "slide-002.jpg"}],
+                          "flow": [{"from": "Start node", "to": "Queue", "label": "enqueue"}]})
+        yl.write_json(folder / "notes.json", notes)
+        yl.render(folder)
+        page = (folder / "overview.html").read_text(encoding="utf-8")
+        md = (folder / "overview.md").read_text(encoding="utf-8")
+        self.assertIn("Slides (2)", page)                                # one hidden
+        self.assertNotIn(".im-3{", page)
+        self.assertIn("BFS &lt;queue&gt;", page)
+        self.assertIn('class="hld-svg"', page)
+        self.assertIn('data-slide="2">see slide 2', page)
+        self.assertIn("High-level design", page)
+        self.assertIn("1. Start node → Queue: enqueue", md)
+        self.assertIn("[slide-002.jpg](slides/slide-002.jpg): BFS <queue>", md)
+
+    def test_slides_alone_when_text_comes_from_captions(self):
+        run = FakeRun(AUDIO_REPORT, slides=True)
+        res = yl.fetch("https://youtu.be/abcDEF12345", self.tmp, get=fake_get, source="captions", runner=run)
+        self.assertEqual(len(run.cmds), 1)
+        self.assertIn("--no-audio", run.cmds[0])
+        self.assertEqual(res["slides"], 3)
+
+    def test_no_slides_skips_video_and_keeps_old_slides(self):
+        yl.fetch("https://youtu.be/abcDEF12345", self.tmp, get=fake_get, runner=FakeRun(AUDIO_REPORT, slides=True))
+        run = FakeRun(AUDIO_REPORT, slides=True)
+        res = yl.fetch("https://youtu.be/abcDEF12345", self.tmp, get=fake_get, runner=run, slides=False)
+        self.assertNotIn("--slides-dir", run.cmds[0])
+        self.assertEqual(res["slides"], 3)                               # earlier capture kept
+        self.assertIn("Slides (3)", (Path(res["folder"]) / "overview.html").read_text(encoding="utf-8"))
+
+    def test_failed_fetch_leaves_no_slides_behind(self):
+        with self.assertRaises(yl.FetchError):
+            yl.fetch("https://youtu.be/abcDEF12345", self.tmp, get=fake_get, source="audio-only",
+                     runner=FakeRun({"fatal": "no engine"}, slides=True))
+        self.assertEqual(list(self.tmp.iterdir()), [])
+
+    def test_fix_advice_attached_when_audio_fails(self):
+        res = yl.fetch("https://youtu.be/abcDEF12345", self.tmp, get=fake_get,
+                       runner=FakeRun({"fatal": "yt-dlp is not installed in the audio Python"}))
+        self.assertTrue(any("pip install" in line for line in res["fix"]))
 
 
 class McpTests(unittest.TestCase):

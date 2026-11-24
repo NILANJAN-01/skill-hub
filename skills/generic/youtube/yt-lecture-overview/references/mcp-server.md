@@ -7,11 +7,11 @@
 | Tool | Writes files | What it does |
 |---|---|---|
 | `yt_check_video(url)` | no | Validates the link, reads the real title, length, category and chapters, and returns `allowed` with the reason |
-| `yt_fetch_overview(url, out_dir?, source?, clip?, lang?, engine?, model?, keep_audio?, transcript_file?, redraft?)` | yes | For an allowed video, extracts the audio, analyses it and turns the speech into text (`source`: `audio` default, `audio-only`, or `captions`), then writes the folder (transcript, draft notes, `overview.md`, `overview.html`). Returns the paths, `audio_summary`, `warnings` and the first 4,000 characters of the transcript. A blocked video returns an error starting `BLOCKED`, and no audio is fetched |
+| `yt_fetch_overview(url, out_dir?, source?, clip?, lang?, engine?, model?, keep_audio?, transcript_file?, redraft?, slides?)` | yes | Checks the link and the guardrail, then extracts the audio, analyses it and turns the speech into text (`source`: `audio` default, `audio-only`, or `captions`). In parallel it captures the slides (`slides: false` skips them). Writes the folder: transcript, `slides/`, draft notes, `overview.md`, `overview.html`. Returns the paths, `slides`, `slides_folder`, `audio_summary`, `warnings`, `fix` (install commands, when something could not run) and the first 4,000 characters of the transcript. A blocked video returns an error starting `BLOCKED`, and nothing is downloaded |
 | `yt_read_transcript(folder, offset?, limit?)` | no | Pages through `transcript.txt` (default 40,000 characters a page; follow `next_offset`) |
-| `yt_render_overview(folder, notes?)` | yes | Merges your notes (summary, key_takeaways, sections, terms, prerequisites, further_study, review_questions) into `notes.json`, marks them `written_by: agent`, and rebuilds the Markdown and HTML |
+| `yt_render_overview(folder, notes?)` | yes | Merges your notes (summary, key_takeaways, sections, terms, prerequisites, further_study, review_questions, `hld`, `slides`) into `notes.json`, marks them `written_by: agent`, and rebuilds the Markdown and HTML |
 
-The usual flow is check, then fetch, then read the transcript, then render with notes.
+The usual flow is fetch, then read the transcript (and look at the slide images, if the client can read files), then render with notes. `yt_check_video` is optional: fetch runs the same check.
 
 ## Start it
 

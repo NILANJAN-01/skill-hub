@@ -4,7 +4,7 @@ The audio stage is `scripts/yt_audio.py`. `yt_lecture.py fetch` runs it as a sep
 
 ## What it does
 
-1. **Extract**: `yt-dlp -f "bestaudio[ext=m4a]/bestaudio" --no-playlist` downloads only the audio track (about 1 MB per minute) into a temporary folder. If Node.js is installed, `--js-runtimes node` is added so that yt-dlp can solve YouTube's player challenges. ffmpeg is not needed.
+1. **Extract**: `yt-dlp -f "bestaudio[ext=m4a][abr<=96]/bestaudio[ext=m4a]/bestaudio" --no-playlist` downloads only the audio track (under 1 MB per minute) into a temporary folder. Speech needs no more than about 96 kbps. `--concurrent-fragments 4 --http-chunk-size 10M` downloads in parallel parts and avoids YouTube's throttling of single long requests. If Node.js is installed, `--js-runtimes node` is added so that yt-dlp can solve YouTube's player challenges. ffmpeg is not needed.
 2. **Decode**: PyAV decodes the track and resamples it to 16 kHz mono. `--clip` seeks to the start and stops at the end, so only that part is processed.
 3. **Analyse** (numpy): the loudness of every 0.5-second window is measured in dBFS. A window counts as speech when it is louder than a threshold between the noise floor and the speech level. The threshold is never closer than 12 dB to the speech level. The results:
    - `speech_ratio` and `speech_seconds` (and from them, words per minute)
@@ -20,7 +20,16 @@ The audio stage is `scripts/yt_audio.py`. `yt_lecture.py fetch` runs it as a sep
 | openai-whisper | `pip install openai-whisper` | Same models, slower on a CPU | Needs PyTorch. The script decodes the audio itself, so ffmpeg is not needed |
 | vosk | `pip install vosk` | Lighter, no punctuation, all lower case | Works on any Python 3. Downloads a small model on first use, or set `VOSK_MODEL_PATH` / `--model <folder>` (models at alphacephei.com/vosk/models) |
 
-5. **Clean up**: the temporary folder (with the audio) is removed unless `--keep-audio` is given.
+   Whisper engines run greedy decoding (beam size 1) and do not feed the previous text back in. This is about twice as fast on a CPU, with little loss on clear lecture speech, and it avoids the repeated-phrase loops whisper can fall into on long recordings.
+5. **Slides, in parallel** (`scripts/yt_slides.py`, the same `av` + `numpy`; nothing extra to install). A second thread downloads a video-only stream of 720p or less, H.264 first because it decodes fastest (`--slides-height` changes the height). It then samples one frame a second and compares 64×36 grey thumbnails:
+   - a change over 12% of the pixels starts a new scene;
+   - a scene shown for 3 s or more is a slide, and its last frame is saved, so builds are complete;
+   - a repeat of an earlier slide is recorded as `shown_again`;
+   - blank frames are skipped;
+   - camera shots are skipped: soft images with few sharp edges, or images that keep moving and have little flat area. Slides with a small webcam in a corner stay.
+
+   On a laptop, a 10-minute 720p video took about 10 s to download and 12 s to scan, while speech-to-text ran at the same time. The video file is deleted right after the scan.
+6. **Clean up**: the temporary folder (audio and video) is removed unless `--keep-audio` is given. Slide images go to `<folder>/slides/` only when the whole fetch succeeds.
 
 ## Setting up a separate audio Python
 

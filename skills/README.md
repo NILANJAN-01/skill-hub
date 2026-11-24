@@ -132,7 +132,7 @@ A skill lives in `skills/<area>/<group>/<skill>/`. The area and group only organ
 
 | Skill | Description | Needs |
 |---|---|---|
-| [`yt-lecture-overview`](generic/youtube/yt-lecture-overview/SKILL.md) | Turn a YouTube link of a study or tech video (lecture, tutorial, course, talk) into text and a visual HTML overview: extract the audio, analyse it (speech,... | Python 3.8+ (standard library) for links, guardrail, captions, notes and HTML; needs... |
+| [`yt-lecture-overview`](generic/youtube/yt-lecture-overview/SKILL.md) | Turn a YouTube study or tech video link into a structured HTML study page: transcript from the audio, captured slides, notes, HLD diagram and quiz. Refuses... | Python 3.8+ (standard library) for links, guardrail, captions, notes and HTML; needs... |
 
 ## AI efficiency: save tokens & cost (`ai-efficiency-tools`)
 
