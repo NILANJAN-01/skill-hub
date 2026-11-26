@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Tests for video_inspector.py and mp4info.py. The MP4 metadata tests use only the standard library
-(hand-built MP4 boxes); the frame tests generate a video with OpenCV and are skipped without it.
+(hand-built MP4 boxes); the frame tests make a video with the ffmpeg program and are skipped without it.
 Run: python -m unittest discover -s scripts -p "test_*.py" """
 
 import argparse
@@ -19,9 +19,11 @@ sys.path.insert(0, str(HERE))
 import mp4info  # noqa: E402
 import video_inspector as vi  # noqa: E402
 
+import video_frames as vf  # noqa: E402
+
+HAVE_FFMPEG = bool(vf.find_tool("ffmpeg") and vf.find_tool("ffprobe"))
 try:
-    import cv2
-    import numpy as np
+    import cv2  # noqa: F401  (only for the optional OpenCV-fallback test)
     HAVE_CV = True
 except ImportError:
     HAVE_CV = False
@@ -78,10 +80,12 @@ class TempDir(unittest.TestCase):
     def tearDown(self):
         self.tmp.cleanup()
 
-    def cli(self, *args, no_cv=False):
-        if no_cv:
-            code = ("import sys; sys.modules['cv2'] = None; sys.path.insert(0, sys.argv[1]); "
-                    "import video_inspector as v; sys.exit(v.main(sys.argv[2:]))")
+    def cli(self, *args, no_cv=False, decoder=None):
+        if no_cv or decoder == "opencv":
+            # no_cv: neither ffmpeg nor OpenCV; decoder="opencv": OpenCV only (ffmpeg hidden)
+            block = "sys.modules['cv2'] = None; " if no_cv else ""
+            code = ("import sys; " + block + "sys.path.insert(0, sys.argv[1]); import video_frames as f; "
+                    "f.find_tool = lambda name: None; import video_inspector as v; sys.exit(v.main(sys.argv[2:]))")
             cmd = [sys.executable, "-c", code, str(HERE), *args]
         else:
             cmd = [sys.executable, str(HERE / "video_inspector.py"), *args]
@@ -166,7 +170,7 @@ class NoOpenCvTests(TempDir):
         self.assertTrue(any("GPS" in w for w in rep["warnings"]))
         p = self.cli("clip.mp4", no_cv=True)
         self.assertEqual(p.returncode, 2)
-        self.assertIn("pip install opencv-python-headless", p.stderr)
+        self.assertIn("ffmpeg", p.stderr)
         self.assertIn("--info", p.stderr)
 
     def test_audio_only_and_edit_list(self):
@@ -176,7 +180,7 @@ class NoOpenCvTests(TempDir):
         rep = json.loads(p.stdout)
         self.assertEqual(rep["description"], "song.mp4 has no video track (audio only), 4.0 s.")
         self.assertTrue(any("no video track" in w for w in rep["warnings"]))
-        if HAVE_CV:                                     # used to hang; must now stop at once with a clear error
+        if HAVE_FFMPEG:                                 # used to hang; must now stop at once with a clear error
             p = self.cli("song.mp4")
             self.assertEqual(p.returncode, 2)
             self.assertIn("no video track", p.stderr)
@@ -195,30 +199,39 @@ class NoOpenCvTests(TempDir):
         self.assertIn("no video files", self.cli("empty").stderr)
 
 
-@unittest.skipUnless(HAVE_CV, "OpenCV not installed (pip install opencv-python-headless)")
+def demo_frames():
+    """8 s at 10 fps, 160x120 RGB: 0-2 s black, 2-4 s red, 4-6 s white with a moving blue square, 6-8 s
+    static green. A yellow 'LED' at (5..15, 5..15) is on from 2 s to 5 s."""
+    W, H = 160, 120
+    for i in range(80):
+        t = i / 10
+        bg = (0, 0, 0) if t < 2 else (220, 30, 30) if t < 4 else (255, 255, 255) if t < 6 else (30, 160, 50)
+        f = bytearray(bytes(bg) * (W * H))
+
+        def rect(x0, y0, x1, y1, rgb):
+            for y in range(y0, y1 + 1):
+                f[(y * W + x0) * 3:(y * W + x1 + 1) * 3] = bytes(rgb) * (x1 - x0 + 1)
+        if 4 <= t < 6:
+            x = int((t - 4) * 60)
+            rect(x, 40, min(W - 1, x + 30), 70, (30, 80, 220))
+        if 2 <= t < 5:
+            rect(5, 5, 15, 15, (250, 220, 0))
+        yield bytes(f)
+
+
+def make_demo(path):
+    cmd = [vf.find_tool("ffmpeg"), "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", "160x120",
+           "-r", "10", "-i", "-", "-c:v", "mpeg4", "-q:v", "2", "-pix_fmt", "yuv420p", str(path)]
+    subprocess.run(cmd, input=b"".join(demo_frames()), check=True, capture_output=True)
+
+
+@unittest.skipUnless(HAVE_FFMPEG, "the ffmpeg program is not installed")
 class VideoTests(TempDir):
-    """8 s at 10 fps: 0-2 s black, 2-4 s red, 4-6 s white with a moving blue square, 6-8 s static green.
-    A yellow 'LED' at (5..15, 5..15) is on from 2 s to 5 s."""
+    """See demo_frames()."""
 
     def setUp(self):
         super().setUp()
-        w = cv2.VideoWriter(str(self.dir / "demo.mp4"), cv2.VideoWriter_fourcc(*"mp4v"), 10, (160, 120))
-        for i in range(80):
-            t = i / 10
-            if t < 2:
-                f = np.zeros((120, 160, 3), np.uint8)
-            elif t < 4:
-                f = np.full((120, 160, 3), (30, 30, 220), np.uint8)
-            elif t < 6:
-                f = np.full((120, 160, 3), 255, np.uint8)
-                x = int((t - 4) * 60)
-                cv2.rectangle(f, (x, 40), (x + 30, 70), (220, 80, 30), -1)
-            else:
-                f = np.full((120, 160, 3), (50, 160, 30), np.uint8)
-            if 2 <= t < 5:
-                cv2.rectangle(f, (5, 5), (15, 15), (0, 220, 250), -1)
-            w.write(f)
-        w.release()
+        make_demo(self.dir / "demo.mp4")
 
     def report(self, out="video-reports"):
         return json.loads((self.dir / out / "demo" / "report.json").read_text(encoding="utf-8"))
@@ -280,6 +293,43 @@ class VideoTests(TempDir):
         p = self.cli("demo.mp4", "--pixel", "500,10")
         self.assertEqual(p.returncode, 2)
         self.assertIn("outside the frame (160x120)", p.stderr)
+
+
+@unittest.skipUnless(HAVE_FFMPEG and HAVE_CV, "needs ffmpeg (to make the video) and OpenCV")
+class OpenCvFallbackTests(TempDir):
+    def test_same_scenes_with_the_opencv_decoder(self):
+        make_demo(self.dir / "demo.mp4")
+        p = self.cli("demo.mp4", "--every", "0.5", "--stdout", decoder="opencv")
+        self.assertEqual(p.returncode, 0, p.stderr)
+        rep = json.loads(p.stdout)
+        self.assertTrue(rep["generator"]["decoder"].startswith("opencv"))
+        self.assertEqual([s["start"] for s in rep["scenes"]], [0.0, 2.0, 4.0, 6.0])
+
+
+class AnalysisMathTests(unittest.TestCase):
+    """The pure-Python versions of the OpenCV operations used per frame."""
+
+    def test_hsv_matches_opencv_values(self):
+        # cv2.cvtColor(..., COLOR_RGB2HSV) on these pixels gives these (H, S)
+        rgb = bytes([255, 0, 0, 0, 255, 0, 0, 0, 255, 255, 255, 0, 128, 128, 128, 200, 100, 50])
+        hs, ss = vf.hsv(rgb)
+        self.assertEqual(list(zip(hs, ss)), [(0, 255), (60, 255), (120, 255), (30, 255), (0, 0), (10, 191)])
+
+    def test_gray_histogram_and_distance(self):
+        self.assertEqual(vf.gray(bytes([255, 255, 255, 0, 0, 0, 255, 0, 0])), [255, 0, 76])
+        h = vf.hs_hist(*vf.hsv(bytes([255, 0, 0] * 10 + [0, 0, 255] * 10)))
+        self.assertAlmostEqual(sum(v * v for v in h), 1.0)
+        self.assertAlmostEqual(vf.bhattacharyya(h, h), 0.0, places=6)
+        other = vf.hs_hist(*vf.hsv(bytes([0, 255, 0] * 20)))
+        self.assertAlmostEqual(vf.bhattacharyya(h, other), 1.0, places=6)
+
+    def test_laplacian_and_resize(self):
+        self.assertEqual(vf.laplacian_var([7] * 16, 4, 4), 0.0)
+        g = [0, 255] * 8                                   # vertical stripes: strong edges
+        self.assertGreater(vf.laplacian_var(g, 4, 4), 1000)
+        img = bytes([10, 20, 30, 30, 40, 50] * 2)          # 2x2 RGB -> 1x1 average
+        self.assertEqual(vf.area_resize(img, 2, 2, 1, 1), bytes([20, 30, 40]))
+        self.assertEqual(vf.analysis_sizes(1920, 1080), ((320, 180), (160, 90)))
 
 
 if __name__ == "__main__":

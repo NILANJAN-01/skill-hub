@@ -6,7 +6,7 @@ One folder per video: `<out>/<video name without extension>/`. If two videos in 
 
 ```json
 {
-  "generator": {"name": "video-inspector", "version": "1.0", "opencv": "5.0.0"},
+  "generator": {"name": "video-inspector", "version": "1.0", "decoder": "ffmpeg"},
   "file": {"name": "demo.mp4", "path": "demo.mp4", "bytes": 8390},
   "video": {
     "width": 160, "height": 120, "fps": 10.0, "frames": 80, "duration_s": 8.0,
@@ -51,8 +51,10 @@ One folder per video: `<out>/<video name without extension>/`. If two videos in 
 | Field | Details |
 |---|---|
 | `video.container` | MP4/MOV/M4V/3GP only. Read directly from the file's `moov` box (standard library). Has `has_gps_location`, and `gps` only with `--include-gps` |
-| `video.width`, `height` | As decoded by OpenCV, so a rotation flag (`rotation`) is already applied |
-| `video.fps`, `frames` | From the container when available (more reliable), otherwise from OpenCV |
+| `video.width`, `height` | As decoded (ffmpeg or OpenCV), so a rotation flag (`rotation`) is already applied |
+| `generator.decoder` | `ffmpeg`, or `opencv <version>` when OpenCV decoded the frames because ffmpeg was missing |
+| `video.fps`, `frames` | From the container when available (more reliable), otherwise from ffprobe (or OpenCV) |
+| `frames[].sharpness` | Variance of the 3x3 Laplacian on the analysis frame (longest side 320 px). Compare it within one video; it is lower than the values of version 1.0, which used 512 px |
 | `frames[].t` | Frame index / fps. With a variable frame rate, it is approximate |
 | `frames[].brightness`, `contrast` | Mean and standard deviation of the grey level, 0..255 |
 | `frames[].dominant` | Up to 3 colours, similar shades merged, with the share of the frame |

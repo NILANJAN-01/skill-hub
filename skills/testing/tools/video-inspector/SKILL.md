@@ -2,7 +2,7 @@
 name: video-inspector
 description: "Analyse a video file (MP4, MOV, MKV, WebM, AVI) with a ready-made Python script: metadata, frame extraction, scene changes, black or frozen sections, motion, brightness, and the colour of a pixel or area over time. Use when the user wants to analyse or describe a video or screen recording, extract frames, check for black screens, freezes or flicker, or track an LED or indicator colour."
 license: Complete terms in the repository README
-compatibility: Needs Python 3.8+ and OpenCV (pip install opencv-python-headless, which includes numpy and FFmpeg decoding). Metadata of MP4/MOV files (--info) works with the standard library alone.
+compatibility: Needs Python 3.8+ and the ffmpeg program (with ffprobe) to decode frames; no Python packages. All frame analysis is pure Python. OpenCV is used as the decoder instead when it is installed and ffmpeg is not. Metadata of MP4/MOV files (--info) needs nothing at all.
 metadata:
   title: "Video inspector: frames, pixels and description"
   category: video-tools
@@ -40,7 +40,7 @@ Per analysed frame, the report has the time and frame number, brightness and lev
 
 `scripts/…` below means the `scripts` folder inside this skill's folder. Run the commands from the user's project with the full path to the script, so that `video-reports/` is created there. Or pass `--out <folder>`.
 
-1. **Check OpenCV.** Run `python -c "import cv2"`. If it fails, ask the user before installing: `pip install opencv-python-headless`. Until then, `--info` still reports the metadata of MP4/MOV files.
+1. **Check ffmpeg.** Run `ffmpeg -version`. If it is missing, ask the user before installing it (Windows: `winget install Gyan.FFmpeg`, macOS: `brew install ffmpeg`, Linux: `apt install ffmpeg`), or point the `FFMPEG` environment variable at it. No Python package is needed. Until then, `--info` still reports the metadata of MP4/MOV files.
 2. **Start with the metadata** when the video is unknown or long:
    ```bash
    python scripts/video_inspector.py clip.mp4 --info      # duration, fps, frames, codec, size, rotation, audio
@@ -88,8 +88,8 @@ The detection only sees the analysed frames. To catch short events (a flicker, a
 
 | Problem | Fix |
 |---|---|
-| `frame analysis needs OpenCV` | `pip install opencv-python-headless`, or use `--info` for metadata only |
-| `OpenCV cannot open this video` | Unsupported codec or damaged file. Convert it, e.g. with ffmpeg: `ffmpeg -i in.ext -c:v libx264 out.mp4` |
+| `frame analysis needs the ffmpeg program` | Install ffmpeg (see step 1) or set `FFMPEG` to its path, or use `--info` for metadata only |
+| `ffmpeg cannot decode this video` / `OpenCV cannot open this video` | Unsupported codec or damaged file. Convert it, e.g. with ffmpeg: `ffmpeg -i in.ext -c:v libx264 out.mp4` |
 | `no moov box: the file is incomplete` | The recording was interrupted or the download was cut off. Some tools can repair it (e.g. `untrunc`); otherwise record again |
 | `this is an HTML page, not a video` | The download saved a web page. Download the video file itself |
 | `no video track (audio only)` | The file holds only sound (e.g. a voice memo or music saved as .mp4/.m4a). There are no frames; `--info` shows its metadata |
@@ -108,4 +108,4 @@ The detection only sees the analysed frames. To catch short events (a flicker, a
 python -m unittest discover -s scripts -p "test_*.py"
 ```
 
-The MP4 metadata tests build MP4 files by hand and need only the standard library. The frame tests generate an 8-second video with known content (black, red, a moving square, a static part, and an LED that turns on and off) and are skipped without OpenCV.
+The MP4 metadata tests build MP4 files by hand and need only the standard library. The frame tests generate an 8-second video with known content (black, red, a moving square, a static part, and an LED that turns on and off) with ffmpeg and are skipped without it. The OpenCV fallback is tested too when OpenCV is installed.

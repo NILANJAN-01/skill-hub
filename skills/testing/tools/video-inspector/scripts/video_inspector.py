@@ -11,14 +11,14 @@ plain-text description.
     python video_inspector.py clip.mp4 --save-frames          # save every analysed frame as PNG
     python video_inspector.py clip.mp4 --pixel 50,900 --region 0,0,200,80  # colour over time (LEDs, icons)
     python video_inspector.py clip.mp4 --at 5 --save-frames --grid 32 --pixels-csv   # one frame in depth
-    python video_inspector.py clip.mp4 --info                 # metadata only (no OpenCV needed for MP4/MOV)
+    python video_inspector.py clip.mp4 --info                 # metadata only (MP4/MOV need nothing at all)
     python video_inspector.py videos/ --out reports           # every video in a folder
 
 Output (per video, in <out>/<video name>/): report.json, report.txt (description + timeline),
 timeline.csv, tracks.csv (with --pixel/--region), frames/ (scene key frames, or all with --save-frames).
 
-Frame analysis needs OpenCV: pip install opencv-python-headless (includes numpy and FFmpeg decoding).
-Python 3.8+.
+No Python packages are needed (Python 3.8+). Frames are decoded by the ffmpeg program (OpenCV is used
+instead when it is installed and ffmpeg is not); all analysis is pure Python (video_frames.py).
 """
 
 from __future__ import annotations
@@ -28,18 +28,19 @@ import csv
 import json
 import math
 import re
+from operator import sub
 import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import mp4info  # noqa: E402
+import video_frames as vf  # noqa: E402
 
 VERSION = "1.0"
 VIDEO_EXTS = {".mp4", ".m4v", ".mov", ".3gp", ".3g2", ".mkv", ".webm", ".avi", ".wmv", ".flv", ".mpg", ".mpeg",
               ".ts", ".mts", ".m2ts", ".ogv"}
 MP4_EXTS = {".mp4", ".m4v", ".mov", ".3gp", ".3g2"}
-INSTALL_HINT = "pip install opencv-python-headless"
 
 
 class VideoError(Exception):
@@ -118,82 +119,76 @@ def parse_time(text: str, duration: float) -> float:
 
 # ------------------------------------------------------------------------------------- frame analysis
 
-def cv():
-    import cv2
-    import numpy as np
-    return cv2, np
-
-
-def dominant(rgb_small, k=3):
+def dominant(data, k=3):
     """[(share, (r,g,b))] largest first; similar shades merged (same method as image-inspector)."""
-    cv2, np = cv()
-    px = rgb_small.reshape(-1, 3).astype(np.int64)
-    key = (px[:, 0] >> 4) * 256 + (px[:, 1] >> 4) * 16 + (px[:, 2] >> 4)
-    counts = np.bincount(key, minlength=4096)
-    sums = [np.bincount(key, weights=px[:, c], minlength=4096) for c in range(3)]
-    order = np.argsort(-counts)
+    buckets = {}
+    for r, g, b in zip(data[0::3], data[1::3], data[2::3]):
+        key = (r >> 4) << 8 | (g >> 4) << 4 | (b >> 4)
+        e = buckets.get(key)
+        if e is None:
+            buckets[key] = [1, r, g, b]
+        else:
+            e[0] += 1
+            e[1] += r
+            e[2] += g
+            e[3] += b
     clusters = []
-    for b in order:
-        n = int(counts[b])
-        if not n:
-            break
-        mean = (sums[0][b] / n, sums[1][b] / n, sums[2][b] / n)
+    for n, sr, sg, sb in sorted(buckets.values(), key=lambda e: -e[0]):
+        mean = (sr / n, sg / n, sb / n)
         for c in clusters:
             if dist(mean, (c[1] / c[0], c[2] / c[0], c[3] / c[0])) < 45:
                 c[0] += n
-                c[1] += sums[0][b]
-                c[2] += sums[1][b]
-                c[3] += sums[2][b]
+                c[1] += sr
+                c[2] += sg
+                c[3] += sb
                 break
         else:
-            clusters.append([n, sums[0][b], sums[1][b], sums[2][b]])
-    total = float(len(px))
+            clusters.append([n, sr, sg, sb])
+    total = float(len(data) // 3)
     clusters.sort(key=lambda c: -c[0])
     return [(c[0] / total, (c[1] / c[0], c[2] / c[0], c[3] / c[0])) for c in clusters[:k]]
 
 
 class FrameAnalyser:
+    """Per-frame numbers from the analysis-size frame (longest side 320 px; motion and the colour
+    histogram use a 160 px version)."""
+
     def __init__(self, scene_threshold: float):
         self.scene_threshold = scene_threshold
         self.prev_tiny = None
         self.prev_hist = None
 
-    def analyse(self, bgr) -> dict:
-        cv2, np = cv()
-        h, w = bgr.shape[:2]
-        f = min(1.0, 512 / max(h, w))
-        med = cv2.resize(bgr, (max(1, round(w * f)), max(1, round(h * f))), interpolation=cv2.INTER_AREA) if f < 1 else bgr
-        f2 = min(1.0, 160 / max(h, w))
-        small = cv2.resize(bgr, (max(1, round(w * f2)), max(1, round(h * f2))), interpolation=cv2.INTER_AREA)
-        gray_med = cv2.cvtColor(med, cv2.COLOR_BGR2GRAY)
-        tiny = cv2.cvtColor(small, cv2.COLOR_BGR2GRAY).astype(np.int16)
-        rgb = med[:, :, ::-1]
-        luma = gray_med.astype(np.float64)
-        mean_rgb = rgb.reshape(-1, 3).mean(axis=0)
-        hsv = cv2.cvtColor(med, cv2.COLOR_BGR2HSV)
-        hist = cv2.calcHist([hsv], [0, 1], None, [16, 8], [0, 180, 0, 256])
-        cv2.normalize(hist, hist)
+    def analyse(self, med: bytes, mw: int, mh: int, small_size) -> dict:
+        sw, sh = small_size
+        small = vf.area_resize(med, mw, mh, sw, sh)
+        luma = vf.gray(med)
+        tiny = vf.gray(small)
+        hs, ss = vf.hsv(small)
+        hist = vf.hs_hist(hs, ss)
         motion = scene_diff = None
-        if self.prev_tiny is not None and self.prev_tiny.shape == tiny.shape:
-            motion = float(np.abs(tiny - self.prev_tiny).mean())
-            scene_diff = float(cv2.compareHist(self.prev_hist, hist, cv2.HISTCMP_BHATTACHARYYA))
+        if self.prev_tiny is not None and len(self.prev_tiny) == len(tiny):
+            motion = sum(abs(d) for d in map(sub, tiny, self.prev_tiny)) / len(tiny)
+            scene_diff = vf.bhattacharyya(self.prev_hist, hist)
         self.prev_tiny, self.prev_hist = tiny, hist
-        mean_l, std_l = float(luma.mean()), float(luma.std())
+        n = len(luma)
+        mean_l = sum(luma) / n
+        std_l = math.sqrt(max(0.0, sum(v * v for v in luma) / n - mean_l * mean_l))
+        mean_rgb = (sum(med[0::3]) / n, sum(med[1::3]) / n, sum(med[2::3]) / n)
         grid = []
         for i in range(3):
             row = []
             for j in range(3):
-                cell = rgb[i * rgb.shape[0] // 3:(i + 1) * rgb.shape[0] // 3, j * rgb.shape[1] // 3:(j + 1) * rgb.shape[1] // 3]
-                row.append(color_name(cell.reshape(-1, 3).mean(axis=0)) if cell.size else "")
+                m = vf.channel_means(med, mw, j * mw // 3, i * mh // 3, (j + 1) * mw // 3, (i + 1) * mh // 3)
+                row.append(color_name(m) if m else "")
             grid.append(row)
-        sharp = float(cv2.Laplacian(gray_med, cv2.CV_64F).var())
-        e = {
+        sharp = vf.laplacian_var(luma, mw, mh)
+        return {
             "brightness": round(mean_l, 1), "brightness_level": level(mean_l, BRIGHTNESS),
             "contrast": round(std_l, 1),
             "mean": {"hex": hexc(mean_rgb), "name": color_name(mean_rgb)},
-            "saturation": round(float(hsv[:, :, 1].mean()) / 255, 3),
+            "saturation": round(sum(ss) / len(ss) / 255, 3),
             "dominant": [{"hex": hexc(c), "name": color_name(c), "percent": round(100 * s, 1)}
-                         for s, c in dominant(rgb)],
+                         for s, c in dominant(med)],
             "grid_3x3": grid,
             "sharpness": round(sharp, 1),
             "motion": None if motion is None else round(motion, 2),
@@ -203,27 +198,14 @@ class FrameAnalyser:
             "black": mean_l < 16 and std_l < 10,
             "flat": std_l < 3,
         }
-        return e
 
 
-def pixel_value(bgr, x, y):
-    b, g, r = (int(v) for v in bgr[y, x][:3])
-    return (r, g, b)
-
-
-def region_value(bgr, box):
-    x, y, w, h = box
-    cell = bgr[y:y + h, x:x + w].reshape(-1, 3).mean(axis=0)
-    return (float(cell[2]), float(cell[1]), float(cell[0]))
-
-
-def pixel_grid(bgr, cols: int):
-    cv2, np = cv()
-    h, w = bgr.shape[:2]
-    cols = max(1, min(cols, w))
-    rows = max(1, min(h, round(cols * h / w)))
-    small = cv2.resize(bgr, (cols, rows), interpolation=cv2.INTER_AREA)
-    return {"columns": cols, "rows": rows, "hex": [[hexc(small[j, i][::-1]) for i in range(cols)] for j in range(rows)]}
+def pixel_grid(med: bytes, mw: int, mh: int, full_w: int, cols: int):
+    cols = max(1, min(cols, full_w, mw))
+    rows = max(1, min(mh, round(cols * mh / mw)))
+    small = vf.area_resize(med, mw, mh, cols, rows)
+    return {"columns": cols, "rows": rows,
+            "hex": [[hexc(small[(j * cols + i) * 3:(j * cols + i) * 3 + 3]) for i in range(cols)] for j in range(rows)]}
 
 
 # ------------------------------------------------------------------------------------------ reading
@@ -241,17 +223,15 @@ def parse_box(spec: str, what: str, n: int):
 NO_VIDEO = "this file has no video track (audio only), so there are no frames to analyse. --info shows its metadata"
 
 
-def open_capture(path: Path):
-    cv2, np = cv()
-    cap = cv2.VideoCapture(str(path))
-    if not cap.isOpened():
+def open_source(path: Path):
+    try:
+        return vf.open_source(path)
+    except vf.DecodeError as e:
         if path.suffix.lower() in MP4_EXTS:
             info = mp4info.read(path, False)           # raises Mp4Error with the precise reason (e.g. no moov box)
             if not any(t.get("type") == "video" for t in info["tracks"]):
                 raise VideoError(NO_VIDEO)
-        raise VideoError("OpenCV cannot open this video (unsupported codec or damaged file). "
-                         "Try converting it: ffmpeg -i in.ext -c:v libx264 out.mp4")
-    return cap
+        raise VideoError(str(e)) from None
 
 
 def choose_targets(opts, fps: float, nframes: int, duration: float, warnings):
@@ -297,34 +277,20 @@ def choose_targets(opts, fps: float, nframes: int, duration: float, warnings):
     return targets
 
 
-def read_frames(cap, targets, warnings, nframes=0):
-    """Yield (index, frame) for the target indices, seeking for big gaps and grabbing for small ones."""
-    cv2, np = cv()
-    pos = 0
-
-    def ended(at):
+def read_frames(src, targets, warnings, nframes=0, **kw):
+    """Yield (index, rgb_bytes, width, height) for the target frames; warn when the stream ends early."""
+    try:
+        yield from src.read(targets, warnings, **kw)
+    except vf.DecodeError as e:
+        raise VideoError(str(e)) from None
+    except vf._Ended as e:
+        at = e.args[0]
         if nframes and at >= nframes - max(5, nframes // 50):          # a few frames short: header estimate
             warnings.append(f"The video has {at} frames, slightly fewer than the {nframes} its header gives; "
                             "samples after the last frame were skipped.")
         else:
             warnings.append(f"The video stops at frame {at} of {nframes or '?'} (damaged or truncated file); "
                             "later samples were skipped.")
-
-    for t in targets:
-        if t < pos or t - pos > 90:
-            cap.set(cv2.CAP_PROP_POS_FRAMES, t)
-            pos = t
-        while pos < t:
-            if not cap.grab():
-                ended(pos)
-                return
-            pos += 1
-        ok, frame = cap.read()
-        if not ok or frame is None:
-            ended(t)
-            return
-        pos += 1
-        yield t, frame
 
 
 # ----------------------------------------------------------------------------------------- summaries
@@ -423,7 +389,7 @@ def describe(name, meta, frames, scenes, blacks, freezes, tracks, sampling) -> s
 
 # --------------------------------------------------------------------------------------------- main
 
-def metadata(path: Path, cap, include_gps: bool, warnings):
+def metadata(path: Path, src_info, include_gps: bool, warnings):
     meta = {}
     if path.suffix.lower() in MP4_EXTS:
         try:
@@ -454,23 +420,24 @@ def metadata(path: Path, cap, include_gps: bool, warnings):
             warnings.append(f"Container metadata: {e}")
         except (OSError, ValueError, IndexError) as e:
             warnings.append(f"Container metadata could not be read ({e.__class__.__name__})")
-    if cap is not None:
-        cv2, np = cv()
-        fps = cap.get(cv2.CAP_PROP_FPS) or 0
-        n = max(0, int(cap.get(cv2.CAP_PROP_FRAME_COUNT) or 0))   # -1 when unknown
-        w, h = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH) or 0), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT) or 0)
-        if not (w and h):
-            meta.setdefault("has_video", False)                   # OpenCV found no picture stream
-        meta.setdefault("fps", round(fps, 3) if fps and w and h else None)
-        meta.setdefault("frames", n or None)
-        if not meta.get("duration_s") and fps and n:
-            meta["duration_s"] = round(n / fps, 3)
-        if w and h:
-            meta["width"], meta["height"] = w, h                       # as decoded (rotation applied)
-        fourcc = int(cap.get(cv2.CAP_PROP_FOURCC) or 0)
-        if fourcc and not meta.get("codec"):
-            meta["codec"] = "".join(chr((fourcc >> 8 * i) & 0xFF) for i in range(4)).strip("\x00")
-            meta["codec_name"] = mp4info.CODECS.get(meta["codec"], meta["codec"])
+    if src_info:
+        if not (src_info.get("width") and src_info.get("height")) or src_info.get("has_video") is False:
+            meta.setdefault("has_video", False)                   # the decoder found no picture stream
+        for key in ("fps", "frames", "codec"):
+            if meta.get(key) is None and src_info.get(key) is not None:
+                meta[key] = src_info[key]
+        if not meta.get("codec_name") and meta.get("codec"):
+            meta["codec_name"] = src_info.get("codec_name") or mp4info.CODECS.get(meta["codec"], meta["codec"])
+        if not meta.get("duration_s") and src_info.get("duration_s"):
+            meta["duration_s"] = src_info["duration_s"]
+        if not meta.get("duration_s") and meta.get("fps") and meta.get("frames"):
+            meta["duration_s"] = round(meta["frames"] / meta["fps"], 3)
+        if src_info.get("width") and src_info.get("height"):
+            meta["width"], meta["height"] = src_info["width"], src_info["height"]   # as decoded (rotation applied)
+        if src_info.get("rotation") and "rotation" not in meta:
+            meta["rotation"] = src_info["rotation"]
+        if "has_audio" not in meta and "has_audio" in src_info:
+            meta["has_audio"] = src_info["has_audio"]
     if meta.get("duration_s") is None:
         meta.pop("duration_s", None)
     return meta
@@ -480,20 +447,22 @@ def analyse_video(path: Path, opts, dest: Path):
     warnings = []
     report = {"generator": {"name": "video-inspector", "version": VERSION},
               "file": {"name": path.name, "path": str(path), "bytes": path.stat().st_size}}
-    have_cv = True
+    src, why = None, None
     try:
-        cv2, np = cv()
-        report["generator"]["opencv"] = cv2.__version__
-    except ImportError:
-        have_cv = False
-    if not have_cv and not opts.info:
+        src = open_source(path)
+    except VideoError as e:
+        why = e
+    if src is None and not opts.info:
         meta = metadata(path, None, opts.include_gps, warnings)
-        raise VideoError(f"frame analysis needs OpenCV: {INSTALL_HINT}"
-                         + (f" (metadata without it: --info; this is a {meta.get('duration_s', '?')} s "
-                            f"{meta.get('codec_name', '')} video)" if meta else ""))
-    cap = open_capture(path) if have_cv else None
+        if str(why) == NO_VIDEO:
+            raise why
+        raise VideoError(f"{why}" + (f" (metadata without it: --info; this is a {meta.get('duration_s', '?')} s "
+                                     f"{meta.get('codec_name', '')} video)" if meta else ""))
+    if src is not None:
+        report["generator"]["decoder"] = src.backend
+    frames, track_samples, saved, boxes = [], {}, 0, []
     try:
-        meta = metadata(path, cap, opts.include_gps, warnings)
+        meta = metadata(path, src.info if src else None, opts.include_gps, warnings)
         report["video"] = meta
         if meta.get("has_video") is False:
             if opts.info:
@@ -508,64 +477,92 @@ def analyse_video(path: Path, opts, dest: Path):
         nframes = meta.get("frames") or 0
         if not fps or not nframes:
             raise VideoError("the video reports no frame rate or frame count (damaged or a stream without an index)")
+        W, H = src.info["width"], src.info["height"]
         duration = meta.get("duration_s") or nframes / fps
         targets = choose_targets(opts, fps, nframes, duration, warnings)
         boxes = [("pixel", parse_box(p, "--pixel", 2)) for p in opts.pixel or []] + \
                 [("region", parse_box(r, "--region", 4)) for r in opts.region or []]
+        clipped = []
+        for kind, box in boxes:                                   # check every box before decoding
+            if kind == "pixel":
+                x, y = box
+                if x >= W or y >= H:
+                    raise VideoError(f"--pixel {x},{y} is outside the frame ({W}x{H})")
+                clipped.append((x, y, 1, 1))
+            else:
+                x, y, w, h = box
+                if x >= W or y >= H or w == 0 or h == 0:
+                    raise VideoError(f"--region {x},{y},{w},{h} is outside the frame ({W}x{H})")
+                clipped.append((x, y, min(w, W - x), min(h, H - y)))
+        med_size, small_size = vf.analysis_sizes(W, H)
         analyser = FrameAnalyser(opts.scene_threshold)
-        frames, track_samples = [], {i: [] for i in range(len(boxes))}
-        frames_dir = dest / "frames"
-        saved = 0
-        csv_written = []
-        for idx, img in read_frames(cap, targets, warnings, nframes):
+        # pass 1: analysis frames, already scaled by the decoder
+        for idx, med, mw, mh in read_frames(src, targets, warnings, nframes, size=med_size):
             t = idx / fps
             fr = {"frame": idx, "t": round(t, 3), "time": fmt_t(t)}
-            fr.update(analyser.analyse(img))
+            fr.update(analyser.analyse(med, mw, mh, small_size))
             fr["frozen"] = fr["motion"] is not None and fr["motion"] < opts.freeze_motion and not fr["black"]
-            H, W = img.shape[:2]
-            for i, (kind, box) in enumerate(boxes):
-                if kind == "pixel":
-                    x, y = box
-                    if x >= W or y >= H:
-                        raise VideoError(f"--pixel {x},{y} is outside the frame ({W}x{H})")
-                    rgb = pixel_value(img, x, y)
-                else:
-                    x, y, w, h = box
-                    if x >= W or y >= H or w == 0 or h == 0:
-                        raise VideoError(f"--region {x},{y},{w},{h} is outside the frame ({W}x{H})")
-                    rgb = region_value(img, (x, y, min(w, W - x), min(h, H - y)))
-                track_samples[i].append((t, rgb))
-                fr.setdefault("tracked", []).append(hexc(rgb))
             if opts.grid:
-                fr["pixel_map"] = pixel_grid(img, opts.grid)
-            keep = opts.save_frames or (not opts.no_frames and (not frames or fr["scene_change"]))
-            if keep and saved < opts.max_saved:
-                frames_dir.mkdir(parents=True, exist_ok=True)
-                name = f"frame_{idx:06d}_{t:09.3f}s.{opts.image_format}"
-                ok, buf = cv2.imencode("." + opts.image_format, img)
-                if ok:
-                    (frames_dir / name).write_bytes(buf.tobytes())
-                    fr["image"] = str(Path("frames") / name)
-                    saved += 1
-                    if opts.pixels_csv:
-                        if W * H > opts.max_csv_pixels:
-                            warnings.append(f"--pixels-csv skipped for frame {idx}: {W * H:,} pixels > --max-csv-pixels.")
-                        else:
-                            cpath = frames_dir / (Path(name).stem + ".pixels.csv")
-                            rgb_img = img[:, :, ::-1].reshape(-1, 3)
-                            ys, xs = np.divmod(np.arange(W * H), W)
-                            table = np.column_stack([xs, ys, rgb_img])
-                            with open(cpath, "w", encoding="utf-8", newline="\n") as fh:
-                                fh.write("x,y,r,g,b\n")
-                                np.savetxt(fh, table, fmt="%d", delimiter=",")
-                            fr["pixels_csv"] = str(Path("frames") / cpath.name)
-                            csv_written.append(cpath)
+                fr["pixel_map"] = pixel_grid(med, mw, mh, W, opts.grid)
             frames.append(fr)
-        if saved >= opts.max_saved and (opts.save_frames or not opts.no_frames):
-            warnings.append(f"Only the first {opts.max_saved} frames were saved as images (--max-saved).")
+        done = [f["frame"] for f in frames]
+        # pass 2: tracked pixels and regions at full resolution (only the area that holds them)
+        track_samples = {i: [] for i in range(len(boxes))}
+        if boxes and frames:
+            ux0, uy0 = min(b[0] for b in clipped), min(b[1] for b in clipped)
+            ux1, uy1 = max(b[0] + b[2] for b in clipped), max(b[1] + b[3] for b in clipped)
+            crop = (ux0, uy0, ux1 - ux0, uy1 - uy0)
+            got = {idx: (data, cw) for idx, data, cw, _ in read_frames(src, done, [], nframes, crop=crop)}
+            last = None
+            for fr in frames:
+                data, cw = got.get(fr["frame"], last or (None, 0))
+                if data is None:
+                    continue
+                last = (data, cw)
+                for i, (kind, _box) in enumerate(boxes):
+                    x, y, w, h = clipped[i]
+                    rgb = vf.channel_means(data, cw, x - ux0, y - uy0, x - ux0 + w, y - uy0 + h)
+                    if kind == "pixel":
+                        rgb = tuple(int(round(v)) for v in rgb)
+                    track_samples[i].append((fr["t"], rgb))
+                    fr.setdefault("tracked", []).append(hexc(rgb))
+        # pass 3: frame images (scene key frames, or every frame with --save-frames) at full resolution
+        keep = [fr for n, fr in enumerate(frames)
+                if opts.save_frames or (not opts.no_frames and (n == 0 or fr["scene_change"]))][:opts.max_saved]
+        if keep:
+            by_idx = {fr["frame"]: fr for fr in keep}
+            frames_dir = dest / "frames"
+            for idx, img, w, h in read_frames(src, [fr["frame"] for fr in keep], [], nframes):
+                fr = by_idx[idx]
+                name = f"frame_{idx:06d}_{idx / fps:09.3f}s.{opts.image_format}"
+                blob = vf.encode_jpeg(w, h, img) if opts.image_format == "jpg" else vf.encode_png(w, h, img)
+                if blob is None:
+                    warnings.append("JPEG frames need ffmpeg; saved PNG instead.")
+                    name = name[:-3] + "png"
+                    blob = vf.encode_png(w, h, img)
+                frames_dir.mkdir(parents=True, exist_ok=True)
+                (frames_dir / name).write_bytes(blob)
+                fr["image"] = str(Path("frames") / name)
+                saved += 1
+                if opts.pixels_csv:
+                    if w * h > opts.max_csv_pixels:
+                        warnings.append(f"--pixels-csv skipped for frame {idx}: {w * h:,} pixels > --max-csv-pixels.")
+                    else:
+                        cpath = frames_dir / (Path(name).stem + ".pixels.csv")
+                        with open(cpath, "w", encoding="utf-8", newline="\n") as fh:
+                            fh.write("x,y,r,g,b\n")
+                            for yy in range(h):
+                                row = img[yy * w * 3:(yy + 1) * w * 3]
+                                fh.write("".join("%d,%d,%d,%d,%d\n" % (xx, yy, row[3 * xx], row[3 * xx + 1], row[3 * xx + 2])
+                                                 for xx in range(w)))
+                        fr["pixels_csv"] = str(Path("frames") / cpath.name)
+            n_keep = sum(1 for n, fr in enumerate(frames)
+                         if opts.save_frames or (not opts.no_frames and (n == 0 or fr["scene_change"])))
+            if n_keep > opts.max_saved:
+                warnings.append(f"Only the first {opts.max_saved} frames were saved as images (--max-saved).")
     finally:
-        if cap is not None:
-            cap.release()
+        if src is not None and hasattr(src, "close"):
+            src.close()
     if not frames:
         raise VideoError("no frames could be decoded")
     times = [f["t"] for f in frames]
@@ -668,7 +665,7 @@ def main(argv=None) -> int:
     ap.add_argument("inputs", nargs="+", help="video files or folders")
     ap.add_argument("--out", type=Path, default=Path("video-reports"), help="output folder (default ./video-reports)")
     ap.add_argument("--stdout", action="store_true", help="print the JSON report instead of writing files")
-    ap.add_argument("--info", action="store_true", help="metadata only (MP4/MOV work without OpenCV)")
+    ap.add_argument("--info", action="store_true", help="metadata only (MP4/MOV work without ffmpeg)")
     g = ap.add_argument_group("which frames")
     g.add_argument("--every", type=float, default=1.0, metavar="SECONDS", help="analyse a frame every N seconds (default 1)")
     g.add_argument("--frames", type=int, metavar="N", help="analyse N frames spread over the video")
