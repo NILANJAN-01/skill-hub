@@ -1,0 +1,123 @@
+{
+ "q90_420.jpg": {
+  "size": [
+   37,
+   23
+  ],
+  "mode": "RGB",
+  "sha256": "091d0a2c7f5d46ea68582573f7f351ef5512753bda7b09636f611cabf1705e6e"
+ },
+ "q60_422_restart.jpg": {
+  "size": [
+   37,
+   23
+  ],
+  "mode": "RGB",
+  "sha256": "9c81fd987470c474ae2ccedc2b09c0d1e1bb96e8b07866011d7e87f24aa0bfa3"
+ },
+ "progressive_444.jpg": {
+  "size": [
+   37,
+   23
+  ],
+  "mode": "RGB",
+  "sha256": "30909a087a63972a3016d35fed5c8215ae51ae9d533047ed249c7c90cc4412cf"
+ },
+ "gray.jpg": {
+  "size": [
+   37,
+   23
+  ],
+  "mode": "L",
+  "sha256": "bb518d1a21f837b5b06ee590c1a049583ad8cadba203d5047ff9c131f15c2179"
+ },
+ "exif_rot6.jpg": {
+  "size": [
+   23,
+   37
+  ],
+  "mode": "RGB",
+  "sha256": "ad076956b044cf4c623efcf2056f09cd7747da1b476230bfba06ca3d15fd26b9"
+ },
+ "palette.gif": {
+  "size": [
+   37,
+   23
+  ],
+  "mode": "RGB",
+  "sha256": "d71f173d13c5fe61bff1fd2d066171eb77543a07116dd7fe78e20e4549bc9301"
+ },
+ "interlaced_transparent.gif": {
+  "size": [
+   37,
+   23
+  ],
+  "mode": "LA",
+  "sha256": "e4972ee12dda95c0a3d79a51322f4ebd82f0e6bbf90627b0a80b6783c3a45c3e"
+ },
+ "anim.gif": {
+  "size": [
+   9,
+   7
+  ],
+  "mode": "RGB",
+  "sha256": "64621224540a921c008eeb0c37d64b46340816f9aa9f85e68016f07f1a7d9390",
+  "frames": 2
+ },
+ "lzw_predictor.tif": {
+  "size": [
+   37,
+   23
+  ],
+  "mode": "RGB",
+  "sha256": "6b219487424f67658bf7146500334e2caeee65e9c28bd0e4abf968f1747751d5"
+ },
+ "deflate.tif": {
+  "size": [
+   37,
+   23
+  ],
+  "mode": "RGBA",
+  "sha256": "01e1dbdb36af78265c7d3933be8c0557900be655035e04839b8519aab94697fc"
+ },
+ "packbits_gray.tif": {
+  "size": [
+   37,
+   23
+  ],
+  "mode": "L",
+  "sha256": "fd960902021a855b14180409fed8318c09f3a18525d0f280e9e474ae37396668"
+ },
+ "palette.tif": {
+  "size": [
+   37,
+   23
+  ],
+  "mode": "RGB",
+  "sha256": "d71f173d13c5fe61bff1fd2d066171eb77543a07116dd7fe78e20e4549bc9301"
+ },
+ "bilevel.tif": {
+  "size": [
+   37,
+   23
+  ],
+  "mode": "L",
+  "sha256": "8b639b4280b568c02abd568d0beea32bf36168832271ab78417785f02defb07a"
+ },
+ "gray16.tif": {
+  "size": [
+   11,
+   5
+  ],
+  "mode": "L",
+  "sha256": "3fec4b81acb4133aeec737132ebf0f9c10da2fdc4275e3ddf7d518c898048b7b"
+ },
+ "rgb.ppm": {
+  "size": [
+   37,
+   23
+  ],
+  "mode": "RGB",
+  "sha256": "6b219487424f67658bf7146500334e2caeee65e9c28bd0e4abf968f1747751d5"
+ }
+}

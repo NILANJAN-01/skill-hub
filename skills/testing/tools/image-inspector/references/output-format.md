@@ -57,7 +57,7 @@ One JSON file per image: `<out>/<image name without extension>.json`. If two ima
 
 | Field | Details |
 |---|---|
-| `generator.backend` | `Pillow <version>`, or `standard library` (PNG and BMP only) |
+| `generator.backend` | `Pillow <version>` when Pillow is installed, `standard library` (the bundled decoders; same pixels), or `standard library + ffmpeg` for formats decoded through ffmpeg (WebP, HEIF, ...) |
 | `image.mode` | The colour mode as stored (`RGB`, `RGBA`, `P`, `L`, `I;16`, `CMYK`, ...). Pixels are always reported as 8-bit RGBA |
 | `image.bit_depth`, `color_type`, `interlaced` | PNG header facts (standard-library backend) |
 | `image.exif_orientation_applied` | `true` when the image was rotated or flipped to match its EXIF orientation. Width, height and coordinates refer to the displayed image |
@@ -73,7 +73,7 @@ One JSON file per image: `<out>/<image name without extension>.json`. If two ima
 | `pixels[].hex` | `#rrggbb`, or `#rrggbbaa` when alpha is below 255 |
 | `regions[].clipped_from` | Present when the requested rectangle went past the edge of the image |
 | CSV | `x,y,r,g,b,a`, one line per pixel, rows top to bottom |
-| `texture.sharpness` | OpenCV only. `laplacian_variance` (higher = sharper) and `level`. Flat graphics score low too |
-| `find[].matches` | OpenCV `matchTemplate` (normalised correlation, in colour). Transparent template pixels are masked out. Overlapping hits are merged; matches are in reading order. `scale` is the template scale that matched (`--scales`) |
+| `texture.sharpness` | Photos and mixed images only (not flat graphics). `laplacian_variance` of the 3x3 Laplacian on the luma, after resizing to at most 2000 px (higher = sharper), and `level`. Same value as OpenCV's `cv2.Laplacian(...).var()` |
+| `find[].matches` | Normalised correlation in colour, as OpenCV's `TM_CCOEFF_NORMED` (exact, computed at full resolution; the search itself runs coarse-to-fine). In smooth photo areas, weak secondary hits near the threshold can differ from OpenCV's; the best matches are the same. Transparent template pixels are masked out. Overlapping hits are merged; matches are in reading order. `scale` is the template scale that matched (`--scales`) |
 | `comparison` | Per pixel, the largest RGBA channel difference. `changed_*` counts pixels above `pixel_threshold`. Nearby changes are grouped into `changed_regions` (largest first, at most 100), each shrunk to its changed pixels. A reference of another size is resized first (`size_mismatch: true`) |
 | `comparison.diff_image` | `<name>.diff.png`: the image dimmed, changed pixels red, change boxes yellow, ignored areas blue. Not written with `--stdout` |

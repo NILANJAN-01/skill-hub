@@ -7,15 +7,16 @@
     python inspect_image.py ui.png --region 0,0,400,80      # average / dominant colours of a rectangle
     python inspect_image.py ui.png --grid 32                # 32-column pixel map (downsampled colours) in the JSON
     python inspect_image.py ui.png --pixels-csv             # every pixel as x,y,r,g,b,a in image-reports/ui.pixels.csv
-    python inspect_image.py scan.png --ocr                  # also extract text (needs pytesseract + tesseract)
+    python inspect_image.py scan.png --ocr                  # also extract text (needs the Tesseract program)
     python inspect_image.py photo.jpg --stdout              # print the JSON instead of writing files
-    python inspect_image.py screen.png --find play_icon.png # where is this icon? (box, centre, score)  [OpenCV]
-    python inspect_image.py after.png --compare before.png  # what changed? (% + boxes + diff image)   [OpenCV]
+    python inspect_image.py screen.png --find play_icon.png # where is this icon? (box, centre, score)
+    python inspect_image.py after.png --compare before.png  # what changed? (% + boxes + diff image)
 
-Backends: Pillow when installed (all common formats, EXIF). Without Pillow, PNG (every colour type, bit depth and
-interlacing) and BMP are decoded with the standard library; for JPEG/WebP/GIF/TIFF only the size is read and a
-warning asks for `pip install Pillow`. --find / --compare and the sharpness score need OpenCV
-(`pip install opencv-python-headless`, see cv_features.py). Python 3.8+.
+Needs nothing but Python 3.8+. The bundled decoders (image_codecs.py) read PNG, BMP, JPEG (baseline and
+progressive), GIF, TIFF and PNM, with EXIF, in pure Python; their pixels match Pillow's exactly. When Pillow is
+installed it is used instead, because it is faster for big photos (--no-pillow turns that off). WebP, HEIF/AVIF
+and other formats need Pillow or the ffmpeg program; without either, only their size is reported. OCR calls the
+Tesseract program. --find, --compare and the sharpness score are pure Python too (cv_features.py).
 """
 
 from __future__ import annotations
@@ -24,10 +25,16 @@ import argparse
 import json
 import math
 import os
+import shutil
 import struct
+import subprocess
 import sys
+import tempfile
 import zlib
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import image_codecs  # noqa: E402  (bundled next to this script)
 
 VERSION = "1.1"
 IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".jpe", ".jfif", ".bmp", ".dib", ".gif", ".webp", ".tif", ".tiff",
@@ -176,7 +183,9 @@ def decode_png(blob: bytes) -> Raster:
             pal.append((plte[3 * i], plte[3 * i + 1], plte[3 * i + 2], a))
 
     def scale(v):
-        return v >> 8 if depth == 16 else (v if depth == 8 else v * 255 // mask)
+        if depth == 16:                                 # like Pillow: I;16 gray -> v // 257, others: high byte
+            return v // 257 if ctype == 0 else v >> 8
+        return v if depth == 8 else v * 255 // mask
 
     passes = ADAM7 if interlace == 1 else ((0, 0, 1, 1),)
     pos = 0
@@ -298,6 +307,8 @@ def sniff(blob: bytes) -> str:
         return "TIFF"
     if blob[4:12] in (b"ftypheic", b"ftypheix", b"ftypmif1", b"ftypavif"):
         return "HEIF/AVIF"
+    if blob[:1] == b"P" and blob[1:2] in b"123456" and blob[2:3].isspace():
+        return "PNM"
     head = blob[:256].lstrip().lower()
     if head.startswith(b"<svg") or (head.startswith(b"<?xml") and b"<svg" in blob[:2048].lower()):
         return "SVG"
@@ -357,31 +368,37 @@ def _json_safe(v):
         return str(v)
 
 
+EXIF_NAMES = {0x010F: "make", 0x0110: "model", 0x0131: "software", 0x0132: "datetime", 0x0112: "orientation",
+              0x9003: "datetime_original", 0x829A: "exposure_time", 0x829D: "f_number", 0x8827: "iso",
+              0x920A: "focal_length", 0xA405: "focal_length_35mm", 0xA434: "lens_model"}
+
+
 def _exif(im, include_gps: bool):
+    """EXIF from a Pillow image."""
     try:
         ex = im.getexif()
     except Exception:
         return {}, False
     if not ex:
         return {}, False
-    names = {0x010F: "make", 0x0110: "model", 0x0131: "software", 0x0132: "datetime", 0x0112: "orientation",
-             0x9003: "datetime_original", 0x829A: "exposure_time", 0x829D: "f_number", 0x8827: "iso",
-             0x920A: "focal_length", 0xA405: "focal_length_35mm", 0xA434: "lens_model"}
-    out = {}
-    for tag, val in ex.items():
-        if tag in names:
-            out[names[tag]] = _json_safe(val)
+    sub, gps = {}, {}
     try:
-        for tag, val in ex.get_ifd(0x8769).items():
-            if tag in names:
-                out[names[tag]] = _json_safe(val)
+        sub = dict(ex.get_ifd(0x8769))
     except Exception:
         pass
-    gps = {}
     try:
         gps = dict(ex.get_ifd(0x8825))
     except Exception:
         pass
+    return _exif_fields(dict(ex), sub, gps, include_gps)
+
+
+def _exif_fields(ifd0: dict, sub: dict, gps: dict, include_gps: bool):
+    """The report's EXIF fields from IFD0, the Exif sub-IFD and the GPS IFD. Returns (fields, has_gps)."""
+    out = {}
+    for tag, val in list(ifd0.items()) + list(sub.items()):
+        if tag in EXIF_NAMES:
+            out[EXIF_NAMES[tag]] = _json_safe(val)
     if gps and include_gps:
         def deg(vals, ref):
             d = sum(float(v) / f for v, f in zip(vals, (1, 60, 3600)))
@@ -444,24 +461,137 @@ def load_with_pillow(path: Path, include_gps: bool) -> Loaded:
     return ld
 
 
-def load_stdlib(path: Path, blob: bytes, fmt: str) -> Loaded:
+PNG_MODES = {0: "L", 2: "RGB", 3: "P", 4: "LA", 6: "RGBA"}
+
+
+def _png_extras(blob: bytes):
+    """(Pillow-style mode, frames, dpi, exif bytes) from the PNG chunks."""
+    w, h, depth, ctype, _c, _f, _i = struct.unpack(">IIBBBBB", blob[16:29])
+    mode = "1" if ctype == 0 and depth == 1 else ("I;16" if ctype == 0 and depth == 16 else PNG_MODES.get(ctype, ""))
+    frames, dpi, exif, pos = 1, None, None, 8
+    while pos + 8 <= len(blob):
+        length, kind = struct.unpack(">I4s", blob[pos:pos + 8])
+        data = blob[pos + 8:pos + 8 + length]
+        if kind == b"acTL" and len(data) >= 4:
+            frames = struct.unpack(">I", data[:4])[0] or 1
+        elif kind == b"pHYs" and len(data) >= 9 and data[8] == 1:
+            px, py = struct.unpack(">II", data[:8])
+            dpi = (px * 0.0254, py * 0.0254)
+        elif kind == b"eXIf":
+            exif = data
+        elif kind == b"IEND":
+            break
+        pos += 12 + length
+    return mode, frames, dpi, exif
+
+
+def _webp_exif(blob: bytes):
+    pos = 12
+    while pos + 8 <= len(blob):
+        kind, size = blob[pos:pos + 4], struct.unpack("<I", blob[pos + 4:pos + 8])[0]
+        if kind == b"EXIF":
+            data = blob[pos + 8:pos + 8 + size]
+            return data[6:] if data.startswith(b"Exif\x00\x00") else data
+        pos += 8 + size + (size & 1)
+    return None
+
+
+def _ffmpeg_png(path: Path):
+    """Decode any image ffmpeg understands (WebP, HEIF, AVIF, ICO, TGA, ...) to PNG bytes, or None."""
+    exe = shutil.which("ffmpeg")
+    if not exe:
+        return None
+    try:
+        res = subprocess.run([exe, "-v", "error", "-i", str(path), "-frames:v", "1", "-f", "image2pipe",
+                              "-vcodec", "png", "-"], capture_output=True, timeout=120)
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    return res.stdout if res.returncode == 0 and res.stdout.startswith(PNG_SIG) else None
+
+
+def _apply_exif(ld: Loaded, exif_bytes, include_gps: bool):
+    if not exif_bytes:
+        return
+    try:
+        ex = image_codecs.parse_exif(exif_bytes)
+    except (image_codecs.CodecError, struct.error, ValueError):
+        return
+    fields, has_gps = _exif_fields(ex["ifd0"], ex["exif"], ex["gps"], include_gps)
+    orientation = fields.get("orientation")
+    r = ld.raster
+    if r is not None and orientation in (2, 3, 4, 5, 6, 7, 8):
+        w, h, data = image_codecs.orient(r.width, r.height, r.channels, r.data, orientation)
+        ld.raster = Raster(w, h, r.mode, data)
+        ld.width, ld.height = w, h
+        ld.info["exif_orientation_applied"] = True
+    if "dpi" not in ld.info:
+        xr, unit = ex["ifd0"].get(0x011A), ex["ifd0"].get(0x0128, 2)
+        yr = ex["ifd0"].get(0x011B, xr)
+        if isinstance(xr, float) and xr == xr and xr > 0 and unit in (2, 3):
+            f = 1.0 if unit == 2 else 2.54
+            ld.info["dpi"] = [round(xr * f), round(yr * f)]
+    if fields:
+        ld.info["exif"] = fields
+    if has_gps:
+        ld.info["has_gps_location"] = True
+        if not include_gps:
+            ld.warnings.append("The file contains GPS location data (left out of this report; "
+                               "--include-gps adds it). Remove it before sharing the image publicly.")
+
+
+def load_stdlib(path: Path, blob: bytes, fmt: str, include_gps: bool = False) -> Loaded:
+    """Decode with the bundled pure-Python decoders (PNG, BMP, JPEG, GIF, TIFF, PNM). Other formats
+    (WebP, HEIF, AVIF, ICO, ...) go through ffmpeg when it is installed; otherwise only the size is read."""
     ld = Loaded()
     ld.backend = "standard library"
     ld.format = fmt
-    if fmt == "PNG":
-        ld.raster = decode_png(blob)
-        _, _, extra = png_header(blob)
-        ld.info.update(extra)
-    elif fmt == "BMP":
-        ld.raster = decode_bmp(blob)
-    else:
-        ld.width, ld.height = header_size(fmt, blob)
-        ld.warnings.append(f"{fmt} pixels can't be decoded without Pillow, so only the size is reported. "
-                           "Install it and run again: pip install Pillow")
-        ld.info["has_alpha"] = None
-        return ld
+    exif = None
+    try:
+        if fmt == "PNG":
+            ld.raster = decode_png(blob)
+            _, _, extra = png_header(blob)
+            ld.info.update(extra)
+            mode, frames, dpi, exif = _png_extras(blob)
+            ld.info.update({"mode": mode, "frames": frames})
+            if dpi:
+                ld.info["dpi"] = [round(d) for d in dpi]
+        elif fmt == "BMP":
+            ld.raster = decode_bmp(blob)
+        elif fmt in ("JPEG", "GIF", "TIFF", "PNM"):
+            dec = {"JPEG": image_codecs.decode_jpeg, "GIF": image_codecs.decode_gif,
+                   "TIFF": image_codecs.decode_tiff, "PNM": image_codecs.decode_pnm}[fmt]
+            w, h, mode, data, info = dec(blob)
+            ld.raster = Raster(w, h, mode, data)
+            ld.info["mode"] = info.get("mode", mode)
+            ld.info["frames"] = info.get("frames", 1)
+            if info.get("dpi"):
+                ld.info["dpi"] = [round(d) for d in info["dpi"]]
+            exif = info.get("exif_raw")
+            if fmt == "TIFF":
+                exif = blob
+        else:
+            raise image_codecs.CodecError(f"no bundled decoder for {fmt or 'this file type'}")
+    except image_codecs.CodecError as e:
+        png = _ffmpeg_png(path)
+        if png is None:
+            if not fmt:
+                raise ImageError("unknown file type (not PNG, JPEG, GIF, BMP, TIFF, PNM, WebP or HEIF). "
+                                 "If it is an image, install Pillow (pip install Pillow) or ffmpeg") from None
+            ld.width, ld.height = header_size(fmt, blob)
+            ld.warnings.append(f"{fmt} pixels can't be decoded here ({e}), so only the size is reported. "
+                               "Install ffmpeg or Pillow (pip install Pillow) to decode them.")
+            ld.info["has_alpha"] = None
+            return ld
+        ld.raster = decode_png(png)
+        ld.backend = "standard library + ffmpeg"
+        if fmt == "WEBP":
+            exif = _webp_exif(blob)
     ld.width, ld.height = ld.raster.width, ld.raster.height
     ld.info["has_alpha"] = ld.raster.mode in ("LA", "RGBA")
+    _apply_exif(ld, exif, include_gps)
+    frames = ld.info.get("frames", 1)
+    if frames > 1:
+        ld.warnings.append(f"Animated/multi-page image with {frames} frames: only the first frame is analysed.")
     return ld
 
 
@@ -485,10 +615,7 @@ def load(path: Path, use_pillow: bool = True, include_gps: bool = False) -> Load
     if use_pillow:
         ld = load_with_pillow(path, include_gps)
     else:
-        if not fmt:
-            raise ImageError("unknown file type (not PNG, JPEG, GIF, BMP, WebP or TIFF). "
-                             "If it is an image, install Pillow: pip install Pillow")
-        ld = load_stdlib(path, blob, fmt)
+        ld = load_stdlib(path, blob, fmt, include_gps)
     ld.info["file_bytes"] = len(blob)
     return ld
 
@@ -802,32 +929,62 @@ def region_info(r: Raster, spec: str):
     return e
 
 
-def run_ocr(pil_image, lang: str):
-    """Text in the image via Tesseract. Returns (result dict | None, warning | None)."""
-    if pil_image is None:
-        return None, "OCR needs Pillow: pip install Pillow pytesseract (and the Tesseract program)"
+def tesseract_command():
+    """The Tesseract program as a command list: $TESSERACT_CMD, PATH, or the usual Windows folders."""
+    env = os.environ.get("TESSERACT_CMD")
+    if env:
+        return [env]
+    exe = shutil.which("tesseract")
+    if exe:
+        return [exe]
+    for base in (os.environ.get("ProgramFiles", ""), os.environ.get("ProgramFiles(x86)", ""),
+                 os.path.join(os.environ.get("LOCALAPPDATA", ""), "Programs")):
+        cand = os.path.join(base, "Tesseract-OCR", "tesseract.exe") if base else ""
+        if cand and os.path.isfile(cand):
+            return [cand]
+    return None
+
+
+def run_ocr(raster, lang: str, cmd=None):
+    """Text in the image via the Tesseract program (no Python package needed).
+    Returns (result dict | None, warning | None)."""
+    if raster is None:
+        return None, "OCR needs decoded pixels"
+    cmd = cmd or tesseract_command()
+    if not cmd:
+        return None, ("OCR unavailable: install the Tesseract program (https://github.com/tesseract-ocr/tesseract; "
+                      "winget install UB-Mannheim.TesseractOCR, brew install tesseract, apt install tesseract-ocr) "
+                      "or set TESSERACT_CMD. Or read the text from the image directly.")
+    fd, tmp = tempfile.mkstemp(suffix=".png")
     try:
-        import pytesseract
-    except ImportError:
-        return None, ("OCR unavailable: pip install pytesseract and install the Tesseract program "
-                      "(https://github.com/tesseract-ocr/tesseract). Or read the text from the image directly.")
-    try:
-        img = pil_image.convert("RGB")
-        data = pytesseract.image_to_data(img, lang=lang, output_type=pytesseract.Output.DICT)
-    except Exception as e:
-        return None, f"OCR failed ({e.__class__.__name__}: {e}). Is the Tesseract program installed and on PATH?"
-    words, lines = [], {}
-    for i, txt in enumerate(data.get("text", [])):
-        txt = (txt or "").strip()
+        with os.fdopen(fd, "wb") as fh:            # the decoded (and EXIF-rotated) pixels, so boxes match
+            fh.write(image_codecs.encode_png(raster.width, raster.height, raster.mode, raster.data))
+        res = subprocess.run(cmd + [tmp, "stdout", "-l", lang, "tsv"], capture_output=True, timeout=300)
+    except (OSError, subprocess.TimeoutExpired) as e:
+        return None, f"OCR failed ({e.__class__.__name__}: {e}). Is the Tesseract program installed?"
+    finally:
         try:
-            conf = float(data["conf"][i])
-        except (TypeError, ValueError):
-            conf = -1
+            os.unlink(tmp)
+        except OSError:
+            pass
+    if res.returncode != 0:
+        msg = res.stderr.decode("utf-8", "replace").strip().splitlines()
+        return None, "OCR failed: " + (msg[-1] if msg else f"tesseract exit code {res.returncode}")
+    rows = res.stdout.decode("utf-8", "replace").splitlines()
+    head = rows[0].split("\t") if rows else []
+    words, lines = [], {}
+    for row in rows[1:]:
+        f = dict(zip(head, row.split("\t")))
+        txt = (f.get("text") or "").strip()
+        try:
+            conf = float(f.get("conf", -1))
+            box = [int(f[k]) for k in ("left", "top", "width", "height")]
+            key = (int(f["block_num"]), int(f["par_num"]), int(f["line_num"]))
+        except (KeyError, ValueError):
+            continue
         if not txt or conf < 0:
             continue
-        box = [int(data[k][i]) for k in ("left", "top", "width", "height")]
         words.append({"text": txt, "confidence": round(conf, 1), "box": box})
-        key = (data["block_num"][i], data["par_num"][i], data["line_num"][i])
         lines.setdefault(key, []).append(txt)
     text = "\n".join(" ".join(v) for _, v in sorted(lines.items()))
     return {"engine": "tesseract", "lang": lang, "text": text, "words": words[:2000]}, None
@@ -883,11 +1040,11 @@ def reference_for(path: Path, ref: Path) -> Path:
 
 
 def cv_sections(path: Path, ld: Loaded, report: dict, opts, stem: str, templates):
-    """Sharpness, --find and --compare (OpenCV). Returns extra description sentences."""
+    """Sharpness, --find and --compare (cv_features.py). Returns extra description sentences."""
     import cv_features as cvf
     extra = []
-    if "texture" in report:
-        report["texture"]["sharpness"] = cvf.sharpness(ld.raster)
+    if "texture" in report and not report["texture"]["kind_guess"].startswith("a flat graphic"):
+        report["texture"]["sharpness"] = cvf.sharpness(ld.raster)          # only meaningful for photos
         if report["texture"]["kind_guess"].startswith("a photograph"):
             extra.append(f"Sharpness: {report['texture']['sharpness']['level']}.")
     if templates:
@@ -958,7 +1115,7 @@ def inspect(path: Path, opts, stem: str = "", templates=()):
         ld.warnings.append("--pixel / --region / --pixels-csv were ignored because the pixels could not be decoded.")
     ocr = None
     if opts.ocr:
-        ocr, warn = run_ocr(ld.pil, opts.ocr_lang)
+        ocr, warn = run_ocr(ld.raster, opts.ocr_lang)
         if warn:
             ld.warnings.append(warn)
         if ocr is not None:
@@ -1009,11 +1166,11 @@ def main(argv=None) -> int:
     ap.add_argument("--colors", type=int, default=6, metavar="K", help="number of dominant colours (default 6)")
     ap.add_argument("--pixels-csv", action="store_true", help="also write every pixel to <name>.pixels.csv")
     ap.add_argument("--max-csv-pixels", type=int, default=2_000_000, help="refuse --pixels-csv above this many pixels")
-    ap.add_argument("--ocr", action="store_true", help="extract text with Tesseract (needs pytesseract + tesseract)")
+    ap.add_argument("--ocr", action="store_true", help="extract text with the Tesseract program (or set TESSERACT_CMD)")
     ap.add_argument("--ocr-lang", default="eng", help="Tesseract language(s), e.g. eng+deu (default eng)")
     ap.add_argument("--include-gps", action="store_true", help="include GPS coordinates from EXIF (left out by default)")
-    ap.add_argument("--no-pillow", action="store_true", help="use only the standard-library decoders (PNG, BMP)")
-    cv = ap.add_argument_group("OpenCV features (pip install opencv-python-headless)")
+    ap.add_argument("--no-pillow", action="store_true", help="never use Pillow, even when installed (same pixels, slower for big photos)")
+    cv = ap.add_argument_group("find and compare")
     cv.add_argument("--find", action="append", type=Path, metavar="TEMPLATE",
                     help="find this image (icon, button) inside each input; repeatable")
     cv.add_argument("--threshold", type=float, default=0.8, help="--find: minimum match score 0..1 (default 0.8)")
@@ -1047,9 +1204,6 @@ def main(argv=None) -> int:
     import cv_features
     opts.cv = cv_features.available()
     templates = []
-    if (opts.find or opts.compare) and not opts.cv:
-        print(f"ERROR --find and --compare need OpenCV: {cv_features.INSTALL_HINT}", file=sys.stderr)
-        return 2
     for t in opts.find or []:
         try:
             tl = load(t, use_pillow=not opts.no_pillow)

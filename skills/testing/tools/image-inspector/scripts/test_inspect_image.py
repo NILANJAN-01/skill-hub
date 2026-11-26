@@ -297,18 +297,18 @@ class AnalysisTests(unittest.TestCase):
             self.assertEqual(ii.color_name(rgb), name)
 
     def test_ocr_with_fake_tesseract(self):
-        fake = types.ModuleType("pytesseract")
-        fake.Output = types.SimpleNamespace(DICT="dict")
-        fake.image_to_data = lambda img, lang, output_type: {
-            "text": ["Sign", "in", "", "Help"], "conf": ["96", "91.5", "-1", "88"],
-            "left": [10, 60, 0, 10], "top": [5, 5, 0, 40], "width": [40, 20, 0, 30], "height": [12, 12, 0, 12],
-            "block_num": [1, 1, 1, 2], "par_num": [1, 1, 1, 1], "line_num": [1, 1, 1, 1]}
-        img = types.SimpleNamespace(convert=lambda mode: img)
-        sys.modules["pytesseract"] = fake
-        try:
-            res, warn = ii.run_ocr(img, "eng")
-        finally:
-            del sys.modules["pytesseract"]
+        tsv = ("level\\tpage_num\\tblock_num\\tpar_num\\tline_num\\tword_num\\tleft\\ttop\\twidth\\theight\\tconf\\ttext\\n"
+               "5\\t1\\t1\\t1\\t1\\t1\\t10\\t5\\t40\\t12\\t96\\tSign\\n"
+               "5\\t1\\t1\\t1\\t1\\t2\\t60\\t5\\t20\\t12\\t91.5\\tin\\n"
+               "4\\t1\\t1\\t1\\t1\\t0\\t0\\t0\\t0\\t0\\t-1\\t\\n"
+               "5\\t1\\t2\\t1\\t1\\t1\\t10\\t40\\t30\\t12\\t88\\tHelp\\n")
+        with tempfile.TemporaryDirectory() as d:
+            fake = Path(d, "fake_tesseract.py")
+            # a stand-in for the Tesseract program: checks its arguments, prints TSV
+            fake.write_text("import sys\nassert sys.argv[1].endswith('.png') and sys.argv[2:] == "
+                            "['stdout', '-l', 'eng', 'tsv'], sys.argv\nsys.stdout.write('%s')\n" % tsv)
+            img = raster(80, 60, lambda x, y: (255, 255, 255, 255), "RGB")
+            res, warn = ii.run_ocr(img, "eng", cmd=[sys.executable, str(fake)])
         self.assertIsNone(warn)
         self.assertEqual(res["text"], "Sign in\nHelp")
         self.assertEqual(res["words"][0], {"text": "Sign", "confidence": 96.0, "box": [10, 5, 40, 12]})

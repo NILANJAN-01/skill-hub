@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tests for the OpenCV features (--find, --compare, sharpness). Skipped when OpenCV is not installed."""
+"""Tests for --find, --compare and sharpness (pure Python; the expected values were first checked with OpenCV)."""
 
 import json
 import random
@@ -175,20 +175,19 @@ class CvCliTests(unittest.TestCase):
         self.assertIn("template missing.png", p.stderr)
 
 
-class WithoutOpenCvTests(unittest.TestCase):
-    def test_clear_error_when_opencv_missing(self):
+class NoPackagesTests(unittest.TestCase):
+    def test_find_compare_and_sharpness_work_without_any_package(self):
         with tempfile.TemporaryDirectory() as d:
-            Path(d, "a.png").write_bytes(make_png(4, 4, lambda x, y: (1, 2, 3), 2, 8))
-            code = ("import sys; sys.modules['cv2'] = None; sys.path.insert(0, sys.argv[1]); "
-                    "import inspect_image; sys.exit(inspect_image.main(['a.png', '--compare', 'a.png']))")
-            p = subprocess.run([sys.executable, "-c", code, str(HERE)], cwd=d, capture_output=True, text=True)
-            self.assertEqual(p.returncode, 2)
-            self.assertIn("pip install opencv-python-headless", p.stderr)
-            code = code.replace("['a.png', '--compare', 'a.png']", "['a.png']")
-            p = subprocess.run([sys.executable, "-c", code, str(HERE)], cwd=d, capture_output=True, text=True)
+            Path(d, "a.png").write_bytes(make_png(40, 30, lambda x, y: (x * 6, y * 8, 90), 2, 8))
+            code = ("import sys; [sys.modules.__setitem__(m, None) for m in ('cv2', 'numpy', 'PIL')]; "
+                    "sys.path.insert(0, sys.argv[1]); import inspect_image; "
+                    "sys.exit(inspect_image.main(['a.png', '--compare', 'a.png', '--find', 'a.png']))")
+            p = subprocess.run([sys.executable, "-S", "-c", code, str(HERE)], cwd=d, capture_output=True, text=True)
             self.assertEqual(p.returncode, 0, p.stderr)
             rep = json.loads(Path(d, "image-reports", "a.json").read_text(encoding="utf-8"))
-            self.assertNotIn("sharpness", rep["texture"])
+            self.assertIn("sharpness", rep["texture"])
+            self.assertTrue(rep["comparison"]["identical"])
+            self.assertEqual(rep["find"][0]["matches"][0]["score"], 1.0)
 
 
 if __name__ == "__main__":
