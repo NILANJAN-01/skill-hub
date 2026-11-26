@@ -25,13 +25,11 @@ The 61 `git-*` skills in this hub were produced with it from *Pro Git*.
 - The user wants a single hand-crafted skill with judgment or workflow. Use the `contribute-skill` skill instead.
 - The document is mostly prose without commands or procedures. Extraction gives thin skills; tell the user.
 
-## Setup (once)
+## Setup
 
-```bash
-pip install -r scripts/requirements.txt     # pymupdf, numpy, scikit-learn, yake
-```
+Nothing to install: the scripts use only the Python standard library (Python 3.8+). The PDF reader (`pdf_lite.py`) and the text statistics (`nlp_lite.py`) are bundled. If PyMuPDF happens to be installed, `--engine pymupdf` uses it instead of the bundled reader. The output is the same apart from small spacing differences.
 
-Python 3.10+ is required. All paths below are relative to this skill's folder. Use the absolute path of `scripts/skillforge.py` if you run it from somewhere else.
+All paths below are relative to this skill's folder. Use the absolute path of `scripts/skillforge.py` if you run it from somewhere else.
 
 ## Procedure
 
@@ -59,12 +57,12 @@ Python 3.10+ is required. All paths below are relative to this skill's folder. U
 
 ## How it works (for explaining results)
 
-1. **Parse.** PyMuPDF uses font size, monospace runs and layout to tell apart headings, prose, code blocks, inline code, captions and note/warning callouts.
-2. **Index.** Each subsection is indexed with TF-IDF and light stemming, so rebase, rebasing and rebased match.
+1. **Parse.** `pdf_lite.py` reads each character with its font, size and position (it handles compressed and damaged files, object streams, embedded and CID fonts, ToUnicode maps and empty-password encryption). Font size, monospace runs and layout then tell apart headings, prose, code blocks, inline code, captions and note/warning callouts. Text hidden by a clipping path is skipped.
+2. **Index.** Each subsection is indexed with TF-IDF (`nlp_lite.py`, same weights as scikit-learn's `TfidfVectorizer`) and light stemming, so rebase, rebasing and rebased match.
 3. **Plan.** Topics are matched to the best sections across the whole document. The plan is editable JSON that later runs reuse.
 4. **Author.** Each output section comes from a different extraction method:
    - Procedures: "instruction → command → output" sequences.
-   - Key concepts: TextRank.
+   - Key concepts: TextRank (PageRank over sentence similarity).
    - Keyphrases: YAKE.
    - Safety rules: callouts plus destructive commands.
    - Troubleshooting: error lines in output, each paired with the sentence that resolves it.
@@ -73,7 +71,8 @@ Python 3.10+ is required. All paths below are relative to this skill's folder. U
 
 | Symptom | Fix |
 |---|---|
-| `ModuleNotFoundError: fitz` | `pip install -r scripts/requirements.txt` |
+| `Cannot read book.pdf: The PDF is password-protected.` | The file needs a real password. Remove it with a PDF tool you trust, then rerun |
+| Text looks garbled (`�`, missing letters) | The PDF's fonts have no Unicode map (common with old TeX bitmap fonts). Try `--engine pymupdf` if PyMuPDF is installed; otherwise OCR the file |
 | Few or no skills planned | Lower `--min-commands`, or pass `--topics` explicitly |
 | Skill reports "no procedures" | The matched sections have no commands. Drop the skill or merge topics |
 | Headings detected wrongly (scanned PDF) | The PDF needs a text layer. Run OCR first (e.g. `ocrmypdf`) |

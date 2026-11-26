@@ -246,10 +246,9 @@ ARCHITECTURE.md                   how the hub fits together, and the full comman
 
 ### Generate skills from a PDF
 
-[`skillforge`](skills/generic/hub/skillforge/SKILL.md) bundles `skillforge.py`, an offline generator that uses open-source NLP and needs no API key or LLM. It turns a technical PDF into focused playbooks, and it produced the Git skills here:
+[`skillforge`](skills/generic/hub/skillforge/SKILL.md) bundles `skillforge.py`, an offline generator that needs no API key, no LLM and no packages (Python standard library only). It turns a technical PDF into focused playbooks, and it produced the Git skills here:
 
 ```bash
-pip install -r skills/generic/hub/skillforge/scripts/requirements.txt
 python skills/generic/hub/skillforge/scripts/skillforge.py book.pdf --plan-only     # review the plan
 python skills/generic/hub/skillforge/scripts/skillforge.py book.pdf --topics "rebase, hooks, bisect"
 ```

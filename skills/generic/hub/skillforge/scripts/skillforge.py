@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 skillforge.py - turn a technical PDF into a library of focused, AI-actionable Agent Skills,
-using only open-source NLP (no LLM, no API key, runs fully offline).
+using only the Python standard library (no LLM, no API key, no pip install, runs fully offline).
 
     python skillforge.py progit.pdf                                   # auto: one skill per actionable section
     python skillforge.py progit.pdf --topics "rebase, hooks, merge conflicts, bisect, submodules"
@@ -13,11 +13,12 @@ Output (default --out generated-skills; review, then copy folders into the hub's
     generated-skills/<name>/references/source-text.md   cleaned source text the skill was built from
 
 Pipeline
-  1. PARSE    PyMuPDF reads fonts and layout, so it can tell headings (by size), prose,
+  1. PARSE    pdf_lite.py (bundled) reads fonts and layout, so it can tell headings (by size), prose,
               code blocks (monospace + indent), inline code, figure captions, page numbers and
               note/tip/warning callouts (icon + indented box) apart - exactly, not by guessing.
-  2. INDEX    Every subsection becomes a "unit". scikit-learn TF-IDF (with light stemming,
-              so rebase/rebasing/rebased match) indexes units for topic retrieval.
+              `--engine pymupdf` uses PyMuPDF instead, if it is installed.
+  2. INDEX    Every subsection becomes a "unit". TF-IDF (nlp_lite.py, same weights as scikit-learn,
+              with light stemming so rebase/rebasing/rebased match) indexes units for topic retrieval.
   3. PLAN     --topics: each topic retrieves its best units from the WHOLE book (e.g. "merge
               conflicts" pulls from Branching AND Advanced Merging). Without --topics: one skill
               per section that contains enough commands. Saved to <out>/.work/<pdf>/plan.json
@@ -27,7 +28,7 @@ Pipeline
                 - safety rules = warning/caution callouts + risk sentences + destructive commands
                 - troubleshooting = error lines in command output -> the sentence that fixes them
                 - key concepts = TextRank (PageRank over TF-IDF sentence similarity)
-                - keywords     = YAKE
+                - keywords     = YAKE (nlp_lite.py)
               Every statement is copied from the source; nothing is invented.
 """
 
@@ -35,19 +36,16 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import re
 import sys
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
 
-try:
-    import numpy as np
-    import pymupdf
-    import yake
-    from sklearn.feature_extraction.text import TfidfVectorizer
-except ImportError as exc:  # pragma: no cover
-    sys.exit(f"Missing dependency ({exc.name}). Run: pip install -r requirements.txt")
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from nlp_lite import Tfidf, dot, pagerank as _pagerank, similarity_matrix, yake  # noqa: E402
+from pdf_lite import PdfDocument, PdfError  # noqa: E402
 
 
 # =========================================================================== patterns
@@ -254,15 +252,32 @@ def join_text(a: str, b: str) -> str:
     return f"{a} {b}"
 
 
-class Document:
-    def __init__(self, path: Path):
-        self.path = path
-        self.pdf = pymupdf.open(str(path))
-        if self.pdf.needs_pass and not self.pdf.authenticate(""):
+def open_pdf(path: Path, engine: str = "builtin") -> tuple[str, list[tuple], list[dict], list[float]]:
+    """(title, toc, page text dicts, page heights). The text dicts use PyMuPDF's get_text("dict") layout."""
+    if engine == "pymupdf":
+        try:
+            import pymupdf
+        except ImportError:
+            sys.exit("--engine pymupdf needs PyMuPDF (pip install pymupdf). The default engine needs nothing.")
+        pdf = pymupdf.open(str(path))
+        if pdf.needs_pass and not pdf.authenticate(""):
             sys.exit("The PDF is password-protected.")
-        self.title = (self.pdf.metadata or {}).get("title") or path.stem
-        self.toc = [(lvl, t.strip(), p) for lvl, t, p in self.pdf.get_toc()]
-        print(f"[parse] '{self.title}': {len(self.pdf)} pages")
+        return ((pdf.metadata or {}).get("title") or "", pdf.get_toc(),
+                [page.get_text("dict", sort=True) for page in pdf], [page.rect.height for page in pdf])
+    try:
+        pdf = PdfDocument(str(path))
+        return pdf.title, pdf.toc, [page.text_dict(sort=True) for page in pdf.pages], [p.height for p in pdf.pages]
+    except (PdfError, OSError) as exc:
+        sys.exit(f"Cannot read {path}: {exc}")
+
+
+class Document:
+    def __init__(self, path: Path, engine: str = "builtin"):
+        self.path = path
+        title, toc, self.page_dicts, self.heights = open_pdf(path, engine)
+        self.title = title or path.stem
+        self.toc = [(lvl, t.strip(), p) for lvl, t, p in toc]
+        print(f"[parse] '{self.title}': {len(self.page_dicts)} pages")
         self._stats()
         self.units = self._parse()
         if sum(len(u.prose()) for u in self.units) < 500:
@@ -275,7 +290,6 @@ class Document:
     def _stats(self) -> None:
         """Body font size and left margin = the most common values in the document."""
         sizes, xs = Counter(), Counter()
-        self.page_dicts = [page.get_text("dict", sort=True) for page in self.pdf]   # read each page once
         for d in self.page_dicts:
             for b in d["blocks"]:
                 for l in b.get("lines", []):
@@ -334,20 +348,22 @@ class Document:
             units.append(u)
             return u
 
-        for pno, page in enumerate(self.pdf, 1):
-            height = page.rect.height
+        for pno, height in enumerate(self.heights, 1):
             lines = []
             for b_i, b in enumerate(self.page_dicts[pno - 1]["blocks"]):
                 for l in b.get("lines", []):
-                    spans = [s for s in l["spans"] if s["text"].strip()]
-                    if spans:
-                        lines.append((l["bbox"], spans, b_i))
-            callouts = self._callout_lines([(bb, sp) for bb, sp, _ in lines])
+                    # whitespace-only spans carry the spaces between words, so they stay in the text;
+                    # font tests look only at the visible spans
+                    spans = [s for s in l["spans"] if s["text"]]
+                    vis = [s for s in spans if s["text"].strip()]
+                    if vis:
+                        lines.append((l["bbox"], spans, vis, b_i))
+            callouts = self._callout_lines([(bb, vis) for bb, _, vis, _ in lines])
             prev = None                                # (kind, block index) of the previous line
-            for i, (bbox, spans, b_i) in enumerate(lines):
-                first = spans[0]
+            for i, (bbox, spans, vis, b_i) in enumerate(lines):
+                first = vis[0]
                 raw = "".join(s["text"] for s in spans).strip()
-                size = round(max(s["size"] for s in spans), 1)
+                size = round(max(s["size"] for s in vis), 1)
                 if ICON_FONT.search(first["font"]):
                     continue
                 if size < self.body - 0.6 and (raw.isdigit() or bbox[1] < height * 0.07
@@ -369,7 +385,7 @@ class Document:
                     prev = ("c", b_i)
                     continue
 
-                all_mono = all(MONO_FONT.search(s["font"]) for s in spans)
+                all_mono = all(MONO_FONT.search(s["font"]) for s in vis)
                 if all_mono and (bbox[0] > self.left + 4 or abs(size - self.body) > 0.3):
                     text = "".join(s["text"] for s in spans).rstrip()
                     if last and last.kind == "code" and prev and prev[0] == "code":
@@ -379,7 +395,7 @@ class Document:
                     prev = ("code", b_i)
                     continue
 
-                all_bold = all(self._is_bold(s) for s in spans) and not all_mono
+                all_bold = all(self._is_bold(s) for s in vis) and not all_mono
                 if all_bold and size > self.body + 0.5 and len(raw) < 120:   # real heading
                     while stack and stack[-1][0] <= size:
                         stack.pop()
@@ -417,8 +433,8 @@ class Document:
 class Index:
     def __init__(self, units: list[Unit]):
         self.units = units
-        self.vec = TfidfVectorizer(analyzer=analyzer, sublinear_tf=True, max_df=0.6)
-        self.X = self.vec.fit_transform([u.index_text() for u in units])
+        self.vec = Tfidf(analyzer=analyzer, sublinear_tf=True, max_df=0.6)
+        self.X = self.vec.fit_transform([u.index_text() for u in units])     # one sparse row per unit
         self.path_stems = [set(analyzer(" ".join(u.path[1:] or u.path))) for u in units]
         self.cmd_stems = [set(analyzer(" ".join(strip_prompt(c) for c in u.commands()))) for u in units]
 
@@ -426,10 +442,10 @@ class Index:
         q_stems = set(analyzer(query))
         if not q_stems:
             return []
-        sims = (self.X @ self.vec.transform([query]).T).toarray().ravel()
+        q = self.vec.transform([query])[0]
         scored = []
         for i in range(len(self.units)):
-            s = float(sims[i])
+            s = dot(self.X[i], q)
             s += 0.35 * len(q_stems & self.path_stems[i]) / len(q_stems)
             s += 0.15 * len(q_stems & self.cmd_stems[i]) / len(q_stems)
             scored.append((s, i))
@@ -505,12 +521,10 @@ def textrank(sentences: list[str], n: int, focus: set[str] | None = None) -> lis
     if len(sentences) <= n:
         return sentences
     try:
-        X = TfidfVectorizer(analyzer=analyzer, sublinear_tf=True).fit_transform(sentences)
+        X = Tfidf(analyzer=analyzer, sublinear_tf=True).fit_transform(sentences)
     except ValueError:
         return sentences[:n]
-    sim = (X @ X.T).toarray()
-    np.fill_diagonal(sim, 0.0)
-    ranks = pagerank(sim)
+    ranks = pagerank(similarity_matrix(X), len(sentences))      # similarity without the diagonal
     if focus:
         for i, s in enumerate(sentences):
             ranks[i] *= (1.0 + 0.8 * bool(focus & set(analyzer(s)))) * (1.0 + 0.4 * bool(CONCEPT.search(s)))
@@ -518,25 +532,13 @@ def textrank(sentences: list[str], n: int, focus: set[str] | None = None) -> lis
     return [sentences[i] for i in sorted(best)]
 
 
-def pagerank(weights: np.ndarray, d: float = 0.85, iters: int = 100) -> np.ndarray:
-    """Weighted PageRank by power iteration (same result as networkx.pagerank, much faster)."""
-    n = len(weights)
-    out = weights.sum(axis=1, keepdims=True)
-    trans = np.divide(weights, out, out=np.full_like(weights, 1.0 / n), where=out > 0)
-    r = np.full(n, 1.0 / n)
-    for _ in range(iters):
-        nxt = (1 - d) / n + d * (r @ trans)
-        if np.abs(nxt - r).sum() < 1e-8:
-            break
-        r = nxt
-    return r
+def pagerank(sim: dict, n: int, d: float = 0.85, iters: int = 100) -> list[float]:
+    """Weighted PageRank by power iteration (same result as networkx.pagerank)."""
+    return _pagerank(sim, n, d, iters)
 
 
 def keyphrases(text: str, domain: str, n: int = 8) -> list[str]:
-    try:
-        kws = yake.KeywordExtractor(lan="en", n=3, top=n * 3, dedupLim=0.7).extract_keywords(text[:60000])
-    except Exception:
-        return []
+    kws = yake(text[:60000], n=3, top=n * 3, dedup_lim=0.7)
     out: list[str] = []
     for kw, _ in kws:
         k = kw.strip().lower()
@@ -595,11 +597,16 @@ class Author:
         # related skills = cosine similarity between the skills' summed unit vectors
         vecs = []
         for sk in plan["skills"]:
-            rows = [i for i in sk["units"] if i < len(doc.units)]
-            v = np.asarray(index.X[rows].sum(axis=0)).ravel() if rows else np.zeros(index.X.shape[1])
-            vecs.append(v / (np.linalg.norm(v) or 1.0))
-        sim = np.array(vecs) @ np.array(vecs).T if vecs else np.zeros((0, 0))
-        self.related = {sk["name"]: [plan["skills"][b] for b in np.argsort(-sim[a])
+            v: dict[int, float] = defaultdict(float)
+            for i in sk["units"]:
+                if i < len(doc.units):
+                    for k, w in index.X[i].items():
+                        v[k] += w
+            norm = math.sqrt(sum(w * w for w in v.values())) or 1.0
+            vecs.append({k: w / norm for k, w in v.items()})
+        n = len(vecs)
+        sim = [[dot(vecs[a], vecs[b]) for b in range(n)] for a in range(n)]
+        self.related = {sk["name"]: [plan["skills"][b] for b in sorted(range(n), key=lambda b: -sim[a][b])
                                      if b != a and sim[a][b] > 0.12][:4]
                         for a, sk in enumerate(plan["skills"])}
 
@@ -933,11 +940,13 @@ def main() -> None:
     p.add_argument("--only", help="comma-separated skill names from plan.json to (re)write")
     p.add_argument("--plan-only", action="store_true", help="write plan.json and stop")
     p.add_argument("--replan", action="store_true", help="ignore an existing plan.json")
+    p.add_argument("--engine", choices=("builtin", "pymupdf"), default="builtin",
+                   help="PDF reader: the bundled standard-library reader (default) or PyMuPDF, if installed")
     args = p.parse_args()
 
     if not args.pdf.is_file():
         sys.exit(f"File not found: {args.pdf}")
-    doc = Document(args.pdf)
+    doc = Document(args.pdf, args.engine)
     index = Index(doc.units)
     work = args.out / ".work" / slugify(args.pdf.stem)
     work.mkdir(parents=True, exist_ok=True)
