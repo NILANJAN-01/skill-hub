@@ -36,6 +36,9 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from pathlib import Path
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import yaml_lite  # noqa: E402  (bundled next to this script)
+
 VERSION = "1.0"
 METHODS = {"GET", "HEAD", "OPTIONS", "POST", "PUT", "PATCH", "DELETE", "TRACE"}
 IDEMPOTENT = {"GET", "HEAD", "OPTIONS", "PUT", "DELETE", "TRACE"}
@@ -95,10 +98,9 @@ def load_structured(path):
         raise SuiteError("cannot read %s: %s" % (path, e.strerror or e))
     if path.suffix.lower() in (".yaml", ".yml"):
         try:
-            import yaml  # optional; only for YAML OpenAPI files
-        except ImportError:
-            raise SuiteError("%s: YAML needs PyYAML (pip install pyyaml), or convert the file to JSON" % path)
-        return yaml.safe_load(text)
+            return yaml_lite.load(text)  # bundled reader: no PyYAML needed
+        except yaml_lite.YamlError as e:
+            raise SuiteError("%s: %s (or convert the file to JSON)" % (path, e))
     try:
         return json.loads(text)
     except json.JSONDecodeError as e:

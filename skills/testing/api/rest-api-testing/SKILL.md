@@ -2,7 +2,7 @@
 name: rest-api-testing
 description: "Test the REST APIs of web applications reliably, in any field (banking, healthcare, e-commerce, telecom, SaaS): plan cases from an OpenAPI spec, write functional, negative, auth and contract tests, and run them with a script that retries only safe requests, polls instead of sleeping, masks secrets and writes JUnit reports. Use when the user wants API tests written, run or reviewed, or says API tests are flaky."
 license: Complete terms in the repository README
-compatibility: The script needs Python 3.8+ (standard library only; PyYAML only to read a YAML OpenAPI file). It sends real HTTP requests, so it needs network access to the API under test. Framework examples need their own toolchains (JDK for REST Assured and Karate, Node.js for Newman, SuperTest and Playwright).
+compatibility: The script needs Python 3.8+ and nothing else (standard library only; YAML specs are read by the bundled yaml_lite.py). It sends real HTTP requests, so it needs network access to the API under test. Framework examples need their own toolchains (JDK for REST Assured and Karate, Node.js for Newman, SuperTest and Playwright).
 metadata:
   title: "REST API testing for web applications"
   category: api-testing-tools

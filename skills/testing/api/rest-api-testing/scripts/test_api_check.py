@@ -399,6 +399,23 @@ class Plan(unittest.TestCase):
         self.assertNotIn("Authorization", suite["tests"][0]["request"].get("headers", {}))  # security: []
         self.assertEqual([f for f in ac.lint_suite(suite) if f[0] == "ERROR"], [])
 
+    def test_plan_from_yaml_openapi_matches_json(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            suites = []
+            for name in ("openapi.json", "openapi.yaml"):
+                out = Path(tmp, name + ".suite.json")
+                self.assertEqual(quiet_main(["plan", str(FIXTURES / name), "--out", str(out)]), 0)
+                suites.append(json.loads(out.read_text(encoding="utf-8").replace("openapi.yaml", "openapi.json")))
+        self.assertEqual(suites[0], suites[1])
+
+    def test_bad_yaml_reports_line(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            p = Path(tmp, "spec.yaml")
+            p.write_text("openapi: 3.0.3\npaths: [1, 2\n", encoding="utf-8")
+            with self.assertRaises(ac.SuiteError) as cm:
+                ac.load_structured(p)
+            self.assertIn("line 2", str(cm.exception))
+
     def test_rejects_swagger2(self):
         with self.assertRaises(ac.SuiteError):
             ac.plan_from_openapi({"swagger": "2.0"}, "x.json")

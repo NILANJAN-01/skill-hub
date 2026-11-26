@@ -1,6 +1,6 @@
 # Suite format for api_check.py
 
-A suite is one JSON file. Tests run in file order, and values captured in one test are available to later tests. `python api_check.py example` prints a complete example, and `scripts/fixtures/orders_suite.json` is a suite that the skill's own tests run.
+A suite is one JSON file (a `.yaml`/`.yml` file with the same structure also works). Tests run in file order, and values captured in one test are available to later tests. `python api_check.py example` prints a complete example, and `scripts/fixtures/orders_suite.json` is a suite that the skill's own tests run.
 
 ```json
 {
@@ -109,7 +109,7 @@ A plain value means "equal". JSON types are strict: `true` is not `1`, and `1` e
 
 ### Schema support
 
-The schema check supports `type` (and OpenAPI `nullable`), `enum`, `const`, `properties`, `required`, `additionalProperties`, `items`, `minItems`/`maxItems`/`uniqueItems`, `minLength`/`maxLength`/`pattern`, `format` (date-time, date, email, uuid, uri, ipv4), `minimum`/`maximum`/`exclusiveMinimum`/`exclusiveMaximum`/`multipleOf`, `allOf`/`anyOf`/`oneOf`/`not`, and `$ref` to the same document or to another file (`file.json#/pointer`, relative to the suite file). JSON Pointer escapes: `/` becomes `~1` and `~` becomes `~0` (`#/paths/~1orders/post/...`). YAML spec files need PyYAML. For full JSON Schema 2020-12 or property-based fuzzing, use Schemathesis (see [frameworks.md](frameworks.md)).
+The schema check supports `type` (and OpenAPI `nullable`), `enum`, `const`, `properties`, `required`, `additionalProperties`, `items`, `minItems`/`maxItems`/`uniqueItems`, `minLength`/`maxLength`/`pattern`, `format` (date-time, date, email, uuid, uri, ipv4), `minimum`/`maximum`/`exclusiveMinimum`/`exclusiveMaximum`/`multipleOf`, `allOf`/`anyOf`/`oneOf`/`not`, and `$ref` to the same document or to another file (`file.json#/pointer`, relative to the suite file). JSON Pointer escapes: `/` becomes `~1` and `~` becomes `~0` (`#/paths/~1orders/post/...`). YAML spec files are read by the bundled `yaml_lite.py` (no PyYAML needed): it reads the YAML 1.2 that OpenAPI files use (anchors, merge keys, block scalars, flow collections) and stops with the line number on the few forms it does not support (`?` complex keys, tab indentation). Status-code keys such as `200:` are read as the string `"200"`, as in JSON. For full JSON Schema 2020-12 or property-based fuzzing, use Schemathesis (see [frameworks.md](frameworks.md)).
 
 ## CLI
 
@@ -117,7 +117,7 @@ The schema check supports `type` (and OpenAPI `nullable`), `enum`, `const`, `pro
 run SUITE [--env FILE] [--var K=V]... [--base-url URL] [--tag T]... [--skip-tag T]... [--only NAME]...
           [--read-only] [--fail-fast] [--no-retry] [--junit FILE] [--json FILE] [--report FILE] [--insecure] [-v]
 lint SUITE [--strict]          # ERROR = must fix, WARN = flaky or unsafe pattern, INFO = needs a value at run time
-plan OPENAPI [--out FILE]      # OpenAPI 3.x JSON (YAML with PyYAML); Swagger 2.0 must be converted first
+plan OPENAPI [--out FILE]      # OpenAPI 3.x JSON or YAML; Swagger 2.0 must be converted first
 example [--out FILE]
 ```
 
