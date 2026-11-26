@@ -2,10 +2,11 @@
 """yt-lecture-overview: turn a YouTube study/tech video link into text and an HTML overview.
 
 This script is standard library only (links, guardrail, captions, notes, HTML). The audio stage runs
-yt_audio.py in the "audio Python" (--audio-python, $YT_LECTURE_AUDIO_PYTHON, or this Python), which needs:
-  yt-dlp                                   extract the audio track (and a low-resolution video for the slides)
-  av + numpy                               decode and analyse it (speech vs silence, pauses, loudness); slides
-  faster-whisper | openai-whisper | vosk   turn the speech into text
+yt_audio.py in the "audio Python" (--audio-python, $YT_LECTURE_AUDIO_PYTHON, or this Python), which uses:
+  yt-dlp (program or package)              extract the audio track (and a low-resolution video for the slides)
+  ffmpeg program, or PyAV                  decode it; the analysis (speech vs silence, pauses) is pure Python
+  faster-whisper | openai-whisper | vosk | whisper.cpp    turn the speech into text
+Every step can run without pip: the yt-dlp, ffmpeg and whisper.cpp (whisper-cli) programs are enough.
 
 Commands
   check  URL                 validate the link, read the real title, apply the study/tech guardrail
@@ -933,12 +934,16 @@ def doctor(python: str | None = None, runner=subprocess.run) -> dict:
         return {"audio_python": py, "error": f"could not run the audio Python: {exc}"}
     advice = []
     if not rep.get("can_download"):
-        advice.append(f"{py} -m pip install yt-dlp")
+        advice.append("install the yt-dlp program (winget install yt-dlp, brew install yt-dlp, or the single file "
+                      f"from github.com/yt-dlp/yt-dlp/releases), or: {py} -m pip install yt-dlp")
     if not rep.get("can_analyse"):
-        advice.append(f"{py} -m pip install av numpy")
+        advice.append("install the ffmpeg program (winget install Gyan.FFmpeg, brew install ffmpeg, apt install "
+                      f"ffmpeg), or: {py} -m pip install av")
     if not rep.get("engines_ready"):
         blocked = [k for k in ("faster-whisper", "whisper", "vosk") if str(rep.get(k, "")).startswith(("cannot", "ctranslate2"))]
         advice.append(f"{py} -m pip install faster-whisper   (best quality; or: vosk for a light engine)")
+        advice.append("no pip: install whisper.cpp (whisper-cli) and a ggml model file, then set WHISPER_CPP_MODEL "
+                      "(or pass --model path/to/ggml-base.bin)")
         if blocked:
             advice.append("an engine is installed but cannot load (" + ", ".join(blocked) + "): its native library is "
                           "missing or blocked by a security policy; try another engine, or a Python version "
@@ -967,10 +972,11 @@ def main(argv=None) -> int:
                         "fails; audio-only: never use captions; captions: captions first (fast), audio if none")
     f.add_argument("--clip", default="", help="process only part of the video, e.g. 10:00-25:00 or 600-1500")
     f.add_argument("--lang", default="en", help="spoken language (en, hi, es...) or 'auto' to detect")
-    f.add_argument("--engine", default="auto", choices=["auto", "faster-whisper", "whisper", "vosk"],
-                   help="speech-to-text engine (auto tries faster-whisper, whisper, vosk)")
+    f.add_argument("--engine", default="auto", choices=["auto", "faster-whisper", "whisper", "vosk", "whisper-cpp"],
+                   help="speech-to-text engine (auto tries faster-whisper, whisper, vosk, whisper-cpp)")
     f.add_argument("--model", default="base",
-                   help="whisper size tiny|base|small|medium|large-v3, or a Vosk model folder (default base)")
+                   help="whisper size tiny|base|small|medium|large-v3, a Vosk model folder, or a whisper.cpp "
+                        "ggml model file (default base)")
     f.add_argument("--audio-python", help="Python that has the audio packages (default $YT_LECTURE_AUDIO_PYTHON "
                                           "or this Python)")
     f.add_argument("--transcript", help="use this .vtt/.srt/.txt/.json transcript for the text")

@@ -1,7 +1,8 @@
 """Slide capture for yt-lecture-overview: find the slides shown in a lecture video and save one image of each.
 
-Runs in the "audio Python" (needs av + numpy). yt_audio.py downloads a low-resolution, video-only stream and
-calls extract_slides(); the video file is deleted afterwards.
+Runs in the "audio Python". Decodes with PyAV + numpy when they are installed, otherwise with the ffmpeg
+program (no Python package needed). yt_audio.py downloads a low-resolution, video-only stream and calls
+extract_slides(); the video file is deleted afterwards.
 
 How a slide is found: frames are sampled about once a second and shrunk to a 64x36 grey thumbnail. When a
 large share of the thumbnail changes, a new scene starts. A scene shown for at least MIN_HOLD seconds is a
@@ -11,6 +12,9 @@ Scenes that look like camera footage (the speaker, the room) are skipped: see lo
 """
 from __future__ import annotations
 
+import json
+import shutil
+import subprocess
 import time
 from pathlib import Path
 
@@ -90,12 +94,93 @@ def looks_like_camera(gray, motion=0.0) -> bool:
       animated slides that moved as much stayed above 65% flat, and slides with a small webcam in a corner
       moved under 1%.
     """
-    g = gray.astype("int16")
-    dx = abs(g[:, 1:] - g[:, :-1])[:-1, :]
-    dy = abs(g[1:, :] - g[:-1, :])[:, :-1]
-    grad = dx * (dx >= dy) + dy * (dy > dx)
-    flat, strong = float((grad <= 2).mean()), float((grad >= 40).mean())
+    if hasattr(gray, "astype"):
+        g = gray.astype("int16")
+        dx = abs(g[:, 1:] - g[:, :-1])[:-1, :]
+        dy = abs(g[1:, :] - g[:-1, :])[:, :-1]
+        grad = dx * (dx >= dy) + dy * (dy > dx)
+        flat, strong = float((grad <= 2).mean()), float((grad >= 40).mean())
+    else:                                         # (flat list of grey values, width): no numpy needed
+        values, w = gray
+        h = len(values) // w
+        n = flat_n = strong_n = 0
+        for y in range(h - 1):
+            row, nxt = values[y * w:(y + 1) * w], values[(y + 1) * w:(y + 2) * w]
+            for x in range(w - 1):
+                g = max(abs(row[x + 1] - row[x]), abs(nxt[x] - row[x]))
+                flat_n += g <= 2
+                strong_n += g >= 40
+                n += 1
+        flat, strong = flat_n / max(1, n), strong_n / max(1, n)
     return (strong < 0.02 and flat < 0.75) or (motion >= 0.06 and flat < 0.65)
+
+
+def _area(values, w, h, nw, nh):
+    """Grey image (flat list) w x h -> nw x nh by area averaging."""
+    def weights(n_src, n_dst):
+        sc = n_src / n_dst
+        out = []
+        for d in range(n_dst):
+            a, b = d * sc, (d + 1) * sc
+            ws, i = [], int(a)
+            while i < b and i < n_src:
+                lo, hi = max(a, i), min(b, i + 1)
+                if hi > lo:
+                    ws.append((i, (hi - lo) / sc))
+                i += 1
+            out.append(ws)
+        return out
+    wx, wy = weights(w, nw), weights(h, nh)
+    rows = [[sum(values[y * w + i] * k for i, k in ws) for ws in wx] for y in range(h)]
+    return [int(sum(rows[j][x] * k for j, k in ws) + 0.5) for ws in wy for x in range(nw)]
+
+
+def _extract_ffmpeg(video, out, start, end, every):
+    """Find the scenes with the ffmpeg program instead of PyAV + numpy."""
+    ff, fp = shutil.which("ffmpeg"), shutil.which("ffprobe")
+    facts = {"size_bytes": Path(video).stat().st_size}
+    if fp:
+        try:
+            res = subprocess.run([fp, "-v", "error", "-select_streams", "v:0", "-show_entries",
+                                  "stream=codec_name,width,height", "-of", "json", str(video)],
+                                 capture_output=True, text=True, timeout=60)
+            st = (json.loads(res.stdout or "{}").get("streams") or [{}])[0]
+            facts.update({"codec": st.get("codec_name"), "width": st.get("width"), "height": st.get("height")})
+        except (OSError, ValueError, subprocess.SubprocessError):
+            pass
+    cw, ch = 160, 90
+    cmd = [ff, "-v", "error", "-nostdin"] + (["-ss", "%.3f" % start] if start > 0 else []) + ["-i", str(video)]
+    if end is not None:
+        cmd += ["-t", "%.3f" % (end - start)]
+    cmd += ["-an", "-sn", "-vf", "fps=1/%g,scale=%d:%d:flags=area,format=gray" % (every, cw, ch),
+            "-f", "rawvideo", "-pix_fmt", "gray", "-"]
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+
+    def samples():
+        k = 0
+        while True:
+            buf = proc.stdout.read(cw * ch)
+            if len(buf) < cw * ch:
+                return
+            g = list(buf)
+            yield start + k * every, _area(g, cw, ch, SIG_W, SIG_H), (start + k * every, g)
+            k += 1
+    try:
+        scenes = pick_scenes(samples())
+    finally:
+        proc.stdout.close()
+        proc.wait()
+    camera = [s for s in scenes if looks_like_camera((s["payload"][1], cw), s["motion"])]
+    scenes = [s for s in scenes if s not in camera]
+    return scenes, camera, facts, lambda s, path: _jpeg_ffmpeg(ff, video, s["payload"][0], path)
+
+
+def _jpeg_ffmpeg(ff, video, t, path: Path) -> int:
+    """Save the frame at t seconds as JPEG, at most MAX_WIDTH wide."""
+    subprocess.run([ff, "-v", "error", "-nostdin", "-y", "-ss", "%.3f" % t, "-i", str(video), "-frames:v", "1",
+                    "-vf", "scale='min(%d,iw)':-2" % MAX_WIDTH, "-q:v", "3", str(path)],
+                   capture_output=True, timeout=120, check=False)
+    return path.stat().st_size if path.is_file() else 0
 
 
 def _jpeg(av, frame, path: Path) -> int:
@@ -116,13 +201,21 @@ def _jpeg(av, frame, path: Path) -> int:
 
 def extract_slides(video, out_dir, start=0.0, end=None, every=1.0) -> dict:
     """Find the slides in `video` between start and end (seconds) and save them as out_dir/slide-NNN.jpg."""
-    import av  # noqa: PLC0415 - optional package, only in the audio Python
-    import numpy as np  # noqa: F401,PLC0415
     began = time.time()
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     for old in out.glob("slide-*.jpg"):
         old.unlink()
+    try:
+        import av  # noqa: PLC0415 - optional package, only in the audio Python
+        import numpy as np  # noqa: F401,PLC0415
+    except ImportError:
+        av = None
+    if av is None:
+        if not shutil.which("ffmpeg"):
+            raise RuntimeError("slides need the ffmpeg program (or pip install av numpy)")
+        scenes, camera, facts, save = _extract_ffmpeg(video, out, start, end, every)
+        return _finish(scenes, camera, facts, save, out, every, began)
     with av.open(str(video)) as container:
         stream = container.streams.video[0]
         stream.thread_type = "AUTO"
@@ -149,13 +242,17 @@ def extract_slides(video, out_dir, start=0.0, end=None, every=1.0) -> dict:
     camera = [s for s in scenes if looks_like_camera(
         s["payload"].reformat(width=160, height=90, format="gray").to_ndarray(), s["motion"])]
     scenes = [s for s in scenes if s not in camera]
+    return _finish(scenes, camera, facts, lambda s, path: _jpeg(av, s["payload"], path), out, every, began)
+
+
+def _finish(scenes, camera, facts, save, out, every, began):
     if len(scenes) > MAX_SLIDES:                       # keep the slides shown longest, in time order
         keep = sorted(sorted(scenes, key=lambda s: s["start"] - s["end"])[:MAX_SLIDES], key=lambda s: s["start"])
         scenes = keep
     slides, total = [], 0
     for i, s in enumerate(scenes, 1):
         name = f"slide-{i:03d}.jpg"
-        total += _jpeg(av, s["payload"], out / name)
+        total += save(s, out / name)
         slides.append({"file": name, "start": s["start"], "end": s["end"], "shown_again": s["shown_again"]})
     return {"count": len(slides), "slides": slides, "camera_shots_skipped": len(camera), "video": facts,
             "image_bytes": total,

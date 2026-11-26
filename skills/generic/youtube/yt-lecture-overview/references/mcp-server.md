@@ -20,7 +20,7 @@ python <skill-folder>/scripts/yt_lecture_mcp.py --out <folder for overviews> --a
 ```
 
 - `--out` is the default parent folder for `yt_fetch_overview` (default: `./yt-lecture`, relative to the folder the client starts the server in). Use an absolute path so the files always land in the same place.
-- `--audio-python` is the interpreter that has `yt-dlp`, `av`, `numpy` and a speech-to-text engine (see [audio-setup.md](audio-setup.md)). The default is `$YT_LECTURE_AUDIO_PYTHON`, or the server's own Python. It can be set only here, never by a tool call, so a client cannot make the server run another program.
+- `--audio-python` is the interpreter that runs the audio stage; it needs no packages when the yt-dlp, ffmpeg and whisper.cpp programs are installed, otherwise it has `yt-dlp`, `av` and a speech-to-text engine (see [audio-setup.md](audio-setup.md)). The default is `$YT_LECTURE_AUDIO_PYTHON`, or the server's own Python. It can be set only here, never by a tool call, so a client cannot make the server run another program.
 
 ## Add it to your agents
 

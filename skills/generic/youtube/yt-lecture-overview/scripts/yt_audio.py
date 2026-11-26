@@ -9,10 +9,13 @@ Runs in the "audio Python" (any interpreter that has the optional packages; yt_l
                              [--lang en] [--keep-audio DIR] [--no-transcribe]
                              [--slides-dir DIR [--slides-height 720]] [--no-audio]
 
-Packages (all optional, each step reports what is missing):
-  yt-dlp                       download the audio track (and, for slides, a low-resolution video-only stream)
-  av (PyAV) + numpy            decode the audio and analyse it; find and save the slides (yt_slides.py)
-  faster-whisper | openai-whisper | vosk     speech to text (tried in that order with --engine auto)
+Tools (all optional, each step reports what is missing). Every step has a no-pip option:
+  yt-dlp (program or package)  download the audio track (and, for slides, a low-resolution video-only stream)
+  ffmpeg program, or PyAV      decode the audio; find and save the slides (yt_slides.py). The loudness
+                               analysis (speech, pauses, pace) is pure Python
+  faster-whisper | openai-whisper | vosk | whisper.cpp     speech to text (tried in that order with
+                               --engine auto). whisper.cpp is a program (whisper-cli) plus a ggml model file
+                               (--model or WHISPER_CPP_MODEL), so it needs no Python package either
 """
 from __future__ import annotations
 
@@ -25,15 +28,19 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 import threading
 import time
+import wave
+from array import array
+from operator import mul
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 RATE = 16000          # speech-to-text engines want 16 kHz mono
 WINDOW = 0.5          # seconds per loudness window for the analysis
-ENGINES = ("faster-whisper", "whisper", "vosk")
+ENGINES = ("faster-whisper", "whisper", "vosk", "whisper-cpp")
 VOSK_LANGS = {"en": "en-us", "hi": "hi", "es": "es", "fr": "fr", "de": "de", "ru": "ru", "pt": "pt",
               "it": "it", "ja": "ja", "zh": "cn", "ko": "ko", "tr": "tr", "vi": "vn", "nl": "nl"}
 
@@ -118,10 +125,12 @@ def download_audio(url, workdir: Path, start=0.0, end=None) -> dict:
 
 
 def capture_slides(url, workdir: Path, slides_dir: Path, start=0.0, end=None, height=720) -> dict:
-    """Download a video-only stream, save one image per slide into slides_dir, then delete the video."""
-    _need("av", "av")
-    _need("numpy", "numpy")
-    from yt_slides import extract_slides  # noqa: PLC0415 - needs av + numpy
+    """Download a video-only stream, save one image per slide into slides_dir, then delete the video.
+    Decodes with PyAV when it is installed, otherwise with the ffmpeg program."""
+    if not shutil.which("ffmpeg"):
+        _need("av", "av (or install the ffmpeg program)")
+        _need("numpy", "numpy (or install the ffmpeg program)")
+    from yt_slides import extract_slides  # noqa: PLC0415
     began = time.time()
     video = _ytdlp(url, workdir, "video", video_format(height), "video for the slides")
     downloaded = round(time.time() - began, 1)
@@ -135,10 +144,14 @@ def capture_slides(url, workdir: Path, slides_dir: Path, start=0.0, end=None, he
 
 # ---------------------------------------------------------------- decode + analyse
 def decode_pcm(path, start=0.0, end=None):
-    """Yield (t_seconds, int16 mono 16 kHz bytes) chunks for [start, end) using PyAV."""
+    """Yield (t_seconds, int16 mono 16 kHz bytes) chunks for [start, end): with PyAV when it is installed,
+    otherwise with the ffmpeg program (no Python package needed)."""
     av, why = _try_import("av")
     if av is None:
-        raise RuntimeError(f"PyAV {why} (pip install av)")
+        if shutil.which("ffmpeg"):
+            yield from _decode_pcm_ffmpeg(path, start, end)
+            return
+        raise RuntimeError(f"PyAV {why}: install the ffmpeg program, or pip install av")
     with av.open(str(path)) as container:
         stream = container.streams.audio[0]
         resampler = av.AudioResampler(format="s16", layout="mono", rate=RATE)
@@ -164,10 +177,53 @@ def decode_pcm(path, start=0.0, end=None):
                 yield seg_start, data
 
 
+def _decode_pcm_ffmpeg(path, start=0.0, end=None, chunk_seconds=10):
+    cmd = [shutil.which("ffmpeg"), "-v", "error", "-nostdin"]
+    if start > 0:
+        cmd += ["-ss", "%.3f" % start]
+    cmd += ["-i", str(path)]
+    if end is not None:
+        cmd += ["-t", "%.3f" % (end - start)]
+    cmd += ["-vn", "-sn", "-dn", "-ac", "1", "-ar", str(RATE), "-f", "s16le", "-"]
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+    t, size = float(start), int(chunk_seconds * RATE) * 2
+    try:
+        while True:
+            data = proc.stdout.read(size)
+            if not data:
+                break
+            data = data[:len(data) - len(data) % 2]
+            yield t, data
+            t += len(data) / 2 / RATE
+    finally:
+        proc.stdout.close()
+        proc.wait()
+    if proc.returncode not in (0, None) and t == start:
+        raise RuntimeError("ffmpeg could not decode the audio")
+
+
+def _ffprobe_facts(path) -> dict:
+    exe = shutil.which("ffprobe")
+    if not exe:
+        return {}
+    try:
+        res = subprocess.run([exe, "-v", "error", "-select_streams", "a:0", "-show_streams", "-show_format",
+                              "-of", "json", str(path)], capture_output=True, text=True, timeout=60)
+        data = json.loads(res.stdout or "{}")
+    except (OSError, ValueError, subprocess.SubprocessError):
+        return {}
+    st = (data.get("streams") or [{}])[0]
+    fm = data.get("format") or {}
+    bitrate = int(st.get("bit_rate") or fm.get("bit_rate") or 0)
+    dur = float(fm.get("duration") or st.get("duration") or 0)
+    return {"codec": st.get("codec_name"), "sample_rate": int(st.get("sample_rate") or 0) or None,
+            "channels": st.get("channels"), "bitrate_kbps": round(bitrate / 1000), "duration": round(dur, 2)}
+
+
 def stream_facts(path) -> dict:
     av, why = _try_import("av")
     if av is None:
-        return {}
+        return _ffprobe_facts(path)
     with av.open(str(path)) as c:
         s = c.streams.audio[0]
         dur = float(c.duration / 1_000_000) if c.duration else (float(s.duration * s.time_base) if s.duration else 0)
@@ -212,19 +268,25 @@ def analyse_levels(levels, start=0.0) -> dict:
             "speech_per_minute": per_min, "method": "loudness windows of 0.5 s (estimate)"}
 
 
+def window_dbfs(pcm: bytes) -> float:
+    """Loudness (dBFS) of one window of int16 little-endian mono samples. Pure Python, no numpy."""
+    a = array("h")
+    a.frombytes(pcm)
+    if sys.byteorder == "big":
+        a.byteswap()
+    n = len(a) or 1
+    rms = math.sqrt(sum(map(mul, a, a)) / n) / 32768.0 + 1e-9
+    return 20 * math.log10(rms)
+
+
 def analyse_audio(path, start=0.0, end=None) -> dict:
-    np, why = _try_import("numpy")
-    if np is None:
-        raise RuntimeError(f"numpy {why} (pip install numpy)")
     levels, buf = [], b""
     win_bytes = int(WINDOW * RATE) * 2
     for _, data in decode_pcm(path, start, end):
         buf += data
         while len(buf) >= win_bytes:
-            x = np.frombuffer(buf[:win_bytes], dtype=np.int16).astype(np.float32) / 32768.0
+            levels.append(window_dbfs(buf[:win_bytes]))
             buf = buf[win_bytes:]
-            rms = float(np.sqrt(np.mean(x * x))) + 1e-9
-            levels.append(20 * math.log10(rms))
     return analyse_levels(levels, start)
 
 
@@ -246,6 +308,8 @@ def transcribe(path, engine="auto", model="base", lang="en", start=0.0, end=None
                 return _openai_whisper(path, model, lang, start, end)
             if name == "vosk":
                 return _vosk(path, model, lang, start, end)
+            if name == "whisper-cpp":
+                return _whisper_cpp(path, model, lang, start, end)
             reasons[name] = "unknown engine"
         except _Unavailable as exc:
             reasons[name] = str(exc)
@@ -289,8 +353,7 @@ def _faster_whisper(path, model, lang, start, end):
 
 def _openai_whisper(path, model, lang, start, end):
     whisper = _need("whisper", "openai-whisper")
-    _need("av", "av")
-    audio = pcm_float32(path, start, end)          # decoded here, so ffmpeg is not needed
+    audio = pcm_float32(path, start, end)          # decoded here (PyAV or the ffmpeg program)
     res = whisper.load_model(model).transcribe(audio, language=None if lang == "auto" else lang, fp16=False,
                                                condition_on_previous_text=False)
     return {"engine": "whisper", "model": model, "language": res.get("language", lang),
@@ -328,6 +391,49 @@ def _vosk(path, model, lang, start, end):
             "language": lang, "segments": segs}
 
 
+def whisper_cpp_program():
+    """The whisper.cpp command-line program: $WHISPER_CPP, or whisper-cli / whisper-cpp on PATH."""
+    env = os.environ.get("WHISPER_CPP")
+    if env and os.path.isfile(env):
+        return env
+    return shutil.which("whisper-cli") or shutil.which("whisper-cpp")
+
+
+def _whisper_cpp(path, model, lang, start, end):
+    """Speech to text with the whisper.cpp program and a ggml model file: no Python package needed."""
+    exe = whisper_cpp_program()
+    if not exe:
+        raise _Unavailable("the whisper.cpp program (whisper-cli) is not installed; or set WHISPER_CPP")
+    model_path = model if model and os.path.isfile(model) else os.environ.get("WHISPER_CPP_MODEL")
+    if not model_path or not os.path.isfile(model_path):
+        raise _Unavailable("whisper.cpp needs a ggml model file: --model path/to/ggml-base.bin or WHISPER_CPP_MODEL")
+    with tempfile.TemporaryDirectory() as tmp:
+        wav = os.path.join(tmp, "audio.wav")
+        with wave.open(wav, "wb") as w:                    # whisper.cpp reads 16 kHz mono WAV
+            w.setnchannels(1)
+            w.setsampwidth(2)
+            w.setframerate(RATE)
+            for _, data in decode_pcm(path, start, end):
+                w.writeframes(data)
+        prefix = os.path.join(tmp, "out")
+        cmd = [exe, "-m", model_path, "-f", wav, "-l", lang or "auto", "-oj", "-of", prefix, "-np"]
+        proc = subprocess.run(cmd, capture_output=True, text=True, timeout=6 * 3600, check=False)
+        try:
+            with open(prefix + ".json", encoding="utf-8") as fh:
+                res = json.load(fh)
+        except (OSError, ValueError):
+            raise _Unavailable("whisper.cpp failed: " + (proc.stderr or proc.stdout or "")[-300:]) from None
+    segs = []
+    for item in res.get("transcription") or []:
+        off = item.get("offsets") or {}
+        text = (item.get("text") or "").strip()
+        if text:
+            segs.append({"start": round(off.get("from", 0) / 1000 + start, 2),
+                         "end": round(off.get("to", 0) / 1000 + start, 2), "text": " " + text})
+    return {"engine": "whisper-cpp", "model": os.path.basename(model_path),
+            "language": ((res.get("result") or {}).get("language")) or lang, "segments": segs}
+
+
 # ---------------------------------------------------------------- commands
 def doctor() -> dict:
     out = {"python": sys.executable, "version": sys.version.split()[0], "node": bool(shutil.which("node")),
@@ -340,10 +446,15 @@ def doctor() -> dict:
         _, why = _try_import("ctranslate2")
         if why:
             out["faster-whisper"] = f"ctranslate2 {why}"
+    cpp = whisper_cpp_program()
+    model = os.environ.get("WHISPER_CPP_MODEL")
+    out["whisper-cpp"] = ("ok" if model and os.path.isfile(model) else "program found; set WHISPER_CPP_MODEL") \
+        if cpp else "not installed"
     out["can_download"] = out["yt-dlp"] == "ok" or bool(shutil.which("yt-dlp"))
-    out["can_analyse"] = out["av"] == "ok" and out["numpy"] == "ok"
-    out["can_capture_slides"] = out["can_download"] and out["can_analyse"]
-    out["engines_ready"] = [e for e in ENGINES if out[e] == "ok"] if out["av"] == "ok" else []
+    decoder = out["av"] == "ok" or out["ffmpeg"]                 # PyAV, or the ffmpeg program
+    out["can_analyse"] = bool(decoder)                           # the loudness analysis is pure Python
+    out["can_capture_slides"] = out["can_download"] and (out["ffmpeg"] or (out["av"] == "ok" and out["numpy"] == "ok"))
+    out["engines_ready"] = [e for e in ENGINES if out[e] == "ok"] if decoder else []
     return out
 
 

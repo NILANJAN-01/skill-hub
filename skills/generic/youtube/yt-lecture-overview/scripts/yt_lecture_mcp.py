@@ -78,10 +78,10 @@ TOOLS = [
                                    "if that fails; audio-only: never captions; captions: captions first (fast)"},
          "clip": {"type": "string", "description": "only this part, e.g. 10:00-25:00"},
          "lang": {"type": "string", "description": "spoken language, e.g. en, hi, es, or auto (default en)"},
-         "engine": {"type": "string", "enum": ["auto", "faster-whisper", "whisper", "vosk"],
+         "engine": {"type": "string", "enum": ["auto", "faster-whisper", "whisper", "vosk", "whisper-cpp"],
                     "description": "speech-to-text engine (default auto)"},
-         "model": {"type": "string", "description": "whisper size (tiny, base, small, medium, large-v3) or a Vosk "
-                                                    "model folder (default base)"},
+         "model": {"type": "string", "description": "whisper size (tiny, base, small, medium, large-v3), a Vosk "
+                                                    "model folder or a whisper.cpp ggml model file (default base)"},
          "keep_audio": {"type": "boolean", "description": "keep the extracted audio clip in <folder>/audio"},
          "transcript_file": {"type": "string", "description": "use this .vtt/.srt/.txt/.json transcript for the text"},
          "redraft": {"type": "boolean", "description": "replace an existing notes.json with a new draft"},

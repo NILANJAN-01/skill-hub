@@ -5,6 +5,7 @@ import importlib.util
 import json
 import re
 import shutil
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -400,6 +401,118 @@ class SlidesAndDesignTests(unittest.TestCase):
         self.assertFalse(ys.looks_like_camera(slide))
         self.assertFalse(ys.looks_like_camera(slide, motion=0.2))        # an animated slide stays a slide
         self.assertTrue(ys.looks_like_camera(camera))                    # soft shading, no sharp edges
+
+    def test_camera_check_without_numpy(self):
+        import random
+        rnd = random.Random(1)
+        slide = [245] * (160 * 90)
+        for y in list(range(20, 24)) + list(range(40, 44)):              # lines of text on a flat page
+            for x in range(20, 140):
+                slide[y * 160 + x] = 20
+        camera = [max(0, min(255, int(40 + 120 * x / 159 + rnd.gauss(0, 4)))) for y in range(90) for x in range(160)]
+        self.assertFalse(ys.looks_like_camera((slide, 160)))
+        self.assertFalse(ys.looks_like_camera((slide, 160), motion=0.2))
+        self.assertTrue(ys.looks_like_camera((camera, 160)))
+
+    @unittest.skipUnless(shutil.which("ffmpeg"), "the ffmpeg program is not installed")
+    def test_slides_with_ffmpeg_and_no_packages(self):
+        video = self.tmp / "talk.mp4"
+        frames = []
+        for i in range(28):                              # 14 s at 2 fps: slide A 0-5 s, B 5-9 s, A again 9-14 s
+            page = [245] * (320 * 180)
+            lines = (30, 60, 90) if (i < 10 or i >= 18) else (40, 120)
+            for y0 in lines:
+                for y in range(y0, y0 + 6):
+                    for x in range(30, 290 if y0 != 120 else 160):
+                        page[y * 320 + x] = 15
+            frames.append(bytes(page))
+        subprocess.run([shutil.which("ffmpeg"), "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "gray", "-s",
+                        "320x180", "-r", "2", "-i", "-", "-c:v", "mpeg4", "-q:v", "2", "-pix_fmt", "yuv420p",
+                        str(video)], input=b"".join(frames), check=True, capture_output=True)
+        orig = ys.extract_slides.__globals__.get("_extract_ffmpeg")
+        self.assertIsNotNone(orig)
+        rep = self._extract_without_av(video, self.tmp / "slides")
+        self.assertEqual(rep["count"], 2, rep)
+        self.assertEqual([s["start"] for s in rep["slides"]], [0.0, 5.0])
+        self.assertEqual(rep["slides"][0]["shown_again"], [9.0])
+        self.assertTrue((self.tmp / "slides" / "slide-001.jpg").read_bytes()[:2] == b"\xff\xd8")
+
+    def _extract_without_av(self, video, out):
+        saved = {m: sys.modules.get(m) for m in ("av", "numpy")}
+        sys.modules["av"] = None                         # make the PyAV import fail: use the ffmpeg path
+        try:
+            return ys.extract_slides(video, out)
+        finally:
+            for m, mod in saved.items():
+                if mod is None:
+                    sys.modules.pop(m, None)
+                else:
+                    sys.modules[m] = mod
+
+    @unittest.skipUnless(shutil.which("ffmpeg"), "the ffmpeg program is not installed")
+    def test_audio_decode_and_pauses_with_ffmpeg(self):
+        import math as m
+        import struct
+        import wave
+        wav = self.tmp / "talk.wav"
+        with wave.open(str(wav), "wb") as w:             # 3 s tone, 4 s silence, 3 s tone at 16 kHz
+            w.setnchannels(1)
+            w.setsampwidth(2)
+            w.setframerate(16000)
+            tone = struct.pack("<16000h", *[int(8000 * m.sin(2 * m.pi * 220 * i / 16000)) for i in range(16000)])
+            w.writeframes(tone * 3 + b"\0\0" * 16000 * 4 + tone * 3)
+        orig = ya._try_import
+        ya._try_import = lambda name: (None, "not installed") if name == "av" else orig(name)
+        try:
+            pcm = b"".join(d for _, d in ya.decode_pcm(wav))
+            res = ya.analyse_audio(wav)
+            facts = ya.stream_facts(wav)
+        finally:
+            ya._try_import = orig
+        self.assertEqual(len(pcm), 16000 * 10 * 2)
+        self.assertEqual(res["pause_count"], 1)
+        self.assertEqual((res["pauses"][0]["start"], res["pauses"][0]["length"]), (3.0, 4.0))
+        self.assertEqual((facts["sample_rate"], facts["duration"]), (16000, 10.0))
+        self.assertAlmostEqual(ya.window_dbfs(tone[:16000]), 20 * m.log10(8000 / 32768 / m.sqrt(2)), places=1)
+
+    def test_whisper_cpp_engine_with_a_stand_in_program(self):
+        import os
+        import struct
+        import wave
+        wav = self.tmp / "a.wav"
+        with wave.open(str(wav), "wb") as w:
+            w.setnchannels(1)
+            w.setsampwidth(2)
+            w.setframerate(16000)
+            w.writeframes(struct.pack("<1600h", *([1000] * 1600)))
+        model = self.tmp / "ggml-base.bin"
+        model.write_bytes(b"model")
+        fake = self.tmp / "whisper_cli.py"
+        fake.write_text(
+            "import json, sys\n"
+            "a = sys.argv\n"
+            "assert a[a.index('-m') + 1].endswith('ggml-base.bin') and '-oj' in a and a[a.index('-l') + 1] == 'en'\n"
+            "out = a[a.index('-of') + 1] + '.json'\n"
+            "json.dump({'result': {'language': 'en'}, 'transcription': ["
+            "{'offsets': {'from': 0, 'to': 1500}, 'text': ' Hello there.'},"
+            "{'offsets': {'from': 1500, 'to': 3000}, 'text': ' Next slide.'}]}, open(out, 'w'))\n", encoding="utf-8")
+        runner = self.tmp / ("whisper-cli.bat" if os.name == "nt" else "whisper-cli")
+        if os.name == "nt":
+            runner.write_text('@"%s" "%s" %%*\n' % (sys.executable, fake), encoding="utf-8")
+        else:
+            runner.write_text('#!/bin/sh\nexec "%s" "%s" "$@"\n' % (sys.executable, fake), encoding="utf-8")
+            runner.chmod(0o755)
+        os.environ["WHISPER_CPP"] = str(runner)
+        orig = ya.decode_pcm
+        ya.decode_pcm = lambda path, start=0.0, end=None: iter([(0.0, b"\0\0" * 1600)])
+        try:
+            res = ya.transcribe(wav, engine="whisper-cpp", model=str(model), lang="en", start=10.0)
+        finally:
+            ya.decode_pcm = orig
+            del os.environ["WHISPER_CPP"]
+        self.assertEqual(res["engine"], "whisper-cpp")
+        self.assertEqual(res["segments"], [{"start": 10.0, "end": 11.5, "text": " Hello there."},
+                                           {"start": 11.5, "end": 13.0, "text": " Next slide."}])
 
     def test_hld_layout_and_svg(self):
         pos, back = yh.hld_layout(["Client", "API", "DB", "Cache"],

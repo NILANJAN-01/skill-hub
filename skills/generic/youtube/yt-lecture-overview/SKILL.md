@@ -2,7 +2,7 @@
 name: yt-lecture-overview
 description: "Turn a YouTube study or tech video link into a structured HTML study page: transcript from the audio, captured slides, notes, HLD diagram and quiz. Refuses non-study videos. Use when the user shares a YouTube lecture link and wants notes, slides, an HLD, a summary or a transcript."
 license: MIT
-compatibility: "Python 3.8+ (standard library) for links, guardrail, captions, notes and HTML; needs internet access to youtube.com. Audio and slides need, in some Python (--audio-python): yt-dlp, av and numpy, plus one speech-to-text engine: faster-whisper, openai-whisper or vosk. Node.js helps yt-dlp. Includes an optional stdio MCP server (scripts/yt_lecture_mcp.py)."
+compatibility: "Python 3.8+ (standard library) for links, guardrail, captions, notes and HTML; needs internet access to youtube.com. Audio and slides need yt-dlp and ffmpeg (as programs; or the yt-dlp and av packages in --audio-python), plus one speech-to-text engine: faster-whisper, openai-whisper, vosk, or the whisper.cpp program with a model file (no pip). Node.js helps yt-dlp. Includes an optional stdio MCP server (scripts/yt_lecture_mcp.py)."
 metadata:
   title: "YouTube lecture overview: link to text, slides, HLD and HTML (study and tech only)"
   category: youtube-tools

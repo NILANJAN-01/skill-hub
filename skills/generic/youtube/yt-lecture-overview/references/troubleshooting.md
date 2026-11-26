@@ -9,7 +9,7 @@
 | Private, removed, members-only, age- or region-restricted video | Exit 5 from the watch page status. YouTube does not give the audio or captions without a login, so ask the user for a transcript file (`--transcript`) |
 | Output says "the text comes from captions" | The audio stage failed (see `warnings`). Run `yt_lecture.py doctor`, install what it lists (or use `--audio-python`), and fetch again. Use `--source audio-only` to make this an error instead |
 | `doctor` says an engine "cannot load" | Its native library will not run on this Python or machine. Use another engine (`--engine vosk`) or a separate audio Python; see [audio-setup.md](audio-setup.md). Do not try to get around a security policy |
-| yt-dlp warns about a JavaScript runtime, or misses formats | Install Node.js (the script passes `--js-runtimes node`), and keep yt-dlp updated: `pip install -U yt-dlp` |
+| yt-dlp warns about a JavaScript runtime, or misses formats | Install Node.js (the script passes `--js-runtimes node`), and keep yt-dlp updated: `yt-dlp -U` (program) or `pip install -U yt-dlp` |
 | Speech-to-text is slow | It already runs greedy decoding and in parallel with the slides. Next, use `--clip 10:00-25:00`, a smaller model (`--model tiny`), `faster-whisper` instead of `openai-whisper`, or `--source captions` when the video has good captions |
 | Speech-to-text text has no punctuation (Vosk) | Expected. Write the notes in clean sentences; faster-whisper gives punctuated text |
 | Audio analysis looks wrong (music counted as speech, quiet speaker shown as pauses) | The analysis is a loudness estimate. Say so if you use it |
@@ -19,7 +19,7 @@
 | `slides: 0`: no slides were found | The video has no slides: a talking head only, or a whiteboard drawn by hand with no clean pages. This is normal; the page then has no slide gallery. Write the `hld` from the transcript alone if the lecture describes a system |
 | A camera shot, blank frame or end card was kept as a slide | Detection is a measured estimate. Camera shots are skipped when they look soft or keep moving; a sharp, still shot of the room can pass. Set `"hide": true` for that file in `notes.json` and render again |
 | A slide that builds up step by step shows up several times | Each step that changes more than ~12% of the screen counts as a new slide. Hide the early steps, or caption them as steps |
-| `slides not captured: …` in `warnings` | The text and audio are fine. Usual causes: yt-dlp could not get a video stream, or PyAV cannot decode the codec. Try `--slides-height 480`, update yt-dlp, or use `--no-slides` |
+| `slides not captured: …` in `warnings` | The text and audio are fine. Usual causes: yt-dlp could not get a video stream, or the decoder (ffmpeg or PyAV) cannot decode the codec. Try `--slides-height 480`, update yt-dlp, or use `--no-slides` |
 | The video download is too big or slow | Slides use a video-only stream of 720p or less, about 30–45 MB per 10 minutes. Use `--slides-height 480` (about half), `--clip`, or `--no-slides` |
 | Many slides (a long talk) | At most 120 are kept: the ones shown longest. The HTML embeds them, so a long talk makes a larger file (about 60 KB per slide) |
 | `could not reach YouTube` | Check the network or proxy. `urllib` uses the `HTTPS_PROXY` environment variable |
