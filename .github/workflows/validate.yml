@@ -84,10 +84,15 @@ jobs:
           set -e
           home="$RUNNER_TEMP/home"; mkdir -p "$home/.codex" && touch "$home/.codex/auth.json"
           export HOME="$home" USERPROFILE="$home"
-          # answers: codex only (by key), everything, for me, go ahead
-          printf 'codex\na\n1\ny\n' | python tools/install.py
+          # Actions runs bash with -eo pipefail: capture output instead of piping into grep -q,
+          # which can stop the installer with a broken pipe.
+          # menu answers: 1 = set up everything for the detected agents (Codex here), y = go ahead
+          printf '1\ny\n' | python tools/install.py
           test -f "$home/.agents/skills/git-rebasing/SKILL.md"
-          # second run must find nothing to do and change nothing
-          printf 'codex\na\n1\n' | python tools/install.py | grep -q "Nothing to change"
-          # declining writes nothing
-          printf 'n\n' | python tools/install.py | grep -q "Nothing was changed"
+          # a second run must find nothing to change
+          out="$(printf '1\n' | python tools/install.py)"
+          grep -q "Nothing to change" <<< "$out"
+          # declining at the menu writes nothing; exit code 4 means cancelled
+          code=0; out="$(printf 'n\n' | python tools/install.py)" || code=$?
+          test "$code" -eq 4
+          grep -q "Nothing was changed" <<< "$out"
