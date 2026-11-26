@@ -88,6 +88,6 @@ jobs:
           printf 'codex\na\n1\ny\n' | python tools/install.py
           test -f "$home/.agents/skills/git-rebasing/SKILL.md"
           # second run must find nothing to do and change nothing
-          printf 'codex\na\n1\n' | python tools/install.py | grep -q "Nothing to do"
+          printf 'codex\na\n1\n' | python tools/install.py | grep -q "Nothing to change"
           # declining writes nothing
           printf 'n\n' | python tools/install.py | grep -q "Nothing was changed"
