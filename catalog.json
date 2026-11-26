@@ -3300,7 +3300,7 @@
       ],
       "path": "skills/testing/tools/image-inspector",
       "license": "Complete terms in the repository README",
-      "compatibility": "Needs Python 3.8+. Pillow (pip install Pillow) is recommended and required for JPEG, WebP, GIF and TIFF; PNG and BMP also work with the standard library alone. OCR is optional and needs pytesseract plus the Tesseract program. Finding and comparing images needs OpenCV (pip install opencv-python-headless).",
+      "compatibility": "Needs only Python 3.8+. The bundled pure-Python decoders read PNG, BMP, JPEG (baseline and progressive), GIF, TIFF and PNM with EXIF, and give the same pixels as Pillow; Pillow is used instead when installed because it is faster on big photos. WebP and HEIF/AVIF need Pillow or the ffmpeg program. OCR needs the Tesseract program (no Python package). --find, --compare and sharpness are pure Python.",
       "examples": [
         "Describe this screenshot.png for me: size, main colours and what's on it.",
         "What is the exact hex colour of the pixel at 120,48 in banner.jpg?",
@@ -3796,7 +3796,7 @@
       ],
       "path": "skills/testing/api/rest-api-testing",
       "license": "Complete terms in the repository README",
-      "compatibility": "The script needs Python 3.8+ (standard library only; PyYAML only to read a YAML OpenAPI file). It sends real HTTP requests, so it needs network access to the API under test. Framework examples need their own toolchains (JDK for REST Assured and Karate, Node.js for Newman, SuperTest and Playwright).",
+      "compatibility": "The script needs Python 3.8+ and nothing else (standard library only; YAML specs are read by the bundled yaml_lite.py). It sends real HTTP requests, so it needs network access to the API under test. Framework examples need their own toolchains (JDK for REST Assured and Karate, Node.js for Newman, SuperTest and Playwright).",
       "examples": [
         "Write API tests for our orders REST endpoints: create, read, update, delete, plus validation and auth errors.",
         "Generate an API test suite from our openapi.json and run it against staging with a JUnit report for CI.",
@@ -4162,7 +4162,7 @@
       ],
       "path": "skills/testing/tools/video-inspector",
       "license": "Complete terms in the repository README",
-      "compatibility": "Needs Python 3.8+ and OpenCV (pip install opencv-python-headless, which includes numpy and FFmpeg decoding). Metadata of MP4/MOV files (--info) works with the standard library alone.",
+      "compatibility": "Needs Python 3.8+ and the ffmpeg program (with ffprobe) to decode frames; no Python packages. All frame analysis is pure Python. OpenCV is used as the decoder instead when it is installed and ffmpeg is not. Metadata of MP4/MOV files (--info) needs nothing at all.",
       "examples": [
         "Analyse recording.mp4 and describe what happens in it, with a timeline.",
         "Split demo.mp4 into frames, one every 2 seconds, and save them as PNG.",
@@ -4186,7 +4186,7 @@
       ],
       "path": "skills/generic/youtube/yt-lecture-overview",
       "license": "MIT",
-      "compatibility": "Python 3.8+ (standard library) for links, guardrail, captions, notes and HTML; needs internet access to youtube.com. Audio and slides need, in some Python (--audio-python): yt-dlp, av and numpy, plus one speech-to-text engine: faster-whisper, openai-whisper or vosk. Node.js helps yt-dlp. Includes an optional stdio MCP server (scripts/yt_lecture_mcp.py).",
+      "compatibility": "Python 3.8+ (standard library) for links, guardrail, captions, notes and HTML; needs internet access to youtube.com. Audio and slides need yt-dlp and ffmpeg (as programs; or the yt-dlp and av packages in --audio-python), plus one speech-to-text engine: faster-whisper, openai-whisper, vosk, or the whisper.cpp program with a model file (no pip). Node.js helps yt-dlp. Includes an optional stdio MCP server (scripts/yt_lecture_mcp.py).",
       "examples": [
         "Give me an overview of this lecture as an HTML page: https://www.youtube.com/watch?v=aircAruvnKk",
         "Make study notes and a transcript from this YouTube tutorial link, with a timeline and review questions.",

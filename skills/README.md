@@ -101,13 +101,13 @@ A skill lives in `skills/<area>/<group>/<skill>/`. The area and group only organ
 
 | Skill | Description | Needs |
 |---|---|---|
-| [`image-inspector`](testing/tools/image-inspector/SKILL.md) | Inspect an image file (PNG, JPG, WebP, GIF, BMP, TIFF) with a ready-made Python script: pixel colours at coordinates, dominant colours and palette,... | Needs Python 3.8+. Pillow (pip install Pillow) is recommended and required for JPEG,... |
+| [`image-inspector`](testing/tools/image-inspector/SKILL.md) | Inspect an image file (PNG, JPG, WebP, GIF, BMP, TIFF) with a ready-made Python script: pixel colours at coordinates, dominant colours and palette,... | Needs only Python 3.8+. The bundled pure-Python decoders read PNG, BMP, JPEG (baseline... |
 
 ## Video: frames, pixels & description (`video-tools`)
 
 | Skill | Description | Needs |
 |---|---|---|
-| [`video-inspector`](testing/tools/video-inspector/SKILL.md) | Analyse a video file (MP4, MOV, MKV, WebM, AVI) with a ready-made Python script: metadata, frame extraction, scene changes, black or frozen sections,... | Needs Python 3.8+ and OpenCV (pip install opencv-python-headless, which includes numpy... |
+| [`video-inspector`](testing/tools/video-inspector/SKILL.md) | Analyse a video file (MP4, MOV, MKV, WebM, AVI) with a ready-made Python script: metadata, frame extraction, scene changes, black or frozen sections,... | Needs Python 3.8+ and the ffmpeg program (with ffprobe) to decode frames; no Python... |
 
 ## Testing: unit tests & reports (`testing-tools`)
 
@@ -215,7 +215,7 @@ A skill lives in `skills/<area>/<group>/<skill>/`. The area and group only organ
 
 | Skill | Description | Needs |
 |---|---|---|
-| [`rest-api-testing`](testing/api/rest-api-testing/SKILL.md) | Test the REST APIs of web applications reliably, in any field (banking, healthcare, e-commerce, telecom, SaaS): plan cases from an OpenAPI spec, write... | The script needs Python 3.8+ (standard library only; PyYAML only to read a YAML... |
+| [`rest-api-testing`](testing/api/rest-api-testing/SKILL.md) | Test the REST APIs of web applications reliably, in any field (banking, healthcare, e-commerce, telecom, SaaS): plan cases from an OpenAPI spec, write... | The script needs Python 3.8+ and nothing else (standard library only; YAML specs are... |
 
 ## Git: getting started (`git-getting-started`)
 

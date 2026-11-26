@@ -38,8 +38,9 @@ jobs:
         run: |
           python -m unittest discover -s mcp-server/tests -v
           python -m unittest discover -s skill-hub-mcp/tests -v
-      - name: Skill tests (image-inspector and video-inspector, with Pillow and OpenCV)
+      - name: Skill tests (image-inspector and video-inspector, also checked against Pillow and OpenCV)
         run: |
+          command -v ffmpeg >/dev/null || (sudo apt-get update -q && sudo apt-get install -y -q ffmpeg)
           python -m pip install --quiet Pillow opencv-python-headless
           python -m unittest discover -s skills/testing/tools/image-inspector/scripts -p "test_*.py" -v
           python -m unittest discover -s skills/testing/tools/video-inspector/scripts -p "test_*.py" -v

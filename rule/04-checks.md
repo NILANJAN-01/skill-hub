@@ -24,4 +24,4 @@ python -m unittest discover -s tools -p "test_*.py" -v
 python -m unittest discover -s skills/<area>/<group>/<name>/scripts -p "test_*.py" -v
 ```
 
-`image-inspector` and `video-inspector` tests need `Pillow` and `opencv-python-headless`. All other tests are stdlib only.
+Skill tests need no Python packages. `video-inspector` frame tests need the ffmpeg program and are skipped without it; with Pillow or OpenCV installed, extra tests check the results against them.
