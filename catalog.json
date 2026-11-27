@@ -1647,6 +1647,7 @@
         "Undo a merge commit that was already pushed."
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -1673,6 +1674,7 @@
         "How do I create a git alias that runs an external shell command?"
       ],
       "files": [
+        "references/playbook.md",
         "references/source-text.md"
       ]
     },
@@ -1698,6 +1700,7 @@
         "Prevent non-fast-forward pushes on the server."
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -1724,6 +1727,7 @@
         "Work with a Mercurial or Perforce server from Git."
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -1750,6 +1754,7 @@
         "Keep a config file's local version during merges with a merge strategy attribute."
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -1776,6 +1781,7 @@
         "What's the difference between a fast-forward merge and a merge commit?"
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -1802,6 +1808,7 @@
         "Rename a file so Git tracks the move."
       ],
       "files": [
+        "references/playbook.md",
         "references/source-text.md"
       ]
     },
@@ -1827,6 +1834,7 @@
         "Show each branch with its last commit."
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -1853,6 +1861,7 @@
         "Show which commit each branch points to."
       ],
       "files": [
+        "references/playbook.md",
         "references/source-text.md"
       ]
     },
@@ -1878,6 +1887,7 @@
         "Clone from a .bundle file."
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -1904,6 +1914,7 @@
         "Set up a global .gitignore and a commit message template."
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -1930,6 +1941,7 @@
         "Which credential helper should I use on Windows or macOS?"
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -1956,6 +1968,7 @@
         "Allow anonymous cloning of a repository over git://."
       ],
       "files": [
+        "references/playbook.md",
         "references/source-text.md"
       ]
     },
@@ -1981,6 +1994,7 @@
         "Automate git bisect with a test script."
       ],
       "files": [
+        "references/playbook.md",
         "references/source-text.md"
       ]
     },
@@ -2006,6 +2020,7 @@
         "Squash my topic branch into one commit before sending it upstream."
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -2032,6 +2047,7 @@
         "Create a release tarball and a shortlog for my project's release notes."
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -2058,6 +2074,7 @@
         "Use a different SSH command for one Git operation."
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -2084,6 +2101,7 @@
         "Make VS Code my default Git editor and set the default branch name to main."
       ],
       "files": [
+        "references/playbook.md",
         "references/source-text.md"
       ]
     },
@@ -2109,6 +2127,7 @@
         "How do I give my SSH public key to the Git server admin?"
       ],
       "files": [
+        "references/playbook.md",
         "references/source-text.md"
       ]
     },
@@ -2134,6 +2153,7 @@
         "What's the difference between git init and git clone?"
       ],
       "files": [
+        "references/playbook.md",
         "references/source-text.md"
       ]
     },
@@ -2159,6 +2179,7 @@
         "Make a server repository group-writable for all developers."
       ],
       "files": [
+        "references/playbook.md",
         "references/source-text.md"
       ]
     },
@@ -2184,6 +2205,7 @@
         "Where can I get help with Git commands offline?"
       ],
       "files": [
+        "references/playbook.md",
         "references/source-text.md"
       ]
     },
@@ -2209,6 +2231,7 @@
         "Sync my fork with the upstream repository."
       ],
       "files": [
+        "references/playbook.md",
         "references/source-text.md"
       ]
     },
@@ -2234,6 +2257,7 @@
         "How do I use pull request refs to fetch all open PRs?"
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -2260,6 +2284,7 @@
         "Install GitWeb on Apache for all repos in /srv/git."
       ],
       "files": [
+        "references/playbook.md",
         "references/source-text.md"
       ]
     },
@@ -2285,6 +2310,7 @@
         "Which server-side hooks can reject a push?"
       ],
       "files": [
+        "references/playbook.md",
         "references/source-text.md"
       ]
     },
@@ -2310,6 +2336,7 @@
         "Get Git tab completion in PowerShell."
       ],
       "files": [
+        "references/playbook.md",
         "references/source-text.md"
       ]
     },
@@ -2335,6 +2362,7 @@
         "I want to build Git from source. What do I need?"
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -2361,6 +2389,7 @@
         "Walk me through git add -i."
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -2387,6 +2416,7 @@
         "How do I add JGit to my Maven project?"
       ],
       "files": [
+        "references/playbook.md",
         "references/source-text.md"
       ]
     },
@@ -2412,6 +2442,7 @@
         "Create a commit programmatically with libgit2."
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -2438,6 +2469,7 @@
         "Recover lost commits with git fsck and the reflog."
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -2464,6 +2496,7 @@
         "Write a custom importer with git fast-import."
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -2490,6 +2523,7 @@
         "Show the tree object of the latest commit."
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -2516,6 +2550,7 @@
         "Run git gc and explain what it does."
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -2542,6 +2577,7 @@
         "Which Git commands are safe to use in scripts?"
       ],
       "files": [
+        "references/playbook.md",
         "references/source-text.md"
       ]
     },
@@ -2605,6 +2641,7 @@
         "When should I avoid rebasing? I already pushed my branch."
       ],
       "files": [
+        "references/playbook.md",
         "references/source-text.md"
       ]
     },
@@ -2630,6 +2667,7 @@
         "Show me what I've staged versus what I've changed but not staged."
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -2656,6 +2694,7 @@
         "What is HEAD internally, and what's a symbolic ref?"
       ],
       "files": [
+        "references/playbook.md",
         "references/source-text.md"
       ]
     },
@@ -2681,6 +2720,7 @@
         "Show how far ahead of or behind its upstream each of my branches is."
       ],
       "files": [
+        "references/playbook.md",
         "references/source-text.md"
       ]
     },
@@ -2706,6 +2746,7 @@
         "How do I list and delete git replace refs?"
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -2732,6 +2773,7 @@
         "I keep resolving the same conflict on every rebase. How can Git automate that?"
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -2758,6 +2800,7 @@
         "What's the difference between git reset and git checkout on a file?"
       ],
       "files": [
+        "references/playbook.md",
         "references/source-text.md"
       ]
     },
@@ -2783,6 +2826,7 @@
         "Use the reflog to find where my branch pointed yesterday."
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -2809,6 +2853,7 @@
         "Remove a file with a leaked password from the entire Git history."
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -2835,6 +2880,7 @@
         "Get notified with a webhook when someone pushes to my repo."
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -2861,6 +2907,7 @@
         "Show the history of a single function in a file."
       ],
       "files": [
+        "references/playbook.md",
         "references/source-text.md"
       ]
     },
@@ -2886,6 +2933,7 @@
         "Add a new developer's public key to my Git server."
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -2912,6 +2960,7 @@
         "How do I change the editor Git opens for commit messages?"
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -2938,6 +2987,7 @@
         "Make Git sign every commit automatically."
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -2964,6 +3014,7 @@
         "Host Git over HTTPS on my own server."
       ],
       "files": [
+        "references/playbook.md",
         "references/source-text.md"
       ]
     },
@@ -2989,6 +3040,7 @@
         "Remove all untracked files and folders, but show me what will be deleted first."
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -3015,6 +3067,7 @@
         "Update all submodules to their latest upstream commits."
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -3041,6 +3094,7 @@
         "Delete a tag both locally and on the remote."
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -3067,6 +3121,7 @@
         "Clone a repository from a shared network folder."
       ],
       "files": [
+        "references/playbook.md",
         "references/source-text.md"
       ]
     },
@@ -3092,6 +3147,7 @@
         "Push my local branch to a differently named remote branch."
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -3118,6 +3174,7 @@
         "What happens during git push over SSH (send-pack and receive-pack)?"
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -3144,6 +3201,7 @@
         "Throw away my local changes to config.yml."
       ],
       "files": [
+        "references/playbook.md",
         "references/source-text.md"
       ]
     },
@@ -3169,6 +3227,7 @@
         "Show a one-line graph of the history of all branches."
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
@@ -3195,6 +3254,7 @@
         "Rename the remote 'origin' to 'github'."
       ],
       "files": [
+        "references/playbook.md",
         "references/procedures.md",
         "references/source-text.md"
       ]
