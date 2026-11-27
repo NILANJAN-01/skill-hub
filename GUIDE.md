@@ -222,7 +222,7 @@ Categories for `--plugin`:
 | `learning-tools` | 1 | Learning: explain any Python file from beginner to advanced and generate study-notes HTML for interview preparation (concepts, gotchas, Q&A, fundamentals checklist) |
 | `youtube-tools` | 1 | YouTube: extract a study or tech video's audio, analyse it (speech, pauses, pace) and turn the speech into text, then make text notes and a easy-to-read HTML overview... |
 | `ai-efficiency-tools` | 4 | AI efficiency: audit a project for token waste, shrink logs, files and JSON before an agent reads them, track token usage per day and per skill on an HTML dashboard,... |
-| `ai-agent-tools` | 4 | AI agents: build and probe MCP servers, design tool/function definitions models use well, run LLM evals with regression checks, and build and evaluate RAG pipelines,... |
+| `ai-agent-tools` | 7 | AI agents: build and probe MCP servers, design tool/function definitions models use well, write and lint prompts, tune and score classification prompts, secure LLM... |
 | `playwright-tools` | 5 | Playwright (up to 1.65): write resilient end-to-end tests that fit your team's conventions (with a suite audit script), debug failing and flaky tests from JSON or... |
 | `robotframework-tools` | 4 | Robot Framework (up to 7.5): write and modernise suites with VAR, typed and secret variables, GROUP, test metadata and Markdown tests (with an audit script), build... |
 | `uiautomator-tools` | 4 | Android UI Automator skill set from the official docs (Kotlin and Java, androidx.test.uiautomator 2.4.1): uiautomator-test-authoring sets up the project and writes... |
@@ -231,7 +231,7 @@ Categories for `--plugin`:
 | `context-management-tools` | 4 | Context management for AI agents and LLM apps: context-handoff decides when to compact or restart a long session, drafts a handoff note from git state and checks... |
 | `software-design-tools` | 5 | Software design rules AI agents follow on every code change, from the ideas in A Philosophy of Software Design: software-design-guardrails installs always-on design... |
 | `code-quality-tools` | 1 | Code quality for any programming language: lint-checker detects a project's languages and the linters it configures or has installed (ruff, ESLint, Biome,... |
-| `security-tools` | 1 | Find leaked secrets and risky dependency pins before they ship. |
+| `security-tools` | 2 | Find leaked secrets and risky dependency pins before they ship, and secure LLM apps against prompt injection, prompt leaking and hallucinated packages. |
 <!-- plugins-simple:end -->
 
 `--all` installs every skill. `--skill a,b` installs specific skills by name.

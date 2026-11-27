@@ -2,9 +2,9 @@
 
 <!-- Generated from examples/prompts.json by tools/build_catalog.py - do not edit by hand. -->
 
-411 things you can say to your AI coding agent, for all 122 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
+417 things you can say to your AI coding agent, for all 125 skills. Install a skill ([guide](../GUIDE.md)), then just ask: the agent loads the skill when your request matches its description. To force a skill, start with *"Use the &lt;skill-name&gt; skill: …"*.
 
-**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [ADB: connect, control & debug Android devices](#adb-connect-control--debug-android-devices) · [Gradle: Android setup, diagnosis & tests](#gradle-android-setup-diagnosis--tests) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Shell: PowerShell on Windows](#shell-powershell-on-windows) · [Learning: Python tutor & interview notes](#learning-python-tutor--interview-notes) · [YouTube: lecture overviews (study & tech only)](#youtube-lecture-overviews-study--tech-only) · [AI efficiency: save tokens & cost](#ai-efficiency-save-tokens--cost) · [Context management: handoffs, memory & context windows](#context-management-handoffs-memory--context-windows) · [AI agents: MCP, tools, evals & RAG](#ai-agents-mcp-tools-evals--rag) · [Software design: deep modules, errors, comments & guardrails](#software-design-deep-modules-errors-comments--guardrails) · [Code quality: linting for any language](#code-quality-linting-for-any-language) · [Playwright: E2E tests, debugging, CI & browser agent](#playwright-e2e-tests-debugging-ci--browser-agent) · [Robot Framework: suites, libraries, results & CI](#robot-framework-suites-libraries-results--ci) · [UI Automator: Android UI tests in Kotlin & Java](#ui-automator-android-ui-tests-in-kotlin--java) · [JUnit 6: Java & Kotlin tests, migration & reports](#junit-6-java--kotlin-tests-migration--reports) · [API testing: REST APIs of web applications](#api-testing-rest-apis-of-web-applications) · [Security: secrets & dependencies](#security-secrets--dependencies) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
+**Categories:** [Hub tools](#hub-tools) · [Android: UI tests & logcat](#android-ui-tests--logcat) · [ADB: connect, control & debug Android devices](#adb-connect-control--debug-android-devices) · [Gradle: Android setup, diagnosis & tests](#gradle-android-setup-diagnosis--tests) · [Repositories: read & document](#repositories-read--document) · [GitLab: CI/CD pipelines](#gitlab-cicd-pipelines) · [Writing: blog, CV & docs](#writing-blog-cv--docs) · [Images: pixels & description](#images-pixels--description) · [Video: frames, pixels & description](#video-frames-pixels--description) · [Testing: unit tests & reports](#testing-unit-tests--reports) · [Shell: PowerShell on Windows](#shell-powershell-on-windows) · [Learning: Python tutor & interview notes](#learning-python-tutor--interview-notes) · [YouTube: lecture overviews (study & tech only)](#youtube-lecture-overviews-study--tech-only) · [AI efficiency: save tokens & cost](#ai-efficiency-save-tokens--cost) · [Context management: handoffs, memory & context windows](#context-management-handoffs-memory--context-windows) · [AI agents: prompts, MCP, tools, evals & RAG](#ai-agents-prompts-mcp-tools-evals--rag) · [Software design: deep modules, errors, comments & guardrails](#software-design-deep-modules-errors-comments--guardrails) · [Code quality: linting for any language](#code-quality-linting-for-any-language) · [Playwright: E2E tests, debugging, CI & browser agent](#playwright-e2e-tests-debugging-ci--browser-agent) · [Robot Framework: suites, libraries, results & CI](#robot-framework-suites-libraries-results--ci) · [UI Automator: Android UI tests in Kotlin & Java](#ui-automator-android-ui-tests-in-kotlin--java) · [JUnit 6: Java & Kotlin tests, migration & reports](#junit-6-java--kotlin-tests-migration--reports) · [API testing: REST APIs of web applications](#api-testing-rest-apis-of-web-applications) · [Security: secrets, dependencies & LLM apps](#security-secrets-dependencies--llm-apps) · [Git: getting started](#git-getting-started) · [Git: branching & merging](#git-branching--merging) · [Git: remotes & collaboration](#git-remotes--collaboration) · [Git: power tools](#git-power-tools) · [Git: customization & hooks](#git-customization--hooks) · [Git: internals](#git-internals) · [Git: other systems & APIs](#git-other-systems--apis) · [Git: full reference](#git-full-reference)
 
 ## Hub tools
 
@@ -369,7 +369,7 @@ Install the whole category: `--plugin context-management-tools`
 - “Plan the context budget for a 200k window with a 3k system prompt, 6k of tools and 20k of retrieved docs.”
 - “Trim this conversation to 100k tokens without breaking tool call and tool result pairs.”
 
-## AI agents: MCP, tools, evals & RAG
+## AI agents: prompts, MCP, tools, evals & RAG
 
 Install the whole category: `--plugin ai-agent-tools`
 
@@ -380,6 +380,20 @@ Install the whole category: `--plugin ai-agent-tools`
 - “Review these function calling definitions; the model keeps choosing the wrong tool.”
 - “Design the tools for a support agent that can look up orders and issue refunds.”
 - “Lint tools.json and improve the descriptions and parameter schemas.”
+
+### LLM app security: prompt injection and hallucinated packages
+
+[`llm-app-security`](../skills/development/ai-agents/llm-app-security/SKILL.md) · install: `--skill llm-app-security`
+
+- “Check our chatbot code for prompt injection risks before we launch.”
+- “The AI wrote this script; are all these imported packages real before I pip install them?”
+
+### LLM classification prompts: build, run, score
+
+[`llm-classification-prompts`](../skills/development/ai-agents/llm-classification-prompts/SKILL.md) · install: `--skill llm-classification-prompts`
+
+- “Use an LLM to label 500 support tickets as billing, bug or other, and measure how accurate it is.”
+- “My sentiment prompt gives different answers each run; find the best few-shot setup and score it.”
 
 ### LLM evals: test sets, scoring and regression checks
 
@@ -396,6 +410,13 @@ Install the whole category: `--plugin ai-agent-tools`
 - “Build an MCP server in Python that exposes our internal notes search as a tool.”
 - “My MCP server starts but the agent shows no tools. Probe it and tell me what is wrong.”
 - “Wrap this REST API as an MCP server in TypeScript and test it before I add it to my agent.”
+
+### Prompt engineering: techniques and prompt lint
+
+[`prompt-engineering`](../skills/development/ai-agents/prompt-engineering/SKILL.md) · install: `--skill prompt-engineering`
+
+- “Review my system prompt and tell me why the model keeps ignoring the output format.”
+- “Should I use few-shot or chain-of-thought for this extraction prompt? Improve it.”
 
 ### RAG pipeline: chunk, retrieve, ground and evaluate
 
@@ -624,7 +645,7 @@ Install the whole category: `--plugin api-testing-tools`
 - “Check that user A cannot read user B's invoices through the API.”
 - “We are a bank: what should we test in our payments API, and can you automate it with REST Assured?”
 
-## Security: secrets & dependencies
+## Security: secrets, dependencies & LLM apps
 
 Install the whole category: `--plugin security-tools`
 

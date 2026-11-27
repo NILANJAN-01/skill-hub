@@ -320,13 +320,16 @@
     },
     {
       "name": "ai-agent-tools",
-      "description": "AI agents: build and probe MCP servers, design tool/function definitions models use well, run LLM evals with regression checks, and build and evaluate RAG pipelines, each with a stdlib Python script",
+      "description": "AI agents: build and probe MCP servers, design tool/function definitions models use well, write and lint prompts, tune and score classification prompts, secure LLM apps, run LLM evals with regression checks, and build and evaluate RAG pipelines, each with a stdlib Python script",
       "category": "ai-agent-tools",
       "skills": [
         "mcp-server-builder",
         "agent-tool-design",
         "llm-evals",
-        "rag-pipeline"
+        "rag-pipeline",
+        "prompt-engineering",
+        "llm-classification-prompts",
+        "llm-app-security"
       ]
     },
     {
@@ -415,10 +418,11 @@
     },
     {
       "name": "security-tools",
-      "description": "Find leaked secrets and risky dependency pins before they ship.",
+      "description": "Find leaked secrets and risky dependency pins before they ship, and secure LLM apps against prompt injection, prompt leaking and hallucinated packages.",
       "category": "security-tools",
       "skills": [
-        "secrets-dependency-audit"
+        "secrets-dependency-audit",
+        "llm-app-security"
       ]
     }
   ],
@@ -500,8 +504,8 @@
     },
     {
       "name": "ai-agent-tools",
-      "title": "AI agents: MCP, tools, evals & RAG",
-      "count": 4
+      "title": "AI agents: prompts, MCP, tools, evals & RAG",
+      "count": 7
     },
     {
       "name": "software-design-tools",
@@ -540,7 +544,7 @@
     },
     {
       "name": "security-tools",
-      "title": "Security: secrets & dependencies",
+      "title": "Security: secrets, dependencies & LLM apps",
       "count": 1
     },
     {
@@ -661,8 +665,11 @@
           "name": "ai-agents",
           "skills": [
             "agent-tool-design",
+            "llm-app-security",
+            "llm-classification-prompts",
             "llm-evals",
             "mcp-server-builder",
+            "prompt-engineering",
             "rag-pipeline"
           ]
         },
@@ -3519,6 +3526,53 @@
       ]
     },
     {
+      "name": "llm-app-security",
+      "title": "LLM app security: prompt injection and hallucinated packages",
+      "category": "ai-agent-tools",
+      "area": "development",
+      "group": "ai-agents",
+      "description": "Secure an app that calls an LLM against prompt injection, jailbreaks, prompt leaking and hallucinated packages: a bundled script finds model output reaching eval, shell, SQL or HTML, user input in system prompts, secrets in prompts, unknown imports in generated code, and runs injection probes against your prompt. Use when building or reviewing a chatbot, agent or LLM feature, or checking AI-generated code before installing its dependencies.",
+      "plugins": [
+        "security-tools",
+        "ai-agent-tools"
+      ],
+      "path": "skills/development/ai-agents/llm-app-security",
+      "license": "CC-BY-4.0. Threat model from The Prompt Report (Schulhoff et al., 2024, arXiv:2406.06608, CC BY 4.0), section 5.1; scripts MIT. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
+      "source": "The Prompt Report: A Systematic Survey of Prompt Engineering Techniques, Schulhoff et al., arXiv:2406.06608v6, 2025",
+      "pages": "Section 5.1",
+      "examples": [
+        "Check our chatbot code for prompt injection risks before we launch.",
+        "The AI wrote this script; are all these imported packages real before I pip install them?"
+      ],
+      "files": [
+        "references/threats.md"
+      ]
+    },
+    {
+      "name": "llm-classification-prompts",
+      "title": "LLM classification prompts: build, run, score",
+      "category": "ai-agent-tools",
+      "area": "development",
+      "group": "ai-agents",
+      "description": "Build and tune an LLM prompt that labels or classifies text (sentiment, intent, moderation, triage, yes/no): pick few-shot exemplars, run prompt variants through any model command, extract answers, and score precision, recall and F1 with a bundled script. Use when the user wants to classify or label data with an LLM, or a labeling prompt gives wrong, unparsable or inconsistent answers.",
+      "plugins": [
+        "ai-agent-tools"
+      ],
+      "path": "skills/development/ai-agents/llm-classification-prompts",
+      "license": "CC-BY-4.0. Method from The Prompt Report (Schulhoff et al., 2024, arXiv:2406.06608, CC BY 4.0), section 6.2; scripts MIT. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
+      "source": "The Prompt Report: A Systematic Survey of Prompt Engineering Techniques, Schulhoff et al., arXiv:2406.06608v6, 2025",
+      "pages": "Sections 2.2.1, 2.5, 6.2, A.7",
+      "examples": [
+        "Use an LLM to label 500 support tickets as billing, bug or other, and measure how accurate it is.",
+        "My sentiment prompt gives different answers each run; find the best few-shot setup and score it."
+      ],
+      "files": [
+        "references/workflow.md"
+      ]
+    },
+    {
       "name": "llm-evals",
       "title": "LLM evals: test sets, scoring and regression checks",
       "category": "ai-agent-tools",
@@ -3751,6 +3805,29 @@
         "assets/technical-doc.md",
         "references/blog.md",
         "references/cv.md"
+      ]
+    },
+    {
+      "name": "prompt-engineering",
+      "title": "Prompt engineering: techniques and prompt lint",
+      "category": "ai-agent-tools",
+      "area": "development",
+      "group": "ai-agents",
+      "description": "Write, fix and improve prompts for an LLM: pick a technique (few-shot, chain-of-thought, decomposition, self-consistency, self-critique), design exemplars, define the answer format, and lint a prompt for known failure modes with a bundled script. Use when the user writes a system prompt or prompt template, or says the model's answers are wrong, inconsistent or badly formatted.",
+      "plugins": [
+        "ai-agent-tools"
+      ],
+      "path": "skills/development/ai-agents/prompt-engineering",
+      "license": "CC-BY-4.0. Original summary of The Prompt Report (Schulhoff et al., 2024, arXiv:2406.06608, CC BY 4.0); scripts MIT. See THIRD_PARTY_NOTICES.md",
+      "compatibility": "",
+      "source": "The Prompt Report: A Systematic Survey of Prompt Engineering Techniques, Schulhoff et al., arXiv:2406.06608v6, 2025",
+      "pages": "Sections 1-2, 4.2, 5.2, 6",
+      "examples": [
+        "Review my system prompt and tell me why the model keeps ignoring the output format.",
+        "Should I use few-shot or chain-of-thought for this extraction prompt? Improve it."
+      ],
+      "files": [
+        "references/techniques.md"
       ]
     },
     {
