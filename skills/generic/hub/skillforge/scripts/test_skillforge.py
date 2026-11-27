@@ -78,8 +78,11 @@ class EndToEnd(unittest.TestCase):
             self.assertEqual(names, ["tool-installing-packages", "tool-removing-packages"])
             md = (out / "tool-removing-packages" / "SKILL.md").read_text(encoding="utf-8")
             self.assertTrue(md.startswith("---\nname: tool-removing-packages\ndescription: "))
-            self.assertIn("## Procedures", md)
-            self.assertIn("tool remove --force serve", md)
+            playbook = (out / "tool-removing-packages" / "references" / "playbook.md").read_text(encoding="utf-8")
+            self.assertIn("## Procedures", playbook)                     # the full playbook, read on demand
+            self.assertIn("references/playbook.md", md)                  # the short page points to it
+            self.assertNotIn("## Procedures", md)                         # long procedures stay out of SKILL.md
+            self.assertLess(len(md), len(playbook))                        # (a fifth of the size on a real book)
             self.assertIn("error: package serve is still in use", md)       # troubleshooting from output
             self.assertIn("`tool remove --force serve`", md)              # destructive command flagged
             src = (out / "tool-installing-packages" / "references" / "source-text.md").read_text(encoding="utf-8")

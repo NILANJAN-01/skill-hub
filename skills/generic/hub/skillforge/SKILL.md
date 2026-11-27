@@ -9,7 +9,7 @@ metadata:
 
 # Skillforge: PDF → Agent Skills
 
-`scripts/skillforge.py` reads a technical PDF and writes one focused skill per actionable topic. Each skill has a fixed layout (When to use, When NOT to use, Key concepts, Safety rules, Procedures, Command reference, Decision guide, Troubleshooting, Related skills, Source). It runs fully offline. Every statement it writes is **extracted** from the source, never invented.
+`scripts/skillforge.py` reads a technical PDF and writes one focused skill per actionable topic. Each skill has two parts, so that using it saves tokens: a short `SKILL.md` (about 500 tokens: safety rules, the commands, the fixes, related skills), read every time the skill is used, and `references/playbook.md` with the full playbook (When to use, Key concepts, Safety rules, Procedures, Command reference, Decision guide, Troubleshooting, Source), read only when a step needs it. It runs fully offline. Every statement it writes is **extracted** from the source, never invented.
 
 The 61 `git-*` skills in this hub were produced with it from *Pro Git*.
 
@@ -49,9 +49,9 @@ All paths below are relative to this skill's folder. Use the absolute path of `s
    python scripts/skillforge.py book.pdf --out generated-skills --only git-rebasing,git-hooks
    ```
    Other options: `--prefix` (skill-name prefix, guessed by default), `--max-skills` (default 60), `--min-commands` (default 3), `--replan`.
-4. **Review** the output. The script prints any problems per skill (for example "no procedures"). Open a few `SKILL.md` files and check:
+4. **Review** the output. The script prints any problems per skill (for example "no procedures"). Open a few skills (`SKILL.md` and `references/playbook.md`) and check:
    - the `description` is rewritten by hand. The generated one is only a draft, and the description is the only text an agent reads when it decides whether to load the skill. Start with the task in the words a user would type ("Undo mistakes: amend the last commit, unstage a file ..."), then "Use when ..." with real commands and error messages. Keep it under about 300 characters, because agents shorten or drop descriptions when many skills are installed;
-   - the procedures are in order and the commands are complete;
+   - the procedures (in `references/playbook.md`) are in order and the commands are complete;
    - noisy or irrelevant bullets are removed (extraction is faithful but can be noisy).
 5. **Publish into the hub** (when working in the skill-hub repo): follow the `contribute-skill` skill. Copy the reviewed folders into `skills/`, add `license` and `metadata` (title, category, source, pages) to each frontmatter, register them in `.claude-plugin/marketplace.json`, then run `python tools/build_catalog.py` and `python tools/validate_skills.py`.
 

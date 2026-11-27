@@ -9,7 +9,8 @@ using only the Python standard library (no LLM, no API key, no pip install, runs
 
 Output (default --out generated-skills; review, then copy folders into the hub's skills/):
     generated-skills/README.md, catalog.json       catalog of every generated skill
-    generated-skills/<name>/SKILL.md               the playbook (fixed section layout)
+    generated-skills/<name>/SKILL.md               short version: safety rules, commands, fixes (read on every use)
+    generated-skills/<name>/references/playbook.md      the full playbook (fixed section layout, read on demand)
     generated-skills/<name>/references/source-text.md   cleaned source text the skill was built from
 
 Pipeline
@@ -722,9 +723,15 @@ class Author:
 
         skill_dir = out / sk["name"]
         (skill_dir / "references").mkdir(parents=True, exist_ok=True)
+        full = "\n".join(L).rstrip() + "\n"
+        # SKILL.md is read every time the skill is used, so it holds only what changes the agent's behaviour
+        # (safety rules, commands, fixes); the full playbook goes to references/playbook.md, read on demand.
+        (skill_dir / "references" / "playbook.md").write_text(
+            f"# {title}: full playbook\n\n" + full.split("\n", 2)[2].lstrip().replace("](references/", "]("),
+            encoding="utf-8")
         (skill_dir / "SKILL.md").write_text(
             f"---\nname: {sk['name']}\ndescription: {json.dumps(description, ensure_ascii=False)}\n---\n\n"
-            + "\n".join(L).rstrip() + "\n", encoding="utf-8")
+            + compact_skill(full, f"\"{self.doc.title}\", pages {pages}"), encoding="utf-8")
         (skill_dir / "references" / "source-text.md").write_text(self.source_text(units, title), encoding="utf-8")
         procs_md = skill_dir / "references" / "procedures.md"
         if extra_procs:
@@ -732,7 +739,7 @@ class Author:
             procs_md.write_text(f"# More procedures: {title}\n\n{body}\n", encoding="utf-8")
         elif procs_md.exists():
             procs_md.unlink()
-        return validate(skill_dir / "SKILL.md")
+        return validate(skill_dir / "SKILL.md", skill_dir / "references" / "playbook.md")
 
     def description(self, title, overview, kws, keys, errors) -> str:
         # Agents choose a skill from this text alone, and shorten or drop it when many skills
@@ -886,7 +893,61 @@ class Author:
         return "\n".join(L).rstrip() + "\n"
 
 
-def validate(skill_md: Path) -> list[str]:
+def _sections(body: str) -> tuple[str, dict[str, str]]:
+    parts = re.split(r"^## (.+)$", body, flags=re.M)
+    return parts[0], {parts[i].strip(): parts[i + 1].strip("\n") for i in range(1, len(parts), 2)}
+
+
+def _cap_bullets(text: str, top_max: int, sub_max: int) -> str:
+    out, top, sub = [], 0, 0
+    for line in text.splitlines():
+        if line.startswith("- "):
+            top, sub = top + 1, 0
+            if top > top_max:
+                continue
+        elif line.startswith("  - "):
+            sub += 1
+            if top > top_max or sub > sub_max:
+                continue
+        elif top > top_max:
+            continue
+        out.append(line)
+    return "\n".join(out).strip()
+
+
+def compact_skill(full: str, source: str) -> str:
+    """The short SKILL.md body: overview, safety rules, commands (from the command reference), fixes and related
+    skills, with a pointer to references/playbook.md. About a fifth of the full playbook's tokens."""
+    pre, sec = _sections(full)
+    title = re.search(r"^# (.+)$", pre, re.M).group(1).strip()
+    paras = [p for p in (q.strip() for q in re.split(r"\n\s*\n", pre)) if p and not p.startswith(("#", "_"))]
+    out = [f"# {title}", ""] + ([paras[0], ""] if paras else [])
+    out += ["This page is the short version: the safety rules, the commands and the fixes. Open "
+            "[references/playbook.md](references/playbook.md) for the concepts, step-by-step procedures and decision "
+            "guide, and [references/source-text.md](references/source-text.md) for the source text, only when a step "
+            "needs more than this page.", ""]
+    if sec.get("Safety rules for the agent"):
+        out += ["## Safety rules for the agent", "", _cap_bullets(sec["Safety rules for the agent"], 5, 8), ""]
+    cmds = []
+    for line in sec.get("Command reference", "").splitlines():
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if len(cells) >= 3 and cells[0].startswith("`"):
+            cmds.append(f"- {cells[0]}: {cells[-1]}" if cells[-1] not in ("", "``", cells[0]) else f"- {cells[0]}")
+    if cmds:
+        out += ["## Commands", "", *cmds[:12], ""]
+    lines = sec.get("Troubleshooting", "").splitlines()
+    table = [l for l in lines if l.startswith("|")][:10]
+    tips = [l for l in lines if l.startswith("- ")][:2]
+    if table or tips:
+        out += ["## Troubleshooting", "", *table, *([""] if table and tips else []), *tips, ""]
+    related = sec.get("Related skills", "").strip()
+    if related and "(none" not in related:
+        out += ["## Related skills", "", related, ""]
+    out += [f"_Source: {source}._"]
+    return "\n".join(out).rstrip() + "\n"
+
+
+def validate(skill_md: Path, playbook: Path | None = None) -> list[str]:
     text = skill_md.read_text(encoding="utf-8")
     problems = []
     m = re.match(r"---\nname: ([a-z0-9-]+)\ndescription: (\".*\")\n---\n", text)
@@ -894,7 +955,8 @@ def validate(skill_md: Path) -> list[str]:
         problems.append("bad frontmatter")
     elif len(json.loads(m.group(2))) > 1024:
         problems.append("description > 1024 chars")
-    if "## Procedures" not in text:
+    full = playbook.read_text(encoding="utf-8") if playbook and playbook.is_file() else text
+    if "## Procedures" not in full:
         problems.append("no procedures (no commands in these sections)")
     return problems
 
