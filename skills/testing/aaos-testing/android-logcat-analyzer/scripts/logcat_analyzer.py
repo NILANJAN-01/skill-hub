@@ -1261,11 +1261,26 @@ def render_text(result, show=None, timeline_limit=60):
                 g["id"], g["severity"], g["type"], g["process"] or "-", g["count"], g["first_time"] or "-", title))
         w("")
         w("## Details")
+    # Each message is printed once: a field that repeats the finding's own message is left out (or keeps only
+    # what it adds), and a message printed by an earlier finding becomes "(see [n])". The agent reads this
+    # report instead of the log, so repeats would cost tokens without adding anything. --json keeps it all.
+    printed = {}
+
+    def once(text, own):
+        if not isinstance(text, str):
+            return text
+        if own["title"] and len(own["title"]) > 30 and own["title"] in text and text != own["title"]:
+            text = text.replace(own["title"], "(the message above)")
+        for t, i in printed.items():
+            if i != own["id"] and len(t) > 30 and t in text:
+                text = text.replace(t, "(see [%d])" % i)
+        return text
     for g in groups:
         w("")
         w("### [%d] %s: %s" % (g["id"], g["severity"].upper(), g["type_label"]))
         w("")
-        w(g["title"])
+        w(once(g["title"], {"title": "", "id": g["id"]}))
+        printed.setdefault(g["title"], g["id"])
         w("")
         w("- Process: %s%s" % (g["process"] or "unknown",
                                " (pid %s)" % ", ".join(str(p) for p in g["pids"][:8]) if g["pids"] else ""))
@@ -1274,11 +1289,13 @@ def render_text(result, show=None, timeline_limit=60):
         else:
             w("- Seen once: %s (%s)" % (g["first_time"] or "no timestamp", g["first_at"]))
         for k, v in g["fields"].items():
-            w("- %s: %s" % (k, v))
+            if v == g["title"]:
+                continue                                   # same as the message printed above
+            w("- %s: %s" % (k, once(v, g)))
         if g["hint"]:
             w("- Usual cause: %s" % g["hint"])
         if g["related"]:
-            w("- After it: " + "; ".join(g["related"]))
+            w("- After it: " + "; ".join(once(r, g) for r in g["related"]))
         if g["stack"]:
             w("")
             w("Log block:")
@@ -1296,10 +1313,12 @@ def render_text(result, show=None, timeline_limit=60):
         w("## Timeline")
         w("")
         tl = result["timeline"]
+        group_title = {g["id"]: g["title"] for g in result["groups"]}
         for t in tl[:timeline_limit]:
             title = t["title"] if len(t["title"]) <= 120 else t["title"][:117] + "..."
-            w("- %s [%d] %s %s%s: %s" % (t["time"] or t["at"], t["group"], t["severity"], t["type"],
-                                         " " + t["process"] if t["process"] else "", title))
+            same = t["title"] == group_title.get(t["group"])        # already in the details of [n]
+            w("- %s [%d] %s %s%s%s" % (t["time"] or t["at"], t["group"], t["severity"], t["type"],
+                                       " " + t["process"] if t["process"] else "", "" if same else ": " + title))
         if len(tl) > timeline_limit:
             w("- ... %d more (use --json for the full timeline)" % (len(tl) - timeline_limit))
     return "\n".join(L) + "\n"

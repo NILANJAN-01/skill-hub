@@ -6,6 +6,7 @@ import gzip
 import io
 import json
 import os
+import re
 import shutil
 import sys
 import tempfile
@@ -122,6 +123,18 @@ class AppCrashTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.r = analyze(APP)
+
+    def test_report_prints_each_message_once(self):
+        text = la.render_text(self.r)
+        details = text.split("## Details", 1)[1].split("## Timeline", 1)[0]
+        msg = group(self.r, "java_crash")["title"]
+        outside_logs = re.sub(r"```.*?```", "", details, flags=re.S)        # quoted log lines are evidence
+        self.assertEqual(outside_logs.count(msg), 1, "the crash message should be printed once")
+        self.assertIn("(see [1])", details)                                 # the service crash points back
+        self.assertIn("(the message above)", details)                       # Exception keeps only what it adds
+        timeline = text.split("## Timeline", 1)[1]
+        self.assertNotIn("NullPointerException", timeline)                  # the timeline points to [1]
+        self.assertEqual(group(self.r, "java_crash")["fields"]["Root cause"], msg)  # the data (--json) keeps it all
 
     def test_fatal_exception_grouped(self):
         g = group(self.r, "java_crash")

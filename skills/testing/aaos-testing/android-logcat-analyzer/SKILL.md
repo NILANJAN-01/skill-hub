@@ -27,6 +27,7 @@ A logcat is often tens of thousands of lines. Run the script first and read its 
 - The user needs element locators from a screen dump: use the `android-uiautomator-locators` skill.
 - The log is not Android logcat (for example a Gradle build log or a server log).
 - The user only wants the last few lines of a log. Reading them directly is faster.
+- The log is short (under about 150 lines). Read it directly: the report quotes the important lines as evidence, so for a short log it is about as long as the log itself. The script pays off above that: a 60,000-token log becomes a report of about 4,000 tokens.
 
 ## Safety rules for the agent
 
@@ -80,7 +81,7 @@ Start with the default report. If it is long, read the Summary table, then use `
 ### 4. Read the result and answer the user
 
 1. Start with the `critical` and `high` rows. A fatal exception, native crash or ANR is usually the cause, and the service crashes and process deaths after it are usually effects. The **Cause** and **After it** lines link them.
-2. For a Java or Kotlin crash, read **Root cause** (the last `Caused by`) and **Top app frame**. That file and line is where to look in the user's code.
+2. For a Java or Kotlin crash, read the root cause and **Top app frame**. The root cause (the last `Caused by`) is the message at the top of the finding; a **Root cause** line appears only when it differs. That file and line is where to look in the user's code. The report prints each message once: `(the message above)` and `(see [n])` point to where it was printed.
 3. For a native crash, read the signal, the library and the top frame of the backtrace. "no tombstone in the log" means the log holds only the signal, so ask for the tombstone or a bugreport.
 4. For an ANR, read the reason (input dispatch, broadcast, service timeout) and the lines before it. The main-thread stack is in the ANR traces file of a bugreport, not in logcat.
 5. Tell the user: what failed, in which process and when, the root cause line, the place in their code, and the next step. Quote the few log lines that prove it, with their line numbers.
