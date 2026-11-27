@@ -952,6 +952,42 @@
         "does this skill cost"
       ],
       "needs": []
+    },
+    "secrets-dependency-audit": {
+      "keywords": [
+        "secret",
+        "secrets",
+        "leak",
+        "leaked",
+        "aws",
+        "token",
+        "credential",
+        "credentials",
+        "password",
+        "apikey",
+        "gitleaks",
+        "trufflehog",
+        "pinned",
+        "unpinned",
+        "lockfile",
+        "supply-chain"
+      ],
+      "phrases": [
+        "api key",
+        "aws key",
+        "commit a key",
+        "committed a key",
+        "committed a password",
+        "leaked key",
+        "scan for secrets",
+        "secret scan",
+        "hardcoded password",
+        "dependency pinning",
+        "pin dependencies"
+      ],
+      "needs": [
+        "repo"
+      ]
     }
   }
 }

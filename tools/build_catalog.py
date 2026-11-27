@@ -167,6 +167,7 @@ CATEGORY_TITLES = {
     "uiautomator-tools": "UI Automator: Android UI tests in Kotlin & Java",
     "junit-tools": "JUnit 6: Java & Kotlin tests, migration & reports",
     "api-testing-tools": "API testing: REST APIs of web applications",
+    "security-tools": "Security: secrets & dependencies",
     "git-getting-started": "Git: getting started",
     "git-branching": "Git: branching & merging",
     "git-collaboration": "Git: remotes & collaboration",

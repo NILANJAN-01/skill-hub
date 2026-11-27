@@ -649,5 +649,9 @@
     "CI's lint job is failing; find and fix the lint errors.",
     "Check my Java and Kotlin code for lint issues with Checkstyle, detekt and ktlint.",
     "Set up linting for this Go and TypeScript repo."
+  ],
+  "secrets-dependency-audit": [
+    "Scan this repo for leaked API keys or passwords before I make it public.",
+    "Check if our dependencies are pinned properly and add a pre-commit hook that blocks secrets."
   ]
 }
