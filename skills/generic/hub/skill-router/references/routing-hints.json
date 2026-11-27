@@ -988,6 +988,86 @@
       "needs": [
         "repo"
       ]
+    },
+    "prompt-engineering": {
+      "keywords": [
+        "prompt",
+        "prompts",
+        "few-shot",
+        "zero-shot",
+        "chain-of-thought",
+        "cot",
+        "exemplars",
+        "system-prompt",
+        "template",
+        "sycophancy",
+        "self-consistency"
+      ],
+      "phrases": [
+        "system prompt",
+        "prompt template",
+        "improve my prompt",
+        "better prompt",
+        "prompt engineering",
+        "chain of thought",
+        "few shot",
+        "ignores the output format",
+        "step by step"
+      ],
+      "needs": []
+    },
+    "llm-classification-prompts": {
+      "keywords": [
+        "classify",
+        "classification",
+        "label",
+        "labeling",
+        "labelling",
+        "sentiment",
+        "triage",
+        "precision",
+        "recall",
+        "f1",
+        "annotate"
+      ],
+      "phrases": [
+        "label data with an llm",
+        "classify with an llm",
+        "labeling prompt",
+        "classification prompt",
+        "how accurate",
+        "few-shot setup",
+        "sentiment prompt"
+      ],
+      "needs": [
+        "file"
+      ]
+    },
+    "llm-app-security": {
+      "keywords": [
+        "injection",
+        "jailbreak",
+        "jailbreaking",
+        "leak",
+        "leaking",
+        "hallucinated",
+        "guardrail",
+        "guardrails",
+        "chatbot",
+        "exfiltration"
+      ],
+      "phrases": [
+        "prompt injection",
+        "prompt leaking",
+        "system prompt leak",
+        "jailbreak our",
+        "hallucinated package",
+        "packages real",
+        "are these packages real",
+        "llm security",
+        "ai generated code"
+      ],
+      "needs": []
     }
   }
 }

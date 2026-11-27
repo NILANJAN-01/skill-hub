@@ -22,6 +22,8 @@ An eval is a unit test suite for model behaviour: fixed **cases**, the model's *
 
 - Checking only retrieval quality (recall@k, MRR) of a RAG system: use `rag-pipeline`, then evaluate answers here.
 - Fixing a tool definition that the model misuses: use `agent-tool-design` first.
+- Tuning a labeling or classification prompt (exemplars, answer extraction, precision/recall): use `llm-classification-prompts`.
+- Testing a prompt against injection or prompt leaking: use `llm-app-security` (`probe --export` gives cases for this suite).
 
 ## Procedure
 

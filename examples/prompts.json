@@ -653,5 +653,17 @@
   "secrets-dependency-audit": [
     "Scan this repo for leaked API keys or passwords before I make it public.",
     "Check if our dependencies are pinned properly and add a pre-commit hook that blocks secrets."
+  ],
+  "prompt-engineering": [
+    "Review my system prompt and tell me why the model keeps ignoring the output format.",
+    "Should I use few-shot or chain-of-thought for this extraction prompt? Improve it."
+  ],
+  "llm-classification-prompts": [
+    "Use an LLM to label 500 support tickets as billing, bug or other, and measure how accurate it is.",
+    "My sentiment prompt gives different answers each run; find the best few-shot setup and score it."
+  ],
+  "llm-app-security": [
+    "Check our chatbot code for prompt injection risks before we launch.",
+    "The AI wrote this script; are all these imported packages real before I pip install them?"
   ]
 }

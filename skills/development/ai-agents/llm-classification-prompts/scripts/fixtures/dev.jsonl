@@ -1,0 +1,12 @@
+{"id": 0, "input": "I feel trapped in this job and see no exit", "label": "yes"}
+{"id": 1, "input": "There is no way out of this debt", "label": "yes"}
+{"id": 2, "input": "I had a great weekend hiking", "label": "no"}
+{"id": 3, "input": "My cat knocked over the plant", "label": "no"}
+{"id": 4, "input": "I am trapped and nobody listens", "label": "yes"}
+{"id": 5, "input": "Work was busy but fine", "label": "no"}
+{"id": 6, "input": "tricky: I feel trapped by my own choices", "label": "yes"}
+{"id": 7, "input": "tricky: the movie was long", "label": "no"}
+{"id": 8, "input": "silent: something", "label": "no"}
+{"id": 9, "input": "Stuck in traffic, no way out until 6", "label": "yes"}
+{"id": 10, "input": "Dinner with friends tonight", "label": "no"}
+{"id": 11, "input": "Everything feels trapped and grey", "label": "yes"}

@@ -41,3 +41,13 @@ The skills under `skills/development/software-design/` (`software-design-guardra
 The book is copyrighted (all rights reserved) and is **not** included in this repository. These skills do not reproduce its text: the principles and red flags are summarised in original words, the examples are original, and each skill cites the chapters it draws on so readers can consult the book for the full reasoning. The scripts (`design_check.py`, `install_guardrails.py`, `design_note.py`) are original work. All of this material is distributed under the repository's MIT license.
 
 Changes made: the book's ideas were reorganised into five task-focused skills with procedures, checklists and decision guides, and extended with original tooling that checks code and design notes for the red flags the book describes.
+
+## The Prompt Report (prompt engineering skills)
+
+The skills `prompt-engineering`, `llm-classification-prompts` and `llm-app-security` under `skills/development/ai-agents/`, including their `references/` files, are based on:
+
+> Sander Schulhoff, Michael Ilie, Nishant Balepur, et al. *The Prompt Report: A Systematic Survey of Prompt Engineering Techniques*. arXiv:2406.06608v6, 2025. https://arxiv.org/abs/2406.06608
+
+The paper is licensed under the [Creative Commons Attribution 4.0 International License (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/). The paper itself is not included in this repository.
+
+Changes made: the survey's taxonomy, findings and case study were summarised in original words and reorganised into three task-focused skills with procedures, decision guides and troubleshooting; short technique phrases (thought inducers, attack examples) are quoted. The scripts (`prompt_lint.py`, `prompt_bench.py`, `llm_sec.py`) are original work under the repository's MIT license; `prompt_bench.py` implements the paper's AutoDiCoT procedure.

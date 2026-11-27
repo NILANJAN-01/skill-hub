@@ -22,6 +22,7 @@ metadata:
 
 - Known vulnerabilities (CVEs) in dependencies: use the ecosystem's tool (`pip-audit`, `npm audit`, `osv-scanner`, Dependabot). This skill checks how dependencies are pinned and fetched, not their CVEs.
 - A full security review of code logic: this finds secrets and supply-chain settings only.
+- Apps that call an LLM (prompt injection, prompt leaking, hallucinated packages in generated code): use `llm-app-security`.
 
 ## Safety rules for the agent
 

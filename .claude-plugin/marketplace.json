@@ -370,7 +370,7 @@
     },
     {
       "name": "ai-agent-tools",
-      "description": "AI agents: build and probe MCP servers, design tool/function definitions models use well, run LLM evals with regression checks, and build and evaluate RAG pipelines, each with a stdlib Python script",
+      "description": "AI agents: build and probe MCP servers, design tool/function definitions models use well, write and lint prompts, tune and score classification prompts, secure LLM apps, run LLM evals with regression checks, and build and evaluate RAG pipelines, each with a stdlib Python script",
       "source": "./",
       "strict": false,
       "category": "ai-agent-tools",
@@ -378,7 +378,10 @@
         "./skills/development/ai-agents/mcp-server-builder",
         "./skills/development/ai-agents/agent-tool-design",
         "./skills/development/ai-agents/llm-evals",
-        "./skills/development/ai-agents/rag-pipeline"
+        "./skills/development/ai-agents/rag-pipeline",
+        "./skills/development/ai-agents/prompt-engineering",
+        "./skills/development/ai-agents/llm-classification-prompts",
+        "./skills/development/ai-agents/llm-app-security"
       ]
     },
     {
@@ -483,12 +486,13 @@
     },
     {
       "name": "security-tools",
-      "description": "Find leaked secrets and risky dependency pins before they ship.",
+      "description": "Find leaked secrets and risky dependency pins before they ship, and secure LLM apps against prompt injection, prompt leaking and hallucinated packages.",
       "source": "./",
       "strict": false,
       "category": "security-tools",
       "skills": [
-        "./skills/development/security/secrets-dependency-audit"
+        "./skills/development/security/secrets-dependency-audit",
+        "./skills/development/ai-agents/llm-app-security"
       ]
     }
   ]

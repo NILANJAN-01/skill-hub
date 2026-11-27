@@ -1,0 +1,6 @@
+I think this code is clearly wrong. Find all the bugs in this function and explain why it is wrong.
+Think step by step.
+
+{CODE}
+
+Contact me at jane.doe@example.com if unsure.

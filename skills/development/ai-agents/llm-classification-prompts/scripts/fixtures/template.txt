@@ -1,0 +1,6 @@
+Label whether the post expresses feeling trapped. Answer Yes or No.
+
+{EXEMPLARS}
+
+Q: {INPUT}
+A:

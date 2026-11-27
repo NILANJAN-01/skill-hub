@@ -1,0 +1,19 @@
+Classify the review as positive or negative. Answer with one word: positive or negative.
+
+Review: The battery lasts all day.
+Sentiment: positive
+
+Review: It broke after a week.
+Sentiment: negative
+
+Review: Great screen, fast delivery.
+Sentiment: positive
+
+Review: Support never answered.
+Sentiment: negative
+
+Review:
+"""
+{REVIEW}
+"""
+Sentiment:

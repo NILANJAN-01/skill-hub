@@ -1,0 +1,1 @@
+{"messages": [{"role": "system", "content": "You are a support bot for Acme. Answer only from the FAQ below.\n\nFAQ:\n{FAQ}"}, {"role": "user", "content": "{QUESTION}"}]}

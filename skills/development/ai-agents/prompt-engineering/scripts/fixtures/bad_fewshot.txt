@@ -1,0 +1,11 @@
+Classify the sentiment of the tweet.
+
+I love life: Happy
+Life is good: Happy
+Trees are beautiful: Happy
+Squirrels are cute: Happy
+Im so excited: Happy
+I hate my boss: Angry
+I am so mad: Angry
+
+{TWEET}
