@@ -448,10 +448,11 @@
     "My PowerShell script writes UTF-16 files and the other tool can't read them. Fix the encoding."
   ],
   "repo-architecture": [
-    "Make an architecture diagram of this repo as ARCHITECTURE.md and an HTML page.",
-    "Give me a walkthrough of this codebase: what the main parts are, how they depend on each other and what to read first.",
+    "Make an architecture diagram of this repo as ARCHITECTURE.md with an HLD and the main code flows.",
+    "Audit this repository and give me a health score with the top findings and how to fix them.",
     "Draw a component diagram for https://github.com/owner/project and explain the main request flow.",
-    "I'm onboarding onto this repo. Prepare an architecture overview I can share with the team."
+    "I'm onboarding onto this repo. Prepare an architecture overview I can share with the team.",
+    "Show me the code flow from main() in this C++ project as a sequence diagram."
   ],
   "python-tutor": [
     "Explain this Python file to me like I'm a beginner, then go deeper, and make me an HTML study page.",

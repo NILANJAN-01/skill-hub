@@ -81,8 +81,8 @@ A skill lives in `skills/<area>/<group>/<skill>/`. The area and group only organ
 
 | Skill | Description | Needs |
 |---|---|---|
-| [`repo-architecture`](development/repo/repo-architecture/SKILL.md) | Walk through a repository and produce an architecture diagram as ARCHITECTURE.md (with Mermaid) and a self-contained architecture.html: components,... | Needs Python 3.8+ (standard library only). git is optional; with git the file list... |
-| [`repo-learnings`](development/repo/repo-learnings/SKILL.md) | Read a whole git repository, every folder and file, line by line, and write a LEARNINGS.md: purpose, build and run steps, folder map, architecture, key... | Needs Python 3.8+ (standard library only). git is optional. With git, the file list... |
+| [`repo-architecture`](development/repo/repo-architecture/SKILL.md) | Analyse any repository (Python, C, C++, Java, Kotlin, Go, JS/TS, Rust, C#) into ARCHITECTURE.md: Mermaid HLD, code-flow sequence diagrams and a scored... | Needs Python 3.8+ (standard library only). git is optional; with git the file list... |
+| [`repo-learnings`](development/repo/repo-learnings/SKILL.md) | Read a whole repository line by line (any language) and write LEARNINGS.md: purpose, build steps, folder map, Mermaid HLD and code-flow diagrams, health... | Needs Python 3.8+ (standard library only). git is optional; with git the file list... |
 
 ## GitLab: CI/CD pipelines (`gitlab-ci-tools`)
 

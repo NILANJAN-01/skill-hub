@@ -211,7 +211,7 @@ Categories for `--plugin`:
 | `android-automation` | 2 | Android test automation and debugging: generate keyword/resource-id locator JSON from the screen of a device or a UIAutomator XML dump (including automotive OEM head... |
 | `adb-tools` | 4 | ADB (Android Debug Bridge) skill set from the official docs: adb-tool is the central skill with all 139 commands, risk levels and one Python script; adb-connect sets... |
 | `gradle-tools` | 1 | Gradle for Android: set up the wrapper, JDK, SDK and version catalog, check JDK/Gradle/AGP/Kotlin compatibility, diagnose build failures from a log, add libraries,... |
-| `repo-tools` | 2 | Repositories: read a whole codebase file by file and write a LEARNINGS.md, with a script that plans the read and checks nothing was missed; draw the architecture as... |
+| `repo-tools` | 2 | Repositories in any language (Python, C, C++, Java, Kotlin, Go, JS/TS, Rust, C#): ARCHITECTURE.md with a Mermaid high-level design, code-flow sequence diagrams and a... |
 | `image-tools` | 1 | Images: read any PNG/JPG/WebP/GIF/BMP with a Python script and report pixels (exact colours, regions, palette, pixel map, CSV) plus a plain-text description, EXIF and... |
 | `video-tools` | 1 | Video: analyse MP4/MOV/MKV/WebM with a Python script - metadata, frames extracted as images, per-frame colours, brightness and motion, scenes, black and frozen... |
 | `hub-tools` | 7 | Skills for working with the hub itself: find and install skills, contribute new skills, generate skills from technical PDFs (skillforge) and from web pages... |

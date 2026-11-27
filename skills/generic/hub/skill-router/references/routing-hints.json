@@ -128,11 +128,22 @@
         "diagram",
         "mermaid",
         "onboarding",
-        "overview"
+        "overview",
+        "hld",
+        "codebase"
       ],
       "phrases": [
         "how is this repo structured",
-        "system overview"
+        "system overview",
+        "high level design",
+        "code flow",
+        "sequence diagram",
+        "repo audit",
+        "repository audit",
+        "audit this repo",
+        "audit this repository",
+        "health score",
+        "health check"
       ],
       "needs": [
         "repo"

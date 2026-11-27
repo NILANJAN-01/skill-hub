@@ -219,7 +219,7 @@
     },
     {
       "name": "repo-tools",
-      "description": "Repositories: read a whole codebase file by file and write a LEARNINGS.md, with a script that plans the read and checks nothing was missed; draw the architecture as ARCHITECTURE.md plus an HTML diagram (repo-architecture)",
+      "description": "Repositories in any language (Python, C, C++, Java, Kotlin, Go, JS/TS, Rust, C#): ARCHITECTURE.md with a Mermaid high-level design, code-flow sequence diagrams and a scored health audit (repo-architecture); a full file-by-file read into LEARNINGS.md with the same diagrams, checked so nothing is missed (repo-learnings)",
       "category": "repositories",
       "skills": [
         "repo-learnings",
@@ -3900,11 +3900,11 @@
     },
     {
       "name": "repo-architecture",
-      "title": "Repo walkthrough and architecture diagram",
+      "title": "Repo architecture, code flow and health audit",
       "category": "repo-tools",
       "area": "development",
       "group": "repo",
-      "description": "Walk through a repository and produce an architecture diagram as ARCHITECTURE.md (with Mermaid) and a self-contained architecture.html: components, dependencies, entry points, flows, reading order. A bundled script drafts it from the code. Use when the user asks for an architecture diagram, a system overview, a repo walkthrough or onboarding map of a codebase.",
+      "description": "Analyse any repository (Python, C, C++, Java, Kotlin, Go, JS/TS, Rust, C#) into ARCHITECTURE.md: Mermaid HLD, code-flow sequence diagrams and a scored health audit with fixes. Use when the user wants an architecture or HLD diagram, code flow, repo audit or health score.",
       "plugins": [
         "repo-tools"
       ],
@@ -3912,12 +3912,16 @@
       "license": "MIT",
       "compatibility": "Needs Python 3.8+ (standard library only). git is optional; with git the file list follows .gitignore and a repository can be cloned from a URL.",
       "examples": [
-        "Make an architecture diagram of this repo as ARCHITECTURE.md and an HTML page.",
-        "Give me a walkthrough of this codebase: what the main parts are, how they depend on each other and what to read first.",
+        "Make an architecture diagram of this repo as ARCHITECTURE.md with an HLD and the main code flows.",
+        "Audit this repository and give me a health score with the top findings and how to fix them.",
         "Draw a component diagram for https://github.com/owner/project and explain the main request flow.",
-        "I'm onboarding onto this repo. Prepare an architecture overview I can share with the team."
+        "I'm onboarding onto this repo. Prepare an architecture overview I can share with the team.",
+        "Show me the code flow from main() in this C++ project as a sequence diagram."
       ],
-      "files": []
+      "files": [
+        "references/annotations.md",
+        "references/audit.md"
+      ]
     },
     {
       "name": "repo-learnings",
@@ -3925,13 +3929,13 @@
       "category": "repo-tools",
       "area": "development",
       "group": "repo",
-      "description": "Read a whole git repository, every folder and file, line by line, and write a LEARNINGS.md: purpose, build and run steps, folder map, architecture, key files, conventions, gotchas and file-by-file notes. A bundled Python script plans the read and checks that no file was missed. Use when the user wants to study, understand, document or onboard onto a codebase or repo, local or by git URL.",
+      "description": "Read a whole repository line by line (any language) and write LEARNINGS.md: purpose, build steps, folder map, Mermaid HLD and code-flow diagrams, health audit, gotchas and file-by-file notes; a script batches the read and checks no file was missed. Use when the user wants to study, document or onboard onto a codebase.",
       "plugins": [
         "repo-tools"
       ],
       "path": "skills/development/repo/repo-learnings",
       "license": "Complete terms in the repository README",
-      "compatibility": "Needs Python 3.8+ (standard library only). git is optional. With git, the file list follows .gitignore and a repository can be cloned from a URL.",
+      "compatibility": "Needs Python 3.8+ (standard library only). git is optional; with git the file list follows .gitignore and a repository can be cloned from a URL.",
       "examples": [
         "Read this whole repo, every folder and file, and write a learnings .md so I understand how it works.",
         "I just joined this project. Go through the codebase deeply and create an onboarding document.",

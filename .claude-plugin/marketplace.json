@@ -247,7 +247,7 @@
     },
     {
       "name": "repo-tools",
-      "description": "Repositories: read a whole codebase file by file and write a LEARNINGS.md, with a script that plans the read and checks nothing was missed; draw the architecture as ARCHITECTURE.md plus an HTML diagram (repo-architecture)",
+      "description": "Repositories in any language (Python, C, C++, Java, Kotlin, Go, JS/TS, Rust, C#): ARCHITECTURE.md with a Mermaid high-level design, code-flow sequence diagrams and a scored health audit (repo-architecture); a full file-by-file read into LEARNINGS.md with the same diagrams, checked so nothing is missed (repo-learnings)",
       "source": "./",
       "strict": false,
       "category": "repositories",
