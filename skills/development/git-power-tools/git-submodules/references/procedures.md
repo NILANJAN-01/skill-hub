@@ -354,3 +354,68 @@ index eb41d76,c771610..0000000
    ```
 
 **If it fails:** Then, when you switch back, you get an empty `CryptoLibrary` directory for some reason and `gitsubmodule update` may not fix it either.
+
+### Submodule Tips
+
+**Goal:** There is a `foreach` submodule command to run some arbitrary command in each submodule.
+
+**Steps:**
+
+1. We can easily stash all the work in all our submodules.
+   ```bash
+   git submodule foreach 'git stash'
+   ```
+   Expected output (excerpt):
+   ```text
+   Entering 'CryptoLibrary'
+   No local changes to save
+   Entering 'DbConnector'
+   Saved working directory and index state WIP on stable: 82d2ad3 Merge from
+   ```
+2. Then we can create a new branch and switch to it in all our submodules.
+   ```bash
+   git submodule foreach 'git checkout -b featureA'
+   ```
+   Expected output (excerpt):
+   ```text
+   Entering 'CryptoLibrary'
+   Switched to a new branch 'featureA'
+   Entering 'DbConnector'
+   Switched to a new branch 'featureA'
+   ```
+3. One really useful thing you can do is produce a nice unified diff of what is changed in your main project and all your subprojects as well.
+   ```bash
+   git diff; git submodule foreach 'git diff'
+   ```
+   Expected output (excerpt):
+   ```text
+   Submodule DbConnector contains modified content
+   diff --git a/src/main.c b/src/main.c
+   index 210f1ae..1f0acdc 100644
+   --- a/src/main.c
+   ```
+4. Run:
+   ```text
+   +       return url_decode_mem(url, strlen(url));
+   +}
+   +
+    char *url_decode_parameter_name(const char **query)
+    {
+           struct strbuf out = STRBUF_INIT;
+   ```
+5. You may want to set up some aliases for some of these commands as they can be quite long and you can’t set configuration options for most of them to make them defaults.
+   ```bash
+   git config alias.sdiff '!'"git diff && git submodule foreach 'git diff'"
+   git config alias.spush 'push --recurse-submodules=on-demand'
+   git config alias.supdate 'submodule update --remote --merge'
+   ```
+
+**Verify:** run `git diff; git submodule foreach 'git diff'` - expect something like:
+```text
+Submodule DbConnector contains modified content
+diff --git a/src/main.c b/src/main.c
+index 210f1ae..1f0acdc 100644
+--- a/src/main.c
++++ b/src/main.c
+@@ -245,6 +245,8 @@ static int handle_alias(int *argcp, const char ***argv)
+```
