@@ -13,31 +13,7 @@ metadata:
 
 The first thing you should do when you install Git is to set your user name and email address.
 
-_Built from "Pro Git" (pages 27-30) by extraction: statements below are quoted from the source. Full cleaned source: [references/source-text.md](references/source-text.md) - read it when a step needs more context._
-
-## When to use
-
-- The user asks about **first-time git setup** (git config, windows system, git environment, editor, user).
-- The user wants to run or understand `git config --global`.
-- The user wants to run or understand `git config --list --show-origin`.
-- The user wants to run or understand `git config --list`.
-- The user wants to run or understand `git config`.
-
-## When NOT to use
-
-- For setup and config, use the `git-setup-and-config` skill instead.
-- For git configuration, use the `git-configuration` skill instead.
-- For environment variables, use the `git-environment-variables` skill instead.
-
-## Key concepts
-
-- If you pass the option `--system` to `git config`, it reads and writes from this file specifically.
-- 2.`~/.gitconfig` or `~/.config/git/config` file: Values specific personally to you, the user.
-- You can make Git read and write to this file specifically by passing the `--global` option, and this affects all of the repositories you work with on your system.
-- On Windows systems, Git looks for the `.gitconfig` file in the `$HOME` directory (`C:\Users\$USER` for most people).
-- This config file can only be changed by `gitconfig -f <file>` as an admin.
-- If not configured, Git uses your system’s default editor.
-- You may see keys more than once, because Git reads the same key from different files (`[path]/etc/gitconfig` and `~/.gitconfig`, for example).
+This page is the short version: the safety rules, the commands and the fixes. Open [references/playbook.md](references/playbook.md) for the concepts, step-by-step procedures and decision guide, and [references/source-text.md](references/source-text.md) for the book text, only when a step needs more than this page.
 
 ## Safety rules for the agent
 
@@ -45,104 +21,13 @@ _Built from "Pro Git" (pages 27-30) by extraction: statements below are quoted f
 - **Warning (from source):** You may find, if you don’t setup your editor like this, you get into a really confusing state when Git attempts to launch it. An example on a Windows system may include a prematurely terminated Git operation during a Git initiated edit.
 - You can force Git to read from and write to this file with the `--local` option, but that is in fact the default.
 
-## Procedures
+## Commands
 
-### First-Time Git Setup
-
-**Goal:** You can also change them at any time by running through the commands again.
-
-**Steps:**
-
-1. You can view all of your settings and where they are coming from using:
-   ```bash
-   git config --list --show-origin
-   ```
-
-### Your Identity
-
-**Goal:** The first thing you should do when you install Git is to set your user name and email address.
-
-**Steps:**
-
-1. This is important because every Git commit uses this information, and it’s immutably baked into the commits you start creating:
-   ```bash
-   git config --global user.name "John Doe"
-   git config --global user.email johndoe@example.com
-   ```
-
-### Your Editor
-
-**Goal:** In the case of Notepad++, a popular programming editor, you are likely to want to use the 32-bit version, since at the time of writing the 64-bit version doesn’t support all plug-ins.
-
-**Steps:**
-
-1. If you want to use a different text editor, such as Emacs, you can do the following:
-   ```bash
-   git config --global core.editor emacs
-   ```
-2. 32-bit Windows system, or you have a 64-bit editor on a 64-bit system, you’ll type something like this:
-   ```bash
-   git config --global core.editor "'C:/Program Files/Notepad++/notepad++.exe'
-   ```
-   Expected output (excerpt):
-   ```text
-   -multiInst -notabbar -nosession -noPlugin"
-   ```
-
-### Your default branch name
-
-**Goal:** Your default branch name
-
-**Steps:**
-
-1. To set main as the default branch name do:
-   ```bash
-   git config --global init.defaultBranch main
-   ```
-
-### Checking Your Settings
-
-**Goal:** Checking Your Settings
-
-**Steps:**
-
-1. If you want to check your configuration settings, you can use the `git config --list` command to list all the settings Git can find at that point:
-   ```bash
-   git config --list
-   ```
-   Expected output (excerpt):
-   ```text
-   user.name=John Doe
-   user.email=johndoe@example.com
-   color.status=auto
-   color.branch=auto
-   ```
-2. You can also check what Git thinks a specific key’s value is by typing `git config <key>`:
-   ```bash
-   git config user.name
-   ```
-   Expected output (excerpt):
-   ```text
-   John Doe
-   ```
-3. Run:
-   ```bash
-   git config --show-origin rerere.autoUpdate
-   ```
-   Expected output (excerpt):
-   ```text
-   file:/home/johndoe/.gitconfig   false
-   ```
-
-## Command reference
-
-| Command | What it does (from source) | Example |
-|---|---|---|
-| `git config --global` | This is important because every Git commit uses this information, and it’s immutably baked into the commits you start creating | `git config --global core.editor emacs` |
-| `git config --list --show-origin` | You can view all of your settings and where they are coming from using | `git config --list --show-origin` |
-| `git config --list` | If you want to check your configuration settings, you can use the `git config --list` command to list all the settings Git can find at that point | `git config --list` |
-| `git config` | If you want to check your configuration settings, you can use the `git config --list` command to list all the settings Git can find at that point | `git config user.name` |
-| `git config --show-origin` | You can also check what Git thinks a specific key’s value is by typing `git config <key>` | `git config --show-origin rerere.autoUpdate` |
+- `git config --global`: `git config --global core.editor emacs`
+- `git config --list --show-origin`
+- `git config --list`
+- `git config`: `git config user.name`
+- `git config --show-origin`: `git config --show-origin rerere.autoUpdate`
 
 ## Troubleshooting
 
@@ -156,6 +41,4 @@ _Built from "Pro Git" (pages 27-30) by extraction: statements below are quoted f
 - `git-environment-variables` - Environment Variables
 - `git-getting-git-on-a-server` - Getting Git on a Server
 
-## Source
-
-"Pro Git", pages 27-30. Sections: First-Time Git Setup; First-Time Git Setup > Your Identity; First-Time Git Setup > Your Editor; First-Time Git Setup > Your default branch name; First-Time Git Setup > Checking Your Settings.
+_Source: "Pro Git" by Scott Chacon and Ben Straub, pages 27-30, CC BY-NC-SA 3.0._
