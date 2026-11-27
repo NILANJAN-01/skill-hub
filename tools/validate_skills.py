@@ -22,6 +22,15 @@ NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 KNOWN_FIELDS = {"name", "description", "license", "compatibility", "metadata", "allowed-tools"}
 LINK_RE = re.compile(r"\[[^\]]*\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
 MAX_LINES = 500
+# Token budgets (estimated as characters / 4, like the skill-token-meter skill). Every installed skill's
+# description is read in every session, and its SKILL.md body each time it is used, so a skill must cost
+# less than it saves: keep detail in references/, which the agent reads only when it needs it.
+MAX_DESC_TOKENS = 130
+MAX_BODY_TOKENS = 5000
+
+
+def est_tokens(text: str) -> int:
+    return -(-len(text) // 4)
 # Text that `tools/hub.py new-skill` and template/ leave behind; a finished skill has none of it.
 PLACEHOLDER = "TODO:"
 TEMPLATE_TEXT = ("One or two sentences on what this skill helps the agent accomplish",
@@ -62,6 +71,9 @@ def check_skill(d: Path, plugin_names: set[str], listed: set[str]) -> tuple[list
         errors.append("description is still the TODO placeholder; write what the skill does and when to use it")
     elif len(desc) > 1024:
         errors.append(f"description is longer than 1024 characters ({len(desc)})")
+    elif est_tokens(desc) > MAX_DESC_TOKENS:
+        errors.append(f"description is about {est_tokens(desc)} tokens (> {MAX_DESC_TOKENS}); every session reads it, "
+                      "so keep the trigger words and cut the rest")
     elif "use when" not in desc.lower() and "use this" not in desc.lower():
         warns.append("description should say when to use the skill (e.g. 'Use when ...')")
     elif len(desc) > 500:
@@ -97,6 +109,9 @@ def check_skill(d: Path, plugin_names: set[str], listed: set[str]) -> tuple[list
     if leftovers:
         errors.append(f"still contains template text ({leftovers[0]!r}); replace it with the skill's content")
 
+    if est_tokens(body) > MAX_BODY_TOKENS:
+        errors.append(f"SKILL.md body is about {est_tokens(body)} tokens (> {MAX_BODY_TOKENS}); move long procedures, "
+                      "tables and examples into references/ and link them")
     n_lines = text.count("\n") + 1
     if n_lines > MAX_LINES:
         warns.append(f"SKILL.md has {n_lines} lines (> {MAX_LINES}); move detail into references/")

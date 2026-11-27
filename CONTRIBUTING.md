@@ -9,12 +9,12 @@ If you use an AI agent to contribute, it follows [AGENTS.md](AGENTS.md).
 Start with `python tools/hub.py new-skill <area>/<group>/<name> --plugin <plugin>`. It creates the folder from `template/`, writes the frontmatter and registers the skill in `marketplace.json` and `examples/prompts.json`, leaving `TODO` placeholders that the validator rejects until you replace them. Finish with `python tools/hub.py check`.
 
 - [ ] The folder is `skills/<area>/<group>/<name>/`. `<area>` is one of `testing`, `development`, `design`, `generic`, `external-tools`; `<group>` is an existing group folder or a new kebab-case one; `<name>` is kebab-case, at most 64 chars, and unique across the whole hub (skills are installed by name alone).
-- [ ] `SKILL.md` frontmatter has `name` (equal to the folder name) and `description` (≤1024 chars, says **what** the skill does and **when** to use it, and names the words users type).
+- [ ] `SKILL.md` frontmatter has `name` (equal to the folder name) and `description` (≤1024 chars and about 130 tokens, says **what** the skill does and **when** to use it, and names the words users type).
 - [ ] `metadata.title` and `metadata.category` are set. The category is the focused plugin the skill belongs to.
 - [ ] `license` is set. It is required if the content derives from a book, docs or another project. Credit the source in `THIRD_PARTY_NOTICES.md`.
 - [ ] The body is actionable: when to use, when not to use, numbered steps with exact commands, safety rules for destructive actions, and troubleshooting.
 - [ ] The body is agent-neutral: no single agent's tool names, slash commands or config paths. Scripts are cross-platform. Any real requirement is declared in the `compatibility` field.
-- [ ] `SKILL.md` is under about 500 lines. Long material goes in `references/`, code in `scripts/`, and templates or data in `assets/`. All links are relative.
+- [ ] `SKILL.md` is under about 500 lines and 5,000 tokens (every use loads it). Long material goes in `references/`, code in `scripts/`, and templates or data in `assets/`. All links are relative.
 - [ ] The skill works when installed on its own: scripts and links stay inside its folder. If it truly needs another skill next to it, name that skill in `metadata.requires` (the installer then adds it) and in `compatibility`, and list both in the same plugins.
 - [ ] Scripts run on the Python version that `compatibility` states (CI checks 3.8 with `vermin`; guard newer features and mark the line `# novermin`).
 - [ ] The skill is listed in at least one plugin in `.claude-plugin/marketplace.json`.

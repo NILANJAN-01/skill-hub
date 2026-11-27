@@ -167,6 +167,26 @@ class DistributionChecks(unittest.TestCase):
         self.assertIn("unknown skill 'ruoter'", msgs[1])
         self.assertIn("plugin 'partial' lists dispatcher but not router", msgs[2])
 
+    def test_token_budgets(self):
+        root = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, root, True)
+
+        def errors(desc, body):
+            d = root / "big-skill"
+            d.mkdir(exist_ok=True)
+            (d / "SKILL.md").write_text(f"---\nname: big-skill\ndescription: {desc}\nmetadata:\n  category: hub-tools\n"
+                                        f"---\n\n{body}\n", encoding="utf-8")
+            return validate_skills.check_skill(d, {"hub-tools"}, {"big-skill"})[0]
+        ok_desc = "Do one thing well. Use when the user asks for it."
+        self.assertFalse([e for e in errors(ok_desc, "# Big\n\nShort body.") if "tokens" in e])
+        self.assertTrue(any("description is about" in e for e in errors("Use when " + "word " * 120, "# Big")))
+        self.assertTrue(any("body is about" in e for e in errors(ok_desc, "# Big\n\n" + "x" * 4 * 5001)))
+
+    def test_every_skill_fits_the_token_budgets(self):
+        over = [(d.name, e) for d in hublib.skill_dirs() for e in validate_skills.check_skill(d, set(), set())[0]
+                if "tokens" in e]
+        self.assertEqual(over, [])
+
     def test_requires_of(self):
         self.assertEqual(hublib.requires_of({"metadata": {"requires": "a, b ,"}}), ["a", "b"])
         self.assertEqual(hublib.requires_of({"metadata": "bad"}), [])
