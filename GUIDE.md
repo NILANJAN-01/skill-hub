@@ -231,6 +231,7 @@ Categories for `--plugin`:
 | `context-management-tools` | 4 | Context management for AI agents and LLM apps: context-handoff decides when to compact or restart a long session, drafts a handoff note from git state and checks... |
 | `software-design-tools` | 5 | Software design rules AI agents follow on every code change, from the ideas in A Philosophy of Software Design: software-design-guardrails installs always-on design... |
 | `code-quality-tools` | 1 | Code quality for any programming language: lint-checker detects a project's languages and the linters it configures or has installed (ruff, ESLint, Biome,... |
+| `security-tools` | 1 | Find leaked secrets and risky dependency pins before they ship. |
 <!-- plugins-simple:end -->
 
 `--all` installs every skill. `--skill a,b` installs specific skills by name.

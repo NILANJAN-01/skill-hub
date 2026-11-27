@@ -412,6 +412,14 @@
       "skills": [
         "lint-checker"
       ]
+    },
+    {
+      "name": "security-tools",
+      "description": "Find leaked secrets and risky dependency pins before they ship.",
+      "category": "security-tools",
+      "skills": [
+        "secrets-dependency-audit"
+      ]
     }
   ],
   "categories": [
@@ -528,6 +536,11 @@
     {
       "name": "api-testing-tools",
       "title": "API testing: REST APIs of web applications",
+      "count": 1
+    },
+    {
+      "name": "security-tools",
+      "title": "Security: secrets & dependencies",
       "count": 1
     },
     {
@@ -773,6 +786,12 @@
           "skills": [
             "repo-architecture",
             "repo-learnings"
+          ]
+        },
+        {
+          "name": "security",
+          "skills": [
+            "secrets-dependency-audit"
           ]
         },
         {
@@ -3955,6 +3974,25 @@
         "references/syntax.md",
         "scripts/fixtures/project/tests/login.robot.md"
       ]
+    },
+    {
+      "name": "secrets-dependency-audit",
+      "title": "Secrets and dependency audit",
+      "category": "security-tools",
+      "area": "development",
+      "group": "security",
+      "description": "Find secrets committed to a repository (AWS, GitHub or API keys, tokens, private keys, passwords) and risky dependency pins with a bundled script, before a commit or release. Use when the user asks if a key was committed or leaked, to scan for secrets, add a pre-commit secret check, or audit dependency pinning.",
+      "plugins": [
+        "security-tools"
+      ],
+      "path": "skills/development/security/secrets-dependency-audit",
+      "license": "MIT",
+      "compatibility": "",
+      "examples": [
+        "Scan this repo for leaked API keys or passwords before I make it public.",
+        "Check if our dependencies are pinned properly and add a pre-commit hook that blocks secrets."
+      ],
+      "files": []
     },
     {
       "name": "skill-dispatcher",
