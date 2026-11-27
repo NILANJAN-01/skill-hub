@@ -49,7 +49,8 @@ header.top .bar { max-width: 1320px; margin: 0 auto; padding: 0 16px; height: 60
 .logo { width: 28px; height: 28px; border-radius: 7px; background: var(--accent); display: grid; place-items: center; flex: none; }
 .logo svg { width: 18px; height: 18px; }
 .ver { font: 600 11px/1 Inter, sans-serif; color: var(--muted); border: 1px solid var(--border); border-radius: 999px; padding: 4px 8px; }
-.gsearch { flex: 1 1 auto; max-width: 440px; margin-left: auto; display: flex; align-items: center; gap: 8px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 0 10px; }
+.gwrap { flex: 1 1 auto; max-width: 480px; margin-left: auto; position: relative; }
+.gsearch { display: flex; align-items: center; gap: 8px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 0 10px; }
 .gsearch svg { width: 17px; height: 17px; color: var(--muted); flex: none; }
 .gsearch input { border: 0; outline: 0; background: transparent; color: var(--text); font: inherit; font-size: 14px; padding: 8px 0; width: 100%; min-width: 0; }
 .gsearch:focus-within { border-color: var(--accent); }
@@ -186,6 +187,53 @@ details.faq > div { padding: 0 16px 12px; color: var(--muted); font-size: 14.5px
 .change li { margin-bottom: 6px; }
 footer { border-top: 1px solid var(--border); color: var(--muted); font-size: 13px; padding: 22px 16px 40px; text-align: center; }
 
+/* search results */
+.gres { position: absolute; top: calc(100% + 6px); left: 0; right: 0; min-width: min(560px, 92vw); max-height: min(70vh, 620px); overflow: auto; background: var(--surface); border: 1px solid var(--border-strong); border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,.16); padding: 6px; z-index: 40; }
+.gres[hidden] { display: none; }
+.gres .grp { font: 600 11px Inter, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 10px 10px 4px; display: flex; justify-content: space-between; }
+.gres .it { display: block; width: 100%; text-align: left; border: 0; background: transparent; color: var(--text); font: inherit; padding: 8px 10px; border-radius: 8px; cursor: pointer; }
+.gres .it:hover, .gres .it.act { background: var(--accent-soft); }
+.gres .it .tt { font-weight: 600; font-size: 14px; display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.gres .it .tt small { font: 12px "JetBrains Mono", monospace; color: var(--muted); font-weight: 400; }
+.gres .it .sn { color: var(--muted); font-size: 13px; line-height: 1.5; margin-top: 2px; overflow-wrap: anywhere; }
+.gres .none { padding: 16px 12px; color: var(--muted); font-size: 14px; }
+.gres mark { padding: 0; border-radius: 2px; }
+.gres .foot { border-top: 1px solid var(--border); margin-top: 6px; padding: 8px 10px 4px; color: var(--muted); font-size: 12px; display: flex; gap: 14px; flex-wrap: wrap; }
+.hit { animation: hit 1.8s ease-out; border-radius: 8px; }
+@keyframes hit { 0%, 35% { box-shadow: 0 0 0 3px var(--accent); background-color: var(--accent-soft); } 100% { box-shadow: 0 0 0 3px transparent; } }
+
+/* table of contents: subsections, heading links */
+aside.toc .subs { display: none; margin: 2px 0 8px 12px; border-left: 1px solid var(--border); }
+aside.toc .subs.open { display: block; }
+aside.toc .subs a { font-size: 13px; padding: 3px 10px; border-left: 0; border-radius: 6px; }
+h2, h3 { position: relative; }
+.anchor { margin-left: 8px; color: var(--muted); opacity: 0; font-weight: 400; text-decoration: none; }
+h2:hover .anchor, h3:hover .anchor, .anchor:focus { opacity: 1; text-decoration: none; }
+section.doc h3, details, tr, .card, .stepcard, .callout { scroll-margin-top: 80px; }
+
+/* "I want to" tasks */
+.tasks { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 8px 0 4px; }
+.tasks a { display: flex; flex-direction: column; gap: 2px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 11px 14px; color: var(--text); box-shadow: var(--shadow); }
+.tasks a:hover { border-color: var(--accent); text-decoration: none; }
+.tasks a b { font-size: 14.5px; }
+.tasks a span { color: var(--muted); font-size: 13px; }
+.hint { color: var(--muted); font-size: 13.5px; margin: 10px 0 0; }
+
+/* accessibility and navigation aids */
+.skip { position: absolute; left: -9999px; top: 8px; z-index: 50; background: var(--surface); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--accent); }
+.skip:focus { left: 12px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+#totop { position: fixed; right: 20px; bottom: 20px; z-index: 20; opacity: 0; pointer-events: none; transition: opacity .2s; }
+#totop.show { opacity: 1; pointer-events: auto; }
+
+@media print {
+  header.top, aside.toc, #totop, .copy, .gres, .tabs, .toolbar, .views, .chips, .anchor, .skip { display: none !important; }
+  .layout { display: block; max-width: none; }
+  body { background: #fff; color: #000; font-size: 11pt; }
+  .card, .stepcard, .tablewrap, details, .code, .stat { box-shadow: none; break-inside: avoid; }
+  a { color: inherit; }
+}
+
 @media (max-width: 960px) {
   .layout { grid-template-columns: minmax(0, 1fr); gap: 0; }
   aside.toc { display: none; position: fixed; top: 60px; left: 0; right: 0; bottom: 0; max-height: none; background: var(--bg); z-index: 25; padding: 16px; }
@@ -196,21 +244,28 @@ footer { border-top: 1px solid var(--border); color: var(--muted); font-size: 13
   .flow { gap: 10px; }
 }
 @media (max-width: 560px) {
-  .gsearch { display: none; }
+  header.top .bar { flex-wrap: wrap; height: auto; padding: 8px 16px; row-gap: 8px; }
+  .gwrap { order: 5; flex-basis: 100%; max-width: none; margin: 0; }
+  .gsearch kbd { display: none; }
   .ver { display: none; }
   details.skill summary { grid-template-columns: minmax(0, 1fr); }
   details.skill summary .meta { justify-content: start; }
+  details.skill summary .meta .badge { white-space: normal; }
   .stepcard { padding-left: 18px; padding-top: 56px; }
 }
 </style>
 </head>
 <body>
+<a class="skip" href="#main">Skip to the content</a>
 <header class="top">
   <div class="bar">
     <button class="iconbtn" id="tocbtn" aria-label="Contents"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
     <a class="brand" href="#overview"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.6" stroke-linecap="round"><path d="M7 4v16M7 12h6a4 4 0 0 0 4-4V4"/></svg></span>skill-hub <span style="font-weight:500;color:var(--muted)">User Guide</span></a>
     <span class="ver" id="ver"></span>
-    <label class="gsearch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="gq" type="search" placeholder="Search skills, scripts, options…" autocomplete="off"><kbd>/</kbd></label>
+    <div class="gwrap">
+      <label class="gsearch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="gq" type="search" placeholder="Search the guide: skills, commands, options, FAQ…" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="gres" aria-label="Search the guide"><kbd>/</kbd></label>
+      <div class="gres" id="gres" role="listbox" hidden></div>
+    </div>
     <nav><a href="index.html">Catalog</a><a href="prompts.html">Prompts</a><a id="repo" href="#">GitHub</a></nav>
     <button class="iconbtn" id="theme" aria-label="Toggle theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
   </div>
@@ -221,6 +276,7 @@ footer { border-top: 1px solid var(--border); color: var(--muted); font-size: 13
   <main id="main"></main>
 </div>
 <footer id="foot"></footer>
+<button class="iconbtn" id="totop" type="button" aria-label="Back to top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
 
 <script>
 const DATA = /*__DATA__*/null;
@@ -273,6 +329,20 @@ section("overview", "", "Overview", `
     <div class="stat"><b>${S.prompts}</b><span>example prompts</span></div>
   </div>
 </div>
+<h3>I want to…</h3>
+<div class="tasks">
+  <a href="#quick-start"><b>Install everything</b><span>One command for every agent you use</span></a>
+  <a href="#installer-choose-agents-and-skills"><b>Install only some skills</b><span>Pick agents, plugins or single skills</span></a>
+  <a href="#installer-update-and-remove"><b>Update or remove skills</b><span>Refresh after the hub changed, or undo</span></a>
+  <a href="#skills"><b>Find a skill for a task</b><span>Browse or filter all ${S.skills} skills</span></a>
+  <a href="#using-skills-requirements-by-skill"><b>See what a skill needs</b><span>Python only, or a program such as ffmpeg</span></a>
+  <a href="#using-skills-running-a-skill-s-script-yourself"><b>Run a skill's script</b><span>Commands, options and examples</span></a>
+  <a href="#professional-write-a-brief-not-a-wish"><b>Get reviewable results</b><span>Write a brief the agent can deliver on</span></a>
+  <a href="#mcp-add-any-other-mcp-server-to-every-agent"><b>Add an MCP server</b><span>To every agent at once, tested first</span></a>
+  <a href="#help"><b>Fix a problem</b><span>Troubleshooting and FAQ</span></a>
+  <a href="#maintainers-common-tasks"><b>Add or change a skill</b><span>Steps and the checks to pass</span></a>
+</div>
+<p class="hint">Looking for something else? Press <kbd>/</kbd> or <kbd>Ctrl</kbd> <kbd>K</kbd> to search every section, command and option in this guide.</p>
 <h3>How it fits together</h3>
 <div class="flow">
   <div class="step"><b>You ask</b><span>in plain words, in your agent</span></div><div class="arrow">→</div>
@@ -327,8 +397,12 @@ section("using-skills", "Using skills", null, `
 <tr><td>Work you can ship</td><td>Give a goal, context, constraints and a “done when” check: see <a href="#professional">Professional use</a> for the brief, the workflow and playbooks by role.</td></tr>
 </tbody></table></div>
 <h3>Running a skill's script yourself</h3>
-<p>Every script is plain Python 3.8+ with no dependencies (two inspector skills note their extras). Run it from the installed skill folder or from the clone; <code>--help</code> lists its options. All scripts are listed in <a href="#scripts">Bundled scripts</a>.</p>
-${code("python skills/testing/playwright/playwright-test-authoring/scripts/pw_audit.py path/to/project\npython skills/testing/junit/junit-migration/scripts/junit_audit.py path/to/project\npython skills/testing/api/rest-api-testing/scripts/api_check.py run tests/api/orders.json --env .env.test --junit build/api-junit.xml\npython skills/development/software-design/software-design-guardrails/scripts/design_check.py --diff\npython <skill-folder>/scripts/<script>.py --help")}`);
+<p>Every script is plain Python 3.8+ with no packages to install. Run it from the installed skill folder or from the clone; <code>--help</code> lists its options. All scripts are listed in <a href="#scripts">Bundled scripts</a>.</p>
+${code("python skills/testing/playwright/playwright-test-authoring/scripts/pw_audit.py path/to/project\npython skills/testing/junit/junit-migration/scripts/junit_audit.py path/to/project\npython skills/testing/api/rest-api-testing/scripts/api_check.py run tests/api/orders.json --env .env.test --junit build/api-junit.xml\npython skills/development/software-design/software-design-guardrails/scripts/design_check.py --diff\npython <skill-folder>/scripts/<script>.py --help")}
+<h3>Requirements by skill</h3>
+<p>No skill needs <code>pip install</code>. Most need nothing but Python 3.8+. The skills below state more: usually a program for work Python cannot do on its own (ffmpeg for video and audio, Tesseract for OCR, adb, git, a JDK), or network access. Each skill says so in its <code>compatibility</code> field, shown here.</p>
+${table(["Skill", "Needs"], DATA.skills.filter(s => s.needs).sort((a, b) => a.name.localeCompare(b.name)).map(s =>
+  `<tr data-search="${esc((s.name + " " + s.needs).toLowerCase())}"><td class="nowrap"><a href="#skill-${esc(s.name)}" data-open="${esc(s.name)}"><code>${esc(s.name)}</code></a></td><td>${esc(s.needs)}</td></tr>`))}`);
 
 // Professional use
 const hasSkill = Object.fromEntries(DATA.skills.map(s => [s.name, true]));
@@ -499,6 +573,9 @@ section("whats-new", "What's new", null, `
 
 // Help
 const FAQ = [
+  ["How do I find something in this guide?", "Press <kbd>/</kbd> or <kbd>Ctrl</kbd> <kbd>K</kbd> and type a word: results come from every section, skill, script, installer option and FAQ answer. Use <kbd>↑</kbd> <kbd>↓</kbd> and <kbd>Enter</kbd> to jump there. The table of contents lists every subsection, and every heading has a link you can share."],
+  ["Do I need to install Python packages?", "No. Every bundled script runs on the Python 3.8+ standard library. A few skills drive a program for work Python cannot do on its own, such as ffmpeg, Tesseract or adb; see <a href=\"#using-skills-requirements-by-skill\">Requirements by skill</a>. Optional packages, such as Pillow for image-inspector, only make some scripts faster."],
+  ["Do skills cost a lot of tokens?", "Each installed skill's short description is read at the start of a session (about 50 tokens; the hub checks that none is over 130). The full SKILL.md is read only when the skill is used, and the hub keeps it under 5,000 tokens, with longer material in references the agent opens only when needed. Install the categories you use to keep the start-up cost low."],
   ["Should I install every skill?", "For trying the hub, yes: <code>--setup</code> is the quickest start. For daily or team use, install the categories you need (<code>--plugin</code>): every installed skill's description is read at start-up, and fewer, relevant skills are picked more reliably. The skill-hub MCP server still finds the rest on demand. See <a href=\"#professional\">Professional use</a>."],
   ["The agent does not use a skill I installed", "Restart the agent (skills are read at start-up), check with <code>python install.py --doctor</code>, then name the skill: “Use the &lt;name&gt; skill: …”. Very simple questions may be answered without a skill."],
   ["How do I update skills after the hub changed?", "<code>python install.py --setup --update</code>. The installer compares every file of each skill and asks before replacing copies that differ (they may be your own edits)."],
@@ -513,7 +590,23 @@ section("help", "Troubleshooting & FAQ", null, FAQ.map(([q, a]) => `<details cla
 
 /* ---------- render page ---------- */
 $("#main").innerHTML = sections.map(s => `<section class="doc" id="${s.id}">${s.title ? `<h2>${esc(s.title)}</h2>` : ""}${s.html}</section>`).join('<div class="hr"></div>');
-$("#toc").innerHTML = `<div class="label">On this page</div>` + sections.map(s => `<a href="#${s.id}" data-id="${s.id}">${esc(s.nav)}${s.count ? `<span class="n">${s.count}</span>` : ""}</a>`).join("");
+// every heading gets a stable id ("section-heading-words") and a link you can copy and share
+const slug = t => t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const subs = {};
+sections.forEach(s => {
+  const el = document.getElementById(s.id);
+  const h2 = el.querySelector(":scope > h2");
+  if (h2) h2.insertAdjacentHTML("beforeend", `<a class="anchor" href="#${s.id}" aria-label="Link to ${esc(s.nav)}">#</a>`);
+  subs[s.id] = [...el.querySelectorAll("h3")].map(h => {
+    const title = h.childNodes[0].textContent.trim();
+    h.id = s.id + "-" + slug(title);
+    h.dataset.title = title;
+    h.insertAdjacentHTML("beforeend", `<a class="anchor" href="#${h.id}" aria-label="Link to ${esc(title)}">#</a>`);
+    return {id: h.id, title};
+  });
+});
+$("#toc").innerHTML = `<div class="label">On this page</div>` + sections.map(s => `<a href="#${s.id}" data-id="${s.id}">${esc(s.nav)}${s.count ? `<span class="n">${s.count}</span>` : ""}</a>` +
+  (subs[s.id].length ? `<div class="subs" data-for="${s.id}">${subs[s.id].map(h => `<a href="#${h.id}">${esc(h.title)}</a>`).join("")}</div>` : "")).join("");
 $("#ver").textContent = "v" + H.version;
 $("#repo").href = H.repository;
 $("#foot").innerHTML = `Generated from the repository by <code>tools/build_catalog.py</code> · skill-hub ${esc(H.version)} · <a href="${esc(H.repository)}">${esc(H.repository.replace("https://", ""))}</a>`;
@@ -589,26 +682,152 @@ $("#chips").addEventListener("click", e => {
   document.querySelectorAll("#chips .chip").forEach(c => c.classList.toggle("on", c === b));
   renderSkills();
 });
-function filterRows() {
-  const q = query.toLowerCase();
-  document.querySelectorAll("tr[data-search]").forEach(tr => tr.style.display = !q || tr.dataset.search.includes(q) ? "" : "none");
-}
-function setQuery(v, from) {
+function setQuery(v) {             // the catalog filter: narrows the skill list only
   query = v.trim();
-  if (from !== "q") $("#q").value = v;
-  if (from !== "gq") $("#gq").value = v;
-  renderSkills(); filterRows();
+  if ($("#q").value !== v) $("#q").value = v;
+  renderSkills();
 }
-$("#q").addEventListener("input", e => setQuery(e.target.value, "q"));
-$("#gq").addEventListener("input", e => setQuery(e.target.value, "gq"));
-$("#gq").addEventListener("keydown", e => { if (e.key === "Enter") document.getElementById("skills").scrollIntoView(); });
-document.addEventListener("keydown", e => {
-  if (e.key === "/" && !/input|textarea/i.test(document.activeElement.tagName)) { e.preventDefault(); ($("#gq").offsetParent ? $("#gq") : $("#q")).focus(); }
+$("#q").addEventListener("input", e => setQuery(e.target.value));
+
+/* ---------- search the whole guide ---------- */
+// One index of everything a reader may look for: sections, headings, every block of text (paragraphs, table
+// rows, cards, FAQ answers, code), and every skill. Results open the right place and flash it.
+const TYPE_OF = {scripts: "Script", installer: "Installer", agents: "Agent", mcp: "MCP", help: "FAQ",
+                 "whats-new": "What's new", maintainers: "Contributing"};
+const GROUP_ORDER = ["Section", "Skill", "FAQ", "Installer", "Script", "MCP", "Agent", "Guide", "Contributing", "What's new"];
+const BLOCKS = "details.faq, tbody tr, .stepcard, .card, .callout, .checklist li, .flow .step, .tasks a, section.doc > p, .code";
+const IDX = [];
+let blockN = 0;
+sections.forEach(s => {
+  const el = document.getElementById(s.id);
+  const lead = el.querySelector(".lead, .hero p");
+  IDX.push({type: "Section", title: s.nav, text: lead ? lead.textContent : "", target: "#" + s.id, w: 4});
+  subs[s.id].forEach(h => IDX.push({type: "Section", title: h.title, sub: s.nav, text: "", target: "#" + h.id, w: 3.5}));
+  if (s.id === "skills") return;                          // skills are indexed from the data below
+  el.querySelectorAll(BLOCKS).forEach(b => {
+    if (b.parentElement.closest(BLOCKS)) return;          // index the outermost block only
+    const text = b.textContent.replace(/\s+/g, " ").trim();
+    if (!text) return;
+    if (!b.id) b.id = "b" + (++blockN);
+    let title = "";
+    const head = b.matches("details") ? b.querySelector("summary") : b.querySelector("h4, b, td");
+    if (head) title = head.textContent.replace(/\s+/g, " ").trim();
+    if (!title || title.length > 90) {                    // fall back to the nearest heading above
+      let h = b, found = null;
+      while (h && !found) { h = h.previousElementSibling || h.parentElement; if (h && /^H[23]$/.test(h.tagName)) found = h; }
+      title = found ? (found.dataset.title || found.childNodes[0].textContent) : s.nav;
+    }
+    IDX.push({type: TYPE_OF[s.id] || "Guide", title, sub: s.nav, text, target: "#" + b.id, w: 1});
+  });
 });
+DATA.skills.forEach(s => IDX.push({type: "Skill", title: s.title, sub: s.name, text: s._t, skill: s.name, w: 2}));
+IDX.forEach(e => { e.lt = e.title.toLowerCase(); e.all = (e.title + " " + (e.sub || "") + " " + e.text).toLowerCase(); });
+
+const reEsc = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+function mark(text, terms) {
+  let out = esc(text);
+  terms.forEach(t => { out = out.replace(new RegExp(`(${reEsc(esc(t))})`, "gi"), "<mark>$1</mark>"); });
+  return out;
+}
+function snippet(text, terms) {
+  const lower = text.toLowerCase();
+  const at = Math.min(...terms.map(t => { const i = lower.indexOf(t); return i < 0 ? Infinity : i; }));
+  if (!isFinite(at)) return text.slice(0, 140) + (text.length > 140 ? "…" : "");
+  const start = Math.max(0, at - 60);
+  return (start ? "…" : "") + text.slice(start, start + 170) + (start + 170 < text.length ? "…" : "");
+}
+function searchIndex(q) {
+  const terms = q.toLowerCase().split(/\s+/).filter(Boolean);
+  if (!terms.length) return [];
+  const hits = [];
+  IDX.forEach(e => {
+    if (!terms.every(t => e.all.includes(t))) return;
+    let score = e.w;
+    terms.forEach(t => { if (e.lt.includes(t)) score += 3; if (e.lt.startsWith(t)) score += 1; if ((e.sub || "").toLowerCase() === t) score += 4; });
+    if (e.lt === q.toLowerCase()) score += 6;
+    hits.push({e, score});
+  });
+  return hits.sort((a, b) => b.score - a.score);
+}
+
+const gq = $("#gq"), gres = $("#gres");
+let shown = [], active = 0;
+function renderResults() {
+  const q = gq.value.trim();
+  if (!q) { closeResults(); return; }
+  const terms = q.toLowerCase().split(/\s+/).filter(Boolean);
+  const hits = searchIndex(q);
+  const groups = {};
+  hits.forEach(h => (groups[h.e.type] = groups[h.e.type] || []).push(h));
+  shown = [];
+  let html = "";
+  GROUP_ORDER.filter(g => groups[g]).forEach(g => {
+    const all = groups[g], top = all.slice(0, g === "Skill" ? 5 : 4);
+    html += `<div class="grp"><span>${esc(g === "Section" ? "Guide sections" : g === "Skill" ? "Skills" : g)}</span><span>${all.length}</span></div>`;
+    top.forEach(h => {
+      shown.push(h.e);
+      const e = h.e;
+      const sn = e.type === "Section" ? (e.sub ? "in " + e.sub : snippet(e.text, terms)) : snippet(e.type === "Skill" ? DATA.skills.find(s => s.name === e.skill).description : e.text, terms);
+      html += `<button class="it" type="button" role="option" data-i="${shown.length - 1}"><div class="tt">${mark(e.title, terms)}${e.sub && e.type !== "Section" ? `<small>${esc(e.sub)}</small>` : ""}</div><div class="sn">${mark(sn, terms)}</div></button>`;
+    });
+    if (g === "Skill" && all.length > top.length) {
+      shown.push({catalog: q});
+      html += `<button class="it" type="button" role="option" data-i="${shown.length - 1}"><div class="tt">Show all ${all.length} matching skills in the catalog</div></button>`;
+    }
+  });
+  if (!shown.length) html = `<div class="none">Nothing matches “${esc(q)}”. Try fewer or shorter words; for skills, your agent's <code>skill-router</code> also matches by meaning.</div>`;
+  html += `<div class="foot"><span><kbd>↑</kbd> <kbd>↓</kbd> move</span><span><kbd>Enter</kbd> open</span><span><kbd>Esc</kbd> close</span><span>${hits.length} result${hits.length === 1 ? "" : "s"}</span></div>`;
+  gres.innerHTML = html;
+  gres.hidden = false;
+  gq.setAttribute("aria-expanded", "true");
+  setActive(0);
+}
+function setActive(i) {
+  const items = [...gres.querySelectorAll(".it")];
+  if (!items.length) return;
+  active = (i + items.length) % items.length;
+  items.forEach((it, k) => it.classList.toggle("act", k === active));
+  items[active].scrollIntoView({block: "nearest"});
+}
+function closeResults() { gres.hidden = true; gq.setAttribute("aria-expanded", "false"); }
+function flash(el) { el.classList.remove("hit"); void el.offsetWidth; el.classList.add("hit"); setTimeout(() => el.classList.remove("hit"), 1900); }
+function openResult(e) {
+  closeResults();
+  gq.blur();
+  if (e.catalog) { setQuery(e.catalog); document.getElementById("skills").scrollIntoView(); return; }
+  if (e.skill) { openSkill(e.skill); history.replaceState(null, "", "#skill-" + e.skill); const d = document.getElementById("skill-" + e.skill); if (d) flash(d); return; }
+  const el = document.querySelector(e.target);
+  if (!el) return;
+  for (let d = el.closest("details"); d; d = d.parentElement && d.parentElement.closest("details")) d.open = true;
+  el.scrollIntoView({block: "start"});
+  history.replaceState(null, "", e.target);
+  flash(el);
+}
+gq.addEventListener("input", renderResults);
+gq.addEventListener("focus", () => { if (gq.value.trim()) renderResults(); });
+gq.addEventListener("keydown", e => {
+  if (e.key === "ArrowDown") { e.preventDefault(); if (gres.hidden) renderResults(); else setActive(active + 1); }
+  else if (e.key === "ArrowUp") { e.preventDefault(); setActive(active - 1); }
+  else if (e.key === "Enter") { e.preventDefault(); if (!gres.hidden && shown[active]) openResult(shown[active]); }
+  else if (e.key === "Escape") { if (gq.value && gres.hidden) gq.value = ""; closeResults(); gq.blur(); }
+});
+gres.addEventListener("mousedown", e => e.preventDefault());   // keep focus in the box while clicking
+gres.addEventListener("click", e => { const it = e.target.closest(".it"); if (it) openResult(shown[+it.dataset.i]); });
+document.addEventListener("click", e => { if (!e.target.closest(".gwrap")) closeResults(); });
+document.addEventListener("keydown", e => {
+  const typing = /input|textarea|select/i.test(document.activeElement.tagName);
+  if ((e.key === "/" && !typing) || (e.key.toLowerCase() === "k" && (e.ctrlKey || e.metaKey))) { e.preventDefault(); gq.focus(); gq.select(); }
+});
+
+/* ---------- back to top, print ---------- */
+const totop = $("#totop");
+addEventListener("scroll", () => totop.classList.toggle("show", scrollY > 900), {passive: true});
+totop.addEventListener("click", () => { scrollTo({top: 0}); gq.focus({preventScroll: true}); });
+addEventListener("beforeprint", () => document.querySelectorAll("details.faq").forEach(d => d.open = true));
 
 /* ---------- open a skill from links and the URL ---------- */
 function openSkill(name) {
-  if (activeCat || query) { activeCat = ""; query = ""; $("#q").value = $("#gq").value = ""; document.querySelectorAll("#chips .chip").forEach((c, i) => c.classList.toggle("on", i === 0)); renderSkills(); filterRows(); }
+  if (activeCat || query) { activeCat = ""; setQuery(""); document.querySelectorAll("#chips .chip").forEach((c, i) => c.classList.toggle("on", i === 0)); renderSkills(); }
   if (view === "list") setView("category");
   const d = document.getElementById("skill-" + name);
   if (d) { d.open = true; d.scrollIntoView({block: "start"}); }
@@ -634,9 +853,13 @@ document.addEventListener("click", e => {
 if (location.hash.startsWith("#skill-")) setTimeout(() => openSkill(location.hash.slice(7)), 0);
 
 /* ---------- table of contents: scroll spy, mobile toggle ---------- */
-const tocLinks = [...document.querySelectorAll("#toc a")];
+const tocLinks = [...document.querySelectorAll("#toc a[data-id]")];
 const spy = new IntersectionObserver(entries => {
-  entries.forEach(en => { if (en.isIntersecting) tocLinks.forEach(a => a.classList.toggle("on", a.dataset.id === en.target.id)); });
+  entries.forEach(en => {
+    if (!en.isIntersecting) return;
+    tocLinks.forEach(a => a.classList.toggle("on", a.dataset.id === en.target.id));
+    document.querySelectorAll("#toc .subs").forEach(d => d.classList.toggle("open", d.dataset.for === en.target.id));
+  });
 }, {rootMargin: "-80px 0px -70% 0px"});
 document.querySelectorAll("section.doc").forEach(s => spy.observe(s));
 $("#tocbtn").addEventListener("click", () => document.body.classList.toggle("tocopen"));
